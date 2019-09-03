@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>杰杰的博客</title>
+  
+  <subtitle>ღ( ´･ᴗ･` )我怎么辣么可爱(*╹▽╹*)</subtitle>
+  <link href="/atom.xml" rel="self"/>
+  
+  <link href="https://jiejietop.github.io/"/>
+  <updated>2019-09-01T13:27:19.122Z</updated>
+  <id>https://jiejietop.github.io/</id>
+  
+  <author>
+    <name>杰杰</name>
+    
+  </author>
+  
+  <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title></title>
+    <link href="https://jiejietop.github.io/googleb6aeb1d5b1eae55a/"/>
+    <id>https://jiejietop.github.io/googleb6aeb1d5b1eae55a/</id>
+    <published>2019-09-03T13:45:48.766Z</published>
+    <updated>2019-09-01T13:27:19.122Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          google-site-verification: googleb6aeb1d5b1eae55a.html&lt;script&gt;
+        document.querySelectorAll(&#39;.github-emoji&#39;)
+          .forEach(el =&gt;
+        
+      
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>freertos-5</title>
+    <link href="https://jiejietop.github.io/freertos-5/"/>
+    <id>https://jiejietop.github.io/freertos-5/</id>
+    <published>2019-09-01T10:20:11.000Z</published>
+    <updated>2019-09-01T12:49:59.556Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;script&gt;
+        document.querySelectorAll(&#39;.github-emoji&#39;)
+          .forEach(el =&gt; {
+            if (!el.dataset.src) { return; }
+       
+        
+      
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>从单片机到操作系统-4</title>
+    <link href="https://jiejietop.github.io/freertos-4/"/>
+    <id>https://jiejietop.github.io/freertos-4/</id>
+    <published>2019-08-31T13:51:41.000Z</published>
+    <updated>2019-09-01T12:01:53.166Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;p&gt;大家晚上好，我是杰杰，最近挺忙的，好久没有更新了，今天周末就吐血更新一下吧！&lt;/p&gt;
+&lt;h1 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot;
+        
+      
+    
+    </summary>
+    
+      <category term="操作系统" scheme="https://jiejietop.github.io/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
+    
+    
+      <category term="FreeRTOS" scheme="https://jiejietop.github.io/tags/FreeRTOS/"/>
+    
+      <category term="RTOS" scheme="https://jiejietop.github.io/tags/RTOS/"/>
+    
+      <category term="操作系统" scheme="https://jiejietop.github.io/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>从单片机到操作系统-3</title>
+    <link href="https://jiejietop.github.io/freertos-3/"/>
+    <id>https://jiejietop.github.io/freertos-3/</id>
+    <published>2019-08-31T12:09:02.000Z</published>
+    <updated>2019-09-01T12:01:54.691Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h1 id=&quot;FreeRTOS列表-amp-列表项的源码解读&quot;&gt;&lt;a href=&quot;#FreeRTOS列表-amp-列表项的源码解读&quot; class=&quot;headerlink&quot;
+        
+      
+    
+    </summary>
+    
+      <category term="操作系统" scheme="https://jiejietop.github.io/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
+    
+    
+      <category term="FreeRTOS" scheme="https://jiejietop.github.io/tags/FreeRTOS/"/>
+    
+      <category term="RTOS" scheme="https://jiejietop.github.io/tags/RTOS/"/>
+    
+      <category term="操作系统" scheme="https://jiejietop.github.io/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>从单片机到操作系统-2</title>
+    <link href="https://jiejietop.github.io/freertos-2/"/>
+    <id>https://jiejietop.github.io/freertos-2/</id>
+    <published>2019-08-31T11:53:46.000Z</published>
+    <updated>2019-09-01T11:41:34.717Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h1 id=&quot;补充&quot;&gt;&lt;a href=&quot;#补充&quot; class=&quot;headerlink&quot; title=&quot;补充&quot;&gt;&lt;/a&gt;补充&lt;/h1&gt;&lt;p&gt;开始今天的内容之前，先补充一下上篇文章&lt;a href=&quot;https://jiejietop.gitee.io/freertos-1/&quot;
+        
+      
+    
+    </summary>
+    
+      <category term="操作系统" scheme="https://jiejietop.github.io/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
+    
+    
+      <category term="FreeRTOS" scheme="https://jiejietop.github.io/tags/FreeRTOS/"/>
+    
+      <category term="RTOS" scheme="https://jiejietop.github.io/tags/RTOS/"/>
+    
+      <category term="操作系统" scheme="https://jiejietop.github.io/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>从单片机到操作系统-1</title>
+    <link href="https://jiejietop.github.io/freertos-1/"/>
+    <id>https://jiejietop.github.io/freertos-1/</id>
+    <published>2019-08-31T11:29:23.000Z</published>
+    <updated>2019-09-01T12:01:57.384Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;p&gt;我们知道，（单核）单片机某一时刻只能干一件事，会造成单片机资源的浪费，而且还有可能响应不够及时，所以，在比较庞大的程序或者是要求实时性比较高的情况下，我们可以移植操作系统。因为这种情况下操作系统比裸机方便很多，效率也高。下面，杰杰将带你们走进FreeRTOS的世界随便看看。
+        
+      
+    
+    </summary>
+    
+      <category term="操作系统" scheme="https://jiejietop.github.io/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
+    
+    
+      <category term="FreeRTOS" scheme="https://jiejietop.github.io/tags/FreeRTOS/"/>
+    
+      <category term="RTOS" scheme="https://jiejietop.github.io/tags/RTOS/"/>
+    
+      <category term="操作系统" scheme="https://jiejietop.github.io/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>openmv学习之旅-2</title>
+    <link href="https://jiejietop.github.io/openmv-2/"/>
+    <id>https://jiejietop.github.io/openmv-2/</id>
+    <published>2019-08-31T08:26:39.000Z</published>
+    <updated>2019-08-31T15:01:55.897Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;p&gt;大家好，我是杰杰。&lt;/p&gt;
+&lt;p&gt;从上一篇openmv的学习中&lt;a href=&quot;https://jiejietop.gitee.io/openmv-1/&quot; target=&quot;_blank&quot;
+        
+      
+    
+    </summary>
+    
+      <category term="机器视觉" scheme="https://jiejietop.github.io/categories/%E6%9C%BA%E5%99%A8%E8%A7%86%E8%A7%89/"/>
+    
+    
+      <category term="机器视觉" scheme="https://jiejietop.github.io/tags/%E6%9C%BA%E5%99%A8%E8%A7%86%E8%A7%89/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>openmv学习之旅-1</title>
+    <link href="https://jiejietop.github.io/openmv-1/"/>
+    <id>https://jiejietop.github.io/openmv-1/</id>
+    <published>2019-08-31T06:00:35.000Z</published>
+    <updated>2019-08-31T11:01:30.232Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;p&gt;最近入手了个OpenMv。&lt;br&gt;装IDE这种小事就不说了。说说真正入门的操作吧。对Python也没啥要求。我也是这样子马上上手的，当然在过程我是学习了Python的。&lt;/p&gt;
+&lt;h1 id=&quot;1：绘制矩形&quot;&gt;&lt;a href=&quot;#1：绘制矩形&quot;
+        
+      
+    
+    </summary>
+    
+      <category term="机器视觉" scheme="https://jiejietop.github.io/categories/%E6%9C%BA%E5%99%A8%E8%A7%86%E8%A7%89/"/>
+    
+    
+      <category term="机器视觉" scheme="https://jiejietop.github.io/tags/%E6%9C%BA%E5%99%A8%E8%A7%86%E8%A7%89/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>单片机C语言知识用法之#define</title>
+    <link href="https://jiejietop.github.io/c-define/"/>
+    <id>https://jiejietop.github.io/c-define/</id>
+    <published>2019-08-30T16:53:41.000Z</published>
+    <updated>2019-09-01T12:01:56.144Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h1 id=&quot;define的定义：&quot;&gt;&lt;a href=&quot;#define的定义：&quot; class=&quot;headerlink&quot;
+        
+      
+    
+    </summary>
+    
+      <category term="C语言" scheme="https://jiejietop.github.io/categories/C%E8%AF%AD%E8%A8%80/"/>
+    
+    
+      <category term="C语言" scheme="https://jiejietop.github.io/tags/C%E8%AF%AD%E8%A8%80/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>hellolo world</title>
+    <link href="https://jiejietop.github.io/hello-world/"/>
+    <id>https://jiejietop.github.io/hello-world/</id>
+    <published>2019-08-30T06:34:05.000Z</published>
+    <updated>2019-09-01T12:49:45.662Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h1 id=&quot;hello&quot;&gt;&lt;a href=&quot;#hello&quot; class=&quot;headerlink&quot;
+        
+      
+    
+    </summary>
+    
+      <category term="随笔" scheme="https://jiejietop.github.io/categories/%E9%9A%8F%E7%AC%94/"/>
+    
+    
+      <category term="随笔" scheme="https://jiejietop.github.io/tags/%E9%9A%8F%E7%AC%94/"/>
+    
+  </entry>
+  
+</feed>
