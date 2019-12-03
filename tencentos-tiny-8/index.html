@@ -1,0 +1,1727 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+<!-- jiejie 杰杰  modify 2019.08.15-->
+
+
+
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="utf-8">
+    <meta name="keywords" content="【TencentOS  tiny】深度源码分析（6）——互斥锁, IoT RTOS linux Python jiejie Dora">
+    <meta name="baidu-site-verification" content="fmlEuI34ir">
+    <meta name="google-site-verification" content="KeoTn_OFy4ndJwXNmm2gMeQfPhd7alqE9vQDwI32KCY">
+    <meta name="description" content="互斥锁互斥锁又称互斥互斥锁，是一种特殊的信号量，它和信号量不同的是，它具有互斥锁所有权、递归访问以及优先级继承等特性，在操作系统中常用于对临界资源的独占式处理。在任意时刻互斥锁的状态只有两种，开锁或闭锁，当互斥锁被任务持有时，该互斥锁处于闭">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="renderer" content="webkit|ie-stand|ie-comp">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>【TencentOS  tiny】深度源码分析（6）——互斥锁 | 杰杰的博客</title>
+    <link rel="icon" type="image/x-icon, image/vnd.microsoft.icon" href="/medias/logo/favicon.ico">
+
+    <link rel="stylesheet" type="text/css" href="/libs/awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="/libs/materialize/materialize.min.css">
+    <link rel="stylesheet" type="text/css" href="/libs/aos/aos.css">
+    <link rel="stylesheet" type="text/css" href="/libs/animate/animate.min.css">
+    <link rel="stylesheet" type="text/css" href="/libs/lightGallery/css/lightgallery.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/matery.css">
+    <link rel="stylesheet" type="text/css" href="/css/my.css">
+
+    <meta name="360-site-verification" content="d280ce782ae1e8d546343da41182687d">
+
+    <style type="text/css">
+        
+            
+            code[class*="language-"],
+            pre[class*="language-"] {
+                white-space: pre !important;
+            }
+
+        
+    </style>
+
+    <script src="/libs/jquery/jquery-2.2.0.min.js"></script>
+    <script src="https://sdk.jinrishici.com/v2/browser/jinrishici.js" charset="utf-8"></script>
+    
+    <script>
+        var _hmt = _hmt || [];
+        (function () {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?46e79e71af0709a5b9106bf20cecc493";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+
+    <script>
+        (function(){
+        var src = "https://jspassport.ssl.qhimg.com/11.0.1.js?d182b3f28525f2db83acfaaf6e696dba";
+        document.write('<script src="' + src + '" id="sozz"><\/script>');
+        })();
+    </script>
+
+    
+    
+        <script>
+            (function(){
+                var bp = document.createElement('script');
+                var curProtocol = window.location.protocol.split(':')[0];
+                if (curProtocol === 'https') {
+                    bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+                }
+                else {
+                    bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+                }
+                var s = document.getElementsByTagName("script")[0];
+                s.parentNode.insertBefore(bp, s);
+            })();
+        </script>
+    
+
+<link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
+
+<body>
+
+    <header class="navbar-fixed">
+    <nav id="headNav" class="bg-color nav-transparent">
+        <div id="navContainer" class="nav-wrapper container">
+            <div class="brand-logo">
+                <a href="/" class="waves-effect waves-light">
+                    
+                    <img src="/medias/logo/logo.ico" class="logo-img" alt="LOGO">
+                    
+                    <span class="logo-span">杰杰的博客</span>
+                </a>
+            </div>
+            <!-- jiejie 杰杰  modify 2019.08.15-->
+
+
+
+<a href="#" data-target="mobile-nav" class="sidenav-trigger button-collapse"><i class="fa fa-navicon"></i></a>
+<ul class="right">
+    
+    <li class="hide-on-med-and-down">
+        <a href="/" class="waves-effect waves-light">
+            
+            <i class="fa fa-home"></i>
+            
+            <span>首页</span>
+        </a>
+    </li>
+    
+    <li class="hide-on-med-and-down">
+        <a href="/tags" class="waves-effect waves-light">
+            
+            <i class="fa fa-tags"></i>
+            
+            <span>标签</span>
+        </a>
+    </li>
+    
+    <li class="hide-on-med-and-down">
+        <a href="/categories" class="waves-effect waves-light">
+            
+            <i class="fa fa-bookmark"></i>
+            
+            <span>分类</span>
+        </a>
+    </li>
+    
+    <li class="hide-on-med-and-down">
+        <a href="/archives" class="waves-effect waves-light">
+            
+            <i class="fa fa-archive"></i>
+            
+            <span>归档</span>
+        </a>
+    </li>
+    
+    <li class="hide-on-med-and-down">
+        <a href="/AV" class="waves-effect waves-light">
+            
+            <i class="fa fa-music"></i>
+            
+            <span>娱乐</span>
+        </a>
+    </li>
+    
+    <li class="hide-on-med-and-down">
+        <a href="/about" class="waves-effect waves-light">
+            
+            <i class="fa fa-user-circle-o"></i>
+            
+            <span>关于我</span>
+        </a>
+    </li>
+    
+    <li class="hide-on-med-and-down">
+        <a href="/contact" class="waves-effect waves-light">
+            
+            <i class="fa fa-envelope"></i>
+            
+            <span>留言板</span>
+        </a>
+    </li>
+    
+    <li class="hide-on-med-and-down">
+        <a href="/friends" class="waves-effect waves-light">
+            
+            <i class="fa fa-address-book"></i>
+            
+            <span>友情链接</span>
+        </a>
+    </li>
+    
+    <li>
+        <a href="#searchModal" class="modal-trigger waves-effect waves-light">
+            <i id="searchIcon" class="fa fa-search" title="搜索"></i>
+        </a>
+    </li>
+</ul>
+
+<!-- jiejie 杰杰  modify 2019.08.15-->
+
+<div id="mobile-nav" class="side-nav sidenav">
+
+    <div class="mobile-head bg-color">
+        
+        <img src="/medias/logo/logo.ico" class="logo-img circle responsive-img">
+        <!-- jiejie 杰杰  modify 2019.08.15-->
+        <div class="logo-name">杰杰的博客</div>
+        <div class="logo-desc">
+            
+            物联网 | linux | 操作系统
+            
+        </div>
+    </div>
+
+    
+
+    <ul class="menu-list mobile-menu-list">
+        
+        <li>
+            <a href="/" class="waves-effect waves-light">
+                
+                <i class="fa fa-fw fa-home"></i>
+                
+                首页
+            </a>
+        </li>
+        
+        <li>
+            <a href="/tags" class="waves-effect waves-light">
+                
+                <i class="fa fa-fw fa-tags"></i>
+                
+                标签
+            </a>
+        </li>
+        
+        <li>
+            <a href="/categories" class="waves-effect waves-light">
+                
+                <i class="fa fa-fw fa-bookmark"></i>
+                
+                分类
+            </a>
+        </li>
+        
+        <li>
+            <a href="/archives" class="waves-effect waves-light">
+                
+                <i class="fa fa-fw fa-archive"></i>
+                
+                归档
+            </a>
+        </li>
+        
+        <li>
+            <a href="/AV" class="waves-effect waves-light">
+                
+                <i class="fa fa-fw fa-music"></i>
+                
+                娱乐
+            </a>
+        </li>
+        
+        <li>
+            <a href="/about" class="waves-effect waves-light">
+                
+                <i class="fa fa-fw fa-user-circle-o"></i>
+                
+                关于我
+            </a>
+        </li>
+        
+        <li>
+            <a href="/contact" class="waves-effect waves-light">
+                
+                <i class="fa fa-fw fa-envelope"></i>
+                
+                留言板
+            </a>
+        </li>
+        
+        <li>
+            <a href="/friends" class="waves-effect waves-light">
+                
+                <i class="fa fa-fw fa-address-book"></i>
+                
+                友情链接
+            </a>
+        </li>
+        
+        
+        <li><div class="divider"></div></li>
+        <li>
+            <a href="https://github.com/jiejietop" class="waves-effect waves-light" target="_blank">
+                <i class="fa fa-github-square fa-fw"></i>Fork Me
+            </a>
+        </li>
+        
+    </ul>
+</div>
+
+        </div>
+
+        
+            <style>
+    .nav-transparent .github-corner {
+        display: none !important;
+    }
+
+    .github-corner {
+        position: absolute;
+        z-index: 10;
+        top: 0;
+        right: 0;
+        border: 0;
+        transform: scale(1.1);
+    }
+
+    .github-corner svg {
+        color: #0f9d58;
+        fill: #fff;
+        height: 64px;
+        width: 64px;
+    }
+
+    .github-corner:hover .octo-arm {
+        animation: a 0.56s ease-in-out;
+    }
+
+    .github-corner .octo-arm {
+        animation: none;
+    }
+
+    @keyframes a {
+        0%,
+        to {
+            transform: rotate(0);
+        }
+        20%,
+        60% {
+            transform: rotate(-25deg);
+        }
+        40%,
+        80% {
+            transform: rotate(10deg);
+        }
+    }
+</style>
+
+<a href="https://github.com/jiejietop" class="github-corner tooltipped hide-on-med-and-down" target="_blank"
+   data-tooltip="Fork Me" data-position="left" data-delay="50">
+    <svg viewBox="0 0 250 250" aria-hidden="true">
+        <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path>
+        <path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2"
+              fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path>
+        <path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z"
+              fill="currentColor" class="octo-body"></path>
+    </svg>
+</a>
+        
+    </nav>
+
+</header>
+
+    
+<script src="/libs/cryptojs/crypto-js.min.js"></script>
+<script>
+    (function() {
+        let pwd = '';
+        if (pwd && pwd.length > 0) {
+            if (pwd !== CryptoJS.SHA256(prompt('请输入访问本文章的密码')).toString(CryptoJS.enc.Hex)) {
+                alert('密码错误，将返回主页！');
+                location.href = '/';
+            }
+        }
+    })();
+</script>
+
+
+
+
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/11.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col s12 m12 l12">
+                <div class="brand">
+                    <div class="description center-align post-title">
+                        【TencentOS  tiny】深度源码分析（6）——互斥锁
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<main class="post-container content">
+
+    
+    <link rel="stylesheet" href="/libs/tocbot/tocbot.css">
+<style>
+    #articleContent h1::before,
+    #articleContent h2::before,
+    #articleContent h3::before,
+    #articleContent h4::before,
+    #articleContent h5::before,
+    #articleContent h6::before {
+        display: block;
+        content: " ";
+        height: 100px;
+        margin-top: -100px;
+        visibility: hidden;
+    }
+
+    #articleContent :focus {
+        outline: none;
+    }
+
+    .toc-fixed {
+        position: fixed;
+        top: 64px;
+    }
+
+    .toc-widget {
+        padding-left: 20px;
+    }
+
+    .toc-widget .toc-title {
+        margin: 35px 0 15px 0;
+        padding-left: 17px;
+        font-size: 1.5rem;
+        font-weight: bold;
+        line-height: 1.5rem;
+    }
+
+    .toc-widget ol {
+        padding: 0;
+        list-style: none;
+    }
+
+    #toc-content ol {
+        padding-left: 10px;
+    }
+
+    #toc-content ol li {
+        padding-left: 10px;
+    }
+
+    #toc-content .toc-link:hover {
+        color: #42b983;
+        font-weight: 700;
+        text-decoration: underline;
+    }
+
+    #toc-content .toc-link::before {
+        background-color: transparent;
+        max-height: 25px;
+    }
+
+    #toc-content .is-active-link {
+        color: #42b983;
+    }
+
+    #toc-content .is-active-link::before {
+        background-color: #42b983;
+    }
+
+    #floating-toc-btn {
+        position: fixed;
+        right: 20px;
+        bottom: 76px;
+        padding-top: 15px;
+        margin-bottom: 0;
+        z-index: 998;
+    }
+
+    #floating-toc-btn .btn-floating {
+        width: 48px;
+        height: 48px;
+    }
+
+    #floating-toc-btn .btn-floating i {
+        line-height: 48px;
+        font-size: 1.4rem;
+    }
+</style>
+<div class="row">
+    <div id="main-content" class="col s12 m12 l9">
+        <!-- jiejie 杰杰  modify 2019.08.15-->
+<!-- 文章内容详情 -->
+<div id="artDetail">
+    <div class="card">
+        <div class="card-content article-info">
+            <div class="row tag-cate">
+                <div class="col s7">
+                    
+                    <div class="article-tag">
+                        
+                            <a href="/tags/TencentOS-tiny/" target="_blank">
+                                <span class="chip bg-color">TencentOS tiny</span>
+                            </a>
+                        
+                            <a href="/tags/RTOS/" target="_blank">
+                                <span class="chip bg-color">RTOS</span>
+                            </a>
+                        
+                            <a href="/tags/操作系统/" target="_blank">
+                                <span class="chip bg-color">操作系统</span>
+                            </a>
+                        
+                            <a href="/tags/物联网/" target="_blank">
+                                <span class="chip bg-color">物联网</span>
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+                <div class="col s5 right-align">
+                    
+                    <div class="post-cate">
+                        <i class="fa fa-bookmark fa-fw icon-category"></i>
+                        
+                            <a href="/categories/操作系统/" class="post-category" target="_blank">
+                                操作系统
+                            </a>
+                        
+                            <a href="/categories/操作系统/TencentOS-tiny/" class="post-category" target="_blank">
+                                TencentOS tiny
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+            
+            <div class="post-info">
+                <div class="post-date info-break-policy">
+                    <i class="fa fa-calendar-minus-o fa-fw"></i>发布日期:&nbsp;&nbsp;
+                    2019-10-12
+                </div>
+
+                <div class="post-author info-break-policy">
+                    <i class="fa fa-user-o fa-fw"></i>作者:&nbsp;&nbsp;
+                    
+                        杰杰
+                    
+                </div>
+
+                
+                    
+                    <div class="info-break-policy">
+                        <i class="fa fa-file-word-o fa-fw"></i>文章字数:&nbsp;&nbsp;
+                        5.3k
+                    </div>
+                    
+
+                    
+                    <div class="info-break-policy">
+                        <i class="fa fa-clock-o fa-fw"></i>阅读时长:&nbsp;&nbsp;
+                        19 分
+                    </div>
+                    
+                
+                
+                
+                        <span id="busuanzi_container_site_pv" style='display:none'></span>
+                        <i class="fa fa-eye fa-fw"></i>阅读次数:&nbsp;&nbsp;
+                        <span id="busuanzi_value_page_pv" ></span>
+    
+                
+
+            </div>
+        </div>
+        <hr class="clearfix">
+        <div class="card-content article-card-content">
+            <div id="articleContent">
+                <h1 id="互斥锁"><a href="#互斥锁" class="headerlink" title="互斥锁"></a>互斥锁</h1><p>互斥锁又称互斥互斥锁，是一种特殊的信号量，它和信号量不同的是，它具有<code>互斥锁所有权、递归访问以及优先级继承</code>等特性，在操作系统中常用于对临界资源的<code>独占式</code>处理。在任意时刻互斥锁的状态只有两种，<code>开锁或闭锁</code>，当互斥锁被任务持有时，该互斥锁处于闭锁状态，当该任务释放互斥锁时，该互斥锁处于开锁状态。</p>
+<ul>
+<li>一个任务持有互斥锁就表示它拥有互斥锁的所有权，只有该任务才能释放互斥锁，同时其他任务将不能持有该互斥锁，这就是互斥锁的<code>所有权</code>特性。</li>
+<li>当持有互斥锁的任务再次获取互斥锁时不会被挂起，而是能递归获取，这就是互斥锁的<code>递归访问</code>特性。这个特性与一般的信号量有很大的不同，在信号量中，由于已经不存在可用的信号量，任务递归获取信号量时会发生挂起任务最终形成<code>死锁</code>。</li>
+<li>互斥锁还拥有<code>优先级继承</code>机制，它可以将<code>低</code>优先级任务的优先级<code>临时提升</code>到与获取互斥锁的<code>高</code>优先级任务的优先级<code>相同</code>，尽可能<code>降低</code>优先级翻转的危害。</li>
+</ul>
+<p>在实际应用中，如果想要实现同步功能，可以使用信号量，虽然互斥锁也可以用于任务与任务间的同步，但互斥锁更多的是用于临界资源的互斥访问。</p>
+<p>使用互斥锁对临界资源保护时，任务必须先获取互斥锁以获得访问该资源的所有权，当任务使用资源后，必须释放互斥锁以便其他任务可以访问该资源（而使用信号量保护临界资源时则可能发生优先级翻转，且<code>危害</code>是不可控的）。</p>
+<h1 id="优先级翻转"><a href="#优先级翻转" class="headerlink" title="优先级翻转"></a>优先级翻转</h1><p>简单来说就是高优先级任务在等待低优先级任务执行完毕，这已经违背了操作系统的设计初衷（抢占式调度）。</p>
+<p>为什么会发生优先级翻转？</p>
+<p>当系统中某个临界资源受到一个互斥锁保护时，任务访问该资源时需要获得互斥锁，如果这个资源正在被一个<code>低优先级</code>任务使用，此时互斥锁处于闭锁状态；如果此时一个<code>高优先级</code>任务想要访问该资源，那么高优先级任务会因为获取不到互斥锁而进入阻塞态，此时就形成高优先级任务在等待低优先级任务运行（等待它释放互斥锁）。</p>
+<p>优先级翻转是会产生<code>危害</code>的，在一开始设计系统的时候，就已经指定任务的优先级，越重要的任务优先级越高，但是发生优先级翻转后，高优先级任务在等待低优先级任务，这就有可能让高优先级任务得不到有效的处理，严重时可能导致系统崩溃。</p>
+<p>优先级翻转的危害是不可控的，因为低优先级任务很可能会被系统中其他<code>中间优先级</code>任务（低优先级与高优先级任务之间的优先级任务）抢占，这就有可能导致高优先级任务将等待所有中间优先级任务运行完毕的情况，这种情况对高优先级任务来说是不可接受的，也是违背了操作系统设计的原则。</p>
+<h1 id="优先级继承"><a href="#优先级继承" class="headerlink" title="优先级继承"></a>优先级继承</h1><p>在<code>TencentOS tiny</code> 中为了<code>降低</code>优先级翻转产生的危害使用了<code>优先级继承算法</code>：暂时提高占有某种临界资源的低优先级任务的优先级，使之与在所有等待该资源的任务中，优先级最高的任务优先级相等，而当这个低优先级任务执行完毕释放该资源时，优先级恢复初始设定值（此处可以看作是低优先级任务临时继承了高优先级任务的优先级）。因此，继承优先级的任务避免了系统资源被任何中间优先级任务抢占。互斥锁的优先级继承机制，它确保高优先级任务进入阻塞状态的时间尽可能短，以及将已经出现的“优先级翻转”危害<code>降低到最小</code>，<code>但不能消除</code>优先级翻转带来的危害。</p>
+<p>值得一提的是<code>TencentOS tiny</code> 在持有互斥锁时还允许调用修改任务优先级的API接口。</p>
+<h1 id="互斥锁的数据结构"><a href="#互斥锁的数据结构" class="headerlink" title="互斥锁的数据结构"></a>互斥锁的数据结构</h1><h2 id="互斥锁控制块"><a href="#互斥锁控制块" class="headerlink" title="互斥锁控制块"></a>互斥锁控制块</h2><p><code>TencentOS tiny</code> 通过互斥锁控制块操作互斥锁，其数据类型为<code>k_mutex_t</code>，互斥锁控制块由多个元素组成。</p>
+<ul>
+<li><code>pend_obj</code>有点类似于面向对象的继承，继承一些属性，里面有描述内核资源的类型（如互斥锁、队列、互斥量等，同时还有一个等待列表<code>list</code>）。</li>
+<li><code>pend_nesting</code>实际上是一个<code>uint8_t</code>类型的变量，记录互斥锁被获取的次数，如果<code>pend_nesting</code>为0则表示开锁状态，不为0则表示闭锁状态，且它的值记录了互斥量被获取的次数（拥有递归访问特性）</li>
+<li><code>*owner</code>是任务控制块指针，记录当前互斥锁被哪个任务持有。</li>
+<li><code>owner_orig_prio</code>变量记录了持有互斥锁任务的优先级，因为有可能发生优先级继承机制而临时改变任务的优先级。（拥有优先级继承机制）。</li>
+<li><code>owner_list</code>是一个列表节点，当互斥锁被任务获取时，该节点会被添加到任务控制块的<code>task-&gt;mutex_own_list</code>列表中，表示任务自己获取到的互斥锁有哪些。当互斥锁被<code>完全</code>释放时（<code>pend_nesting等于0</code>），该节点将从任务控制块的<code>task-&gt;mutex_own_list</code>列表中移除。</li>
+<li><code>prio_pending</code>变量比较有意思：在一般的操作系统中，任务在持有互斥锁时不允许修改优先级，但在<code>TencentOS tiny</code> 中是允许的，就是因为这个变量，当一个任务处于互斥锁优先级反转的时候，我假设他因为优先级反转优先级得到了提升，此时有用户企图改变这个任务的优先级，但这个更改后的优先级会使此任务违背其优先级必须比所有等待他所持有的互斥锁的任务还高的原则时，此时需要将用户的这次优先级更改请求记录到<code>prio_pending</code>里，待其释放其所持有的互斥锁后再更改，相当于将任务优先级的更改延后了。<blockquote>
+<p>举个例子：好比一个任务优先级是10，且持有一把锁，此时一个优先级为6的任务尝试获取这把锁，那么此任务优先级会被提升为6，如果此时用户试图更改他的优先级为7，那么不能立刻响应这次请求，必须要等这把锁放掉的时候才能做真正的优先级修改</p>
+</blockquote>
+</li>
+</ul>
+<pre class="line-numbers language-js"><code class="language-js">typedef struct k_mutex_st <span class="token punctuation">{</span>
+    pend_obj_t      pend_obj<span class="token punctuation">;</span>
+    k_nesting_t     pend_nesting<span class="token punctuation">;</span>
+    k_task_t       <span class="token operator">*</span>owner<span class="token punctuation">;</span>
+    k_prio_t        owner_orig_prio<span class="token punctuation">;</span>
+    k_list_t        owner_list<span class="token punctuation">;</span>
+<span class="token punctuation">}</span> k_mutex_t<span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-js"><code class="language-js">typedef struct k_task_st <span class="token punctuation">{</span>
+#<span class="token keyword">if</span> TOS_CFG_MUTEX_EN <span class="token operator">></span> 0u
+    k_list_t            mutex_own_list<span class="token punctuation">;</span>     <span class="token comment" spellcheck="true">/**&lt; 任务拥有的互斥量 */</span>
+    k_prio_t            prio_pending<span class="token punctuation">;</span>       <span class="token comment" spellcheck="true">/*&lt; 在持有互斥锁时修改任务优先级将被记录到这个变量中，在释放持有的互斥锁时再更改 */</span>
+#endif
+<span class="token punctuation">}</span> k_task_t<span class="token punctuation">;</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="与互斥锁相关的宏定义"><a href="#与互斥锁相关的宏定义" class="headerlink" title="与互斥锁相关的宏定义"></a>与互斥锁相关的宏定义</h2><p>在<code>tos_config.h</code>中，使能互斥锁的宏定义是<code>TOS_CFG_MUTEX_EN</code></p>
+<pre class="line-numbers language-js"><code class="language-js">#define TOS_CFG_MUTEX_EN            1u<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<h1 id="创建互斥锁"><a href="#创建互斥锁" class="headerlink" title="创建互斥锁"></a>创建互斥锁</h1><p>系统中每个互斥锁都有对应的互斥锁控制块，互斥锁控制块中包含了互斥锁的所有信息，比如它的等待列表、它的资源类型，以及它的互斥锁值，那么可以想象一下，创建互斥锁的本质是不是就是对互斥锁控制块进行初始化呢？很显然就是这样子的。因为在后续对互斥锁的操作都是通过互斥锁控制块来操作的，如果控制块没有信息，那怎么能操作嘛~</p>
+<p>创建互斥锁函数是<code>tos_mutex_create()</code>，传入一个互斥锁控制块的指针<code>*mutex</code>即可。</p>
+<p>互斥锁的创建实际上就是调用<code>pend_object_init()</code>函数将互斥锁控制块中的<code>mutex-&gt;pend_obj</code>成员变量进行初始化，它的资源类型被标识为<code>PEND_TYPE_MUTEX</code>。然后将<code>mutex-&gt;pend_nesting</code>成员变量设置为<code>0</code>，表示互斥锁处于开锁状态；将<code>mutex-&gt;owner</code>成员变量设置为<code>K_NULL</code>，表示此事并无任务持有互斥锁；将<code>mutex-&gt;owner_orig_prio</code>成员变量设置为默认值<code>K_TASK_PRIO_INVALID</code>，毕竟此事没有任务持有互斥锁，也无需记录持有互斥锁任务的优先级。最终调用<code>tos_list_init()</code>函数将互斥锁的持有互斥锁任务的列表节点<code>owner_list</code>。</p>
+<pre class="line-numbers language-js"><code class="language-js">__API__ k_err_t <span class="token function">tos_mutex_create</span><span class="token punctuation">(</span>k_mutex_t <span class="token operator">*</span>mutex<span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    <span class="token function">TOS_PTR_SANITY_CHECK</span><span class="token punctuation">(</span>mutex<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token function">pend_object_init</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>mutex<span class="token operator">-</span><span class="token operator">></span>pend_obj<span class="token punctuation">,</span> PEND_TYPE_MUTEX<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    mutex<span class="token operator">-</span><span class="token operator">></span>pend_nesting     <span class="token operator">=</span> <span class="token punctuation">(</span>k_nesting_t<span class="token punctuation">)</span>0u<span class="token punctuation">;</span>
+    mutex<span class="token operator">-</span><span class="token operator">></span>owner            <span class="token operator">=</span> K_NULL<span class="token punctuation">;</span>
+    mutex<span class="token operator">-</span><span class="token operator">></span>owner_orig_prio  <span class="token operator">=</span> K_TASK_PRIO_INVALID<span class="token punctuation">;</span>
+    <span class="token function">tos_list_init</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>mutex<span class="token operator">-</span><span class="token operator">></span>owner_list<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">return</span> K_ERR_NONE<span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h1 id="销毁互斥锁"><a href="#销毁互斥锁" class="headerlink" title="销毁互斥锁"></a>销毁互斥锁</h1><p>互斥锁销毁函数是根据互斥锁控制块直接销毁的，销毁之后互斥锁的所有信息都会被清除，而且不能再次使用这个互斥锁，当互斥锁被销毁时，其等待列表中存在任务，系统有必要将这些等待这些任务唤醒，并告知任务互斥锁已经被销毁了<code>PEND_STATE_DESTROY</code>。然后产生一次任务调度以切换到最高优先级任务执行。</p>
+<p><code>TencentOS tiny</code> 对互斥锁销毁的处理流程如下：</p>
+<ol>
+<li>调用<code>pend_is_nopending()</code>函数判断一下是否有任务在等待互斥锁</li>
+<li>如果有则调用<code>pend_wakeup_all()</code>函数将这些任务唤醒，并且告知等待任务互斥锁已经被销毁了（即设置任务控制块中的等待状态成员变量<code>pend_state</code>为<code>PEND_STATE_DESTROY</code>）。</li>
+<li>调用<code>pend_object_deinit()</code>函数将互斥锁控制块中的内容清除，最主要的是将控制块中的资源类型设置为<code>PEND_TYPE_NONE</code>，这样子就无法使用这个互斥锁了。</li>
+<li>将<code>mutex-&gt;pend_nesting</code>成员变量恢复为默认值<code>0</code>。</li>
+<li>如果删除的时候有任务持有互斥锁，那么调用<code>mutex_old_owner_release()</code>函数将互斥锁释放。</li>
+<li>进行任务调度<code>knl_sched()</code></li>
+</ol>
+<p>注意：如果互斥锁控制块的RAM是由<code>编译器静态分配</code>的，所以即使是销毁了互斥锁，这个内存也是没办法释放的。当然你也可以使用动态内存为互斥锁控制块分配内存，只不过在销毁后要将这个内存释放掉，避免内存泄漏。</p>
+<pre class="line-numbers language-js"><code class="language-js">__API__ k_err_t <span class="token function">tos_mutex_destroy</span><span class="token punctuation">(</span>k_mutex_t <span class="token operator">*</span>mutex<span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    <span class="token function">TOS_CPU_CPSR_ALLOC</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token function">TOS_PTR_SANITY_CHECK</span><span class="token punctuation">(</span>mutex<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+#<span class="token keyword">if</span> TOS_CFG_OBJECT_VERIFY_EN <span class="token operator">></span> 0u
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token function">pend_object_verify</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>mutex<span class="token operator">-</span><span class="token operator">></span>pend_obj<span class="token punctuation">,</span> PEND_TYPE_MUTEX<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> K_ERR_OBJ_INVALID<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+#endif
+
+    <span class="token function">TOS_CPU_INT_DISABLE</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token function">pend_is_nopending</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>mutex<span class="token operator">-</span><span class="token operator">></span>pend_obj<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token function">pend_wakeup_all</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>mutex<span class="token operator">-</span><span class="token operator">></span>pend_obj<span class="token punctuation">,</span> PEND_STATE_DESTROY<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token function">pend_object_deinit</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>mutex<span class="token operator">-</span><span class="token operator">></span>pend_obj<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    mutex<span class="token operator">-</span><span class="token operator">></span>pend_nesting <span class="token operator">=</span> <span class="token punctuation">(</span>k_nesting_t<span class="token punctuation">)</span>0u<span class="token punctuation">;</span>
+
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>mutex<span class="token operator">-</span><span class="token operator">></span>owner<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token function">mutex_old_owner_release</span><span class="token punctuation">(</span>mutex<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token function">TOS_CPU_INT_ENABLE</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">knl_sched</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">return</span> K_ERR_NONE<span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h1 id="获取互斥锁"><a href="#获取互斥锁" class="headerlink" title="获取互斥锁"></a>获取互斥锁</h1><p><code>tos_mutex_pend_timed()</code>函数用于获取互斥锁，互斥锁就像是临界资源的令牌，任务只有获取到互斥锁时才能访问临界资源。当且仅当互斥锁处于开锁的状态，任务才能获取互斥锁成功，当任务持有了某个互斥锁的时候，其它任务就无法获取这个互斥锁，需要等到持有互斥锁的任务进行释放后，其他任务才能获取成功，任务通过互斥锁获取函数来获取互斥锁的所有权，任务对互斥锁的所有权是独占的，任意时刻互斥锁只能被一个任务持有，如果互斥锁处于开锁状态，那么获取该互斥锁的任务将成功获得该互斥锁，并拥有互斥锁的使用权；如果互斥锁处于闭锁状态，获取该互斥锁的任务将无法获得互斥锁，任务将可能被阻塞，也可能立即返回，阻塞时间<code>timeout</code>由用户指定，在指定时间还无法获取到互斥锁时，将发送超时，等待任务将自动恢复为就绪态。在任务被阻塞之前，会进行优先级继承，如果当前任务优先级比持有互斥锁的任务优先级高，那么将会临时提升持有互斥锁任务的优先级。</p>
+<p><code>TencentOS tiny</code> 提供两组API接口用于获取互斥锁，分别是<code>tos_mutex_pend_timed()</code>和<code>tos_mutex_pend()</code>，主要的差别是参数不同：可选阻塞与永久阻塞获取互斥锁，实际获取的过程都是一样的。获取互斥锁的过程如下：</p>
+<ol>
+<li>首先检测传入的参数是否正确，此处不仅会检查互斥锁控制块的信息，还会调用<code>TOS_IN_IRQ_CHECK()</code>检查上下文是否处于中断中，因为互斥锁的操作是不允许在中断中进行的。</li>
+<li>判断互斥锁控制块中的<code>mutex-&gt;pend_nesting</code>成员变量是否为<code>0</code>，为0表示互斥锁处于开锁状态，调用<code>mutex_fresh_owner_mark()</code>函数将获取互斥锁任务的相关信息保存到互斥锁控制块中，如<code>mutex-&gt;pend_nesting</code>成员变量的值变为<code>1</code>表示互斥锁处于闭锁状态，其他任务无法获取，<code>mutex-&gt;owner</code>成员变量指向当前获取互斥锁的任务控制块，<code>mutex-&gt;owner_orig_prio</code>成员变量则是记录当前任务的优先级，最终使用<code>tos_list_add()</code>函数将互斥锁控制块的<code>mutex-&gt;owner_list</code>节点挂载到任务控制块的<code>task-&gt;mutex_own_list</code>列表中，任务获取成功后返回<code>K_ERR_NONE</code>。</li>
+<li>如果互斥锁控制块中的<code>mutex-&gt;pend_nesting</code>成员变量不为<code>0</code>，则表示互斥锁处于闭锁状态，那么由于互斥锁具有递归访问特性，那么会判断一下是不是已经持有互斥锁的任务再次获取互斥锁（<code>knl_is_self()</code>），因为这也是允许的，判断一下<code>mutex-&gt;pend_nesting</code>成员变量的值是否为<code>(k_nesting_t)-1</code>，如果是则表示递归访问次数达到最大值，互斥锁已经溢出了，返回错误代码<code>K_ERR_MUTEX_NESTING_OVERFLOW</code>。否则就将<code>mutex-&gt;pend_nesting</code>成员变量的值加1，返回<code>K_ERR_MUTEX_NESTING</code>表示递归获取成功。</li>
+<li>如果互斥锁处于闭锁状态，且当前任务并未持有互斥锁，看一下用户指定的阻塞时间<code>timeout</code>是否为不阻塞<code>TOS_TIME_NOWAIT</code>，如果不阻塞则直接返回<code>K_ERR_PEND_NOWAIT</code>错误代码。</li>
+<li>如果调度器被锁了<code>knl_is_sched_locked()</code>，则无法进行等待操作，返回错误代码<code>K_ERR_PEND_SCHED_LOCKED</code>，毕竟需要切换任务，调度器被锁则无法切换任务。</li>
+<li>最最最最重要的特性来了，在阻塞当前任务之前，需要判断一下当前任务与持有互斥锁的任务优先级大小情况，如果当前任务优先级比持有互斥锁任务优先级大，则需要进行优先级继承，临时将持有互斥锁任务的优先级提升到当前优先级，通过<code>tos_task_prio_change()</code>函数进行改变优先级。</li>
+<li>调用<code>pend_task_block()</code>函数将任务阻塞，该函数实际上就是将任务从就绪列表中移除<code>k_rdyq.task_list_head[task_prio]</code>，并且插入到等待列表中<code>object-&gt;list</code>，如果等待的时间不是永久等待<code>TOS_TIME_FOREVER</code>，还会将任务插入时间列表中<code>k_tick_list</code>，阻塞时间为<code>timeout</code>，然后进行一次任务调度<code>knl_sched()</code>。</li>
+<li>当程序能行到<code>pend_state2errno()</code>时，则表示<code>任务等获取到互斥锁</code>，又或者<code>等待发生了超时</code>，那么就调用<code>pend_state2errno()</code>函数获取一下任务的等待状态，看一下是哪种情况导致任务恢复运行，如果任务已经获取到互斥锁，那么需要调用<code>mutex_new_owner_mark()</code>函数标记一下获取任务的信息，将获取互斥锁任务的相关信息保存到互斥锁控制块中。</li>
+</ol>
+<p>注意：当获取互斥锁的任务能从阻塞中恢复运行，也不一定是获取到互斥锁，也可能是发生了超时，因此在写程序的时候必须要判断一下获取的互斥锁状态，如果返回值是<code>K_ERR_NONE</code>与<code>K_ERR_MUTEX_NESTING</code>则表示获取成功！</p>
+<pre class="line-numbers language-js"><code class="language-js">__API__ k_err_t <span class="token function">tos_mutex_pend_timed</span><span class="token punctuation">(</span>k_mutex_t <span class="token operator">*</span>mutex<span class="token punctuation">,</span> k_tick_t timeout<span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    <span class="token function">TOS_CPU_CPSR_ALLOC</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    k_err_t err<span class="token punctuation">;</span>
+
+    <span class="token function">TOS_PTR_SANITY_CHECK</span><span class="token punctuation">(</span>mutex<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">TOS_IN_IRQ_CHECK</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+#<span class="token keyword">if</span> TOS_CFG_OBJECT_VERIFY_EN <span class="token operator">></span> 0u
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token function">pend_object_verify</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>mutex<span class="token operator">-</span><span class="token operator">></span>pend_obj<span class="token punctuation">,</span> PEND_TYPE_MUTEX<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> K_ERR_OBJ_INVALID<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+#endif
+
+    <span class="token function">TOS_CPU_INT_DISABLE</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>mutex<span class="token operator">-</span><span class="token operator">></span>pend_nesting <span class="token operator">==</span> <span class="token punctuation">(</span>k_nesting_t<span class="token punctuation">)</span>0u<span class="token punctuation">)</span> <span class="token punctuation">{</span> <span class="token comment" spellcheck="true">// first come</span>
+        <span class="token function">mutex_fresh_owner_mark</span><span class="token punctuation">(</span>mutex<span class="token punctuation">,</span> k_curr_task<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token function">TOS_CPU_INT_ENABLE</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">return</span> K_ERR_NONE<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token function">knl_is_self</span><span class="token punctuation">(</span>mutex<span class="token operator">-</span><span class="token operator">></span>owner<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span> <span class="token comment" spellcheck="true">// come again</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>mutex<span class="token operator">-</span><span class="token operator">></span>pend_nesting <span class="token operator">==</span> <span class="token punctuation">(</span>k_nesting_t<span class="token punctuation">)</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token function">TOS_CPU_INT_ENABLE</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token keyword">return</span> K_ERR_MUTEX_NESTING_OVERFLOW<span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+        <span class="token operator">++</span>mutex<span class="token operator">-</span><span class="token operator">></span>pend_nesting<span class="token punctuation">;</span>
+        <span class="token function">TOS_CPU_INT_ENABLE</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">return</span> K_ERR_MUTEX_NESTING<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>timeout <span class="token operator">==</span> TOS_TIME_NOWAIT<span class="token punctuation">)</span> <span class="token punctuation">{</span> <span class="token comment" spellcheck="true">// no wait, return immediately</span>
+        <span class="token function">TOS_CPU_INT_ENABLE</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">return</span> K_ERR_PEND_NOWAIT<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token function">knl_is_sched_locked</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token function">TOS_CPU_INT_ENABLE</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">return</span> K_ERR_PEND_SCHED_LOCKED<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>mutex<span class="token operator">-</span><span class="token operator">></span>owner<span class="token operator">-</span><span class="token operator">></span>prio <span class="token operator">></span> k_curr_task<span class="token operator">-</span><span class="token operator">></span>prio<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token comment" spellcheck="true">// PRIORITY INVERSION:</span>
+        <span class="token comment" spellcheck="true">// we are declaring a mutex, which's owner has a lower(numerically bigger) priority.</span>
+        <span class="token comment" spellcheck="true">// make owner the same priority with us.</span>
+        <span class="token function">tos_task_prio_change</span><span class="token punctuation">(</span>mutex<span class="token operator">-</span><span class="token operator">></span>owner<span class="token punctuation">,</span> k_curr_task<span class="token operator">-</span><span class="token operator">></span>prio<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token function">pend_task_block</span><span class="token punctuation">(</span>k_curr_task<span class="token punctuation">,</span> <span class="token operator">&amp;</span>mutex<span class="token operator">-</span><span class="token operator">></span>pend_obj<span class="token punctuation">,</span> timeout<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token function">TOS_CPU_INT_ENABLE</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">knl_sched</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    err <span class="token operator">=</span> <span class="token function">pend_state2errno</span><span class="token punctuation">(</span>k_curr_task<span class="token operator">-</span><span class="token operator">></span>pend_state<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>err <span class="token operator">==</span> K_ERR_NONE<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token comment" spellcheck="true">// good, we are the owner now.</span>
+        <span class="token function">TOS_CPU_INT_DISABLE</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token function">mutex_new_owner_mark</span><span class="token punctuation">(</span>mutex<span class="token punctuation">,</span> k_curr_task<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token function">TOS_CPU_INT_ENABLE</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">return</span> err<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+__API__ k_err_t <span class="token function">tos_mutex_pend</span><span class="token punctuation">(</span>k_mutex_t <span class="token operator">*</span>mutex<span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    <span class="token function">TOS_PTR_SANITY_CHECK</span><span class="token punctuation">(</span>mutex<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">return</span> <span class="token function">tos_mutex_pend_timed</span><span class="token punctuation">(</span>mutex<span class="token punctuation">,</span> TOS_TIME_FOREVER<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><code>mutex_fresh_owner_mark</code>与<code>mutex_new_owner_mark()</code>函数的实现：</p>
+<pre class="line-numbers language-js"><code class="language-js">__STATIC_INLINE__ <span class="token keyword">void</span> <span class="token function">mutex_fresh_owner_mark</span><span class="token punctuation">(</span>k_mutex_t <span class="token operator">*</span>mutex<span class="token punctuation">,</span> k_task_t <span class="token operator">*</span>task<span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    mutex<span class="token operator">-</span><span class="token operator">></span>pend_nesting     <span class="token operator">=</span> <span class="token punctuation">(</span>k_nesting_t<span class="token punctuation">)</span>1u<span class="token punctuation">;</span>
+    mutex<span class="token operator">-</span><span class="token operator">></span>owner            <span class="token operator">=</span> task<span class="token punctuation">;</span>
+    mutex<span class="token operator">-</span><span class="token operator">></span>owner_orig_prio  <span class="token operator">=</span> task<span class="token operator">-</span><span class="token operator">></span>prio<span class="token punctuation">;</span>
+
+    <span class="token function">tos_list_add</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>mutex<span class="token operator">-</span><span class="token operator">></span>owner_list<span class="token punctuation">,</span> <span class="token operator">&amp;</span>task<span class="token operator">-</span><span class="token operator">></span>mutex_own_list<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+__STATIC_INLINE__ <span class="token keyword">void</span> <span class="token function">mutex_new_owner_mark</span><span class="token punctuation">(</span>k_mutex_t <span class="token operator">*</span>mutex<span class="token punctuation">,</span> k_task_t <span class="token operator">*</span>task<span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    k_prio_t highest_pending_prio<span class="token punctuation">;</span>
+
+    <span class="token function">mutex_fresh_owner_mark</span><span class="token punctuation">(</span>mutex<span class="token punctuation">,</span> task<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token comment" spellcheck="true">// we own the mutex now, make sure our priority is higher than any one in the pend list.</span>
+    highest_pending_prio <span class="token operator">=</span> <span class="token function">pend_highest_prio_get</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>mutex<span class="token operator">-</span><span class="token operator">></span>pend_obj<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>task<span class="token operator">-</span><span class="token operator">></span>prio <span class="token operator">></span> highest_pending_prio<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token function">tos_task_prio_change</span><span class="token punctuation">(</span>task<span class="token punctuation">,</span> highest_pending_prio<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h1 id="释放互斥锁"><a href="#释放互斥锁" class="headerlink" title="释放互斥锁"></a>释放互斥锁</h1><p>互斥锁的释放是不允许在中断中释放的，主要的原因是因为中断中没有上下文的概念，所以中断上下文不能持有，也不能释放互斥锁；互斥锁有<code>所属</code>关系，只有持有互斥锁的任务才能将互斥锁释放，而持有者是任务。</p>
+<p>任务想要访问某个资源的时候，需要先获取互斥锁，然后进行资源访问，在任务使用完该资源的时候，必须要<code>及时</code>释放互斥锁，这样别的任务才能访问临界资源。任务可以调用<code>tos_mutex_post()</code>函数进行释放互斥锁，当互斥锁处于开锁状态时就表示我已经用完了，别人可以获取互斥锁以访问临界资源。</p>
+<p>使用<code>tos_mutex_post()</code>函数接口时，只有已持有互斥锁所有权的任务才能释放它，当任务调用<code>tos_mutex_post()</code>函数时会将互斥锁释放一次，当互斥锁完全释放完毕（<code>mutex-&gt;pend_nesting</code>成员变量的值为<code>0</code>）就变为开锁状态，等待获取该互斥锁的任务将被唤醒。如果任务的优先级被互斥锁的优先级翻转机制临时提升，那么当互斥锁被释放后，任务的优先级将恢复为原本设定的优先级。</p>
+<p><code>TencentOS tiny</code> 中可以只让等待中的一个任务获取到互斥锁（在等待的任务中具有最高优先级）。</p>
+<p>在<code>tos_mutex_post()</code>函数中的处理也是非常简单明了的，其执行思路如下：</p>
+<ol>
+<li>首先进行传入的互斥锁控制块相关的参数检测，然后判断一下是否是持有互斥锁的任务来释放互斥锁，如果是则进行释放操作，如果不是则返回错误代码<code>K_ERR_MUTEX_NOT_OWNER</code>。</li>
+<li>将<code>mutex-&gt;pend_nesting</code>成员变量的值减1，然后判断它的值是否为0，如果不为0则表示当前任务还是持有互斥锁的，也无需进行后续的操作，直接返回<code>K_ERR_MUTEX_NESTING</code>。</li>
+<li>如果<code>mutex-&gt;pend_nesting</code>成员变量的值为0，则表示互斥锁处于开锁状态，则需要调用<code>mutex_old_owner_release()</code>函数完全释放掉互斥锁，在这个函数中会将互斥锁控制块的成员变量（如<code>owner_list、owner、owner_orig_prio</code>等都设置为初始值），此外还有最重要的就是判断一下任务是否发生过优先级继承，如果是则需要将任务恢复为原本的优先级，否则就无效理会。</li>
+<li>调用<code>pend_is_nopending()</code>函数判断一下是否有任务在等待互斥锁，如果没有则返回<code>K_ERR_NONE</code>表示释放互斥锁成功，因为此时没有唤醒任务也就无需任务调度，直接返回即可。</li>
+<li>如果有任务在等待互斥锁，则直接调用<code>pend_wakeup_one()</code>函数唤醒一个等待任务，这个任务在等待任务中是处于最高优先级的，因为<code>TencentOS tiny</code> 的等待任务是按照优先级进行排序。</li>
+<li>进行一次任务调度<code>knl_sched()</code>。</li>
+</ol>
+<pre class="line-numbers language-js"><code class="language-js">__API__ k_err_t <span class="token function">tos_mutex_post</span><span class="token punctuation">(</span>k_mutex_t <span class="token operator">*</span>mutex<span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    <span class="token function">TOS_CPU_CPSR_ALLOC</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token function">TOS_PTR_SANITY_CHECK</span><span class="token punctuation">(</span>mutex<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+#<span class="token keyword">if</span> TOS_CFG_OBJECT_VERIFY_EN <span class="token operator">></span> 0u
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token function">pend_object_verify</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>mutex<span class="token operator">-</span><span class="token operator">></span>pend_obj<span class="token punctuation">,</span> PEND_TYPE_MUTEX<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> K_ERR_OBJ_INVALID<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+#endif
+
+    <span class="token function">TOS_CPU_INT_DISABLE</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token function">knl_is_self</span><span class="token punctuation">(</span>mutex<span class="token operator">-</span><span class="token operator">></span>owner<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token function">TOS_CPU_INT_ENABLE</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">return</span> K_ERR_MUTEX_NOT_OWNER<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>mutex<span class="token operator">-</span><span class="token operator">></span>pend_nesting <span class="token operator">==</span> <span class="token punctuation">(</span>k_nesting_t<span class="token punctuation">)</span>0u<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token function">TOS_CPU_INT_ENABLE</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">return</span> K_ERR_MUTEX_NESTING_OVERFLOW<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token operator">--</span>mutex<span class="token operator">-</span><span class="token operator">></span>pend_nesting<span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>mutex<span class="token operator">-</span><span class="token operator">></span>pend_nesting <span class="token operator">></span> <span class="token punctuation">(</span>k_nesting_t<span class="token punctuation">)</span>0u<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token function">TOS_CPU_INT_ENABLE</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">return</span> K_ERR_MUTEX_NESTING<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token function">mutex_old_owner_release</span><span class="token punctuation">(</span>mutex<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token function">pend_is_nopending</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>mutex<span class="token operator">-</span><span class="token operator">></span>pend_obj<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token function">TOS_CPU_INT_ENABLE</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">return</span> K_ERR_NONE<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token function">pend_wakeup_one</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>mutex<span class="token operator">-</span><span class="token operator">></span>pend_obj<span class="token punctuation">,</span> PEND_STATE_POST<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">TOS_CPU_INT_ENABLE</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">knl_sched</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">return</span> K_ERR_NONE<span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>持有互斥锁的任务释放互斥锁<code>mutex_old_owner_release()</code>。</p>
+<pre class="line-numbers language-js"><code class="language-js">__STATIC_INLINE__ <span class="token keyword">void</span> <span class="token function">mutex_old_owner_release</span><span class="token punctuation">(</span>k_mutex_t <span class="token operator">*</span>mutex<span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    k_task_t <span class="token operator">*</span>owner<span class="token punctuation">;</span>
+
+    owner <span class="token operator">=</span> mutex<span class="token operator">-</span><span class="token operator">></span>owner<span class="token punctuation">;</span>
+
+    <span class="token function">tos_list_del</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>mutex<span class="token operator">-</span><span class="token operator">></span>owner_list<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    mutex<span class="token operator">-</span><span class="token operator">></span>owner <span class="token operator">=</span> K_NULL<span class="token punctuation">;</span>
+
+    <span class="token comment" spellcheck="true">// the right time comes! let's do it!</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>owner<span class="token operator">-</span><span class="token operator">></span>prio_pending <span class="token operator">!=</span> K_TASK_PRIO_INVALID<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token function">tos_task_prio_change</span><span class="token punctuation">(</span>owner<span class="token punctuation">,</span> owner<span class="token operator">-</span><span class="token operator">></span>prio_pending<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        owner<span class="token operator">-</span><span class="token operator">></span>prio_pending <span class="token operator">=</span> K_TASK_PRIO_INVALID<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token keyword">if</span> <span class="token punctuation">(</span>owner<span class="token operator">-</span><span class="token operator">></span>prio <span class="token operator">!=</span> mutex<span class="token operator">-</span><span class="token operator">></span>owner_orig_prio<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token function">tos_task_prio_change</span><span class="token punctuation">(</span>owner<span class="token punctuation">,</span> mutex<span class="token operator">-</span><span class="token operator">></span>owner_orig_prio<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        mutex<span class="token operator">-</span><span class="token operator">></span>owner_orig_prio <span class="token operator">=</span> K_TASK_PRIO_INVALID<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h1 id="喜欢就关注我吧！"><a href="#喜欢就关注我吧！" class="headerlink" title="喜欢就关注我吧！"></a>喜欢就关注我吧！</h1><p><img src="./images/loading.png" data-original="http://qiniu.jiejie01.top/gzh.jpg" alt="欢迎关注我公众号"></p>
+<p>相关代码可以在公众号后台回复 “ 19 ” 获取。</p>
+<script>
+        document.querySelectorAll('.github-emoji')
+          .forEach(el => {
+            if (!el.dataset.src) { return; }
+            const img = document.createElement('img');
+            img.style = 'display:none !important;';
+            img.src = el.dataset.src;
+            img.addEventListener('error', () => {
+              img.remove();
+              el.style.color = 'inherit';
+              el.style.backgroundImage = 'none';
+              el.style.background = 'none';
+            });
+            img.addEventListener('load', () => {
+              img.remove();
+            });
+            document.body.appendChild(img);
+          });
+      </script>
+            </div>
+            <hr/>
+
+            
+            <style>
+    #reward {
+        margin: 40px 0;
+        text-align: center;
+    }
+
+    #reward .reward-link {
+        font-size: 1.88rem;
+    }
+
+    #reward .btn-floating:hover {
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2), 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    #rewardModal {
+        width: 320px;
+        height: 350px;
+    }
+
+    #rewardModal .reward-title {
+        margin: 15px auto;
+        padding-bottom: 5px;
+    }
+
+    #rewardModal .modal-content {
+        padding: 10px;
+    }
+
+    #rewardModal .close {
+        position: absolute;
+        right: 15px;
+        top: 15px;
+        color: rgba(0, 0, 0, 0.5);
+        font-size: 1.3rem;
+        line-height: 20px;
+        cursor: pointer;
+    }
+
+    #rewardModal .close:hover {
+        color: #ef5350;
+        transform: scale(1.3);
+        -moz-transform:scale(1.3);
+        -webkit-transform:scale(1.3);
+        -o-transform:scale(1.3);
+    }
+
+    #rewardModal .reward-tabs {
+        margin: 0 auto;
+        width: 210px;
+    }
+
+    .reward-tabs .tabs {
+        height: 38px;
+        margin: 10px auto;
+        padding-left: 0;
+    }
+
+    .reward-content ul {
+        padding-left: 0 !important;
+    }
+
+    .reward-tabs .tabs .tab {
+        height: 38px;
+        line-height: 38px;
+    }
+
+    .reward-tabs .tab a {
+        color: #fff;
+        background-color: #ccc;
+    }
+
+    .reward-tabs .tab a:hover {
+        background-color: #ccc;
+        color: #fff;
+    }
+
+    .reward-tabs .wechat-tab .active {
+        color: #fff !important;
+        background-color: #22AB38 !important;
+    }
+
+    .reward-tabs .alipay-tab .active {
+        color: #fff !important;
+        background-color: #019FE8 !important;
+    }
+
+    .reward-tabs .reward-img {
+        width: 210px;
+        height: 210px;
+    }
+</style>
+
+<div id="reward">
+    <a href="#rewardModal" class="reward-link modal-trigger btn-floating btn-large waves-effect waves-light red">赏</a>
+
+    <!-- Modal Structure -->
+    <div id="rewardModal" class="modal">
+        <div class="modal-content">
+            <a class="close modal-close"><i class="fa fa-close"></i></a>
+            <h4 class="reward-title">你的赏识是我前进的动力!</h4>
+            <div class="reward-content">
+                <div class="reward-tabs">
+                    <ul class="tabs row">
+                        <li class="tab col s6 alipay-tab waves-effect waves-light"><a href="#alipay">支付宝</a></li>
+                        <li class="tab col s6 wechat-tab waves-effect waves-light"><a href="#wechat">微 信</a></li>
+                    </ul>
+                    <div id="alipay">
+                        <img src="/medias/reward/alipay.bmp" class="reward-img" alt="支付宝打赏二维码">
+                    </div>
+                    <div id="wechat">
+                        <img src="/medias/reward/wechat.bmp" class="reward-img" alt="微信打赏二维码">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $('.tabs').tabs();
+    });
+</script>
+            
+
+            <link rel="stylesheet" type="text/css" href="/libs/share/css/share.min.css">
+
+<div id="article-share">
+    
+    <div class="social-share" data-disabled="qzone" data-wechat-qrcode-helper="<p>微信里点“发现”->“扫一扫”二维码便可查看分享。</p>"></div>
+    
+</div>
+
+<script src="/libs/share/js/social-share.min.js"></script>
+
+            
+            
+            
+            <div class="reprint1">
+                <p>
+                    <span class="reprint1-tip">
+                        <i class="fa fa-exclamation-circle"></i>&nbsp;&nbsp;转载请注明:
+                    </span>
+                    <a href="https://jiejietop.cn" class="b-link-green">杰杰的博客</a>
+                    <i class="fa fa-angle-right fa-lg fa-fw text-color"></i>
+                    <a href="/tencentos-tiny-8/" class="b-link-green">【TencentOS  tiny】深度源码分析（6）——互斥锁</a>
+                </p>
+            </div>
+
+        </div>
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+        <style>
+    .valine-card {
+        margin: 1.5rem auto;
+    }
+
+    .valine-card .card-content {
+        padding: 20px 20px 5px 20px;
+    }
+
+    #vcomments input[type=text],
+    #vcomments input[type=email],
+    #vcomments input[type=url],
+    #vcomments textarea {
+        box-sizing: border-box;
+    }
+
+    #vcomments p {
+        margin: 2px 2px 10px;
+        font-size: 1.05rem;
+        line-height: 1.78rem;
+    }
+
+    #vcomments blockquote p {
+        text-indent: 0.2rem;
+    }
+
+    #vcomments a {
+        padding: 0 2px;
+        color: #42b983;
+        font-weight: 500;
+        text-decoration: underline;
+    }
+
+    #vcomments img {
+        max-width: 100%;
+        height: auto;
+        cursor: pointer;
+    }
+
+    #vcomments ol li {
+        list-style-type: decimal;
+    }
+
+    #vcomments ol,
+    ul {
+        display: block;
+        padding-left: 2em;
+        word-spacing: 0.05rem;
+    }
+
+    #vcomments ul li,
+    ol li {
+        display: list-item;
+        line-height: 1.8rem;
+        font-size: 1rem;
+    }
+
+    #vcomments ul li {
+        list-style-type: disc;
+    }
+
+    #vcomments ul ul li {
+        list-style-type: circle;
+    }
+
+    #vcomments table, th, td {
+        padding: 12px 13px;
+        border: 1px solid #dfe2e5;
+    }
+
+    #vcomments table, th, td {
+        border: 0;
+    }
+
+    table tr:nth-child(2n), thead {
+        background-color: #fafafa;
+    }
+
+    #vcomments table th {
+        background-color: #f2f2f2;
+        min-width: 80px;
+    }
+
+    #vcomments table td {
+        min-width: 80px;
+    }
+
+    #vcomments h1 {
+        font-size: 1.85rem;
+        font-weight: bold;
+        line-height: 2.2rem;
+    }
+
+    #vcomments h2 {
+        font-size: 1.65rem;
+        font-weight: bold;
+        line-height: 1.9rem;
+    }
+
+    #vcomments h3 {
+        font-size: 1.45rem;
+        font-weight: bold;
+        line-height: 1.7rem;
+    }
+
+    #vcomments h4 {
+        font-size: 1.25rem;
+        font-weight: bold;
+        line-height: 1.5rem;
+    }
+
+    #vcomments h5 {
+        font-size: 1.1rem;
+        font-weight: bold;
+        line-height: 1.4rem;
+    }
+
+    #vcomments h6 {
+        font-size: 1rem;
+        line-height: 1.3rem;
+    }
+
+    #vcomments p {
+        font-size: 1rem;
+        line-height: 1.5rem;
+    }
+
+    #vcomments hr {
+        margin: 12px 0;
+        border: 0;
+        border-top: 1px solid #ccc;
+    }
+
+    #vcomments blockquote {
+        margin: 15px 0;
+        border-left: 5px solid #42b983;
+        padding: 1rem 0.8rem 0.3rem 0.8rem;
+        color: #666;
+        background-color: rgba(66, 185, 131, .1);
+    }
+
+    #vcomments pre {
+        font-family: monospace, monospace;
+        padding: 1.2em;
+        margin: .5em 0;
+        background: #272822;
+        overflow: auto;
+        border-radius: 0.3em;
+        tab-size: 4;
+    }
+
+    #vcomments code {
+        font-family: monospace, monospace;
+        padding: 1px 3px;
+        font-size: 0.92rem;
+        color: #e96900;
+        background-color: #f8f8f8;
+        border-radius: 2px;
+    }
+
+    #vcomments pre code {
+        font-family: monospace, monospace;
+        padding: 0;
+        color: #e8eaf6;
+        background-color: #272822;
+    }
+
+    #vcomments pre[class*="language-"] {
+        padding: 1.2em;
+        margin: .5em 0;
+    }
+
+    #vcomments code[class*="language-"],
+    pre[class*="language-"] {
+        color: #e8eaf6;
+    }
+
+    #vcomments [type="checkbox"]:not(:checked), [type="checkbox"]:checked {
+        position: inherit;
+        margin-left: -1.3rem;
+        margin-right: 0.4rem;
+        margin-top: -1px;
+        vertical-align: middle;
+        left: unset;
+        visibility: visible;
+    }
+
+    #vcomments b,
+    strong {
+        font-weight: bold;
+    }
+
+    #vcomments dfn {
+        font-style: italic;
+    }
+
+    #vcomments small {
+        font-size: 85%;
+    }
+
+    #vcomments cite {
+        font-style: normal;
+    }
+
+    #vcomments mark {
+        background-color: #fcf8e3;
+        padding: .2em;
+    }
+
+    #vcomments table, th, td {
+        padding: 12px 13px;
+        border: 1px solid #dfe2e5;
+    }
+
+    table tr:nth-child(2n), thead {
+        background-color: #fafafa;
+    }
+
+    #vcomments table th {
+        background-color: #f2f2f2;
+        min-width: 80px;
+    }
+
+    #vcomments table td {
+        min-width: 80px;
+    }
+
+    #vcomments [type="checkbox"]:not(:checked), [type="checkbox"]:checked {
+        position: inherit;
+        margin-left: -1.3rem;
+        margin-right: 0.4rem;
+        margin-top: -1px;
+        vertical-align: middle;
+        left: unset;
+        visibility: visible;
+    }
+</style>
+
+<div class="card valine-card" data-aos="fade-up">
+    <div id="vcomments" class="card-content"></div>
+</div>
+
+<script src="/libs/valine/av-min.js"></script>
+<script src="/libs/valine/Valine.min.js"></script>
+<script>
+    new Valine({
+        el: '#vcomments',
+        appId: 'P8ggvR4g3idexcAGf4hkEUqQ-gzGzoHsz',
+        appKey: 'GqHPu44hpoDiC8uOjc4JJFSc',
+        notify: 'true' === 'true',
+        verify: 'true' === 'true',
+        visitor: 'true' === 'true',
+        avatar: 'monsterid',
+        pageSize: '10',
+        lang: 'zh-cn',
+        placeholder: '赶紧留下你的评论吧~'
+    });
+</script>
+    
+
+    
+
+<article id="prenext-posts" class="prev-next articles">
+    <div class="row article-row">
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge left-badge text-color">
+                <i class="fa fa-chevron-left"></i>&nbsp;上一篇</div>
+            <div class="card">
+                <a href="/tencentos-tiny-9/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/3.jpg" class="responsive-img" alt="【TencentOS  tiny】深度源码分析（7）——事件">
+                        
+                        <span class="card-title">【TencentOS  tiny】深度源码分析（7）——事件</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            引言大家在裸机编程中很可能经常用到flag这种变量，用来标志一下某个事件的发生，然后在循环中判断这些标志是否发生，如果是等待多个事件的话，还可能会if((xxx_flag)&amp;&amp;(xxx_flag))这样子做判断。当然，如果聪
+                        
+                    </div>
+                    <div class="publish-info">
+                        <span class="publish-date">
+                            <i class="fa fa-clock-o fa-fw icon-date"></i>2019-10-12
+                        </span>
+                        <span class="publish-author">
+                            
+                            <i class="fa fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/操作系统/" class="post-category" target="_blank">
+                                    操作系统
+                                </a>
+                            
+                            <a href="/categories/操作系统/TencentOS-tiny/" class="post-category" target="_blank">
+                                    TencentOS tiny
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/TencentOS-tiny/" target="_blank">
+                        <span class="chip bg-color">TencentOS tiny</span>
+                    </a>
+                    
+                    <a href="/tags/RTOS/" target="_blank">
+                        <span class="chip bg-color">RTOS</span>
+                    </a>
+                    
+                    <a href="/tags/操作系统/" target="_blank">
+                        <span class="chip bg-color">操作系统</span>
+                    </a>
+                    
+                    <a href="/tags/物联网/" target="_blank">
+                        <span class="chip bg-color">物联网</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fa fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/tencentos-tiny-6/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/4.jpg" class="responsive-img" alt="【TencentOS  tiny】深度源码分析（4）——消息队列">
+                        
+                        <span class="card-title">【TencentOS  tiny】深度源码分析（4）——消息队列</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            消息队列在前一篇文章中【TencentOS tiny学习】源码分析（3）——队列我们描述了TencentOS tiny的队列实现，同时也点出了TencentOS tiny的队列是依赖于消息队列的，那么我们今天来看看消息队列的实现。
+其实消息
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="fa fa-clock-o fa-fw icon-date"></i>2019-10-12
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fa fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/操作系统/" class="post-category" target="_blank">
+                                    操作系统
+                                </a>
+                            
+                            <a href="/categories/操作系统/TencentOS-tiny/" class="post-category" target="_blank">
+                                    TencentOS tiny
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/TencentOS-tiny/" target="_blank">
+                        <span class="chip bg-color">TencentOS tiny</span>
+                    </a>
+                    
+                    <a href="/tags/RTOS/" target="_blank">
+                        <span class="chip bg-color">RTOS</span>
+                    </a>
+                    
+                    <a href="/tags/操作系统/" target="_blank">
+                        <span class="chip bg-color">操作系统</span>
+                    </a>
+                    
+                    <a href="/tags/物联网/" target="_blank">
+                        <span class="chip bg-color">物联网</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+    </div>
+</article>
+</div>
+
+
+<script>
+    $('#articleContent').on('copy', function (e) {
+        // IE8 or earlier browser is 'undefined'
+        if (typeof window.getSelection === 'undefined') return;
+
+        var selection = window.getSelection();
+        // if the selection is short let's not annoy our users.
+        if (('' + selection).length < Number.parseInt('120')) {
+            return;
+        }
+
+        // create a div outside of the visible area and fill it with the selected text.
+        var bodyElement = document.getElementsByTagName('body')[0];
+        var newdiv = document.createElement('div');
+        newdiv.style.position = 'absolute';
+        newdiv.style.left = '-99999px';
+        bodyElement.appendChild(newdiv);
+        newdiv.appendChild(selection.getRangeAt(0).cloneContents());
+
+        // we need a <pre> tag workaround.
+        // otherwise the text inside "pre" loses all the line breaks!
+        if (selection.getRangeAt(0).commonAncestorContainer.nodeName === 'PRE') {
+            newdiv.innerHTML = "<pre>" + newdiv.innerHTML + "</pre>";
+        }
+
+        var url = document.location.href;
+        newdiv.innerHTML += '<br />'
+            + '来源: 杰杰的博客<br />'
+            + '作者: 杰杰<br />'
+            + '链接: <a href="' + url + '">' + url + '</a><br />'
+            + '本文章著作权归作者所有，任何形式的转载都请注明出处。';
+
+        selection.selectAllChildren(newdiv);
+        window.setTimeout(function () {bodyElement.removeChild(newdiv);}, 200);
+    });
+</script>
+
+
+    </div>
+    <div id="toc-aside" class="expanded col l3 hide-on-med-and-down">
+        <div class="toc-widget">
+            <div class="toc-title"><i class="fa fa-list-alt"></i>&nbsp;&nbsp;目录</div>
+            <div id="toc-content"></div>
+        </div>
+    </div>
+</div>
+
+<!-- TOC 悬浮按钮. -->
+
+<div id="floating-toc-btn" class="hide-on-med-and-down">
+    <a class="btn-floating btn-large bg-color">
+        <i class="fa fa-list"></i>
+    </a>
+</div>
+
+
+<script src="/libs/tocbot/tocbot.min.js"></script>
+<script>
+    $(function () {
+        tocbot.init({
+            tocSelector: '#toc-content',
+            contentSelector: '#articleContent',
+            headingsOffset: -($(window).height() * 0.4 - 45),
+            // headingsOffset: -205,
+            headingSelector: 'h1, h2, h3, h4, h5'
+        });
+
+        // modify the toc link href to support Chinese.
+        let i = 0;
+        let tocHeading = 'toc-heading-';
+        $('#toc-content a').each(function () {
+            $(this).attr('href', '#' + tocHeading + (++i));
+        });
+
+        // modify the heading title id to support Chinese.
+        i = 0;
+        $('#articleContent').children('h1, h2, h3, h4, h5').each(function () {
+            $(this).attr('id', tocHeading + (++i));
+        });
+
+        // Set scroll toc fixed.
+        let tocHeight = parseInt($(window).height() * 0.4 - 64);
+        let $tocWidget = $('.toc-widget');
+        $(window).scroll(function () {
+            let scroll = $(window).scrollTop();
+            /* add post toc fixed. */
+            if (scroll > tocHeight) {
+                $tocWidget.addClass('toc-fixed');
+            } else {
+                $tocWidget.removeClass('toc-fixed');
+            }
+        });
+
+        
+        /* 修复文章卡片 div 的宽度. */
+        let fixPostCardWidth = function (srcId, targetId) {
+            let srcDiv = $('#' + srcId);
+            if (srcDiv.length === 0) {
+                return;
+            }
+
+            let w = srcDiv.width();
+            if (w >= 450) {
+                w = w + 21;
+            } else if (w >= 350 && w < 450) {
+                w = w + 18;
+            } else if (w >= 300 && w < 350) {
+                w = w + 16;
+            } else {
+                w = w + 14;
+            }
+            $('#' + targetId).width(w);
+        };
+
+        // 切换TOC目录展开收缩的相关操作.
+        const expandedClass = 'expanded';
+        let $tocAside = $('#toc-aside');
+        let $mainContent = $('#main-content');
+        $('#floating-toc-btn .btn-floating').click(function () {
+            if ($tocAside.hasClass(expandedClass)) {
+                $tocAside.removeClass(expandedClass).slideUp(500);
+                $mainContent.removeClass('l9');
+            } else {
+                $tocAside.addClass(expandedClass).slideDown(500);
+                $mainContent.addClass('l9');
+            }
+            fixPostCardWidth('artDetail', 'prenext-posts');
+        });
+        
+    });
+</script>
+    
+
+</main>
+
+
+    <!-- jiejie 杰杰  modify 2019.08.15-->
+
+<footer class="page-footer bg-color">
+    <div class="container row center-align">
+        <div class="col s12 m8 l8 copy-right">
+            &copy; 2019 jiejie. All Rights Reserved.
+
+            
+                &nbsp;<i class="fa fa-area-chart"></i>&nbsp;站点总字数:&nbsp;
+                <span class="white-color">94k</span>
+
+            
+            <br>
+
+            <span id="sitetime"></span>
+
+            
+
+            
+                <br>
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'></span>
+                    <i class="fa fa-heart-o"></i>
+                    本站总访问量 <span id="busuanzi_value_site_pv" class="white-color"></span>
+
+                
+
+                
+                    <span id="busuanzi_container_site_uv" style='display:none'></span>
+                    人次,&nbsp;访客数 <span id="busuanzi_value_site_uv" class="white-color"></span> 人.
+                    
+                
+
+            
+
+        </div>
+
+        <div class="col s12 m4 l4 social-link social-statis">
+    <a href="https://github.com/jiejietop" class="tooltipped" target="_blank" data-tooltip="访问我的GitHub" data-position="top" data-delay="50">
+        <i class="fa fa-github"></i>
+    </a>
+
+
+ 
+    <a href="https://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=jiejietop@gmail.com" class="tooltipped" target="_blank" data-tooltip="邮件联系我" data-position="top" data-delay="50">
+        <i class="fa fa-envelope-open"></i>
+    </a>
+
+
+
+
+    <a href="https://zhihu.com/people/jie-jie-33-9" class="tooltipped" target="_blank" data-tooltip="访问我的知乎" data-position="top" data-delay="50">
+        <i class="fa fa-inverse">知</i>
+    </a>
+
+
+
+    <a href="http://wpa.qq.com/msgrd?v=3&uin=1161959934&site=qq&menu=yes" class="tooltipped" target="_blank" data-tooltip="访问我的QQ空间" data-position="top" data-delay="50">
+        <i class="fa fa-qq"></i>
+    </a>
+
+
+
+    <a href="https://weibo.com/6800623694" class="tooltipped" target="_blank" data-tooltip="关注我的微博" data-position="top" data-delay="50">
+        <i class="fa fa-weibo"></i>
+    </a>
+
+
+
+    <a href="/atom.xml" class="tooltipped" target="_blank" data-tooltip="RSS 订阅" data-position="top" data-delay="50">
+        <i class="fa fa-rss"></i>
+    </a>
+</div>
+
+    </div>
+</footer>
+
+<div class="progress-bar"></div>
+
+<script language=javascript>
+    function siteTime() {
+        window.setTimeout("siteTime()", 1000);
+        var seconds = 1000;
+        var minutes = seconds * 60;
+        var hours = minutes * 60;
+        var days = hours * 24;
+        var years = days * 365;
+        var today = new Date();
+        var todayYear = today.getFullYear();
+        var todayMonth = today.getMonth() + 1;
+        var todayDate = today.getDate();
+        var todayHour = today.getHours();
+        var todayMinute = today.getMinutes();
+        var todaySecond = today.getSeconds();
+
+        /* Date.UTC() -- 返回date对象距世界标准时间(UTC)1970年1月1日午夜之间的毫秒数(时间戳)
+        year - 作为date对象的年份，为4位年份值
+        month - 0-11之间的整数，做为date对象的月份
+        day - 1-31之间的整数，做为date对象的天数
+        hours - 0(午夜24点)-23之间的整数，做为date对象的小时数
+        minutes - 0-59之间的整数，做为date对象的分钟数
+        seconds - 0-59之间的整数，做为date对象的秒数
+        microseconds - 0-999之间的整数，做为date对象的毫秒数 */
+
+        var t1 = Date.UTC(2019, 08, 01, 00, 00, 00); //北京时间2019-8-1 00:00:00
+        var t2 = Date.UTC(todayYear, todayMonth, todayDate, todayHour, todayMinute, todaySecond);
+        var diff = t2 - t1;
+        var diffYears = Math.floor(diff / years);
+        var diffDays = Math.floor((diff / days) - diffYears * 365);
+        var diffHours = Math.floor((diff - (diffYears * 365 + diffDays) * days) / hours);
+        var diffMinutes = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours) / minutes);
+        var diffSeconds = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours - diffMinutes * minutes) / seconds);
+        document.getElementById("sitetime").innerHTML = "本站已运行 " + diffYears + " 年 " + diffDays + " 天 " + diffHours + " 小时 " + diffMinutes + " 分钟 " + diffSeconds + " 秒";
+    }/*因为建站时间还没有一年，就将之注释掉了。需要的可以取消*/
+    siteTime();
+</script>
+
+    <!-- 搜索遮罩框 -->
+<div id="searchModal" class="modal">
+    <div class="modal-content">
+        <div class="search-header">
+            <span class="title"><i class="fa fa-search"></i>&nbsp;&nbsp;搜索</span>
+            <input type="search" id="searchInput" name="s" placeholder="请输入搜索的关键字"
+                   class="search-input">
+        </div>
+        <div id="searchResult"></div>
+    </div>
+</div>
+
+<script src="/js/search.js"></script>
+<script type="text/javascript">
+$(function () {
+    searchFunc("/" + "search.xml", 'searchInput', 'searchResult');
+});
+</script>
+    <!-- 回到顶部按钮 -->
+<div id="backTop" class="top-scroll">
+    <a class="btn-floating btn-large waves-effect waves-light" href="#!">
+        <i class="fa fa-angle-up"></i>
+    </a>
+</div>
+
+
+    <script src="/libs/materialize/materialize.min.js"></script>
+    <script src="/libs/masonry/masonry.pkgd.min.js"></script>
+    <script src="/libs/aos/aos.js"></script>
+    <script src="/libs/scrollprogress/scrollProgress.min.js"></script>
+    <script src="/libs/lightGallery/js/lightgallery-all.min.js"></script>
+    <script src="/js/matery.js"></script>
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+
+
+
+    
+        <script src="/libs/others/clicklove.js"></script>
+    
+    
+    
+        <script async src="/libs/others/busuanzi.pure.mini.js"></script>
+    
+    
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"log":false,"model":{"jsonPath":"/live2dw/assets/wanko.model.json"},"display":{"position":"left","width":150,"height":200},"mobile":{"show":false},"react":{"opacity":0.7}});</script><script>!function(e){var r=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function t(){for(var c=0;c<r.length;c++)t=r[c],void 0,0<=(n=t.getBoundingClientRect()).top&&0<=n.left&&n.top<=(e.innerHeight||document.documentElement.clientHeight)&&function(){var t,n,e,i,o=r[c];t=o,n=function(){r=r.filter(function(t){return o!==t})},e=new Image,i=t.getAttribute("data-original"),e.onload=function(){t.src=i,n&&n()},e.src=i}();var t,n}t(),e.addEventListener("scroll",function(){!function(t,n){clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(n)},500)}(t,e)})}(this);</script></body>
+
+</html>

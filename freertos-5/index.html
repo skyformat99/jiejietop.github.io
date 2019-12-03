@@ -1,0 +1,1730 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+<!-- jiejie 杰杰  modify 2019.08.15-->
+
+
+
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="utf-8">
+    <meta name="keywords" content="从0开始学FreeRTOS-(消息队列)-5, IoT RTOS linux Python jiejie Dora">
+    <meta name="baidu-site-verification" content="fmlEuI34ir">
+    <meta name="google-site-verification" content="KeoTn_OFy4ndJwXNmm2gMeQfPhd7alqE9vQDwI32KCY">
+    <meta name="description" content="问题解答曾经有人问我，FreeRTOS那么多API，到底怎么记住呢？我想说，其实API不难记，就是有点难找，因为FreeRTOS的API很多都是带参宏，所以跳来跳去的比较麻烦，而且注释也很多，要找还真不是那么容易，不过也没啥，一般都会有AP">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="renderer" content="webkit|ie-stand|ie-comp">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>从0开始学FreeRTOS-(消息队列)-5 | 杰杰的博客</title>
+    <link rel="icon" type="image/x-icon, image/vnd.microsoft.icon" href="/medias/logo/favicon.ico">
+
+    <link rel="stylesheet" type="text/css" href="/libs/awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="/libs/materialize/materialize.min.css">
+    <link rel="stylesheet" type="text/css" href="/libs/aos/aos.css">
+    <link rel="stylesheet" type="text/css" href="/libs/animate/animate.min.css">
+    <link rel="stylesheet" type="text/css" href="/libs/lightGallery/css/lightgallery.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/matery.css">
+    <link rel="stylesheet" type="text/css" href="/css/my.css">
+
+    <meta name="360-site-verification" content="d280ce782ae1e8d546343da41182687d">
+
+    <style type="text/css">
+        
+            
+            code[class*="language-"],
+            pre[class*="language-"] {
+                white-space: pre !important;
+            }
+
+        
+    </style>
+
+    <script src="/libs/jquery/jquery-2.2.0.min.js"></script>
+    <script src="https://sdk.jinrishici.com/v2/browser/jinrishici.js" charset="utf-8"></script>
+    
+    <script>
+        var _hmt = _hmt || [];
+        (function () {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?46e79e71af0709a5b9106bf20cecc493";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+
+    <script>
+        (function(){
+        var src = "https://jspassport.ssl.qhimg.com/11.0.1.js?d182b3f28525f2db83acfaaf6e696dba";
+        document.write('<script src="' + src + '" id="sozz"><\/script>');
+        })();
+    </script>
+
+    
+    
+        <script>
+            (function(){
+                var bp = document.createElement('script');
+                var curProtocol = window.location.protocol.split(':')[0];
+                if (curProtocol === 'https') {
+                    bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+                }
+                else {
+                    bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+                }
+                var s = document.getElementsByTagName("script")[0];
+                s.parentNode.insertBefore(bp, s);
+            })();
+        </script>
+    
+
+<link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
+
+<body>
+
+    <header class="navbar-fixed">
+    <nav id="headNav" class="bg-color nav-transparent">
+        <div id="navContainer" class="nav-wrapper container">
+            <div class="brand-logo">
+                <a href="/" class="waves-effect waves-light">
+                    
+                    <img src="/medias/logo/logo.ico" class="logo-img" alt="LOGO">
+                    
+                    <span class="logo-span">杰杰的博客</span>
+                </a>
+            </div>
+            <!-- jiejie 杰杰  modify 2019.08.15-->
+
+
+
+<a href="#" data-target="mobile-nav" class="sidenav-trigger button-collapse"><i class="fa fa-navicon"></i></a>
+<ul class="right">
+    
+    <li class="hide-on-med-and-down">
+        <a href="/" class="waves-effect waves-light">
+            
+            <i class="fa fa-home"></i>
+            
+            <span>首页</span>
+        </a>
+    </li>
+    
+    <li class="hide-on-med-and-down">
+        <a href="/tags" class="waves-effect waves-light">
+            
+            <i class="fa fa-tags"></i>
+            
+            <span>标签</span>
+        </a>
+    </li>
+    
+    <li class="hide-on-med-and-down">
+        <a href="/categories" class="waves-effect waves-light">
+            
+            <i class="fa fa-bookmark"></i>
+            
+            <span>分类</span>
+        </a>
+    </li>
+    
+    <li class="hide-on-med-and-down">
+        <a href="/archives" class="waves-effect waves-light">
+            
+            <i class="fa fa-archive"></i>
+            
+            <span>归档</span>
+        </a>
+    </li>
+    
+    <li class="hide-on-med-and-down">
+        <a href="/AV" class="waves-effect waves-light">
+            
+            <i class="fa fa-music"></i>
+            
+            <span>娱乐</span>
+        </a>
+    </li>
+    
+    <li class="hide-on-med-and-down">
+        <a href="/about" class="waves-effect waves-light">
+            
+            <i class="fa fa-user-circle-o"></i>
+            
+            <span>关于我</span>
+        </a>
+    </li>
+    
+    <li class="hide-on-med-and-down">
+        <a href="/contact" class="waves-effect waves-light">
+            
+            <i class="fa fa-envelope"></i>
+            
+            <span>留言板</span>
+        </a>
+    </li>
+    
+    <li class="hide-on-med-and-down">
+        <a href="/friends" class="waves-effect waves-light">
+            
+            <i class="fa fa-address-book"></i>
+            
+            <span>友情链接</span>
+        </a>
+    </li>
+    
+    <li>
+        <a href="#searchModal" class="modal-trigger waves-effect waves-light">
+            <i id="searchIcon" class="fa fa-search" title="搜索"></i>
+        </a>
+    </li>
+</ul>
+
+<!-- jiejie 杰杰  modify 2019.08.15-->
+
+<div id="mobile-nav" class="side-nav sidenav">
+
+    <div class="mobile-head bg-color">
+        
+        <img src="/medias/logo/logo.ico" class="logo-img circle responsive-img">
+        <!-- jiejie 杰杰  modify 2019.08.15-->
+        <div class="logo-name">杰杰的博客</div>
+        <div class="logo-desc">
+            
+            物联网 | linux | 操作系统
+            
+        </div>
+    </div>
+
+    
+
+    <ul class="menu-list mobile-menu-list">
+        
+        <li>
+            <a href="/" class="waves-effect waves-light">
+                
+                <i class="fa fa-fw fa-home"></i>
+                
+                首页
+            </a>
+        </li>
+        
+        <li>
+            <a href="/tags" class="waves-effect waves-light">
+                
+                <i class="fa fa-fw fa-tags"></i>
+                
+                标签
+            </a>
+        </li>
+        
+        <li>
+            <a href="/categories" class="waves-effect waves-light">
+                
+                <i class="fa fa-fw fa-bookmark"></i>
+                
+                分类
+            </a>
+        </li>
+        
+        <li>
+            <a href="/archives" class="waves-effect waves-light">
+                
+                <i class="fa fa-fw fa-archive"></i>
+                
+                归档
+            </a>
+        </li>
+        
+        <li>
+            <a href="/AV" class="waves-effect waves-light">
+                
+                <i class="fa fa-fw fa-music"></i>
+                
+                娱乐
+            </a>
+        </li>
+        
+        <li>
+            <a href="/about" class="waves-effect waves-light">
+                
+                <i class="fa fa-fw fa-user-circle-o"></i>
+                
+                关于我
+            </a>
+        </li>
+        
+        <li>
+            <a href="/contact" class="waves-effect waves-light">
+                
+                <i class="fa fa-fw fa-envelope"></i>
+                
+                留言板
+            </a>
+        </li>
+        
+        <li>
+            <a href="/friends" class="waves-effect waves-light">
+                
+                <i class="fa fa-fw fa-address-book"></i>
+                
+                友情链接
+            </a>
+        </li>
+        
+        
+        <li><div class="divider"></div></li>
+        <li>
+            <a href="https://github.com/jiejietop" class="waves-effect waves-light" target="_blank">
+                <i class="fa fa-github-square fa-fw"></i>Fork Me
+            </a>
+        </li>
+        
+    </ul>
+</div>
+
+        </div>
+
+        
+            <style>
+    .nav-transparent .github-corner {
+        display: none !important;
+    }
+
+    .github-corner {
+        position: absolute;
+        z-index: 10;
+        top: 0;
+        right: 0;
+        border: 0;
+        transform: scale(1.1);
+    }
+
+    .github-corner svg {
+        color: #0f9d58;
+        fill: #fff;
+        height: 64px;
+        width: 64px;
+    }
+
+    .github-corner:hover .octo-arm {
+        animation: a 0.56s ease-in-out;
+    }
+
+    .github-corner .octo-arm {
+        animation: none;
+    }
+
+    @keyframes a {
+        0%,
+        to {
+            transform: rotate(0);
+        }
+        20%,
+        60% {
+            transform: rotate(-25deg);
+        }
+        40%,
+        80% {
+            transform: rotate(10deg);
+        }
+    }
+</style>
+
+<a href="https://github.com/jiejietop" class="github-corner tooltipped hide-on-med-and-down" target="_blank"
+   data-tooltip="Fork Me" data-position="left" data-delay="50">
+    <svg viewBox="0 0 250 250" aria-hidden="true">
+        <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path>
+        <path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2"
+              fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path>
+        <path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z"
+              fill="currentColor" class="octo-body"></path>
+    </svg>
+</a>
+        
+    </nav>
+
+</header>
+
+    
+<script src="/libs/cryptojs/crypto-js.min.js"></script>
+<script>
+    (function() {
+        let pwd = '';
+        if (pwd && pwd.length > 0) {
+            if (pwd !== CryptoJS.SHA256(prompt('请输入访问本文章的密码')).toString(CryptoJS.enc.Hex)) {
+                alert('密码错误，将返回主页！');
+                location.href = '/';
+            }
+        }
+    })();
+</script>
+
+
+
+
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/12.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col s12 m12 l12">
+                <div class="brand">
+                    <div class="description center-align post-title">
+                        从0开始学FreeRTOS-(消息队列)-5
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<main class="post-container content">
+
+    
+    <link rel="stylesheet" href="/libs/tocbot/tocbot.css">
+<style>
+    #articleContent h1::before,
+    #articleContent h2::before,
+    #articleContent h3::before,
+    #articleContent h4::before,
+    #articleContent h5::before,
+    #articleContent h6::before {
+        display: block;
+        content: " ";
+        height: 100px;
+        margin-top: -100px;
+        visibility: hidden;
+    }
+
+    #articleContent :focus {
+        outline: none;
+    }
+
+    .toc-fixed {
+        position: fixed;
+        top: 64px;
+    }
+
+    .toc-widget {
+        padding-left: 20px;
+    }
+
+    .toc-widget .toc-title {
+        margin: 35px 0 15px 0;
+        padding-left: 17px;
+        font-size: 1.5rem;
+        font-weight: bold;
+        line-height: 1.5rem;
+    }
+
+    .toc-widget ol {
+        padding: 0;
+        list-style: none;
+    }
+
+    #toc-content ol {
+        padding-left: 10px;
+    }
+
+    #toc-content ol li {
+        padding-left: 10px;
+    }
+
+    #toc-content .toc-link:hover {
+        color: #42b983;
+        font-weight: 700;
+        text-decoration: underline;
+    }
+
+    #toc-content .toc-link::before {
+        background-color: transparent;
+        max-height: 25px;
+    }
+
+    #toc-content .is-active-link {
+        color: #42b983;
+    }
+
+    #toc-content .is-active-link::before {
+        background-color: #42b983;
+    }
+
+    #floating-toc-btn {
+        position: fixed;
+        right: 20px;
+        bottom: 76px;
+        padding-top: 15px;
+        margin-bottom: 0;
+        z-index: 998;
+    }
+
+    #floating-toc-btn .btn-floating {
+        width: 48px;
+        height: 48px;
+    }
+
+    #floating-toc-btn .btn-floating i {
+        line-height: 48px;
+        font-size: 1.4rem;
+    }
+</style>
+<div class="row">
+    <div id="main-content" class="col s12 m12 l9">
+        <!-- jiejie 杰杰  modify 2019.08.15-->
+<!-- 文章内容详情 -->
+<div id="artDetail">
+    <div class="card">
+        <div class="card-content article-info">
+            <div class="row tag-cate">
+                <div class="col s7">
+                    
+                    <div class="article-tag">
+                        
+                            <a href="/tags/RTOS/" target="_blank">
+                                <span class="chip bg-color">RTOS</span>
+                            </a>
+                        
+                            <a href="/tags/操作系统/" target="_blank">
+                                <span class="chip bg-color">操作系统</span>
+                            </a>
+                        
+                            <a href="/tags/FreeRTOS/" target="_blank">
+                                <span class="chip bg-color">FreeRTOS</span>
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+                <div class="col s5 right-align">
+                    
+                    <div class="post-cate">
+                        <i class="fa fa-bookmark fa-fw icon-category"></i>
+                        
+                            <a href="/categories/操作系统/" class="post-category" target="_blank">
+                                操作系统
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+            
+            <div class="post-info">
+                <div class="post-date info-break-policy">
+                    <i class="fa fa-calendar-minus-o fa-fw"></i>发布日期:&nbsp;&nbsp;
+                    2019-09-01
+                </div>
+
+                <div class="post-author info-break-policy">
+                    <i class="fa fa-user-o fa-fw"></i>作者:&nbsp;&nbsp;
+                    
+                        杰杰
+                    
+                </div>
+
+                
+                    
+                    <div class="info-break-policy">
+                        <i class="fa fa-file-word-o fa-fw"></i>文章字数:&nbsp;&nbsp;
+                        4.4k
+                    </div>
+                    
+
+                    
+                    <div class="info-break-policy">
+                        <i class="fa fa-clock-o fa-fw"></i>阅读时长:&nbsp;&nbsp;
+                        17 分
+                    </div>
+                    
+                
+                
+                
+                        <span id="busuanzi_container_site_pv" style='display:none'></span>
+                        <i class="fa fa-eye fa-fw"></i>阅读次数:&nbsp;&nbsp;
+                        <span id="busuanzi_value_page_pv" ></span>
+    
+                
+
+            </div>
+        </div>
+        <hr class="clearfix">
+        <div class="card-content article-card-content">
+            <div id="articleContent">
+                <h2 id="问题解答"><a href="#问题解答" class="headerlink" title="问题解答"></a>问题解答</h2><p>曾经有人问我，FreeRTOS那么多API，到底怎么记住呢？<br>我想说，其实API不难记，就是有点难找，因为FreeRTOS的API很多都是带参宏，所以跳来跳去的比较麻烦，而且注释也很多，要找还真不是那么容易，不过也没啥，一般都会有API手册的，我就告诉大家一下：<br><strong>FreeRTOS Kernel: Reference Manual</strong><br>FreeRTOS内核：参考手册，大家可以在<a href="https://www.freertos.org/Documentation/RTOS_book.html" target="_blank" rel="noopener">官网下载</a>，也能在后台得到。<br>当然书本是英文的，如果英语像我这样子不咋地的同学，可以用谷歌浏览器在官网直接看API手册，直接翻译一下就行了。传送门：<a href="https://www.freertos.org/a00018.html" target="_blank" rel="noopener">https://www.freertos.org/a00018.html</a><br><img src="./images/loading.png" data-original="https://img-blog.csdnimg.cn/2019013113211022.png?" alt="Reference Manual"><br><img src="./images/loading.png" data-original="https://img-blog.csdnimg.cn/20190131133629940.png?" alt="FreeRTOS官网的API"></p>
+<h2 id="FreeRTOS消息队列"><a href="#FreeRTOS消息队列" class="headerlink" title="FreeRTOS消息队列"></a>FreeRTOS消息队列</h2><p>基于 FreeRTOS 的应用程序由一组独立的任务构成——每个任务都是具有独立权限的程序。这些独立的任务之间的通讯与同步一般都是基于操作系统提供的IPC通讯机制，而FreeRTOS 中所有的通信与同步机制都是基于队列实现的。<br>消息队列是一种常用于任务间通信的数据结构，队列可以在任务与任务间、中断和任务间传送信息，实现了任务接收来自其他任务或中断的不固定长度的消息。任务能够从队列里面读取消息，当队列中的消息是空时，挂起读取任务，用户还可以指定挂起的任务时间；当队列中有新消息时，挂起的读取任务被唤醒并处理新消息，消息队列是一种异步的通信方式。</p>
+<h3 id="队列特性"><a href="#队列特性" class="headerlink" title="队列特性"></a>队列特性</h3><h4 id="1-数据存储"><a href="#1-数据存储" class="headerlink" title="1.数据存储"></a>1.数据存储</h4><p>队列可以保存有限个具有确定长度的数据单元。队列可以保存的最大单元数目被称为队列的“深度”。在队列创建时需要设定其深度和每个单元的大小。<br>通常情况下，队列被作为 FIFO(先进先出)缓冲区使用，即数据由队列尾写入，从队列首读出。当然，由队列首写入也是可能的。<br>往队列写入数据是通过字节拷贝把数据复制存储到队列中；从队列读出数据使得把队列中的数据拷贝删除。 </p>
+<h4 id="2-读阻塞"><a href="#2-读阻塞" class="headerlink" title="2.读阻塞"></a>2.读阻塞</h4><p>当某个任务试图读一个队列时，其可以指定一个阻塞超时时间。在这段时间中，如果队列为空，该任务将保持阻塞状态以等待队列数据有效。当其它任务或中断服务例程往其等待的队列中写入了数据，该任务将自动由阻塞态转移为就绪态。当等待的时间超过了指定的阻塞时间，即使队列中尚无有效数据，任务也会自动从阻塞态转移为就绪态。<br>由于队列可以被多个任务读取，所以对单个队列而言，也可能有多个任务处于阻塞状态以等待队列数据有效。这种情况下，一旦队列数据有效，只会有一个任务会被解除阻塞，这个任务就是所有等待任务中优先级最高的任务。而如果所有等待任务的优先级相同，那么被解除阻塞的任务将是等待最久的任务。</p>
+<blockquote>
+<p>说些题外话，ucos中是具有广播消息的，当有多个任务阻塞在队列上，当发送消息的时候可以选择广播消息，那么这些阻塞的任务都能被解除阻塞。</p>
+</blockquote>
+<h4 id="3-写阻塞"><a href="#3-写阻塞" class="headerlink" title="3.写阻塞"></a>3.写阻塞</h4><p>与读阻塞想反，任务也可以在写队列时指定一个阻塞超时时间。这个时间是当被写队列已满时，任务进入阻塞态以等待队列空间有效的最长时间。<br>由于队列可以被多个任务写入，所以对单个队列而言，也可能有多个任务处于阻塞状态以等待队列空间有效。这种情况下，一旦队列空间有效，只会有一个任务会被解除阻塞，这个任务就是所有等待任务中优先级最高的任务。而如果所有等待任务的优先级相同，那么被解除阻塞的任务将是等待最久的任务。</p>
+<h3 id="消息队列的工作流程"><a href="#消息队列的工作流程" class="headerlink" title="消息队列的工作流程"></a>消息队列的工作流程</h3><h4 id="1-发送消息"><a href="#1-发送消息" class="headerlink" title="1.发送消息"></a>1.发送消息</h4><p>任务或者中断服务程序都可以给消息队列发送消息，当发送消息时，如果队列未满或者允许覆盖入队， FreeRTOS 会将消息拷贝到消息队列队尾，否则，会根据用户指定的阻塞超时时间进行阻塞，在这段时间中，如果队列一直不允许入队，该任务将保持阻塞状态以等待队列允许入队。当其它任务从其等待的队列中读取入了数据（队列未满），该任务将自动由阻塞态转为就绪态。当任务等待的时间超过了指定的阻塞时间，即使队列中还不允许入队，任务也会自动从阻塞态转移为就绪态，此时发送消息的任务或者中断程序会收到一个错误码 errQUEUE_FULL。<br>发送紧急消息的过程与发送消息几乎一样，唯一的不同是，当发送紧急消息时，发送的位置是消息队列队头而非队尾，这样，接收者就能够优先接收到紧急消息，从而及时进行消息处理。<br>下面是消息队列的发送API接口，函数中有FromISR则表明在中断中使用的。<br><img src="./images/loading.png" data-original="https://img-blog.csdnimg.cn/20181203195147150.png?" alt="消息队列入队（发送）的API接口"></p>
+<pre><code>1 /*-----------------------------------------------------------*/
+ 2 BaseType_t xQueueGenericSend( QueueHandle_t xQueue,        (1)    
+ 3                               const void * const pvItemToQueue,     (2)
+ 4                               TickType_t xTicksToWait,        (3)
+ 5                               const BaseType_t xCopyPosition )    (4)
+ 6 {
+ 7     BaseType_t xEntryTimeSet = pdFALSE, xYieldRequired;
+ 8     TimeOut_t xTimeOut;
+ 9     Queue_t * const pxQueue = ( Queue_t * ) xQueue;
+10 
+11     /* 已删除一些断言操作 */
+12 
+13     for ( ;; ) {
+14         taskENTER_CRITICAL();                    (5)
+15         {
+16             /* 队列未满 */
+17             if ( ( pxQueue-&gt;uxMessagesWaiting &lt; pxQueue-&gt;uxLength )
+18                  || ( xCopyPosition == queueOVERWRITE ) ) {    (6)    
+19                 traceQUEUE_SEND( pxQueue );
+20                 xYieldRequired =
+21           prvCopyDataToQueue( pxQueue, pvItemToQueue, xCopyPosition ); (7)
+22 
+23                 /* 已删除使用队列集部分代码 */
+24                 /* 如果有任务在等待获取此消息队列 */
+25       if ( listLIST_IS_EMPTY(&amp;(pxQueue-&gt;xTasksWaitingToReceive))==pdFALSE){ (8)
+26                     /* 将任务从阻塞中恢复 */
+27             if ( xTaskRemoveFromEventList(
+28                   &amp;( pxQueue-&gt;xTasksWaitingToReceive ) )!=pdFALSE) { (9)
+29                         /* 如果恢复的任务优先级比当前运行任务优先级还高，
+30                         那么需要进行一次任务切换 */
+31                         queueYIELD_IF_USING_PREEMPTION();    (10)
+32                     } else {
+33                         mtCOVERAGE_TEST_MARKER();
+34                     }
+35                 } else if ( xYieldRequired != pdFALSE ) {
+36                     /* 如果没有等待的任务，拷贝成功也需要任务切换 */
+37                     queueYIELD_IF_USING_PREEMPTION();        (11)
+38                 } else {
+39                     mtCOVERAGE_TEST_MARKER();
+40                 }
+41 
+42                 taskEXIT_CRITICAL();                (12)
+43                 return pdPASS;
+44             }
+45             /* 队列已满 */
+46             else {                        (13)
+47                 if ( xTicksToWait == ( TickType_t ) 0 ) {
+48                     /* 如果用户不指定阻塞超时时间，退出 */
+49                     taskEXIT_CRITICAL();            (14)
+50                     traceQUEUE_SEND_FAILED( pxQueue );
+51                     return errQUEUE_FULL;
+52                 } else if ( xEntryTimeSet == pdFALSE ) {    
+53                     /* 初始化阻塞超时结构体变量，初始化进入
+54                 阻塞的时间xTickCount和溢出次数xNumOfOverflows */
+55                     vTaskSetTimeOutState( &amp;xTimeOut );        (15)
+56                     xEntryTimeSet = pdTRUE;
+57                 } else {
+58                     mtCOVERAGE_TEST_MARKER();
+59                 }
+60             }
+61         }
+62         taskEXIT_CRITICAL();                    (16)
+63         /* 挂起调度器 */
+64         vTaskSuspendAll();
+65         /* 队列上锁 */
+66         prvLockQueue( pxQueue );
+67 
+68         /* 检查超时时间是否已经过去了 */
+69         if (xTaskCheckForTimeOut(&amp;xTimeOut, &amp;xTicksToWait)==pdFALSE){ (17)
+70             /* 如果队列还是满的 */
+71             if ( prvIsQueueFull( pxQueue ) != pdFALSE ) {    (18)    
+72                 traceBLOCKING_ON_QUEUE_SEND( pxQueue );    
+73                 /* 将当前任务添加到队列的等待发送列表中
+74                    以及阻塞延时列表，延时时间为用户指定的超时时间xTicksToWait */
+75                 vTaskPlaceOnEventList(
+76                    &amp;( pxQueue-&gt;xTasksWaitingToSend ), xTicksToWait );(19)
+77                 /* 队列解锁 */
+78                 prvUnlockQueue( pxQueue );            (20)
+79 
+80                 /* 恢复调度器 */
+81                 if ( xTaskResumeAll() == pdFALSE ) {
+82                     portYIELD_WITHIN_API();
+83                 }
+84             } else {
+85                 /* 队列有空闲消息空间，允许入队 */
+86                 prvUnlockQueue( pxQueue );            (21)
+87                 ( void ) xTaskResumeAll();
+88             }
+89         } else {
+90             /* 超时时间已过，退出 */
+91             prvUnlockQueue( pxQueue );                (22)
+92             ( void ) xTaskResumeAll();
+93 
+94             traceQUEUE_SEND_FAILED( pxQueue );
+95             return errQUEUE_FULL;
+96         }
+97     }
+98 }
+99 /*-----------------------------------------------------------*/</code></pre><p>如果阻塞时间不为 0，任务会因为等待入队而进入阻塞， 在将任务设置为阻塞的过程中， 系统不希望有其它任务和中断操作这个队列的 xTasksWaitingToReceive 列表和 xTasksWaitingToSend 列表，因为可能引起其它任务解除阻塞，这可能会发生优先级翻转。比如任务 A 的优先级低于当前任务，但是在当前任务进入阻塞的过程中，任务 A 却因为其它原因解除阻塞了，这显然是要绝对禁止的。因此FreeRTOS 使用挂起调度器禁止其它任务操作队列，因为挂起调度器意味着任务不能切换并且不准调用可能引起任务切换的 API 函数。但挂起调度器并不会禁止中断，中断服务函数仍然可以操作队列阻塞列表，可能会解除任务阻塞、可能会进行上下文切换，这也是不允许的。于是，<strong>FreeRTOS解决办法是不但挂起调度器，还要给队列上锁，禁止任何中断来操作队列。</strong><br>下面来看看流程图：<br><img src="./images/loading.png" data-original="https://img-blog.csdnimg.cn/20190131164341932.png?" alt="消息队列发送流程"><br>相比在任务中调用的发送函数，在中断中调用的函数会更加简单一些， 没有任务阻塞操作。<br>函数 xQueueGenericSend中插入数据后， 会检查等待接收链表是否有任务等待，如果有会恢复就绪。如果恢复的任务优先级比当前任务高， 则会触发任务切换；但是在中断中调用的这个函数的做法是返回一个参数标志是否需要触发任务切换，并不在中断中切换任务。<br>在任务中调用的函数中有锁定和解锁队列的操作， 锁定队列的时候， 队列的事件链表不能被修改。 而在被中断中发送消息的处理是： 当遇到队列被锁定的时候， 将新数据插入到队列后， 并不会直接恢复因为等待接收的任务， 而是累加了计数， 当队列解锁的时候， 会根据这个计数， 对应恢复几个任务。<br>遇到队列满的情况， 函数会直接返回， 而不是阻塞等待， 因为在中断中阻塞是不允许的！！！</p>
+<pre><code> 1 BaseType_t xQueueGenericSendFromISR(
+ 2        QueueHandle_t xQueue,
+ 3        const void * const pvItemToQueue,
+ 4        /* 不在中断函数中触发任务切换， 而是返回一个标记 */
+ 5        BaseType_t * const pxHigherPriorityTaskWoken,
+ 6        const BaseType_t xCopyPosition )
+ 7{
+ 8    BaseType_t xReturn;
+ 9    UBaseType_t uxSavedInterruptStatus;
+10    Queue_t * const pxQueue = ( Queue_t * ) xQueue;
+11
+12    uxSavedInterruptStatus = portSET_INTERRUPT_MASK_FROM_ISR();
+13    {
+14        // 判断队列是否有空间插入新内容
+15        if( ( pxQueue-&gt;uxMessagesWaiting &lt; pxQueue-&gt;uxLength ) || ( xCopyPosition == queueOVERWRITE ) )
+16        {
+17            const int8_t cTxLock = pxQueue-&gt;cTxLock;
+18
+19            // 中断中不能使用互斥锁， 所以拷贝函数只是拷贝数据，
+20            // 没有任务优先级继承需要考虑
+21            ( void ) prvCopyDataToQueue( pxQueue, pvItemToQueue, xCopyPosition );
+22
+23            // 判断队列是否被锁定
+24            if( cTxLock == queueUNLOCKED )
+25            {
+26            #if ( configUSE_QUEUE_SETS == 1 )
+27                // 集合相关代码
+28            #else /* configUSE_QUEUE_SETS */
+29                {
+30                    // 将最高优先级的等待任务恢复到就绪链表
+31                    if( listLIST_IS_EMPTY( &amp;( pxQueue-&gt;xTasksWaitingToReceive ) ) == pdFALSE )
+32                    {
+33                        if( xTaskRemoveFromEventList( &amp;( pxQueue-&gt;xTasksWaitingToReceive ) ) != pdFALSE)
+34                        {
+35                            // 如果有高优先级的任务被恢复
+36                            // 此处不直接触发任务切换， 而是返回一个标记
+37                            if( pxHigherPriorityTaskWoken != NULL )
+38                            {
+39                                *pxHigherPriorityTaskWoken = pdTRUE;
+40                            }
+41                        }
+42                    }
+43                }
+44            #endif /* configUSE_QUEUE_SETS */
+45            }
+46            else
+47            {
+48                // 队列被锁定， 不能修改事件链表
+49                // 增加计数， 记录需要接触几个任务到就绪
+50                // 在解锁队列的时候会根据这个计数恢复任务
+51                pxQueue-&gt;cTxLock = ( int8_t ) ( cTxLock + 1 );
+52            }
+53            xReturn = pdPASS;
+54        }
+55        else
+56        {
+57            // 队列满 直接返回 不阻塞
+58            xReturn = errQUEUE_FULL;
+59        }
+60    }
+61
+62    // 恢复中断的优先级
+63    portCLEAR_INTERRUPT_MASK_FROM_ISR( uxSavedInterruptStatus );
+64
+65    return xReturn;
+66}</code></pre><h4 id="消息队列读取"><a href="#消息队列读取" class="headerlink" title="消息队列读取"></a>消息队列读取</h4><p><img src="./images/loading.png" data-original="https://img-blog.csdnimg.cn/20181203200731899.png" alt="消息读取"><br>任务调用接收函数收取队列消息， 函数首先判断当前队列是否有未读消息， 如果没有， 则会判断参数 xTicksToWait, 决定直接返回函数还是阻塞等待。<br>如果队列中有消息未读， 首先会把待读的消息复制到传进来的指针所指内， 然后判断函数参数 xJustPeeking == pdFALSE的时候， 符合的话， 说明这个函数读取了数据， 需要把被读取的数据做出队处理， 如果不是， 则只是查看一下（peek），只是返回数据，但是不会把数据清除。<br>对于正常读取数据的操作， 清除数据后队列会空出空位， 所以查看队列中的等待列表中是否有任务等发送数据而被挂起， 有的话恢复一个任务就绪， 并根据优先级判断是否需要出进行任务切换。<br>对于只是查看数据的， 由于没有清除数据， 所以没有空间新空出，不需要检查发送等待链表， 但是会检查接收等待链表， 如果有任务挂起会切换其到就绪并判断是否需要切换。</p>
+<p>消息队列出队过程分析，其实跟入队差不多，请看注释：</p>
+<pre><code> 1 /*-----------------------------------------------------------*/
+ 2 BaseType_t xQueueGenericReceive( QueueHandle_t xQueue,        (1)    
+ 3                                  void * const pvBuffer,        (2)
+ 4                                  TickType_t xTicksToWait,    (3)    
+ 5                                  const BaseType_t xJustPeeking )    (4)
+ 6 {
+ 7     BaseType_t xEntryTimeSet = pdFALSE;
+ 8     TimeOut_t xTimeOut;
+ 9     int8_t *pcOriginalReadPosition;
+10     Queue_t * const pxQueue = ( Queue_t * ) xQueue;
+11 
+12     /* 已删除一些断言 */
+13     for ( ;; ) {
+14         taskENTER_CRITICAL();                    (5)
+15         {
+16             const UBaseType_t uxMessagesWaiting = pxQueue-&gt;uxMessagesWaiting; 
+17 
+18             /* 看看队列中有没有消息 */
+19             if ( uxMessagesWaiting &gt; ( UBaseType_t ) 0 ) {    (6)    
+20                 /*防止仅仅是读取消息，而不进行消息出队操作*/
+21                 pcOriginalReadPosition = pxQueue-&gt;u.pcReadFrom;    (7)
+22                 /* 拷贝消息到用户指定存放区域pvBuffer */
+23                 prvCopyDataFromQueue( pxQueue, pvBuffer );    (8)
+24 
+25                 if ( xJustPeeking == pdFALSE ) {        (9)
+26                     /* 读取消息并且消息出队 */
+27                     traceQUEUE_RECEIVE( pxQueue );    
+28 
+29                     /* 获取了消息，当前消息队列的消息个数需要减一 */
+30                     pxQueue-&gt;uxMessagesWaiting = uxMessagesWaiting - 1;  (10)
+31                     /* 判断一下消息队列中是否有等待发送消息的任务 */
+32                     if ( listLIST_IS_EMPTY(            (11)
+33                              &amp;( pxQueue-&gt;xTasksWaitingToSend ) ) == pdFALSE ) {
+34                         /* 将任务从阻塞中恢复 */
+35                         if ( xTaskRemoveFromEventList(        (12)
+36                                  &amp;( pxQueue-&gt;xTasksWaitingToSend ) ) != pdFALSE ) {
+37                             /* 如果被恢复的任务优先级比当前任务高，会进行一次任务切换 */
+38                             queueYIELD_IF_USING_PREEMPTION();    (13)
+39                         } else {
+40                             mtCOVERAGE_TEST_MARKER();
+41                         }
+42                     } else {
+43                         mtCOVERAGE_TEST_MARKER();
+44                     }
+45                 } else {                    (14)
+46                     /* 任务只是看一下消息（peek），并不出队 */    
+47                     traceQUEUE_PEEK( pxQueue );
+48 
+49                     /* 因为是只读消息 所以还要还原读消息位置指针 */
+50                     pxQueue-&gt;u.pcReadFrom = pcOriginalReadPosition; (15)
+51 
+52                     /* 判断一下消息队列中是否还有等待获取消息的任务 */
+53                     if ( listLIST_IS_EMPTY(            (16)
+54                              &amp;( pxQueue-&gt;xTasksWaitingToReceive ) ) == pdFALSE ) {
+55                         /* 将任务从阻塞中恢复 */
+56                         if ( xTaskRemoveFromEventList(            
+57                               &amp;( pxQueue-&gt;xTasksWaitingToReceive ) ) != pdFALSE ) {
+58                             /* 如果被恢复的任务优先级比当前任务高，会进行一次任务切换 */
+59                             queueYIELD_IF_USING_PREEMPTION();    
+60                         } else {
+61                             mtCOVERAGE_TEST_MARKER();
+62                         }
+63                     } else {
+64                         mtCOVERAGE_TEST_MARKER();
+65                     }
+66                 }
+67 
+68                 taskEXIT_CRITICAL();                (17)
+69                 return pdPASS;
+70             } else {                        (18)
+71                 /* 消息队列中没有消息可读 */
+72                 if ( xTicksToWait == ( TickType_t ) 0 ) {    (19)    
+73                     /* 不等待，直接返回 */
+74                     taskEXIT_CRITICAL();
+75                     traceQUEUE_RECEIVE_FAILED( pxQueue );
+76                     return errQUEUE_EMPTY;
+77                 } else if ( xEntryTimeSet == pdFALSE ) {        
+78                     /* 初始化阻塞超时结构体变量，初始化进入
+79                     阻塞的时间xTickCount和溢出次数xNumOfOverflows */
+80                     vTaskSetTimeOutState( &amp;xTimeOut );        (20)
+81                     xEntryTimeSet = pdTRUE;
+82                 } else {
+83                     mtCOVERAGE_TEST_MARKER();
+84                 }
+85             }
+86         }
+87         taskEXIT_CRITICAL();                    
+88 
+89         vTaskSuspendAll();
+90         prvLockQueue( pxQueue );                (21)
+91 
+92         /* 检查超时时间是否已经过去了*/
+93         if ( xTaskCheckForTimeOut( &amp;xTimeOut, &amp;xTicksToWait ) == pdFALSE ) {(22)
+94             /* 如果队列还是空的 */
+95             if ( prvIsQueueEmpty( pxQueue ) != pdFALSE ) {
+96                 traceBLOCKING_ON_QUEUE_RECEIVE( pxQueue );    (23)    
+97                 /* 将当前任务添加到队列的等待接收列表中
+98                    以及阻塞延时列表，阻塞时间为用户指定的超时时间xTicksToWait */
+99                 vTaskPlaceOnEventList(                
+100                     &amp;( pxQueue-&gt;xTasksWaitingToReceive ), xTicksToWait );
+101                 prvUnlockQueue( pxQueue );
+102                 if ( xTaskResumeAll() == pdFALSE ) {        
+103                     /* 如果有任务优先级比当前任务高，会进行一次任务切换 */
+104                     portYIELD_WITHIN_API();            
+105                 } else {
+106                     mtCOVERAGE_TEST_MARKER();
+107                 }
+108             } else {
+109                 /* 如果队列有消息了，就再试一次获取消息 */
+110                 prvUnlockQueue( pxQueue );            (24)
+111                 ( void ) xTaskResumeAll();
+112             }
+113         } else {
+114             /* 超时时间已过，退出 */
+115             prvUnlockQueue( pxQueue );                (25)
+116             ( void ) xTaskResumeAll();
+117 
+118             if ( prvIsQueueEmpty( pxQueue ) != pdFALSE ) {
+119                 /* 如果队列还是空的，返回错误代码errQUEUE_EMPTY */
+120                 traceQUEUE_RECEIVE_FAILED( pxQueue );
+121                 return errQUEUE_EMPTY;                (26)
+122             } else {
+123                 mtCOVERAGE_TEST_MARKER();
+124             }
+125         }
+126     }
+127 }
+128 /*-----------------------------------------------------------*/</code></pre><h3 id="提示"><a href="#提示" class="headerlink" title="提示"></a>提示</h3><p>如果队列存储的数据较大时，那最好是利用队列来传递数据的指针而不是数据本身，因为传递数据的时候是需要CPU一字节一字节地将数据拷贝进队列或从队列拷贝出来。而传递指针无论是在处理速度上还是内存空间利用上都更有效。但是，当利用队列传递指针时，一定要十分小心地做到以下两点：</p>
+<h4 id="1-指针指向的内存空间的所有权必须明确"><a href="#1-指针指向的内存空间的所有权必须明确" class="headerlink" title="1.指针指向的内存空间的所有权必须明确"></a>1.指针指向的内存空间的所有权必须明确</h4><p>当任务间通过指针共享内存时，应该从根本上保证所不会有任意两个任务同时修改共享内存中的数据，或是以其它行为方式使得共享内存数据无效或产生一致性问题。原则上，共享内存在其指针发送到队列之前，其内容只允许被发送任务访问；共享内存指针从队列中被读出之后，其内容亦只允许被接收任务访问。</p>
+<h4 id="2-指针指向的内存空间必须有效"><a href="#2-指针指向的内存空间必须有效" class="headerlink" title="2.指针指向的内存空间必须有效"></a>2.指针指向的内存空间必须有效</h4><p>如果指针指向的内存空间是动态分配的，只应该有一个任务负责对其进行内存释放。当这段内存空间被释放之后，就不应该有任何一个任务再访问这段空间。<br>并且最最最重要的是禁止使用指针访问<strong>任务栈上</strong>的空间，也就是局部变量。因为当栈发生改变后，栈上的数据将不再有效。</p>
+<h1 id="喜欢就关注我吧！"><a href="#喜欢就关注我吧！" class="headerlink" title="喜欢就关注我吧！"></a>喜欢就关注我吧！</h1><p><img src="./images/loading.png" data-original="http://qiniu.jiejie01.top/gzh.jpg" alt="欢迎关注我公众号"></p>
+<p>相关代码可以在公众号后台获取。</p>
+<script>
+        document.querySelectorAll('.github-emoji')
+          .forEach(el => {
+            if (!el.dataset.src) { return; }
+            const img = document.createElement('img');
+            img.style = 'display:none !important;';
+            img.src = el.dataset.src;
+            img.addEventListener('error', () => {
+              img.remove();
+              el.style.color = 'inherit';
+              el.style.backgroundImage = 'none';
+              el.style.background = 'none';
+            });
+            img.addEventListener('load', () => {
+              img.remove();
+            });
+            document.body.appendChild(img);
+          });
+      </script>
+            </div>
+            <hr/>
+
+            
+            <style>
+    #reward {
+        margin: 40px 0;
+        text-align: center;
+    }
+
+    #reward .reward-link {
+        font-size: 1.88rem;
+    }
+
+    #reward .btn-floating:hover {
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2), 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    #rewardModal {
+        width: 320px;
+        height: 350px;
+    }
+
+    #rewardModal .reward-title {
+        margin: 15px auto;
+        padding-bottom: 5px;
+    }
+
+    #rewardModal .modal-content {
+        padding: 10px;
+    }
+
+    #rewardModal .close {
+        position: absolute;
+        right: 15px;
+        top: 15px;
+        color: rgba(0, 0, 0, 0.5);
+        font-size: 1.3rem;
+        line-height: 20px;
+        cursor: pointer;
+    }
+
+    #rewardModal .close:hover {
+        color: #ef5350;
+        transform: scale(1.3);
+        -moz-transform:scale(1.3);
+        -webkit-transform:scale(1.3);
+        -o-transform:scale(1.3);
+    }
+
+    #rewardModal .reward-tabs {
+        margin: 0 auto;
+        width: 210px;
+    }
+
+    .reward-tabs .tabs {
+        height: 38px;
+        margin: 10px auto;
+        padding-left: 0;
+    }
+
+    .reward-content ul {
+        padding-left: 0 !important;
+    }
+
+    .reward-tabs .tabs .tab {
+        height: 38px;
+        line-height: 38px;
+    }
+
+    .reward-tabs .tab a {
+        color: #fff;
+        background-color: #ccc;
+    }
+
+    .reward-tabs .tab a:hover {
+        background-color: #ccc;
+        color: #fff;
+    }
+
+    .reward-tabs .wechat-tab .active {
+        color: #fff !important;
+        background-color: #22AB38 !important;
+    }
+
+    .reward-tabs .alipay-tab .active {
+        color: #fff !important;
+        background-color: #019FE8 !important;
+    }
+
+    .reward-tabs .reward-img {
+        width: 210px;
+        height: 210px;
+    }
+</style>
+
+<div id="reward">
+    <a href="#rewardModal" class="reward-link modal-trigger btn-floating btn-large waves-effect waves-light red">赏</a>
+
+    <!-- Modal Structure -->
+    <div id="rewardModal" class="modal">
+        <div class="modal-content">
+            <a class="close modal-close"><i class="fa fa-close"></i></a>
+            <h4 class="reward-title">你的赏识是我前进的动力!</h4>
+            <div class="reward-content">
+                <div class="reward-tabs">
+                    <ul class="tabs row">
+                        <li class="tab col s6 alipay-tab waves-effect waves-light"><a href="#alipay">支付宝</a></li>
+                        <li class="tab col s6 wechat-tab waves-effect waves-light"><a href="#wechat">微 信</a></li>
+                    </ul>
+                    <div id="alipay">
+                        <img src="/medias/reward/alipay.bmp" class="reward-img" alt="支付宝打赏二维码">
+                    </div>
+                    <div id="wechat">
+                        <img src="/medias/reward/wechat.bmp" class="reward-img" alt="微信打赏二维码">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $('.tabs').tabs();
+    });
+</script>
+            
+
+            <link rel="stylesheet" type="text/css" href="/libs/share/css/share.min.css">
+
+<div id="article-share">
+    
+    <div class="social-share" data-disabled="qzone" data-wechat-qrcode-helper="<p>微信里点“发现”->“扫一扫”二维码便可查看分享。</p>"></div>
+    
+</div>
+
+<script src="/libs/share/js/social-share.min.js"></script>
+
+            
+            
+            
+            <div class="reprint1">
+                <p>
+                    <span class="reprint1-tip">
+                        <i class="fa fa-exclamation-circle"></i>&nbsp;&nbsp;转载请注明:
+                    </span>
+                    <a href="https://jiejietop.cn" class="b-link-green">杰杰的博客</a>
+                    <i class="fa fa-angle-right fa-lg fa-fw text-color"></i>
+                    <a href="/freertos-5/" class="b-link-green">从0开始学FreeRTOS-(消息队列)-5</a>
+                </p>
+            </div>
+
+        </div>
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+        <style>
+    .valine-card {
+        margin: 1.5rem auto;
+    }
+
+    .valine-card .card-content {
+        padding: 20px 20px 5px 20px;
+    }
+
+    #vcomments input[type=text],
+    #vcomments input[type=email],
+    #vcomments input[type=url],
+    #vcomments textarea {
+        box-sizing: border-box;
+    }
+
+    #vcomments p {
+        margin: 2px 2px 10px;
+        font-size: 1.05rem;
+        line-height: 1.78rem;
+    }
+
+    #vcomments blockquote p {
+        text-indent: 0.2rem;
+    }
+
+    #vcomments a {
+        padding: 0 2px;
+        color: #42b983;
+        font-weight: 500;
+        text-decoration: underline;
+    }
+
+    #vcomments img {
+        max-width: 100%;
+        height: auto;
+        cursor: pointer;
+    }
+
+    #vcomments ol li {
+        list-style-type: decimal;
+    }
+
+    #vcomments ol,
+    ul {
+        display: block;
+        padding-left: 2em;
+        word-spacing: 0.05rem;
+    }
+
+    #vcomments ul li,
+    ol li {
+        display: list-item;
+        line-height: 1.8rem;
+        font-size: 1rem;
+    }
+
+    #vcomments ul li {
+        list-style-type: disc;
+    }
+
+    #vcomments ul ul li {
+        list-style-type: circle;
+    }
+
+    #vcomments table, th, td {
+        padding: 12px 13px;
+        border: 1px solid #dfe2e5;
+    }
+
+    #vcomments table, th, td {
+        border: 0;
+    }
+
+    table tr:nth-child(2n), thead {
+        background-color: #fafafa;
+    }
+
+    #vcomments table th {
+        background-color: #f2f2f2;
+        min-width: 80px;
+    }
+
+    #vcomments table td {
+        min-width: 80px;
+    }
+
+    #vcomments h1 {
+        font-size: 1.85rem;
+        font-weight: bold;
+        line-height: 2.2rem;
+    }
+
+    #vcomments h2 {
+        font-size: 1.65rem;
+        font-weight: bold;
+        line-height: 1.9rem;
+    }
+
+    #vcomments h3 {
+        font-size: 1.45rem;
+        font-weight: bold;
+        line-height: 1.7rem;
+    }
+
+    #vcomments h4 {
+        font-size: 1.25rem;
+        font-weight: bold;
+        line-height: 1.5rem;
+    }
+
+    #vcomments h5 {
+        font-size: 1.1rem;
+        font-weight: bold;
+        line-height: 1.4rem;
+    }
+
+    #vcomments h6 {
+        font-size: 1rem;
+        line-height: 1.3rem;
+    }
+
+    #vcomments p {
+        font-size: 1rem;
+        line-height: 1.5rem;
+    }
+
+    #vcomments hr {
+        margin: 12px 0;
+        border: 0;
+        border-top: 1px solid #ccc;
+    }
+
+    #vcomments blockquote {
+        margin: 15px 0;
+        border-left: 5px solid #42b983;
+        padding: 1rem 0.8rem 0.3rem 0.8rem;
+        color: #666;
+        background-color: rgba(66, 185, 131, .1);
+    }
+
+    #vcomments pre {
+        font-family: monospace, monospace;
+        padding: 1.2em;
+        margin: .5em 0;
+        background: #272822;
+        overflow: auto;
+        border-radius: 0.3em;
+        tab-size: 4;
+    }
+
+    #vcomments code {
+        font-family: monospace, monospace;
+        padding: 1px 3px;
+        font-size: 0.92rem;
+        color: #e96900;
+        background-color: #f8f8f8;
+        border-radius: 2px;
+    }
+
+    #vcomments pre code {
+        font-family: monospace, monospace;
+        padding: 0;
+        color: #e8eaf6;
+        background-color: #272822;
+    }
+
+    #vcomments pre[class*="language-"] {
+        padding: 1.2em;
+        margin: .5em 0;
+    }
+
+    #vcomments code[class*="language-"],
+    pre[class*="language-"] {
+        color: #e8eaf6;
+    }
+
+    #vcomments [type="checkbox"]:not(:checked), [type="checkbox"]:checked {
+        position: inherit;
+        margin-left: -1.3rem;
+        margin-right: 0.4rem;
+        margin-top: -1px;
+        vertical-align: middle;
+        left: unset;
+        visibility: visible;
+    }
+
+    #vcomments b,
+    strong {
+        font-weight: bold;
+    }
+
+    #vcomments dfn {
+        font-style: italic;
+    }
+
+    #vcomments small {
+        font-size: 85%;
+    }
+
+    #vcomments cite {
+        font-style: normal;
+    }
+
+    #vcomments mark {
+        background-color: #fcf8e3;
+        padding: .2em;
+    }
+
+    #vcomments table, th, td {
+        padding: 12px 13px;
+        border: 1px solid #dfe2e5;
+    }
+
+    table tr:nth-child(2n), thead {
+        background-color: #fafafa;
+    }
+
+    #vcomments table th {
+        background-color: #f2f2f2;
+        min-width: 80px;
+    }
+
+    #vcomments table td {
+        min-width: 80px;
+    }
+
+    #vcomments [type="checkbox"]:not(:checked), [type="checkbox"]:checked {
+        position: inherit;
+        margin-left: -1.3rem;
+        margin-right: 0.4rem;
+        margin-top: -1px;
+        vertical-align: middle;
+        left: unset;
+        visibility: visible;
+    }
+</style>
+
+<div class="card valine-card" data-aos="fade-up">
+    <div id="vcomments" class="card-content"></div>
+</div>
+
+<script src="/libs/valine/av-min.js"></script>
+<script src="/libs/valine/Valine.min.js"></script>
+<script>
+    new Valine({
+        el: '#vcomments',
+        appId: 'P8ggvR4g3idexcAGf4hkEUqQ-gzGzoHsz',
+        appKey: 'GqHPu44hpoDiC8uOjc4JJFSc',
+        notify: 'true' === 'true',
+        verify: 'true' === 'true',
+        visitor: 'true' === 'true',
+        avatar: 'monsterid',
+        pageSize: '10',
+        lang: 'zh-cn',
+        placeholder: '赶紧留下你的评论吧~'
+    });
+</script>
+    
+
+    
+
+<article id="prenext-posts" class="prev-next articles">
+    <div class="row article-row">
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge left-badge text-color">
+                <i class="fa fa-chevron-left"></i>&nbsp;上一篇</div>
+            <div class="card">
+                <a href="/freertos-6/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/9.jpg" class="responsive-img" alt="从0开始学FreeRTOS-(列表&列表项)-6">
+                        
+                        <span class="card-title">从0开始学FreeRTOS-(列表&列表项)-6</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            FreeRTOS列表&amp;列表项的源码解读第一次看列表与列表项的时候，感觉很像是链表，虽然我自己的链表也不太会，但是就是感觉很像。
+在FreeRTOS中，列表与列表项使用得非常多，是FreeRTOS的一个数据结构，学习过数据结构的同学都
+                        
+                    </div>
+                    <div class="publish-info">
+                        <span class="publish-date">
+                            <i class="fa fa-clock-o fa-fw icon-date"></i>2019-09-25
+                        </span>
+                        <span class="publish-author">
+                            
+                            <i class="fa fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/操作系统/" class="post-category" target="_blank">
+                                    操作系统
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/RTOS/" target="_blank">
+                        <span class="chip bg-color">RTOS</span>
+                    </a>
+                    
+                    <a href="/tags/操作系统/" target="_blank">
+                        <span class="chip bg-color">操作系统</span>
+                    </a>
+                    
+                    <a href="/tags/FreeRTOS/" target="_blank">
+                        <span class="chip bg-color">FreeRTOS</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fa fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/freertos-4/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/1.jpg" class="responsive-img" alt="从0开始学FreeRTOS-(任务调度)-4">
+                        
+                        <span class="card-title">从0开始学FreeRTOS-(任务调度)-4</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            大家晚上好，我是杰杰，最近挺忙的，好久没有更新了，今天周末就吐血更新一下吧！
+前言FreeRTOS是一个是实时内核，任务是程序执行的最小单位，也是调度器处理的基本单位，移植了FreeRTOS，则避免不了对任务的管理，在多个任务运行的时候，任
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="fa fa-clock-o fa-fw icon-date"></i>2019-08-31
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fa fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/操作系统/" class="post-category" target="_blank">
+                                    操作系统
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/RTOS/" target="_blank">
+                        <span class="chip bg-color">RTOS</span>
+                    </a>
+                    
+                    <a href="/tags/操作系统/" target="_blank">
+                        <span class="chip bg-color">操作系统</span>
+                    </a>
+                    
+                    <a href="/tags/FreeRTOS/" target="_blank">
+                        <span class="chip bg-color">FreeRTOS</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+    </div>
+</article>
+</div>
+
+
+<script>
+    $('#articleContent').on('copy', function (e) {
+        // IE8 or earlier browser is 'undefined'
+        if (typeof window.getSelection === 'undefined') return;
+
+        var selection = window.getSelection();
+        // if the selection is short let's not annoy our users.
+        if (('' + selection).length < Number.parseInt('120')) {
+            return;
+        }
+
+        // create a div outside of the visible area and fill it with the selected text.
+        var bodyElement = document.getElementsByTagName('body')[0];
+        var newdiv = document.createElement('div');
+        newdiv.style.position = 'absolute';
+        newdiv.style.left = '-99999px';
+        bodyElement.appendChild(newdiv);
+        newdiv.appendChild(selection.getRangeAt(0).cloneContents());
+
+        // we need a <pre> tag workaround.
+        // otherwise the text inside "pre" loses all the line breaks!
+        if (selection.getRangeAt(0).commonAncestorContainer.nodeName === 'PRE') {
+            newdiv.innerHTML = "<pre>" + newdiv.innerHTML + "</pre>";
+        }
+
+        var url = document.location.href;
+        newdiv.innerHTML += '<br />'
+            + '来源: 杰杰的博客<br />'
+            + '作者: 杰杰<br />'
+            + '链接: <a href="' + url + '">' + url + '</a><br />'
+            + '本文章著作权归作者所有，任何形式的转载都请注明出处。';
+
+        selection.selectAllChildren(newdiv);
+        window.setTimeout(function () {bodyElement.removeChild(newdiv);}, 200);
+    });
+</script>
+
+
+    </div>
+    <div id="toc-aside" class="expanded col l3 hide-on-med-and-down">
+        <div class="toc-widget">
+            <div class="toc-title"><i class="fa fa-list-alt"></i>&nbsp;&nbsp;目录</div>
+            <div id="toc-content"></div>
+        </div>
+    </div>
+</div>
+
+<!-- TOC 悬浮按钮. -->
+
+<div id="floating-toc-btn" class="hide-on-med-and-down">
+    <a class="btn-floating btn-large bg-color">
+        <i class="fa fa-list"></i>
+    </a>
+</div>
+
+
+<script src="/libs/tocbot/tocbot.min.js"></script>
+<script>
+    $(function () {
+        tocbot.init({
+            tocSelector: '#toc-content',
+            contentSelector: '#articleContent',
+            headingsOffset: -($(window).height() * 0.4 - 45),
+            // headingsOffset: -205,
+            headingSelector: 'h1, h2, h3, h4, h5'
+        });
+
+        // modify the toc link href to support Chinese.
+        let i = 0;
+        let tocHeading = 'toc-heading-';
+        $('#toc-content a').each(function () {
+            $(this).attr('href', '#' + tocHeading + (++i));
+        });
+
+        // modify the heading title id to support Chinese.
+        i = 0;
+        $('#articleContent').children('h1, h2, h3, h4, h5').each(function () {
+            $(this).attr('id', tocHeading + (++i));
+        });
+
+        // Set scroll toc fixed.
+        let tocHeight = parseInt($(window).height() * 0.4 - 64);
+        let $tocWidget = $('.toc-widget');
+        $(window).scroll(function () {
+            let scroll = $(window).scrollTop();
+            /* add post toc fixed. */
+            if (scroll > tocHeight) {
+                $tocWidget.addClass('toc-fixed');
+            } else {
+                $tocWidget.removeClass('toc-fixed');
+            }
+        });
+
+        
+        /* 修复文章卡片 div 的宽度. */
+        let fixPostCardWidth = function (srcId, targetId) {
+            let srcDiv = $('#' + srcId);
+            if (srcDiv.length === 0) {
+                return;
+            }
+
+            let w = srcDiv.width();
+            if (w >= 450) {
+                w = w + 21;
+            } else if (w >= 350 && w < 450) {
+                w = w + 18;
+            } else if (w >= 300 && w < 350) {
+                w = w + 16;
+            } else {
+                w = w + 14;
+            }
+            $('#' + targetId).width(w);
+        };
+
+        // 切换TOC目录展开收缩的相关操作.
+        const expandedClass = 'expanded';
+        let $tocAside = $('#toc-aside');
+        let $mainContent = $('#main-content');
+        $('#floating-toc-btn .btn-floating').click(function () {
+            if ($tocAside.hasClass(expandedClass)) {
+                $tocAside.removeClass(expandedClass).slideUp(500);
+                $mainContent.removeClass('l9');
+            } else {
+                $tocAside.addClass(expandedClass).slideDown(500);
+                $mainContent.addClass('l9');
+            }
+            fixPostCardWidth('artDetail', 'prenext-posts');
+        });
+        
+    });
+</script>
+    
+
+</main>
+
+
+    <!-- jiejie 杰杰  modify 2019.08.15-->
+
+<footer class="page-footer bg-color">
+    <div class="container row center-align">
+        <div class="col s12 m8 l8 copy-right">
+            &copy; 2019 jiejie. All Rights Reserved.
+
+            
+                &nbsp;<i class="fa fa-area-chart"></i>&nbsp;站点总字数:&nbsp;
+                <span class="white-color">94k</span>
+
+            
+            <br>
+
+            <span id="sitetime"></span>
+
+            
+
+            
+                <br>
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'></span>
+                    <i class="fa fa-heart-o"></i>
+                    本站总访问量 <span id="busuanzi_value_site_pv" class="white-color"></span>
+
+                
+
+                
+                    <span id="busuanzi_container_site_uv" style='display:none'></span>
+                    人次,&nbsp;访客数 <span id="busuanzi_value_site_uv" class="white-color"></span> 人.
+                    
+                
+
+            
+
+        </div>
+
+        <div class="col s12 m4 l4 social-link social-statis">
+    <a href="https://github.com/jiejietop" class="tooltipped" target="_blank" data-tooltip="访问我的GitHub" data-position="top" data-delay="50">
+        <i class="fa fa-github"></i>
+    </a>
+
+
+ 
+    <a href="https://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=jiejietop@gmail.com" class="tooltipped" target="_blank" data-tooltip="邮件联系我" data-position="top" data-delay="50">
+        <i class="fa fa-envelope-open"></i>
+    </a>
+
+
+
+
+    <a href="https://zhihu.com/people/jie-jie-33-9" class="tooltipped" target="_blank" data-tooltip="访问我的知乎" data-position="top" data-delay="50">
+        <i class="fa fa-inverse">知</i>
+    </a>
+
+
+
+    <a href="http://wpa.qq.com/msgrd?v=3&uin=1161959934&site=qq&menu=yes" class="tooltipped" target="_blank" data-tooltip="访问我的QQ空间" data-position="top" data-delay="50">
+        <i class="fa fa-qq"></i>
+    </a>
+
+
+
+    <a href="https://weibo.com/6800623694" class="tooltipped" target="_blank" data-tooltip="关注我的微博" data-position="top" data-delay="50">
+        <i class="fa fa-weibo"></i>
+    </a>
+
+
+
+    <a href="/atom.xml" class="tooltipped" target="_blank" data-tooltip="RSS 订阅" data-position="top" data-delay="50">
+        <i class="fa fa-rss"></i>
+    </a>
+</div>
+
+    </div>
+</footer>
+
+<div class="progress-bar"></div>
+
+<script language=javascript>
+    function siteTime() {
+        window.setTimeout("siteTime()", 1000);
+        var seconds = 1000;
+        var minutes = seconds * 60;
+        var hours = minutes * 60;
+        var days = hours * 24;
+        var years = days * 365;
+        var today = new Date();
+        var todayYear = today.getFullYear();
+        var todayMonth = today.getMonth() + 1;
+        var todayDate = today.getDate();
+        var todayHour = today.getHours();
+        var todayMinute = today.getMinutes();
+        var todaySecond = today.getSeconds();
+
+        /* Date.UTC() -- 返回date对象距世界标准时间(UTC)1970年1月1日午夜之间的毫秒数(时间戳)
+        year - 作为date对象的年份，为4位年份值
+        month - 0-11之间的整数，做为date对象的月份
+        day - 1-31之间的整数，做为date对象的天数
+        hours - 0(午夜24点)-23之间的整数，做为date对象的小时数
+        minutes - 0-59之间的整数，做为date对象的分钟数
+        seconds - 0-59之间的整数，做为date对象的秒数
+        microseconds - 0-999之间的整数，做为date对象的毫秒数 */
+
+        var t1 = Date.UTC(2019, 08, 01, 00, 00, 00); //北京时间2019-8-1 00:00:00
+        var t2 = Date.UTC(todayYear, todayMonth, todayDate, todayHour, todayMinute, todaySecond);
+        var diff = t2 - t1;
+        var diffYears = Math.floor(diff / years);
+        var diffDays = Math.floor((diff / days) - diffYears * 365);
+        var diffHours = Math.floor((diff - (diffYears * 365 + diffDays) * days) / hours);
+        var diffMinutes = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours) / minutes);
+        var diffSeconds = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours - diffMinutes * minutes) / seconds);
+        document.getElementById("sitetime").innerHTML = "本站已运行 " + diffYears + " 年 " + diffDays + " 天 " + diffHours + " 小时 " + diffMinutes + " 分钟 " + diffSeconds + " 秒";
+    }/*因为建站时间还没有一年，就将之注释掉了。需要的可以取消*/
+    siteTime();
+</script>
+
+    <!-- 搜索遮罩框 -->
+<div id="searchModal" class="modal">
+    <div class="modal-content">
+        <div class="search-header">
+            <span class="title"><i class="fa fa-search"></i>&nbsp;&nbsp;搜索</span>
+            <input type="search" id="searchInput" name="s" placeholder="请输入搜索的关键字"
+                   class="search-input">
+        </div>
+        <div id="searchResult"></div>
+    </div>
+</div>
+
+<script src="/js/search.js"></script>
+<script type="text/javascript">
+$(function () {
+    searchFunc("/" + "search.xml", 'searchInput', 'searchResult');
+});
+</script>
+    <!-- 回到顶部按钮 -->
+<div id="backTop" class="top-scroll">
+    <a class="btn-floating btn-large waves-effect waves-light" href="#!">
+        <i class="fa fa-angle-up"></i>
+    </a>
+</div>
+
+
+    <script src="/libs/materialize/materialize.min.js"></script>
+    <script src="/libs/masonry/masonry.pkgd.min.js"></script>
+    <script src="/libs/aos/aos.js"></script>
+    <script src="/libs/scrollprogress/scrollProgress.min.js"></script>
+    <script src="/libs/lightGallery/js/lightgallery-all.min.js"></script>
+    <script src="/js/matery.js"></script>
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+
+
+
+    
+        <script src="/libs/others/clicklove.js"></script>
+    
+    
+    
+        <script async src="/libs/others/busuanzi.pure.mini.js"></script>
+    
+    
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"log":false,"model":{"jsonPath":"/live2dw/assets/wanko.model.json"},"display":{"position":"left","width":150,"height":200},"mobile":{"show":false},"react":{"opacity":0.7}});</script><script>!function(e){var r=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function t(){for(var c=0;c<r.length;c++)t=r[c],void 0,0<=(n=t.getBoundingClientRect()).top&&0<=n.left&&n.top<=(e.innerHeight||document.documentElement.clientHeight)&&function(){var t,n,e,i,o=r[c];t=o,n=function(){r=r.filter(function(t){return o!==t})},e=new Image,i=t.getAttribute("data-original"),e.onload=function(){t.src=i,n&&n()},e.src=i}();var t,n}t(),e.addEventListener("scroll",function(){!function(t,n){clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(n)},500)}(t,e)})}(this);</script></body>
+
+</html>

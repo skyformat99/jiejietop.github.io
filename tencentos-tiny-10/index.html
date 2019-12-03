@@ -1,0 +1,2001 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+<!-- jiejie 杰杰  modify 2019.08.15-->
+
+
+
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="utf-8">
+    <meta name="keywords" content="【TencentOS  tiny】深度源码分析（8）——软件定时器, IoT RTOS linux Python jiejie Dora">
+    <meta name="baidu-site-verification" content="fmlEuI34ir">
+    <meta name="google-site-verification" content="KeoTn_OFy4ndJwXNmm2gMeQfPhd7alqE9vQDwI32KCY">
+    <meta name="description" content="软件定时器的基本概念TencentOS tiny 的软件定时器是由操作系统提供的一类系统接口，它构建在硬件定时器基础之上，使系统能够提供不受硬件定时器资源限制的定时器服务，本质上软件定时器的使用相当于扩展了定时器的数量，允许创建更多的定时业">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="renderer" content="webkit|ie-stand|ie-comp">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>【TencentOS  tiny】深度源码分析（8）——软件定时器 | 杰杰的博客</title>
+    <link rel="icon" type="image/x-icon, image/vnd.microsoft.icon" href="/medias/logo/favicon.ico">
+
+    <link rel="stylesheet" type="text/css" href="/libs/awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="/libs/materialize/materialize.min.css">
+    <link rel="stylesheet" type="text/css" href="/libs/aos/aos.css">
+    <link rel="stylesheet" type="text/css" href="/libs/animate/animate.min.css">
+    <link rel="stylesheet" type="text/css" href="/libs/lightGallery/css/lightgallery.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/matery.css">
+    <link rel="stylesheet" type="text/css" href="/css/my.css">
+
+    <meta name="360-site-verification" content="d280ce782ae1e8d546343da41182687d">
+
+    <style type="text/css">
+        
+            
+            code[class*="language-"],
+            pre[class*="language-"] {
+                white-space: pre !important;
+            }
+
+        
+    </style>
+
+    <script src="/libs/jquery/jquery-2.2.0.min.js"></script>
+    <script src="https://sdk.jinrishici.com/v2/browser/jinrishici.js" charset="utf-8"></script>
+    
+    <script>
+        var _hmt = _hmt || [];
+        (function () {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?46e79e71af0709a5b9106bf20cecc493";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+
+    <script>
+        (function(){
+        var src = "https://jspassport.ssl.qhimg.com/11.0.1.js?d182b3f28525f2db83acfaaf6e696dba";
+        document.write('<script src="' + src + '" id="sozz"><\/script>');
+        })();
+    </script>
+
+    
+    
+        <script>
+            (function(){
+                var bp = document.createElement('script');
+                var curProtocol = window.location.protocol.split(':')[0];
+                if (curProtocol === 'https') {
+                    bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+                }
+                else {
+                    bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+                }
+                var s = document.getElementsByTagName("script")[0];
+                s.parentNode.insertBefore(bp, s);
+            })();
+        </script>
+    
+
+<link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
+
+<body>
+
+    <header class="navbar-fixed">
+    <nav id="headNav" class="bg-color nav-transparent">
+        <div id="navContainer" class="nav-wrapper container">
+            <div class="brand-logo">
+                <a href="/" class="waves-effect waves-light">
+                    
+                    <img src="/medias/logo/logo.ico" class="logo-img" alt="LOGO">
+                    
+                    <span class="logo-span">杰杰的博客</span>
+                </a>
+            </div>
+            <!-- jiejie 杰杰  modify 2019.08.15-->
+
+
+
+<a href="#" data-target="mobile-nav" class="sidenav-trigger button-collapse"><i class="fa fa-navicon"></i></a>
+<ul class="right">
+    
+    <li class="hide-on-med-and-down">
+        <a href="/" class="waves-effect waves-light">
+            
+            <i class="fa fa-home"></i>
+            
+            <span>首页</span>
+        </a>
+    </li>
+    
+    <li class="hide-on-med-and-down">
+        <a href="/tags" class="waves-effect waves-light">
+            
+            <i class="fa fa-tags"></i>
+            
+            <span>标签</span>
+        </a>
+    </li>
+    
+    <li class="hide-on-med-and-down">
+        <a href="/categories" class="waves-effect waves-light">
+            
+            <i class="fa fa-bookmark"></i>
+            
+            <span>分类</span>
+        </a>
+    </li>
+    
+    <li class="hide-on-med-and-down">
+        <a href="/archives" class="waves-effect waves-light">
+            
+            <i class="fa fa-archive"></i>
+            
+            <span>归档</span>
+        </a>
+    </li>
+    
+    <li class="hide-on-med-and-down">
+        <a href="/AV" class="waves-effect waves-light">
+            
+            <i class="fa fa-music"></i>
+            
+            <span>娱乐</span>
+        </a>
+    </li>
+    
+    <li class="hide-on-med-and-down">
+        <a href="/about" class="waves-effect waves-light">
+            
+            <i class="fa fa-user-circle-o"></i>
+            
+            <span>关于我</span>
+        </a>
+    </li>
+    
+    <li class="hide-on-med-and-down">
+        <a href="/contact" class="waves-effect waves-light">
+            
+            <i class="fa fa-envelope"></i>
+            
+            <span>留言板</span>
+        </a>
+    </li>
+    
+    <li class="hide-on-med-and-down">
+        <a href="/friends" class="waves-effect waves-light">
+            
+            <i class="fa fa-address-book"></i>
+            
+            <span>友情链接</span>
+        </a>
+    </li>
+    
+    <li>
+        <a href="#searchModal" class="modal-trigger waves-effect waves-light">
+            <i id="searchIcon" class="fa fa-search" title="搜索"></i>
+        </a>
+    </li>
+</ul>
+
+<!-- jiejie 杰杰  modify 2019.08.15-->
+
+<div id="mobile-nav" class="side-nav sidenav">
+
+    <div class="mobile-head bg-color">
+        
+        <img src="/medias/logo/logo.ico" class="logo-img circle responsive-img">
+        <!-- jiejie 杰杰  modify 2019.08.15-->
+        <div class="logo-name">杰杰的博客</div>
+        <div class="logo-desc">
+            
+            物联网 | linux | 操作系统
+            
+        </div>
+    </div>
+
+    
+
+    <ul class="menu-list mobile-menu-list">
+        
+        <li>
+            <a href="/" class="waves-effect waves-light">
+                
+                <i class="fa fa-fw fa-home"></i>
+                
+                首页
+            </a>
+        </li>
+        
+        <li>
+            <a href="/tags" class="waves-effect waves-light">
+                
+                <i class="fa fa-fw fa-tags"></i>
+                
+                标签
+            </a>
+        </li>
+        
+        <li>
+            <a href="/categories" class="waves-effect waves-light">
+                
+                <i class="fa fa-fw fa-bookmark"></i>
+                
+                分类
+            </a>
+        </li>
+        
+        <li>
+            <a href="/archives" class="waves-effect waves-light">
+                
+                <i class="fa fa-fw fa-archive"></i>
+                
+                归档
+            </a>
+        </li>
+        
+        <li>
+            <a href="/AV" class="waves-effect waves-light">
+                
+                <i class="fa fa-fw fa-music"></i>
+                
+                娱乐
+            </a>
+        </li>
+        
+        <li>
+            <a href="/about" class="waves-effect waves-light">
+                
+                <i class="fa fa-fw fa-user-circle-o"></i>
+                
+                关于我
+            </a>
+        </li>
+        
+        <li>
+            <a href="/contact" class="waves-effect waves-light">
+                
+                <i class="fa fa-fw fa-envelope"></i>
+                
+                留言板
+            </a>
+        </li>
+        
+        <li>
+            <a href="/friends" class="waves-effect waves-light">
+                
+                <i class="fa fa-fw fa-address-book"></i>
+                
+                友情链接
+            </a>
+        </li>
+        
+        
+        <li><div class="divider"></div></li>
+        <li>
+            <a href="https://github.com/jiejietop" class="waves-effect waves-light" target="_blank">
+                <i class="fa fa-github-square fa-fw"></i>Fork Me
+            </a>
+        </li>
+        
+    </ul>
+</div>
+
+        </div>
+
+        
+            <style>
+    .nav-transparent .github-corner {
+        display: none !important;
+    }
+
+    .github-corner {
+        position: absolute;
+        z-index: 10;
+        top: 0;
+        right: 0;
+        border: 0;
+        transform: scale(1.1);
+    }
+
+    .github-corner svg {
+        color: #0f9d58;
+        fill: #fff;
+        height: 64px;
+        width: 64px;
+    }
+
+    .github-corner:hover .octo-arm {
+        animation: a 0.56s ease-in-out;
+    }
+
+    .github-corner .octo-arm {
+        animation: none;
+    }
+
+    @keyframes a {
+        0%,
+        to {
+            transform: rotate(0);
+        }
+        20%,
+        60% {
+            transform: rotate(-25deg);
+        }
+        40%,
+        80% {
+            transform: rotate(10deg);
+        }
+    }
+</style>
+
+<a href="https://github.com/jiejietop" class="github-corner tooltipped hide-on-med-and-down" target="_blank"
+   data-tooltip="Fork Me" data-position="left" data-delay="50">
+    <svg viewBox="0 0 250 250" aria-hidden="true">
+        <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path>
+        <path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2"
+              fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path>
+        <path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z"
+              fill="currentColor" class="octo-body"></path>
+    </svg>
+</a>
+        
+    </nav>
+
+</header>
+
+    
+<script src="/libs/cryptojs/crypto-js.min.js"></script>
+<script>
+    (function() {
+        let pwd = '';
+        if (pwd && pwd.length > 0) {
+            if (pwd !== CryptoJS.SHA256(prompt('请输入访问本文章的密码')).toString(CryptoJS.enc.Hex)) {
+                alert('密码错误，将返回主页！');
+                location.href = '/';
+            }
+        }
+    })();
+</script>
+
+
+
+
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/4.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col s12 m12 l12">
+                <div class="brand">
+                    <div class="description center-align post-title">
+                        【TencentOS  tiny】深度源码分析（8）——软件定时器
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<main class="post-container content">
+
+    
+    <link rel="stylesheet" href="/libs/tocbot/tocbot.css">
+<style>
+    #articleContent h1::before,
+    #articleContent h2::before,
+    #articleContent h3::before,
+    #articleContent h4::before,
+    #articleContent h5::before,
+    #articleContent h6::before {
+        display: block;
+        content: " ";
+        height: 100px;
+        margin-top: -100px;
+        visibility: hidden;
+    }
+
+    #articleContent :focus {
+        outline: none;
+    }
+
+    .toc-fixed {
+        position: fixed;
+        top: 64px;
+    }
+
+    .toc-widget {
+        padding-left: 20px;
+    }
+
+    .toc-widget .toc-title {
+        margin: 35px 0 15px 0;
+        padding-left: 17px;
+        font-size: 1.5rem;
+        font-weight: bold;
+        line-height: 1.5rem;
+    }
+
+    .toc-widget ol {
+        padding: 0;
+        list-style: none;
+    }
+
+    #toc-content ol {
+        padding-left: 10px;
+    }
+
+    #toc-content ol li {
+        padding-left: 10px;
+    }
+
+    #toc-content .toc-link:hover {
+        color: #42b983;
+        font-weight: 700;
+        text-decoration: underline;
+    }
+
+    #toc-content .toc-link::before {
+        background-color: transparent;
+        max-height: 25px;
+    }
+
+    #toc-content .is-active-link {
+        color: #42b983;
+    }
+
+    #toc-content .is-active-link::before {
+        background-color: #42b983;
+    }
+
+    #floating-toc-btn {
+        position: fixed;
+        right: 20px;
+        bottom: 76px;
+        padding-top: 15px;
+        margin-bottom: 0;
+        z-index: 998;
+    }
+
+    #floating-toc-btn .btn-floating {
+        width: 48px;
+        height: 48px;
+    }
+
+    #floating-toc-btn .btn-floating i {
+        line-height: 48px;
+        font-size: 1.4rem;
+    }
+</style>
+<div class="row">
+    <div id="main-content" class="col s12 m12 l9">
+        <!-- jiejie 杰杰  modify 2019.08.15-->
+<!-- 文章内容详情 -->
+<div id="artDetail">
+    <div class="card">
+        <div class="card-content article-info">
+            <div class="row tag-cate">
+                <div class="col s7">
+                    
+                    <div class="article-tag">
+                        
+                            <a href="/tags/TencentOS-tiny/" target="_blank">
+                                <span class="chip bg-color">TencentOS tiny</span>
+                            </a>
+                        
+                            <a href="/tags/RTOS/" target="_blank">
+                                <span class="chip bg-color">RTOS</span>
+                            </a>
+                        
+                            <a href="/tags/操作系统/" target="_blank">
+                                <span class="chip bg-color">操作系统</span>
+                            </a>
+                        
+                            <a href="/tags/物联网/" target="_blank">
+                                <span class="chip bg-color">物联网</span>
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+                <div class="col s5 right-align">
+                    
+                    <div class="post-cate">
+                        <i class="fa fa-bookmark fa-fw icon-category"></i>
+                        
+                            <a href="/categories/操作系统/" class="post-category" target="_blank">
+                                操作系统
+                            </a>
+                        
+                            <a href="/categories/操作系统/TencentOS-tiny/" class="post-category" target="_blank">
+                                TencentOS tiny
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+            
+            <div class="post-info">
+                <div class="post-date info-break-policy">
+                    <i class="fa fa-calendar-minus-o fa-fw"></i>发布日期:&nbsp;&nbsp;
+                    2019-10-12
+                </div>
+
+                <div class="post-author info-break-policy">
+                    <i class="fa fa-user-o fa-fw"></i>作者:&nbsp;&nbsp;
+                    
+                        杰杰
+                    
+                </div>
+
+                
+                    
+                    <div class="info-break-policy">
+                        <i class="fa fa-file-word-o fa-fw"></i>文章字数:&nbsp;&nbsp;
+                        6.8k
+                    </div>
+                    
+
+                    
+                    <div class="info-break-policy">
+                        <i class="fa fa-clock-o fa-fw"></i>阅读时长:&nbsp;&nbsp;
+                        25 分
+                    </div>
+                    
+                
+                
+                
+                        <span id="busuanzi_container_site_pv" style='display:none'></span>
+                        <i class="fa fa-eye fa-fw"></i>阅读次数:&nbsp;&nbsp;
+                        <span id="busuanzi_value_page_pv" ></span>
+    
+                
+
+            </div>
+        </div>
+        <hr class="clearfix">
+        <div class="card-content article-card-content">
+            <div id="articleContent">
+                <h1 id="软件定时器的基本概念"><a href="#软件定时器的基本概念" class="headerlink" title="软件定时器的基本概念"></a>软件定时器的基本概念</h1><p>TencentOS tiny 的软件定时器是由操作系统提供的一类<code>系统接口</code>，它构建在硬件定时器基础之上，使系统能够提供不受硬件定时器资源限制的定时器服务，本质上软件定时器的使用相当于扩展了定时器的数量，允许创建更多的定时业务，它实现的功能与硬件定时器也是类似的。</p>
+<blockquote>
+<p>硬件定时器是芯片本身提供的定时功能。一般是由外部晶振提供给芯片输入时钟，芯片向软件模块提供一组配置寄存器，接受控制输入，到达设定时间值后芯片中断控制器产生时钟中断。硬件定时器的精度一般很高，可以达到纳秒级别，并且是中断触发方式。</p>
+</blockquote>
+<p>软件定时器的超时处理是指：在定时时间到达之后就会自动触发一个超时，然后系统跳转到对应的函数去处理这个超时，此时，调用的函数也被称<code>回调函数</code>。</p>
+<p>回调函数的执行环境可以是<code>中断</code>，也可以是<code>任务</code>，这就需要你自己在<code>tos_config.h</code>通过<code>TOS_CFG_TIMER_AS_PROC</code>宏定义选择回调函数的执行环境了。</p>
+<ul>
+<li><code>TOS_CFG_TIMER_AS_PROC  为 1</code> ：回调函数的执行环境是<code>中断</code></li>
+<li><code>TOS_CFG_TIMER_AS_PROC  为 0</code> ：回调函数的执行环境是<code>任务</code></li>
+</ul>
+<p>这与硬件定时器的中断服务函数很类似，无论是在中断中还是在任务中，回调函数的处理尽可能<code>简短，快进快出</code>。</p>
+<p>软件定时器在被创建之后，当经过设定的超时时间后会触发回调函数，定时精度与系统时钟的周期有关，一般可以采用SysTick作为软件定时器的时基（在<code>m核</code>单片机中几乎都是采用SysTick作为系统时基，而软件定时器又是基于系统时基之上）。</p>
+<p><code>TencentOS tiny</code>提供的软件定时器支持单次模式和周期模式，单次模式和周期模式的定时时间到之后都会调用软件定时器的回调函数。</p>
+<ul>
+<li><p><code>单次模式</code>：当用户创建了定时器并启动了定时器后，指定超时时间到达，只执行<code>一次</code>回调函数之后就将该定时器停止，不再重新执行。</p>
+</li>
+<li><p><code>周期模式</code>：这个定时器会按照指定的定时时间循环执行回调函数，直到将定时器删除。</p>
+</li>
+</ul>
+<blockquote>
+<p>在很多应用中，可能需要一些定时器任务，硬件定时器受硬件的限制，数量上不足以满足用户的实际需求，无法提供更多的定时器，可以采用软件定时器，由软件定时器代替硬件定时器任务。但需要注意的是软件定时器的精度是无法和硬件定时器相比的，因为在软件定时器的定时过程中是极有可能被其他中断打断，因此软件定时器更适用于对时间精度要求不高的任务。</p>
+</blockquote>
+<p>软件定时器以<code>tick</code>为基本计时单位，当用户创建并<code>启动</code>一个软件定时器时， <code>TencentOS tiny</code>会根据当前系统<code>tick</code>与用户指定的超时时间计算出该定时器超时的时间expires，并将该定时器插入软件定时器列表。</p>
+<h1 id="软件定时器的数据结构"><a href="#软件定时器的数据结构" class="headerlink" title="软件定时器的数据结构"></a>软件定时器的数据结构</h1><blockquote>
+<p>以下软件定时器的相关数据结构都在<code>tos_global.c</code>中定义</p>
+</blockquote>
+<h2 id="软件定时器列表"><a href="#软件定时器列表" class="headerlink" title="软件定时器列表"></a>软件定时器列表</h2><p>软件定时器列表用于记录系统中所有的软件定时器，这些软件定时器将按照唤醒时间升序插入软件定时器列表<code>k_timer_ctl.list</code> 中，它的数据类型是<code>timer_ctl_t</code>。</p>
+<pre class="line-numbers language-js"><code class="language-js">timer_ctl_t         k_timer_ctl <span class="token operator">=</span> <span class="token punctuation">{</span> TOS_TIME_FOREVER<span class="token punctuation">,</span> <span class="token function">TOS_LIST_NODE</span><span class="token punctuation">(</span>k_timer_ctl<span class="token punctuation">.</span>list<span class="token punctuation">)</span> <span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+typedef struct timer_control_st <span class="token punctuation">{</span>
+    k_tick_t    next_expires<span class="token punctuation">;</span>
+    k_list_t    list<span class="token punctuation">;</span>
+<span class="token punctuation">}</span> timer_ctl_t<span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<ul>
+<li><code>next_expires</code>：记录下一个到期的软件定时器时间。</li>
+<li><code>list</code>：软件定时器列表，所有的软件定时器都会被挂载到这个列表中。</li>
+</ul>
+<h2 id="软件定时器任务相关的数据结构"><a href="#软件定时器任务相关的数据结构" class="headerlink" title="软件定时器任务相关的数据结构"></a>软件定时器任务相关的数据结构</h2><p>如果 <code>TOS_CFG_TIMER_AS_PROC</code> 宏定义为0，则表示使用软件定时器任务处理软件定时器的回调函数，那么此时软件定时器的回调函数执行环境为任务；反之软件定时器回调函数的处理将在中断上下文环境中。</p>
+<pre class="line-numbers language-js"><code class="language-js">k_task_t            k_timer_task<span class="token punctuation">;</span>
+k_stack_t           k_timer_task_stk<span class="token punctuation">[</span>TOS_CFG_TIMER_TASK_STK_SIZE<span class="token punctuation">]</span><span class="token punctuation">;</span>
+k_prio_t            <span class="token keyword">const</span> k_timer_task_prio         <span class="token operator">=</span> TOS_CFG_TIMER_TASK_PRIO<span class="token punctuation">;</span>
+k_stack_t          <span class="token operator">*</span><span class="token keyword">const</span> k_timer_task_stk_addr     <span class="token operator">=</span> <span class="token operator">&amp;</span>k_timer_task_stk<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+size_t              <span class="token keyword">const</span> k_timer_task_stk_size     <span class="token operator">=</span> TOS_CFG_TIMER_TASK_STK_SIZE<span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<ul>
+<li><code>k_timer_task</code>：软件定时器任务控制块</li>
+<li><code>k_timer_task_stk</code>：软件定时器任务栈，其大小为<code>TOS_CFG_TIMER_TASK_STK_SIZE</code></li>
+<li><code>k_timer_task_prio</code>：软件定时器任务优先级，值为<code>TOS_CFG_TIMER_TASK_PRIO</code>，默认值是 <code>(k_prio_t)(K_TASK_PRIO_IDLE - (k_prio_t)1u)</code>，比空闲任务高<code>1</code>个数值优先级，杰杰认为这也是很低的优先级了，这样一来软件定时器的精度将更低，不过好在这个值是可以被用户自定义的，想让精度高一点就将这个软件定时器任务优先级设置得高一点就好。</li>
+<li>k_timer_task_stk_addr：软件定时器任务栈起始地址。</li>
+<li>k_timer_task_stk_size：软件定时器任务栈大小。</li>
+</ul>
+<blockquote>
+<p>以下软件定时器的相关数据结构都在<code>tos_timer.h</code>中定义</p>
+</blockquote>
+<h2 id="软件定时器的回调函数"><a href="#软件定时器的回调函数" class="headerlink" title="软件定时器的回调函数"></a>软件定时器的回调函数</h2><pre class="line-numbers language-js"><code class="language-js"><span class="token comment" spellcheck="true">// 软件定时器的回调函数类型</span>
+typedef <span class="token keyword">void</span> <span class="token punctuation">(</span><span class="token operator">*</span>k_timer_callback_t<span class="token punctuation">)</span><span class="token punctuation">(</span><span class="token keyword">void</span> <span class="token operator">*</span>arg<span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p>软件定时器的回调函数是一个函数指针的形式，它支持传入一个<code>void指针</code>类型的数据。</p>
+<h2 id="软件定时器控制块"><a href="#软件定时器控制块" class="headerlink" title="软件定时器控制块"></a>软件定时器控制块</h2><p>每个软件定时器都有对应的软件定时器控制块，每个软件定时器控制块都包含了软件定时器的基本信息，如软件定时器的状态、软件定时器工作模式、软件定时器的周期，剩余时间，以及软件定时器回调函数等信息。</p>
+<pre class="line-numbers language-js"><code class="language-js">typedef struct k_timer_st <span class="token punctuation">{</span>
+#<span class="token keyword">if</span> TOS_CFG_OBJECT_VERIFY_EN <span class="token operator">></span> 0u
+    knl_obj_t               knl_obj<span class="token punctuation">;</span>    <span class="token comment" spellcheck="true">/**&lt; 仅为了验证,测试当前内核对象是否真的是一个软件定时器 */</span>
+#endif
+
+    k_timer_callback_t      cb<span class="token punctuation">;</span>         <span class="token comment" spellcheck="true">/**&lt; 时间到时回调函数 */</span>
+    <span class="token keyword">void</span>                   <span class="token operator">*</span>cb_arg<span class="token punctuation">;</span>     <span class="token comment" spellcheck="true">/**&lt; 回调函数中传入的参数 */</span>
+    k_list_t                list<span class="token punctuation">;</span>       <span class="token comment" spellcheck="true">/**&lt; 挂载到软件定时器列表的节点 */</span>
+    k_tick_t                expires<span class="token punctuation">;</span>    <span class="token comment" spellcheck="true">/**&lt; 距离软件定时器的到期时间到期还剩多少时间（单位为tick） */</span>
+    k_tick_t                delay<span class="token punctuation">;</span>      <span class="token comment" spellcheck="true">/**&lt; 还剩多少时间运行第一个到期的软件定时器（的回调函数） */</span>
+    k_tick_t                period<span class="token punctuation">;</span>     <span class="token comment" spellcheck="true">/**&lt; 软件定时器的周期 */</span>
+    k_opt_t                 opt<span class="token punctuation">;</span>        <span class="token comment" spellcheck="true">/**&lt; 软件定时器的工作模式选项，可以是单次模式TOS_OPT_TIMER_ONESHOT，也可以是周期模式TOS_OPT_TIMER_PERIODIC */</span>
+    timer_state_t           state<span class="token punctuation">;</span>      <span class="token comment" spellcheck="true">/**&lt; 软件定时器的状态 */</span>
+<span class="token punctuation">}</span> k_timer_t<span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="软件定时器的工作模式"><a href="#软件定时器的工作模式" class="headerlink" title="软件定时器的工作模式"></a>软件定时器的工作模式</h2><pre class="line-numbers language-js"><code class="language-js"><span class="token comment" spellcheck="true">// if we just want the timer to run only once, this option should be passed to tos_timer_create.</span>
+#define TOS_OPT_TIMER_ONESHOT                   <span class="token punctuation">(</span>k_opt_t<span class="token punctuation">)</span><span class="token punctuation">(</span>0x0001u<span class="token punctuation">)</span>
+
+<span class="token comment" spellcheck="true">// if we want the timer run periodically, this option should be passed to tos_timer_create.</span>
+#define TOS_OPT_TIMER_PERIODIC                  <span class="token punctuation">(</span>k_opt_t<span class="token punctuation">)</span><span class="token punctuation">(</span>0x0002u<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<ul>
+<li><p><code>TOS_OPT_TIMER_ONESHOT</code>：<strong>单次</strong>模式，软件定时器在超时后，只会执行一次回调函数，它的状态将被设置为<code>TIMER_STATE_COMPLETED</code>，不再重新执行它的回调函数，当然，用户还是可以重新启动这个单次模式的软件定时器，它并未被删除。</p>
+<blockquote>
+<p>如果只希望计时器运行一次，则应将此选项传递给<code>tos_timer_create()</code>。</p>
+</blockquote>
+</li>
+<li><p>TOS_OPT_TIMER_PERIODIC ：<strong>周期</strong>模式 ，软件定时器在超时后，会执行对应的回调函数，同时根据软件定时器控制块中的<code>period</code>成员变量的值再重新插入软件定时器列表中，这个定时器会按照指定的定时时间循环执行（周期性执行）回调函数，直到用户将定时器删除。</p>
+<blockquote>
+<p>如果我们希望计时器周期运行，则应将此选项传递给<code>tos_timer_create()</code>。</p>
+</blockquote>
+</li>
+</ul>
+<h2 id="软件定时器的状态"><a href="#软件定时器的状态" class="headerlink" title="软件定时器的状态"></a>软件定时器的状态</h2><p>定时器状态有以下几种：</p>
+<pre class="line-numbers language-js"><code class="language-js">typedef <span class="token keyword">enum</span> timer_state_en <span class="token punctuation">{</span>
+    TIMER_STATE_UNUSED<span class="token punctuation">,</span>     <span class="token comment" spellcheck="true">/**&lt; the timer has been destroyed */</span>
+    TIMER_STATE_STOPPED<span class="token punctuation">,</span>    <span class="token comment" spellcheck="true">/**&lt; the timer has been created but not been started, or just be stopped(tos_timer_stop) */</span>
+    TIMER_STATE_RUNNING<span class="token punctuation">,</span>    <span class="token comment" spellcheck="true">/**&lt; the timer has been created and been started */</span>
+    TIMER_STATE_COMPLETED   <span class="token comment" spellcheck="true">/**&lt; the timer has finished its expires, it can only happen when the timer's opt is TOS_OPT_TIMER_ONESHOT */</span>
+<span class="token punctuation">}</span> timer_state_t<span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<ul>
+<li><p><code>TIMER_STATE_UNUSED</code>：未使用状态。</p>
+</li>
+<li><p><code>TIMER_STATE_STOPPED</code>：<code>创建</code>了软件定时器，但此时软件定时器<code>未启动</code>或者处于<code>停止</code>状态，调用<code>tos_timer_create()</code>函数接口或者在软件定时器启动后调用<code>tos_timer_stop()</code>函数接口后，定时器将变成该状态。</p>
+</li>
+<li><p><code>TIMER_STATE_RUNNING</code>：软件定时器处于运行状态，在定时器被<code>创建</code>后调用<code>tos_timer_start()</code>函数接口，定时器将变成该状态，表示定时器运行时的状态。</p>
+</li>
+<li><p><code>TIMER_STATE_COMPLETED</code>：软件定时器已到期，只有在软件定时器的模式选择为<code>TOS_OPT_TIMER_ONESHOT</code>时才可能发生，表示软件定时器已经完成了。</p>
+</li>
+</ul>
+<h1 id="创建软件定时器"><a href="#创建软件定时器" class="headerlink" title="创建软件定时器"></a>创建软件定时器</h1><p><strong>函数</strong></p>
+<pre class="line-numbers language-js"><code class="language-js">__API__ k_err_t <span class="token function">tos_timer_create</span><span class="token punctuation">(</span>k_timer_t <span class="token operator">*</span>tmr<span class="token punctuation">,</span>
+                                 k_tick_t delay<span class="token punctuation">,</span>
+                                 k_tick_t period<span class="token punctuation">,</span>
+                                 k_timer_callback_t callback<span class="token punctuation">,</span>
+                                 <span class="token keyword">void</span> <span class="token operator">*</span>cb_arg<span class="token punctuation">,</span>
+                                 k_opt_t opt<span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><strong>参数</strong></p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>说明（杰杰）</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>tmr</td>
+<td>软件定时器控制块指针</td>
+</tr>
+<tr>
+<td>delay</td>
+<td>软件定时器第一次运行的延迟时间间隔</td>
+</tr>
+<tr>
+<td>period</td>
+<td>软件定时器的周期</td>
+</tr>
+<tr>
+<td>callback</td>
+<td>软件定时器的回调函数，在超时时调用（由用户自己定义）</td>
+</tr>
+<tr>
+<td>cb_arg</td>
+<td>用于回调函数传入的形参（void指针类型）</td>
+</tr>
+<tr>
+<td>opt</td>
+<td>软件定时器的工作模式（单次 / 周期）</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>杰杰觉得 <code>delay</code>与 <code>period</code> 比较有意思，就简单提一下 <code>delay</code> 参数与 <code>period</code> 参数的意义与区别：</p>
+<ul>
+<li><code>delay</code>参数其实是第一次运行的延迟时间间隔（即第一次调用回调函数的时间），如果软件定时器是单次模式，那么只用 <code>delay</code> 参数作为软件定时器的回调时间，因为软件定时器是单次工作模式的话，只会运行一次回调函数，那么就没有周期一说（<code>period</code> 参数将不起作用），只能是以第一次运行的延迟时间间隔作为它的回调时间。</li>
+<li><code>period</code> 参数则是作为软件定时器的周期性回调的时间间隔，就好比你的闹钟，每天 7 点叫你起床，但是<code>delay</code>参数在周期工作模式下的软件定时器也是有作用的，它是对第一次回调函数的延迟时间，举个例子：今天晚上<code>9</code>点的时候，你设置了一个闹钟，闹钟时间是每天早上<code>7</code>点的，那么在<code>10</code>个小时后，闹钟将叫你起床，那么这10个小时就相当于<code>delay</code>参数的值，因为闹钟第一次叫你起床并不是在<code>24</code>小时后，而在明天7点后，闹钟响了，此时闹钟将在一天后才会再响，这24小时则相当于 <code>period</code> 参数的值。</li>
+</ul>
+</blockquote>
+<p>系统中每个软件定时器都有对应的软件定时器控制块，软件定时器控制块中包含了软件定时器的所有信息，那么可以想象一下，创建软件定时器的本质是不是就是对软件定时器控制块进行初始化呢？很显然就是这样子的。因为在后续对软件定时器的操作都是通过软件定时器控制块来操作的，如果控制块没有信息，那怎么能操作嘛~</p>
+<p>步骤如下：</p>
+<ol>
+<li><p>判断传入的参数是否正确：软件定时器控制块不为<code>null</code>，回调函数不为<code>null</code>，如果是创建周期模式的软件定时器，那么 <code>period</code> 参数则不可以为<code>0</code>，而如果是单次模式的软件定时器，参数<code>delay</code>则不可以为<code>0</code>，无论是何种模式的软件定时器，<code>delay</code> 参数与 <code>period</code> 参数都不可以为<code>K_ERR_TIMER_PERIOD_FOREVER</code>，因为这代表着软件定时器不需要运行，那还创建个锤子啊。</p>
+</li>
+<li><p>根据传入的参数将软件定时器控制块的成员变量赋初值，软件定时器状态<code>state</code>被设置为<code>TIMER_STATE_STOPPED</code>，<code>expires</code> 则被设置为<code>0</code>，因为还尚未启动软件定时器。</p>
+</li>
+<li><p>调用<code>tos_list_init()</code>函数将软件定时器控制块中可挂载到<code>k_tick_list</code>列表的节点初始化。</p>
+</li>
+</ol>
+<pre class="line-numbers language-js"><code class="language-js">__API__ k_err_t <span class="token function">tos_timer_create</span><span class="token punctuation">(</span>k_timer_t <span class="token operator">*</span>tmr<span class="token punctuation">,</span>
+                                 k_tick_t delay<span class="token punctuation">,</span>
+                                 k_tick_t period<span class="token punctuation">,</span>
+                                 k_timer_callback_t callback<span class="token punctuation">,</span>
+                                 <span class="token keyword">void</span> <span class="token operator">*</span>cb_arg<span class="token punctuation">,</span>
+                                 k_opt_t opt<span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    <span class="token function">TOS_PTR_SANITY_CHECK</span><span class="token punctuation">(</span>tmr<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">TOS_PTR_SANITY_CHECK</span><span class="token punctuation">(</span>callback<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>opt <span class="token operator">==</span> TOS_OPT_TIMER_PERIODIC <span class="token operator">&amp;&amp;</span> period <span class="token operator">==</span> <span class="token punctuation">(</span>k_tick_t<span class="token punctuation">)</span>0u<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> K_ERR_TIMER_INVALID_PERIOD<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>opt <span class="token operator">==</span> TOS_OPT_TIMER_ONESHOT <span class="token operator">&amp;&amp;</span> delay <span class="token operator">==</span> <span class="token punctuation">(</span>k_tick_t<span class="token punctuation">)</span>0u<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> K_ERR_TIMER_INVALID_DELAY<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>opt <span class="token operator">!=</span> TOS_OPT_TIMER_ONESHOT <span class="token operator">&amp;&amp;</span> opt <span class="token operator">!=</span> TOS_OPT_TIMER_PERIODIC<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> K_ERR_TIMER_INVALID_OPT<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>delay <span class="token operator">==</span> TOS_TIME_FOREVER<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> K_ERR_TIMER_DELAY_FOREVER<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>period <span class="token operator">==</span> TOS_TIME_FOREVER<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> K_ERR_TIMER_PERIOD_FOREVER<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+#<span class="token keyword">if</span> TOS_CFG_OBJECT_VERIFY_EN <span class="token operator">></span> 0u
+    <span class="token function">knl_object_init</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>tmr<span class="token operator">-</span><span class="token operator">></span>knl_obj<span class="token punctuation">,</span> KNL_OBJ_TYPE_TIMER<span class="token punctuation">)</span><span class="token punctuation">;</span>
+#endif
+
+    tmr<span class="token operator">-</span><span class="token operator">></span>state          <span class="token operator">=</span> TIMER_STATE_STOPPED<span class="token punctuation">;</span>
+    tmr<span class="token operator">-</span><span class="token operator">></span>delay          <span class="token operator">=</span> delay<span class="token punctuation">;</span>
+    tmr<span class="token operator">-</span><span class="token operator">></span>expires        <span class="token operator">=</span> <span class="token punctuation">(</span>k_tick_t<span class="token punctuation">)</span>0u<span class="token punctuation">;</span>
+    tmr<span class="token operator">-</span><span class="token operator">></span>period         <span class="token operator">=</span> period<span class="token punctuation">;</span>
+    tmr<span class="token operator">-</span><span class="token operator">></span>opt            <span class="token operator">=</span> opt<span class="token punctuation">;</span>
+    tmr<span class="token operator">-</span><span class="token operator">></span>cb             <span class="token operator">=</span> callback<span class="token punctuation">;</span>
+    tmr<span class="token operator">-</span><span class="token operator">></span>cb_arg         <span class="token operator">=</span> cb_arg<span class="token punctuation">;</span>
+    <span class="token function">tos_list_init</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>tmr<span class="token operator">-</span><span class="token operator">></span>list<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> K_ERR_NONE<span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h1 id="销毁软件定时器"><a href="#销毁软件定时器" class="headerlink" title="销毁软件定时器"></a>销毁软件定时器</h1><p>软件定时器销毁函数是根据软件定时器控制块直接销毁的，销毁之后软件定时器的所有信息都会被清除，而且不能再次使用这个软件定时器，如果软件定时器处于运行状态，那么就需要将被销毁的软件定时器停止，然后再进行销毁操作。<br>其过程如下：</p>
+<ol>
+<li><p>判断软件定时器是否有效，然后根据软件定时器状态判断软件定时器是否创建，如果是未使用状态<code>TIMER_STATE_UNUSED</code>，则直接返回错误代码<code>K_ERR_TIMER_INACTIVE</code>。</p>
+</li>
+<li><p>如果软件定时器状态是 <code>运行</code>状态 <code>TIMER_STATE_RUNNING</code>，那么调用<code>timer_takeoff()</code>函数将软件定时器停止。</p>
+</li>
+<li><p>最后调用<code>timer_reset()</code>函数将软件定时器控制块的内容重置，主要是将软件定时器的状态设置为未使用状态<code>TIMER_STATE_UNUSED</code>，将对应的回调函数设置为<code>null</code>。</p>
+<pre class="line-numbers language-js"><code class="language-js">__API__ k_err_t <span class="token function">tos_timer_destroy</span><span class="token punctuation">(</span>k_timer_t <span class="token operator">*</span>tmr<span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+<span class="token function">TOS_PTR_SANITY_CHECK</span><span class="token punctuation">(</span>tmr<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+</li>
+</ol>
+<p>#if TOS_CFG_OBJECT_VERIFY_EN &gt; 0u<br>    if (!knl_object_verify(&amp;tmr-&gt;knl_obj, KNL_OBJ_TYPE_TIMER)) {<br>        return K_ERR_OBJ_INVALID;<br>    }<br>#endif</p>
+<pre><code>if (tmr-&gt;state == TIMER_STATE_UNUSED) {
+    return K_ERR_TIMER_INACTIVE;
+}
+
+if (tmr-&gt;state == TIMER_STATE_RUNNING) {
+    timer_takeoff(tmr);
+}
+
+timer_reset(tmr);
+return K_ERR_NONE;</code></pre><p>}</p>
+<pre><code># 停止软件定时器（内部函数）
+在销毁软件定时器的时候提到了`timer_takeoff()`函数，那么就来看看这个函数具体是怎么样停止软件定时器的，其实本质上就是将软件定时器从软件定时器列表中移除。
+
+&gt; 注意，这个函数是内部静态函数，不是给用户使用的，它与`tos_timer_stop()`不同。
+
+ 1. 首先通过`TOS_LIST_FIRST_ENTRY`宏定义将软件定时器列表`k_timer_ctl.list`中的第一个软件定时器取出，因为防止软件定时器列表中的第一个软件定时器被移除了，而没有重置软件定时器列表中的相关的信息，因此此时要记录一下第一个软件定时器。
+ 2. 调用`tos_list_del()`将软件定时器从软件定时器列表中移除，表示中国软件定时器就被停止了，因为不知软件定时器列表中，中国软件定时器也就不会被处理。
+ 3. 判断一下移除的软件定时器是不是第一个软件定时器，如果是，则重置相关信息。如果软件定时器列表中不存在其他软件定时器，则将软件定时器列表的下一个到期时间设置为`TOS_TIME_FOREVER`，反正则让软件定时器列表的下一个到期时间为第二个软件定时器。
+
+```js
+__STATIC__ void timer_takeoff(k_timer_t *tmr)
+{
+    TOS_CPU_CPSR_ALLOC();
+    k_timer_t *first, *next;
+
+    TOS_CPU_INT_DISABLE();
+
+    first = TOS_LIST_FIRST_ENTRY(&amp;k_timer_ctl.list, k_timer_t, list);
+
+    tos_list_del(&amp;tmr-&gt;list);
+
+    if (first == tmr) {
+        // if the first guy removed, we need to refresh k_timer_ctl.next_expires
+        next = TOS_LIST_FIRST_ENTRY_OR_NULL(&amp;tmr-&gt;list, k_timer_t, list);
+        if (!next) {
+            // the only guy removed
+            k_timer_ctl.next_expires = TOS_TIME_FOREVER;
+        } else {
+            k_timer_ctl.next_expires = next-&gt;expires;
+        }
+    }
+
+    TOS_CPU_INT_ENABLE();
+}</code></pre><h1 id="启动软件定时器"><a href="#启动软件定时器" class="headerlink" title="启动软件定时器"></a>启动软件定时器</h1><p>在创建成功软件定时器的时候，软件定时器的状态从<code>TIMER_STATE_UNUSED</code>（未使用状态）变成<code>TIMER_STATE_STOPPED</code>（创建但未启动 / 停止状态），创建完成的软件定时器是未运行的，用户在需要的时候可以启动它，TencentOS tiny提供了软件定时器启动函数<code>tos_timer_start()</code>。启动软件定时器的本质就是将软件定时器插入软件定时器列表<code>k_timer_ctl.list</code> 中，既然是这样子，那么很显然需要根据软件定时器的不同状态进行不同的处理。</p>
+<p><strong>其实现过程如下</strong>：判断软件定时器控制块是否为<code>null</code>，然后判断软件定时器状态，如果为未使用状态<code>TIMER_STATE_UNUSED</code>则直接返回错误代码<code>K_ERR_TIMER_INACTIVE</code>；如果为已经运行状态<code>TIMER_STATE_RUNNING</code>，那么将软件定时器停止，然重新插入软件定时器列表<code>k_timer_ctl.list</code>中；如果是<code>TIMER_STATE_STOPPED</code>或者<code>TIMER_STATE_COMPLETED</code>状态，则将软件定时器的状态重新设置为运行状态<code>TIMER_STATE_RUNNING</code>，并且插入软件定时器列表<code>k_timer_ctl.list</code>中。</p>
+<blockquote>
+<p>注意：插入软件定时器列表的函数是<code>timer_place()</code>。</p>
+</blockquote>
+<blockquote>
+<p><code>tos_timer_start()</code>函数将软件定时器控制块的<code>period</code>或者<code>delay</code>成员变量的值赋值给<code>expires</code>，但这个值是相对的到期时间，而不是绝对值，因此在<code>timer_place()</code>函数中将重新计算得出绝对的到期时间。</p>
+</blockquote>
+<pre class="line-numbers language-js"><code class="language-js">__API__ k_err_t <span class="token function">tos_timer_start</span><span class="token punctuation">(</span>k_timer_t <span class="token operator">*</span>tmr<span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    <span class="token function">TOS_PTR_SANITY_CHECK</span><span class="token punctuation">(</span>tmr<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+#<span class="token keyword">if</span> TOS_CFG_OBJECT_VERIFY_EN <span class="token operator">></span> 0u
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token function">knl_object_verify</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>tmr<span class="token operator">-</span><span class="token operator">></span>knl_obj<span class="token punctuation">,</span> KNL_OBJ_TYPE_TIMER<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> K_ERR_OBJ_INVALID<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+#endif
+
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>tmr<span class="token operator">-</span><span class="token operator">></span>state <span class="token operator">==</span> TIMER_STATE_UNUSED<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> K_ERR_TIMER_INACTIVE<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>tmr<span class="token operator">-</span><span class="token operator">></span>state <span class="token operator">==</span> TIMER_STATE_RUNNING<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token function">timer_takeoff</span><span class="token punctuation">(</span>tmr<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        tmr<span class="token operator">-</span><span class="token operator">></span>expires <span class="token operator">=</span> tmr<span class="token operator">-</span><span class="token operator">></span>delay<span class="token punctuation">;</span>
+        <span class="token function">timer_place</span><span class="token punctuation">(</span>tmr<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">return</span> K_ERR_NONE<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>tmr<span class="token operator">-</span><span class="token operator">></span>state <span class="token operator">==</span> TIMER_STATE_STOPPED <span class="token operator">||</span>
+        tmr<span class="token operator">-</span><span class="token operator">></span>state <span class="token operator">==</span> TIMER_STATE_COMPLETED<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        tmr<span class="token operator">-</span><span class="token operator">></span>state <span class="token operator">=</span> TIMER_STATE_RUNNING<span class="token punctuation">;</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>tmr<span class="token operator">-</span><span class="token operator">></span>delay <span class="token operator">==</span> <span class="token punctuation">(</span>k_tick_t<span class="token punctuation">)</span>0u<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            tmr<span class="token operator">-</span><span class="token operator">></span>expires <span class="token operator">=</span> tmr<span class="token operator">-</span><span class="token operator">></span>period<span class="token punctuation">;</span>
+        <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+            tmr<span class="token operator">-</span><span class="token operator">></span>expires <span class="token operator">=</span> tmr<span class="token operator">-</span><span class="token operator">></span>delay<span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+        <span class="token function">timer_place</span><span class="token punctuation">(</span>tmr<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">return</span> K_ERR_NONE<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">return</span> K_ERR_TIMER_INVALID_STATE<span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h1 id="插入软件定时器列表"><a href="#插入软件定时器列表" class="headerlink" title="插入软件定时器列表"></a>插入软件定时器列表</h1><p>插入软件定时器列表的函数是<code>timer_place()</code>，这个函数会根据软件定时器的到期时间升序排序，然后再插入。</p>
+<blockquote>
+<p>该函数是一个内部实现的静态函数</p>
+</blockquote>
+<p>实现过程如下：</p>
+<ol>
+<li>根据软件定时器的到期时间<code>expires</code>（相对值） 与系统当前时间<code>k_tick_count</code>计算得出到期时间<code>expires</code>（绝对值）。<blockquote>
+<p>举个例子，闹钟将在10分钟后叫我起床（这是一个<code>相对值</code>）。闹钟将在当前时间（7:00）的10分钟后叫我起床，那么闹钟响的时间是7:10分，此时的时间就是<code>绝对值</code>。</p>
+</blockquote>
+</li>
+</ol>
+<ol start="2">
+<li><p>通过for循环<code>TOS_LIST_FOR_EACH</code>找到合适的位置插入软件定时器列表，此时插入软件定时器列表安装到期时间升序插入。</p>
+</li>
+<li><p>找到合适的位置后，调用<code>tos_list_add_tail()</code>函数将软件定时器插入软件定时器列表。</p>
+</li>
+<li><p>如果插入的软件定时器是唯一定时器列表中的第一个，那么相应的，下一个到期时间就是这个软件定时器的到期时间，将到期时间更新： <code>k_timer_ctl.next_expires = tmr-&gt;expires</code>。如果<code>TOS_CFG_TIMER_AS_PROC</code> 宏定义为0，则判断一下软件定时器任务是否处于睡眠状态，如果是则调用<code>tos_task_delay_abort()</code>函数恢复软件定时器任务运行，以便于更新它休眠的时间，因为此时是需要更新软件定时器任务睡眠的时间的，毕竟第一个软件定时器到期时间已经改变了。</p>
+</li>
+<li><p>如果软件定时器任务处于挂起状态，表示并没有软件定时器在工作，现在插入了软件定时器，需要调用<code>tos_task_resume()</code>函数将软件定时器任务唤醒。</p>
+</li>
+</ol>
+<blockquote>
+<p>关于唤醒软件定时器任务是为了什么，我们在后续讲解</p>
+</blockquote>
+<pre class="line-numbers language-js"><code class="language-js">__STATIC__ <span class="token keyword">void</span> <span class="token function">timer_place</span><span class="token punctuation">(</span>k_timer_t <span class="token operator">*</span>tmr<span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    <span class="token function">TOS_CPU_CPSR_ALLOC</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    k_list_t <span class="token operator">*</span>curr<span class="token punctuation">;</span>
+    k_timer_t <span class="token operator">*</span>iter <span class="token operator">=</span> K_NULL<span class="token punctuation">;</span>
+
+    <span class="token function">TOS_CPU_INT_DISABLE</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    tmr<span class="token operator">-</span><span class="token operator">></span>expires <span class="token operator">+</span><span class="token operator">=</span> k_tick_count<span class="token punctuation">;</span>
+
+    <span class="token function">TOS_LIST_FOR_EACH</span><span class="token punctuation">(</span>curr<span class="token punctuation">,</span> <span class="token operator">&amp;</span>k_timer_ctl<span class="token punctuation">.</span>list<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        iter <span class="token operator">=</span> <span class="token function">TOS_LIST_ENTRY</span><span class="token punctuation">(</span>curr<span class="token punctuation">,</span> k_timer_t<span class="token punctuation">,</span> list<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>tmr<span class="token operator">-</span><span class="token operator">></span>expires <span class="token operator">&lt;</span> iter<span class="token operator">-</span><span class="token operator">></span>expires<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token keyword">break</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+    <span class="token function">tos_list_add_tail</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>tmr<span class="token operator">-</span><span class="token operator">></span>list<span class="token punctuation">,</span> curr<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>k_timer_ctl<span class="token punctuation">.</span>list<span class="token punctuation">.</span>next <span class="token operator">==</span> <span class="token operator">&amp;</span>tmr<span class="token operator">-</span><span class="token operator">></span>list<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token comment" spellcheck="true">// we are the first guy now</span>
+        k_timer_ctl<span class="token punctuation">.</span>next_expires <span class="token operator">=</span> tmr<span class="token operator">-</span><span class="token operator">></span>expires<span class="token punctuation">;</span>
+
+#<span class="token keyword">if</span> TOS_CFG_TIMER_AS_PROC <span class="token operator">==</span> 0u
+        <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token function">task_state_is_sleeping</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>k_timer_task<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token function">tos_task_delay_abort</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>k_timer_task<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+#endif
+    <span class="token punctuation">}</span>
+
+#<span class="token keyword">if</span> TOS_CFG_TIMER_AS_PROC <span class="token operator">==</span> 0u
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token function">task_state_is_suspended</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>k_timer_task<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token function">tos_task_resume</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>k_timer_task<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+#endif
+
+    <span class="token function">TOS_CPU_INT_ENABLE</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h1 id="停止软件定时器（外部函数）"><a href="#停止软件定时器（外部函数）" class="headerlink" title="停止软件定时器（外部函数）"></a>停止软件定时器（外部函数）</h1><blockquote>
+<p>在前文也提及停止软件定时器，但是那个<code>timer_takeoff()</code>函数是内部函数，而<code>tos_timer_stop()</code>函数是外部函数，可以被用户使用。</p>
+</blockquote>
+<p>停止软件定时器的本质也是调用<code>timer_takeoff()</code>函数将软件定时器从软件定时器列表中移除，但是在调用这个函数之前还好做一些相关的判断，这样能保证系统的稳定性。</p>
+<ol>
+<li><p>对软件定时器控制块检测，如果软件定时器控制块为null，则直接返回错误代码。</p>
+</li>
+<li><p>如果软件定时器状态为未使用状态<code>TIMER_STATE_UNUSED</code>，则直接返回错误代码<code>K_ERR_TIMER_INACTIVE</code>。</p>
+</li>
+<li><p>如果软件定时器状态为<code>TIMER_STATE_COMPLETED</code> 或者是<code>TIMER_STATE_STOPPED</code>，则不需要停止软件定时器，因为这个软件定时器是未启动的。则直接返回错误代码<code>K_ERR_TIMER_STOPPED</code>。</p>
+</li>
+<li><p>如果软件定时器状态为<code>TIMER_STATE_RUNNING</code> ，就将软件定时器状态设置为停止状态<code>TIMER_STATE_STOPPED</code>，并且调用<code>timer_takeoff()</code>函数将软件定时器从软件定时器列表中移除。</p>
+</li>
+</ol>
+<pre class="line-numbers language-js"><code class="language-js">__API__ k_err_t <span class="token function">tos_timer_stop</span><span class="token punctuation">(</span>k_timer_t <span class="token operator">*</span>tmr<span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    <span class="token function">TOS_PTR_SANITY_CHECK</span><span class="token punctuation">(</span>tmr<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+#<span class="token keyword">if</span> TOS_CFG_OBJECT_VERIFY_EN <span class="token operator">></span> 0u
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token function">knl_object_verify</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>tmr<span class="token operator">-</span><span class="token operator">></span>knl_obj<span class="token punctuation">,</span> KNL_OBJ_TYPE_TIMER<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> K_ERR_OBJ_INVALID<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+#endif
+
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>tmr<span class="token operator">-</span><span class="token operator">></span>state <span class="token operator">==</span> TIMER_STATE_UNUSED<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> K_ERR_TIMER_INACTIVE<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>tmr<span class="token operator">-</span><span class="token operator">></span>state <span class="token operator">==</span> TIMER_STATE_COMPLETED <span class="token operator">||</span>
+        tmr<span class="token operator">-</span><span class="token operator">></span>state <span class="token operator">==</span> TIMER_STATE_STOPPED<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> K_ERR_TIMER_STOPPED<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>tmr<span class="token operator">-</span><span class="token operator">></span>state <span class="token operator">==</span> TIMER_STATE_RUNNING<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        tmr<span class="token operator">-</span><span class="token operator">></span>state <span class="token operator">=</span> TIMER_STATE_STOPPED<span class="token punctuation">;</span>
+        <span class="token function">timer_takeoff</span><span class="token punctuation">(</span>tmr<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">return</span> K_ERR_NONE<span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h1 id="软件定时器的处理（在中断上下文环境）"><a href="#软件定时器的处理（在中断上下文环境）" class="headerlink" title="软件定时器的处理（在中断上下文环境）"></a>软件定时器的处理（在中断上下文环境）</h1><p>我们知道，TencentOS tiny的软件定时器是可以在中断上下文环境来处理回调函数的，因此当软件定时器到期后，会在<code>tos_tick_handler()</code>函数中调用<code>timer_update()</code>来处理软件定时器。这个函数在每次tick中断到来的时候都会判断一下是否有软件定时器到期，如果有则去处理它。<br>过程如下：</p>
+<ol>
+<li><p>判断软件定时器的下一个到期时间<code>k_timer_ctl.next_expires</code>是否小于<code>k_tick_count</code>，如果是小于则表示还未到期，直接退出。</p>
+</li>
+<li><p>反之则表示到期，此时要<code>遍历</code>软件定时器列表，找到<code>所有</code>到期的软件定时器，并处理他们。</p>
+</li>
+</ol>
+<blockquote>
+<p>因为有可能不只是一个软件定时器到期，很可能有多个定时器到期。当然啦，当软件定时器没到期的时候就会退出遍历。</p>
+</blockquote>
+<ol start="3">
+<li><p>到期后的处理就是：调用<code>timer_takeoff()</code>函数将到期的软件定时器停止，如果是周期工作的定时器就调用<code>timer_place()</code>函数将它重新插入软件定时器列表中（它到期的相对时间就是软件定时器的周期值：<code>tmr-&gt;expires = tmr-&gt;period</code>）；如果是单次工作模式的软件定时器，就仅将软件定时器状态设置为<code>TIMER_STATE_COMPLETED</code>。</p>
+</li>
+<li><p>调用软件定时器的回调函数处理相关的工作：<code>(*tmr-&gt;cb)(tmr-&gt;cb_arg)</code></p>
+</li>
+</ol>
+<pre class="line-numbers language-js"><code class="language-js">__KERNEL__ <span class="token keyword">void</span> <span class="token function">timer_update</span><span class="token punctuation">(</span><span class="token keyword">void</span><span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    k_timer_t <span class="token operator">*</span>tmr<span class="token punctuation">;</span>
+    k_list_t <span class="token operator">*</span>curr<span class="token punctuation">,</span> <span class="token operator">*</span>next<span class="token punctuation">;</span>
+
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>k_timer_ctl<span class="token punctuation">.</span>next_expires <span class="token operator">&lt;</span> k_tick_count<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token function">tos_knl_sched_lock</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token function">TOS_LIST_FOR_EACH_SAFE</span><span class="token punctuation">(</span>curr<span class="token punctuation">,</span> next<span class="token punctuation">,</span> <span class="token operator">&amp;</span>k_timer_ctl<span class="token punctuation">.</span>list<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        tmr <span class="token operator">=</span> <span class="token function">TOS_LIST_ENTRY</span><span class="token punctuation">(</span>curr<span class="token punctuation">,</span> k_timer_t<span class="token punctuation">,</span> list<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>tmr<span class="token operator">-</span><span class="token operator">></span>expires <span class="token operator">></span> k_tick_count<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token keyword">break</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+
+        <span class="token comment" spellcheck="true">// time's up</span>
+        <span class="token function">timer_takeoff</span><span class="token punctuation">(</span>tmr<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>tmr<span class="token operator">-</span><span class="token operator">></span>opt <span class="token operator">==</span> TOS_OPT_TIMER_PERIODIC<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            tmr<span class="token operator">-</span><span class="token operator">></span>expires <span class="token operator">=</span> tmr<span class="token operator">-</span><span class="token operator">></span>period<span class="token punctuation">;</span>
+            <span class="token function">timer_place</span><span class="token punctuation">(</span>tmr<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+            tmr<span class="token operator">-</span><span class="token operator">></span>state <span class="token operator">=</span> TIMER_STATE_COMPLETED<span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+
+        <span class="token punctuation">(</span><span class="token operator">*</span>tmr<span class="token operator">-</span><span class="token operator">></span>cb<span class="token punctuation">)</span><span class="token punctuation">(</span>tmr<span class="token operator">-</span><span class="token operator">></span>cb_arg<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token function">tos_knl_sched_unlock</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h1 id="软件定时器的处理（在任务上下文环境）"><a href="#软件定时器的处理（在任务上下文环境）" class="headerlink" title="软件定时器的处理（在任务上下文环境）"></a>软件定时器的处理（在任务上下文环境）</h1><blockquote>
+<p>关于使用软件定时器任务处理回调函数（即回调函数执行的上下文环境是<code>任务</code>），则必须打开<code>TOS_CFG_TIMER_AS_PROC</code> 宏定义。</p>
+</blockquote>
+<h2 id="创建软件定时器任务"><a href="#创建软件定时器任务" class="headerlink" title="创建软件定时器任务"></a>创建软件定时器任务</h2><p>既然是软件定时器任务，那么就必须创建软件定时器任务，那么这个任务将在<code>timer_init()</code>函数中被创建，它是一个内核调用的函数，在内核初始化时就被调用（在<code>tos_knl_init()</code>函数中调用）。</p>
+<blockquote>
+<p>创建软件定时器任务也是跟创建其他任务没啥差别，都是通过<code>tos_task_create()</code>函数创建，软件定时器任务控制块、任务主体、优先级、任务栈起始地址与大小等都在<code>前面</code>的数据结构中指定了，任务的名字为”timer”。</p>
+</blockquote>
+<pre class="line-numbers language-js"><code class="language-js">__KERNEL__ k_err_t <span class="token function">timer_init</span><span class="token punctuation">(</span><span class="token keyword">void</span><span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+#<span class="token keyword">if</span> TOS_CFG_TIMER_AS_PROC <span class="token operator">></span> 0u
+    <span class="token keyword">return</span> K_ERR_NONE<span class="token punctuation">;</span>
+#<span class="token keyword">else</span>
+    <span class="token keyword">return</span> <span class="token function">tos_task_create</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>k_timer_task<span class="token punctuation">,</span>
+                            <span class="token string">"timer"</span><span class="token punctuation">,</span>
+                            timer_task_entry<span class="token punctuation">,</span>
+                            K_NULL<span class="token punctuation">,</span>
+                            k_timer_task_prio<span class="token punctuation">,</span>
+                            k_timer_task_stk_addr<span class="token punctuation">,</span>
+                            k_timer_task_stk_size<span class="token punctuation">,</span>
+                            <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+#endif
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="软件定时器任务主体"><a href="#软件定时器任务主体" class="headerlink" title="软件定时器任务主体"></a>软件定时器任务主体</h2><p>软件定时器任务的主体也是一个<code>while (K_TRUE)</code>循环，在循环中处理对应的事情。</p>
+<ol>
+<li>调用<code>timer_next_expires_get()</code>函数获取软件定时器列表中的下一个到期时间，并且更新<code>next_expires</code> 的值。</li>
+</ol>
+<blockquote>
+<p><code>注意</code>：这里的时间已经在函数内部转换为<code>相对</code>到期时间，比如10分钟后闹钟叫我起床，而不是7:10分闹钟叫我起床）</p>
+</blockquote>
+<ol start="2">
+<li>根据<code>next_expires</code>的值，判断一下软件定时器任务应该休眠多久，在多久后到期时才唤醒软件定时器任务并且处理回调函数。也就是说，软件定时器任务在软件定时器没有到期的时候是不会被唤醒的，都是处于休眠状态，调用<code>tos_task_delay()</code>函数将任务进入休眠状态，此时任务会被挂载到系统的<code>延时（时基）列表</code>中。</li>
+</ol>
+<blockquote>
+<p><code>注意</code>：如果<code>next_expires</code>的值为<code>TOS_TIME_FOREVER</code>，则不是休眠而是直接挂起，因为挂起状态的任务对调度器而言是不可见的，这样子的处理效率更高~挂起任务的函数是<code>tos_task_suspend()</code>。</p>
+</blockquote>
+<ol start="3">
+<li><p>任务如果被唤醒了，或者被恢复运行了，则表明软件定时器到期了或者有新的软件定时器插入列表了，那么在唤醒之后就要判断一下是哪种情况，如果是到期了则处理对应的回调函数：首先调用<code>timer_takeoff()</code>函数将到期的软件定时器停止，如果是周期工作的定时器就调用<code>timer_place()</code>函数将它重新插入软件定时器列表中（它到期的相对时间就是软件定时器的周期值：<code>tmr-&gt;expires = tmr-&gt;period</code>）；如果是单次工作模式的软件定时器，就仅将软件定时器状态设置为<code>TIMER_STATE_COMPLETED</code>。（这里也是会<code>遍历</code>软件定时器列表以处理<code>所有</code>到期的软件定时器）</p>
+</li>
+<li><p>最后将调用软件定时器的回调函数处理相关的工作：<code>(*tmr-&gt;cb)(tmr-&gt;cb_arg)</code>。</p>
+</li>
+<li><p>如果定时器还未到期，并且软件定时器任务被唤醒了，那么就表示有新的软件定时器插入列表了，此时要更新一下任务的睡眠时间，因为软件定时器任务主体是一个<code>while</code>循环，还是会回到 <code>timer_next_expires_get()</code>函数中重新获取下一个唤醒任务的时间的。</p>
+</li>
+</ol>
+<blockquote>
+<p>注意：软件定时器的处理都是在锁调度器中处理的，就是为了避免其他任务打扰回调函数的执行。</p>
+</blockquote>
+<pre class="line-numbers language-js"><code class="language-js">__STATIC__ <span class="token keyword">void</span> <span class="token function">timer_task_entry</span><span class="token punctuation">(</span><span class="token keyword">void</span> <span class="token operator">*</span>arg<span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    k_timer_t <span class="token operator">*</span>tmr<span class="token punctuation">;</span>
+    k_list_t <span class="token operator">*</span>curr<span class="token punctuation">,</span> <span class="token operator">*</span>next<span class="token punctuation">;</span>
+    k_tick_t next_expires<span class="token punctuation">;</span>
+
+    arg <span class="token operator">=</span> arg<span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// make compiler happy</span>
+    <span class="token keyword">while</span> <span class="token punctuation">(</span>K_TRUE<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        next_expires <span class="token operator">=</span> <span class="token function">timer_next_expires_get</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>next_expires <span class="token operator">==</span> TOS_TIME_FOREVER<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token function">tos_task_suspend</span><span class="token punctuation">(</span>K_NULL<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token keyword">if</span> <span class="token punctuation">(</span>next_expires <span class="token operator">></span> <span class="token punctuation">(</span>k_tick_t<span class="token punctuation">)</span>0u<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token function">tos_task_delay</span><span class="token punctuation">(</span>next_expires<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+
+        <span class="token function">tos_knl_sched_lock</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        <span class="token function">TOS_LIST_FOR_EACH_SAFE</span><span class="token punctuation">(</span>curr<span class="token punctuation">,</span> next<span class="token punctuation">,</span> <span class="token operator">&amp;</span>k_timer_ctl<span class="token punctuation">.</span>list<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            tmr <span class="token operator">=</span> <span class="token function">TOS_LIST_ENTRY</span><span class="token punctuation">(</span>curr<span class="token punctuation">,</span> k_timer_t<span class="token punctuation">,</span> list<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token keyword">if</span> <span class="token punctuation">(</span>tmr<span class="token operator">-</span><span class="token operator">></span>expires <span class="token operator">></span> k_tick_count<span class="token punctuation">)</span> <span class="token punctuation">{</span> <span class="token comment" spellcheck="true">// not yet</span>
+                <span class="token keyword">break</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span>
+
+            <span class="token comment" spellcheck="true">// time's up</span>
+            <span class="token function">timer_takeoff</span><span class="token punctuation">(</span>tmr<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+            <span class="token keyword">if</span> <span class="token punctuation">(</span>tmr<span class="token operator">-</span><span class="token operator">></span>opt <span class="token operator">==</span> TOS_OPT_TIMER_PERIODIC<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                tmr<span class="token operator">-</span><span class="token operator">></span>expires <span class="token operator">=</span> tmr<span class="token operator">-</span><span class="token operator">></span>period<span class="token punctuation">;</span>
+                <span class="token function">timer_place</span><span class="token punctuation">(</span>tmr<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+                tmr<span class="token operator">-</span><span class="token operator">></span>state <span class="token operator">=</span> TIMER_STATE_COMPLETED<span class="token punctuation">;</span>
+            <span class="token punctuation">}</span>
+
+            <span class="token punctuation">(</span><span class="token operator">*</span>tmr<span class="token operator">-</span><span class="token operator">></span>cb<span class="token punctuation">)</span><span class="token punctuation">(</span>tmr<span class="token operator">-</span><span class="token operator">></span>cb_arg<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+
+        <span class="token function">tos_knl_sched_unlock</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h1 id="获取软件定时器下一个到期时间"><a href="#获取软件定时器下一个到期时间" class="headerlink" title="获取软件定时器下一个到期时间"></a>获取软件定时器下一个到期时间</h1><p><code>timer_next_expires_get()</code>就是用于获取软件定时器下一个到期时间，如果软件定时器到期时间是<code>TOS_TIME_FOREVER</code>，就返回<code>TOS_TIME_FOREVER</code>，如果下一个到期时间小于<code>k_tick_count</code>则直接返回0，表示已经到期了，可以直接处理它，而如果是其他值，则需要减去<code>k_tick_count</code>，将其转变为相对值，因为调用这个函数就是为了知道任务能休眠多少时间。</p>
+<blockquote>
+<p>打个比方，我7点醒来了，而7:10分的闹钟才会响，那么我就能再睡10分钟，就是这个道理。</p>
+</blockquote>
+<pre class="line-numbers language-js"><code class="language-js">__KERNEL__ k_tick_t <span class="token function">timer_next_expires_get</span><span class="token punctuation">(</span><span class="token keyword">void</span><span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    <span class="token function">TOS_CPU_CPSR_ALLOC</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    k_tick_t next_expires<span class="token punctuation">;</span>
+
+    <span class="token function">TOS_CPU_INT_DISABLE</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>k_timer_ctl<span class="token punctuation">.</span>next_expires <span class="token operator">==</span> TOS_TIME_FOREVER<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        next_expires <span class="token operator">=</span> TOS_TIME_FOREVER<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token keyword">if</span> <span class="token punctuation">(</span>k_timer_ctl<span class="token punctuation">.</span>next_expires <span class="token operator">&lt;=</span> k_tick_count<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        next_expires <span class="token operator">=</span> <span class="token punctuation">(</span>k_tick_t<span class="token punctuation">)</span>0u<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+        next_expires <span class="token operator">=</span> k_timer_ctl<span class="token punctuation">.</span>next_expires <span class="token operator">-</span> k_tick_count<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token function">TOS_CPU_INT_ENABLE</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> next_expires<span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h1 id="喜欢就关注我吧！"><a href="#喜欢就关注我吧！" class="headerlink" title="喜欢就关注我吧！"></a>喜欢就关注我吧！</h1><p><img src="./images/loading.png" data-original="http://qiniu.jiejie01.top/gzh.jpg" alt="欢迎关注我公众号"></p>
+<p>相关代码可以在公众号后台回复 “ 19 ” 获取。</p>
+<script>
+        document.querySelectorAll('.github-emoji')
+          .forEach(el => {
+            if (!el.dataset.src) { return; }
+            const img = document.createElement('img');
+            img.style = 'display:none !important;';
+            img.src = el.dataset.src;
+            img.addEventListener('error', () => {
+              img.remove();
+              el.style.color = 'inherit';
+              el.style.backgroundImage = 'none';
+              el.style.background = 'none';
+            });
+            img.addEventListener('load', () => {
+              img.remove();
+            });
+            document.body.appendChild(img);
+          });
+      </script>
+            </div>
+            <hr/>
+
+            
+            <style>
+    #reward {
+        margin: 40px 0;
+        text-align: center;
+    }
+
+    #reward .reward-link {
+        font-size: 1.88rem;
+    }
+
+    #reward .btn-floating:hover {
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2), 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    #rewardModal {
+        width: 320px;
+        height: 350px;
+    }
+
+    #rewardModal .reward-title {
+        margin: 15px auto;
+        padding-bottom: 5px;
+    }
+
+    #rewardModal .modal-content {
+        padding: 10px;
+    }
+
+    #rewardModal .close {
+        position: absolute;
+        right: 15px;
+        top: 15px;
+        color: rgba(0, 0, 0, 0.5);
+        font-size: 1.3rem;
+        line-height: 20px;
+        cursor: pointer;
+    }
+
+    #rewardModal .close:hover {
+        color: #ef5350;
+        transform: scale(1.3);
+        -moz-transform:scale(1.3);
+        -webkit-transform:scale(1.3);
+        -o-transform:scale(1.3);
+    }
+
+    #rewardModal .reward-tabs {
+        margin: 0 auto;
+        width: 210px;
+    }
+
+    .reward-tabs .tabs {
+        height: 38px;
+        margin: 10px auto;
+        padding-left: 0;
+    }
+
+    .reward-content ul {
+        padding-left: 0 !important;
+    }
+
+    .reward-tabs .tabs .tab {
+        height: 38px;
+        line-height: 38px;
+    }
+
+    .reward-tabs .tab a {
+        color: #fff;
+        background-color: #ccc;
+    }
+
+    .reward-tabs .tab a:hover {
+        background-color: #ccc;
+        color: #fff;
+    }
+
+    .reward-tabs .wechat-tab .active {
+        color: #fff !important;
+        background-color: #22AB38 !important;
+    }
+
+    .reward-tabs .alipay-tab .active {
+        color: #fff !important;
+        background-color: #019FE8 !important;
+    }
+
+    .reward-tabs .reward-img {
+        width: 210px;
+        height: 210px;
+    }
+</style>
+
+<div id="reward">
+    <a href="#rewardModal" class="reward-link modal-trigger btn-floating btn-large waves-effect waves-light red">赏</a>
+
+    <!-- Modal Structure -->
+    <div id="rewardModal" class="modal">
+        <div class="modal-content">
+            <a class="close modal-close"><i class="fa fa-close"></i></a>
+            <h4 class="reward-title">你的赏识是我前进的动力!</h4>
+            <div class="reward-content">
+                <div class="reward-tabs">
+                    <ul class="tabs row">
+                        <li class="tab col s6 alipay-tab waves-effect waves-light"><a href="#alipay">支付宝</a></li>
+                        <li class="tab col s6 wechat-tab waves-effect waves-light"><a href="#wechat">微 信</a></li>
+                    </ul>
+                    <div id="alipay">
+                        <img src="/medias/reward/alipay.bmp" class="reward-img" alt="支付宝打赏二维码">
+                    </div>
+                    <div id="wechat">
+                        <img src="/medias/reward/wechat.bmp" class="reward-img" alt="微信打赏二维码">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $('.tabs').tabs();
+    });
+</script>
+            
+
+            <link rel="stylesheet" type="text/css" href="/libs/share/css/share.min.css">
+
+<div id="article-share">
+    
+    <div class="social-share" data-disabled="qzone" data-wechat-qrcode-helper="<p>微信里点“发现”->“扫一扫”二维码便可查看分享。</p>"></div>
+    
+</div>
+
+<script src="/libs/share/js/social-share.min.js"></script>
+
+            
+            
+            
+            <div class="reprint1">
+                <p>
+                    <span class="reprint1-tip">
+                        <i class="fa fa-exclamation-circle"></i>&nbsp;&nbsp;转载请注明:
+                    </span>
+                    <a href="https://jiejietop.cn" class="b-link-green">杰杰的博客</a>
+                    <i class="fa fa-angle-right fa-lg fa-fw text-color"></i>
+                    <a href="/tencentos-tiny-10/" class="b-link-green">【TencentOS  tiny】深度源码分析（8）——软件定时器</a>
+                </p>
+            </div>
+
+        </div>
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+        <style>
+    .valine-card {
+        margin: 1.5rem auto;
+    }
+
+    .valine-card .card-content {
+        padding: 20px 20px 5px 20px;
+    }
+
+    #vcomments input[type=text],
+    #vcomments input[type=email],
+    #vcomments input[type=url],
+    #vcomments textarea {
+        box-sizing: border-box;
+    }
+
+    #vcomments p {
+        margin: 2px 2px 10px;
+        font-size: 1.05rem;
+        line-height: 1.78rem;
+    }
+
+    #vcomments blockquote p {
+        text-indent: 0.2rem;
+    }
+
+    #vcomments a {
+        padding: 0 2px;
+        color: #42b983;
+        font-weight: 500;
+        text-decoration: underline;
+    }
+
+    #vcomments img {
+        max-width: 100%;
+        height: auto;
+        cursor: pointer;
+    }
+
+    #vcomments ol li {
+        list-style-type: decimal;
+    }
+
+    #vcomments ol,
+    ul {
+        display: block;
+        padding-left: 2em;
+        word-spacing: 0.05rem;
+    }
+
+    #vcomments ul li,
+    ol li {
+        display: list-item;
+        line-height: 1.8rem;
+        font-size: 1rem;
+    }
+
+    #vcomments ul li {
+        list-style-type: disc;
+    }
+
+    #vcomments ul ul li {
+        list-style-type: circle;
+    }
+
+    #vcomments table, th, td {
+        padding: 12px 13px;
+        border: 1px solid #dfe2e5;
+    }
+
+    #vcomments table, th, td {
+        border: 0;
+    }
+
+    table tr:nth-child(2n), thead {
+        background-color: #fafafa;
+    }
+
+    #vcomments table th {
+        background-color: #f2f2f2;
+        min-width: 80px;
+    }
+
+    #vcomments table td {
+        min-width: 80px;
+    }
+
+    #vcomments h1 {
+        font-size: 1.85rem;
+        font-weight: bold;
+        line-height: 2.2rem;
+    }
+
+    #vcomments h2 {
+        font-size: 1.65rem;
+        font-weight: bold;
+        line-height: 1.9rem;
+    }
+
+    #vcomments h3 {
+        font-size: 1.45rem;
+        font-weight: bold;
+        line-height: 1.7rem;
+    }
+
+    #vcomments h4 {
+        font-size: 1.25rem;
+        font-weight: bold;
+        line-height: 1.5rem;
+    }
+
+    #vcomments h5 {
+        font-size: 1.1rem;
+        font-weight: bold;
+        line-height: 1.4rem;
+    }
+
+    #vcomments h6 {
+        font-size: 1rem;
+        line-height: 1.3rem;
+    }
+
+    #vcomments p {
+        font-size: 1rem;
+        line-height: 1.5rem;
+    }
+
+    #vcomments hr {
+        margin: 12px 0;
+        border: 0;
+        border-top: 1px solid #ccc;
+    }
+
+    #vcomments blockquote {
+        margin: 15px 0;
+        border-left: 5px solid #42b983;
+        padding: 1rem 0.8rem 0.3rem 0.8rem;
+        color: #666;
+        background-color: rgba(66, 185, 131, .1);
+    }
+
+    #vcomments pre {
+        font-family: monospace, monospace;
+        padding: 1.2em;
+        margin: .5em 0;
+        background: #272822;
+        overflow: auto;
+        border-radius: 0.3em;
+        tab-size: 4;
+    }
+
+    #vcomments code {
+        font-family: monospace, monospace;
+        padding: 1px 3px;
+        font-size: 0.92rem;
+        color: #e96900;
+        background-color: #f8f8f8;
+        border-radius: 2px;
+    }
+
+    #vcomments pre code {
+        font-family: monospace, monospace;
+        padding: 0;
+        color: #e8eaf6;
+        background-color: #272822;
+    }
+
+    #vcomments pre[class*="language-"] {
+        padding: 1.2em;
+        margin: .5em 0;
+    }
+
+    #vcomments code[class*="language-"],
+    pre[class*="language-"] {
+        color: #e8eaf6;
+    }
+
+    #vcomments [type="checkbox"]:not(:checked), [type="checkbox"]:checked {
+        position: inherit;
+        margin-left: -1.3rem;
+        margin-right: 0.4rem;
+        margin-top: -1px;
+        vertical-align: middle;
+        left: unset;
+        visibility: visible;
+    }
+
+    #vcomments b,
+    strong {
+        font-weight: bold;
+    }
+
+    #vcomments dfn {
+        font-style: italic;
+    }
+
+    #vcomments small {
+        font-size: 85%;
+    }
+
+    #vcomments cite {
+        font-style: normal;
+    }
+
+    #vcomments mark {
+        background-color: #fcf8e3;
+        padding: .2em;
+    }
+
+    #vcomments table, th, td {
+        padding: 12px 13px;
+        border: 1px solid #dfe2e5;
+    }
+
+    table tr:nth-child(2n), thead {
+        background-color: #fafafa;
+    }
+
+    #vcomments table th {
+        background-color: #f2f2f2;
+        min-width: 80px;
+    }
+
+    #vcomments table td {
+        min-width: 80px;
+    }
+
+    #vcomments [type="checkbox"]:not(:checked), [type="checkbox"]:checked {
+        position: inherit;
+        margin-left: -1.3rem;
+        margin-right: 0.4rem;
+        margin-top: -1px;
+        vertical-align: middle;
+        left: unset;
+        visibility: visible;
+    }
+</style>
+
+<div class="card valine-card" data-aos="fade-up">
+    <div id="vcomments" class="card-content"></div>
+</div>
+
+<script src="/libs/valine/av-min.js"></script>
+<script src="/libs/valine/Valine.min.js"></script>
+<script>
+    new Valine({
+        el: '#vcomments',
+        appId: 'P8ggvR4g3idexcAGf4hkEUqQ-gzGzoHsz',
+        appKey: 'GqHPu44hpoDiC8uOjc4JJFSc',
+        notify: 'true' === 'true',
+        verify: 'true' === 'true',
+        visitor: 'true' === 'true',
+        avatar: 'monsterid',
+        pageSize: '10',
+        lang: 'zh-cn',
+        placeholder: '赶紧留下你的评论吧~'
+    });
+</script>
+    
+
+    
+
+<article id="prenext-posts" class="prev-next articles">
+    <div class="row article-row">
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge left-badge text-color">
+                <i class="fa fa-chevron-left"></i>&nbsp;上一篇</div>
+            <div class="card">
+                <a href="/tcpip-1/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/2.jpg" class="responsive-img" alt="TCP/IP协议栈扫盲班">
+                        
+                        <span class="card-title">TCP/IP协议栈扫盲班</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            前言本文的东西是基础理论知识，因此不必记住，前面的操作系统的文章我不想更新了，现在想写一写网络相关的文章，本篇文章是第一篇，仅传递网络相关知识的概念，不必牢记~
+什么是TCP/IP协议简单来说TCP/IP协议是网络中所有相关协议簇的简称，它
+                        
+                    </div>
+                    <div class="publish-info">
+                        <span class="publish-date">
+                            <i class="fa fa-clock-o fa-fw icon-date"></i>2019-10-15
+                        </span>
+                        <span class="publish-author">
+                            
+                            <i class="fa fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/TCP-IP/" class="post-category" target="_blank">
+                                    TCP/IP
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/TCP-IP/" target="_blank">
+                        <span class="chip bg-color">TCP/IP</span>
+                    </a>
+                    
+                    <a href="/tags/网络/" target="_blank">
+                        <span class="chip bg-color">网络</span>
+                    </a>
+                    
+                    <a href="/tags/LwIP/" target="_blank">
+                        <span class="chip bg-color">LwIP</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fa fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/tencentos-tiny-9/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/3.jpg" class="responsive-img" alt="【TencentOS  tiny】深度源码分析（7）——事件">
+                        
+                        <span class="card-title">【TencentOS  tiny】深度源码分析（7）——事件</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            引言大家在裸机编程中很可能经常用到flag这种变量，用来标志一下某个事件的发生，然后在循环中判断这些标志是否发生，如果是等待多个事件的话，还可能会if((xxx_flag)&amp;&amp;(xxx_flag))这样子做判断。当然，如果聪
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="fa fa-clock-o fa-fw icon-date"></i>2019-10-12
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fa fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/操作系统/" class="post-category" target="_blank">
+                                    操作系统
+                                </a>
+                            
+                            <a href="/categories/操作系统/TencentOS-tiny/" class="post-category" target="_blank">
+                                    TencentOS tiny
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/TencentOS-tiny/" target="_blank">
+                        <span class="chip bg-color">TencentOS tiny</span>
+                    </a>
+                    
+                    <a href="/tags/RTOS/" target="_blank">
+                        <span class="chip bg-color">RTOS</span>
+                    </a>
+                    
+                    <a href="/tags/操作系统/" target="_blank">
+                        <span class="chip bg-color">操作系统</span>
+                    </a>
+                    
+                    <a href="/tags/物联网/" target="_blank">
+                        <span class="chip bg-color">物联网</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+    </div>
+</article>
+</div>
+
+
+<script>
+    $('#articleContent').on('copy', function (e) {
+        // IE8 or earlier browser is 'undefined'
+        if (typeof window.getSelection === 'undefined') return;
+
+        var selection = window.getSelection();
+        // if the selection is short let's not annoy our users.
+        if (('' + selection).length < Number.parseInt('120')) {
+            return;
+        }
+
+        // create a div outside of the visible area and fill it with the selected text.
+        var bodyElement = document.getElementsByTagName('body')[0];
+        var newdiv = document.createElement('div');
+        newdiv.style.position = 'absolute';
+        newdiv.style.left = '-99999px';
+        bodyElement.appendChild(newdiv);
+        newdiv.appendChild(selection.getRangeAt(0).cloneContents());
+
+        // we need a <pre> tag workaround.
+        // otherwise the text inside "pre" loses all the line breaks!
+        if (selection.getRangeAt(0).commonAncestorContainer.nodeName === 'PRE') {
+            newdiv.innerHTML = "<pre>" + newdiv.innerHTML + "</pre>";
+        }
+
+        var url = document.location.href;
+        newdiv.innerHTML += '<br />'
+            + '来源: 杰杰的博客<br />'
+            + '作者: 杰杰<br />'
+            + '链接: <a href="' + url + '">' + url + '</a><br />'
+            + '本文章著作权归作者所有，任何形式的转载都请注明出处。';
+
+        selection.selectAllChildren(newdiv);
+        window.setTimeout(function () {bodyElement.removeChild(newdiv);}, 200);
+    });
+</script>
+
+
+    </div>
+    <div id="toc-aside" class="expanded col l3 hide-on-med-and-down">
+        <div class="toc-widget">
+            <div class="toc-title"><i class="fa fa-list-alt"></i>&nbsp;&nbsp;目录</div>
+            <div id="toc-content"></div>
+        </div>
+    </div>
+</div>
+
+<!-- TOC 悬浮按钮. -->
+
+<div id="floating-toc-btn" class="hide-on-med-and-down">
+    <a class="btn-floating btn-large bg-color">
+        <i class="fa fa-list"></i>
+    </a>
+</div>
+
+
+<script src="/libs/tocbot/tocbot.min.js"></script>
+<script>
+    $(function () {
+        tocbot.init({
+            tocSelector: '#toc-content',
+            contentSelector: '#articleContent',
+            headingsOffset: -($(window).height() * 0.4 - 45),
+            // headingsOffset: -205,
+            headingSelector: 'h1, h2, h3, h4, h5'
+        });
+
+        // modify the toc link href to support Chinese.
+        let i = 0;
+        let tocHeading = 'toc-heading-';
+        $('#toc-content a').each(function () {
+            $(this).attr('href', '#' + tocHeading + (++i));
+        });
+
+        // modify the heading title id to support Chinese.
+        i = 0;
+        $('#articleContent').children('h1, h2, h3, h4, h5').each(function () {
+            $(this).attr('id', tocHeading + (++i));
+        });
+
+        // Set scroll toc fixed.
+        let tocHeight = parseInt($(window).height() * 0.4 - 64);
+        let $tocWidget = $('.toc-widget');
+        $(window).scroll(function () {
+            let scroll = $(window).scrollTop();
+            /* add post toc fixed. */
+            if (scroll > tocHeight) {
+                $tocWidget.addClass('toc-fixed');
+            } else {
+                $tocWidget.removeClass('toc-fixed');
+            }
+        });
+
+        
+        /* 修复文章卡片 div 的宽度. */
+        let fixPostCardWidth = function (srcId, targetId) {
+            let srcDiv = $('#' + srcId);
+            if (srcDiv.length === 0) {
+                return;
+            }
+
+            let w = srcDiv.width();
+            if (w >= 450) {
+                w = w + 21;
+            } else if (w >= 350 && w < 450) {
+                w = w + 18;
+            } else if (w >= 300 && w < 350) {
+                w = w + 16;
+            } else {
+                w = w + 14;
+            }
+            $('#' + targetId).width(w);
+        };
+
+        // 切换TOC目录展开收缩的相关操作.
+        const expandedClass = 'expanded';
+        let $tocAside = $('#toc-aside');
+        let $mainContent = $('#main-content');
+        $('#floating-toc-btn .btn-floating').click(function () {
+            if ($tocAside.hasClass(expandedClass)) {
+                $tocAside.removeClass(expandedClass).slideUp(500);
+                $mainContent.removeClass('l9');
+            } else {
+                $tocAside.addClass(expandedClass).slideDown(500);
+                $mainContent.addClass('l9');
+            }
+            fixPostCardWidth('artDetail', 'prenext-posts');
+        });
+        
+    });
+</script>
+    
+
+</main>
+
+
+    <!-- jiejie 杰杰  modify 2019.08.15-->
+
+<footer class="page-footer bg-color">
+    <div class="container row center-align">
+        <div class="col s12 m8 l8 copy-right">
+            &copy; 2019 jiejie. All Rights Reserved.
+
+            
+                &nbsp;<i class="fa fa-area-chart"></i>&nbsp;站点总字数:&nbsp;
+                <span class="white-color">94k</span>
+
+            
+            <br>
+
+            <span id="sitetime"></span>
+
+            
+
+            
+                <br>
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'></span>
+                    <i class="fa fa-heart-o"></i>
+                    本站总访问量 <span id="busuanzi_value_site_pv" class="white-color"></span>
+
+                
+
+                
+                    <span id="busuanzi_container_site_uv" style='display:none'></span>
+                    人次,&nbsp;访客数 <span id="busuanzi_value_site_uv" class="white-color"></span> 人.
+                    
+                
+
+            
+
+        </div>
+
+        <div class="col s12 m4 l4 social-link social-statis">
+    <a href="https://github.com/jiejietop" class="tooltipped" target="_blank" data-tooltip="访问我的GitHub" data-position="top" data-delay="50">
+        <i class="fa fa-github"></i>
+    </a>
+
+
+ 
+    <a href="https://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=jiejietop@gmail.com" class="tooltipped" target="_blank" data-tooltip="邮件联系我" data-position="top" data-delay="50">
+        <i class="fa fa-envelope-open"></i>
+    </a>
+
+
+
+
+    <a href="https://zhihu.com/people/jie-jie-33-9" class="tooltipped" target="_blank" data-tooltip="访问我的知乎" data-position="top" data-delay="50">
+        <i class="fa fa-inverse">知</i>
+    </a>
+
+
+
+    <a href="http://wpa.qq.com/msgrd?v=3&uin=1161959934&site=qq&menu=yes" class="tooltipped" target="_blank" data-tooltip="访问我的QQ空间" data-position="top" data-delay="50">
+        <i class="fa fa-qq"></i>
+    </a>
+
+
+
+    <a href="https://weibo.com/6800623694" class="tooltipped" target="_blank" data-tooltip="关注我的微博" data-position="top" data-delay="50">
+        <i class="fa fa-weibo"></i>
+    </a>
+
+
+
+    <a href="/atom.xml" class="tooltipped" target="_blank" data-tooltip="RSS 订阅" data-position="top" data-delay="50">
+        <i class="fa fa-rss"></i>
+    </a>
+</div>
+
+    </div>
+</footer>
+
+<div class="progress-bar"></div>
+
+<script language=javascript>
+    function siteTime() {
+        window.setTimeout("siteTime()", 1000);
+        var seconds = 1000;
+        var minutes = seconds * 60;
+        var hours = minutes * 60;
+        var days = hours * 24;
+        var years = days * 365;
+        var today = new Date();
+        var todayYear = today.getFullYear();
+        var todayMonth = today.getMonth() + 1;
+        var todayDate = today.getDate();
+        var todayHour = today.getHours();
+        var todayMinute = today.getMinutes();
+        var todaySecond = today.getSeconds();
+
+        /* Date.UTC() -- 返回date对象距世界标准时间(UTC)1970年1月1日午夜之间的毫秒数(时间戳)
+        year - 作为date对象的年份，为4位年份值
+        month - 0-11之间的整数，做为date对象的月份
+        day - 1-31之间的整数，做为date对象的天数
+        hours - 0(午夜24点)-23之间的整数，做为date对象的小时数
+        minutes - 0-59之间的整数，做为date对象的分钟数
+        seconds - 0-59之间的整数，做为date对象的秒数
+        microseconds - 0-999之间的整数，做为date对象的毫秒数 */
+
+        var t1 = Date.UTC(2019, 08, 01, 00, 00, 00); //北京时间2019-8-1 00:00:00
+        var t2 = Date.UTC(todayYear, todayMonth, todayDate, todayHour, todayMinute, todaySecond);
+        var diff = t2 - t1;
+        var diffYears = Math.floor(diff / years);
+        var diffDays = Math.floor((diff / days) - diffYears * 365);
+        var diffHours = Math.floor((diff - (diffYears * 365 + diffDays) * days) / hours);
+        var diffMinutes = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours) / minutes);
+        var diffSeconds = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours - diffMinutes * minutes) / seconds);
+        document.getElementById("sitetime").innerHTML = "本站已运行 " + diffYears + " 年 " + diffDays + " 天 " + diffHours + " 小时 " + diffMinutes + " 分钟 " + diffSeconds + " 秒";
+    }/*因为建站时间还没有一年，就将之注释掉了。需要的可以取消*/
+    siteTime();
+</script>
+
+    <!-- 搜索遮罩框 -->
+<div id="searchModal" class="modal">
+    <div class="modal-content">
+        <div class="search-header">
+            <span class="title"><i class="fa fa-search"></i>&nbsp;&nbsp;搜索</span>
+            <input type="search" id="searchInput" name="s" placeholder="请输入搜索的关键字"
+                   class="search-input">
+        </div>
+        <div id="searchResult"></div>
+    </div>
+</div>
+
+<script src="/js/search.js"></script>
+<script type="text/javascript">
+$(function () {
+    searchFunc("/" + "search.xml", 'searchInput', 'searchResult');
+});
+</script>
+    <!-- 回到顶部按钮 -->
+<div id="backTop" class="top-scroll">
+    <a class="btn-floating btn-large waves-effect waves-light" href="#!">
+        <i class="fa fa-angle-up"></i>
+    </a>
+</div>
+
+
+    <script src="/libs/materialize/materialize.min.js"></script>
+    <script src="/libs/masonry/masonry.pkgd.min.js"></script>
+    <script src="/libs/aos/aos.js"></script>
+    <script src="/libs/scrollprogress/scrollProgress.min.js"></script>
+    <script src="/libs/lightGallery/js/lightgallery-all.min.js"></script>
+    <script src="/js/matery.js"></script>
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+
+
+
+    
+        <script src="/libs/others/clicklove.js"></script>
+    
+    
+    
+        <script async src="/libs/others/busuanzi.pure.mini.js"></script>
+    
+    
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"log":false,"model":{"jsonPath":"/live2dw/assets/wanko.model.json"},"display":{"position":"left","width":150,"height":200},"mobile":{"show":false},"react":{"opacity":0.7}});</script><script>!function(e){var r=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function t(){for(var c=0;c<r.length;c++)t=r[c],void 0,0<=(n=t.getBoundingClientRect()).top&&0<=n.left&&n.top<=(e.innerHeight||document.documentElement.clientHeight)&&function(){var t,n,e,i,o=r[c];t=o,n=function(){r=r.filter(function(t){return o!==t})},e=new Image,i=t.getAttribute("data-original"),e.onload=function(){t.src=i,n&&n()},e.src=i}();var t,n}t(),e.addEventListener("scroll",function(){!function(t,n){clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(n)},500)}(t,e)})}(this);</script></body>
+
+</html>

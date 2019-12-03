@@ -1,0 +1,1887 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+<!-- jiejie 杰杰  modify 2019.08.15-->
+
+
+
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="utf-8">
+    <meta name="keywords" content="基于Linux的kfifo移植到STM32（支持os的互斥访问）, IoT RTOS linux Python jiejie Dora">
+    <meta name="baidu-site-verification" content="fmlEuI34ir">
+    <meta name="google-site-verification" content="KeoTn_OFy4ndJwXNmm2gMeQfPhd7alqE9vQDwI32KCY">
+    <meta name="description" content="基于Linux的kfifo移植到STM32（支持os的互斥访问）关于kfifokfifo是内核里面的一个First In First Out数据结构，它采用环形循环队列的数据结构来实现；它提供一个无边界的字节流服务，最重要的一点是，它使用并">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="renderer" content="webkit|ie-stand|ie-comp">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>基于Linux的kfifo移植到STM32（支持os的互斥访问） | 杰杰的博客</title>
+    <link rel="icon" type="image/x-icon, image/vnd.microsoft.icon" href="/medias/logo/favicon.ico">
+
+    <link rel="stylesheet" type="text/css" href="/libs/awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="/libs/materialize/materialize.min.css">
+    <link rel="stylesheet" type="text/css" href="/libs/aos/aos.css">
+    <link rel="stylesheet" type="text/css" href="/libs/animate/animate.min.css">
+    <link rel="stylesheet" type="text/css" href="/libs/lightGallery/css/lightgallery.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/matery.css">
+    <link rel="stylesheet" type="text/css" href="/css/my.css">
+
+    <meta name="360-site-verification" content="d280ce782ae1e8d546343da41182687d">
+
+    <style type="text/css">
+        
+            
+            code[class*="language-"],
+            pre[class*="language-"] {
+                white-space: pre !important;
+            }
+
+        
+    </style>
+
+    <script src="/libs/jquery/jquery-2.2.0.min.js"></script>
+    <script src="https://sdk.jinrishici.com/v2/browser/jinrishici.js" charset="utf-8"></script>
+    
+    <script>
+        var _hmt = _hmt || [];
+        (function () {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?46e79e71af0709a5b9106bf20cecc493";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+
+    <script>
+        (function(){
+        var src = "https://jspassport.ssl.qhimg.com/11.0.1.js?d182b3f28525f2db83acfaaf6e696dba";
+        document.write('<script src="' + src + '" id="sozz"><\/script>');
+        })();
+    </script>
+
+    
+    
+        <script>
+            (function(){
+                var bp = document.createElement('script');
+                var curProtocol = window.location.protocol.split(':')[0];
+                if (curProtocol === 'https') {
+                    bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+                }
+                else {
+                    bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+                }
+                var s = document.getElementsByTagName("script")[0];
+                s.parentNode.insertBefore(bp, s);
+            })();
+        </script>
+    
+
+<link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
+
+<body>
+
+    <header class="navbar-fixed">
+    <nav id="headNav" class="bg-color nav-transparent">
+        <div id="navContainer" class="nav-wrapper container">
+            <div class="brand-logo">
+                <a href="/" class="waves-effect waves-light">
+                    
+                    <img src="/medias/logo/logo.ico" class="logo-img" alt="LOGO">
+                    
+                    <span class="logo-span">杰杰的博客</span>
+                </a>
+            </div>
+            <!-- jiejie 杰杰  modify 2019.08.15-->
+
+
+
+<a href="#" data-target="mobile-nav" class="sidenav-trigger button-collapse"><i class="fa fa-navicon"></i></a>
+<ul class="right">
+    
+    <li class="hide-on-med-and-down">
+        <a href="/" class="waves-effect waves-light">
+            
+            <i class="fa fa-home"></i>
+            
+            <span>首页</span>
+        </a>
+    </li>
+    
+    <li class="hide-on-med-and-down">
+        <a href="/tags" class="waves-effect waves-light">
+            
+            <i class="fa fa-tags"></i>
+            
+            <span>标签</span>
+        </a>
+    </li>
+    
+    <li class="hide-on-med-and-down">
+        <a href="/categories" class="waves-effect waves-light">
+            
+            <i class="fa fa-bookmark"></i>
+            
+            <span>分类</span>
+        </a>
+    </li>
+    
+    <li class="hide-on-med-and-down">
+        <a href="/archives" class="waves-effect waves-light">
+            
+            <i class="fa fa-archive"></i>
+            
+            <span>归档</span>
+        </a>
+    </li>
+    
+    <li class="hide-on-med-and-down">
+        <a href="/AV" class="waves-effect waves-light">
+            
+            <i class="fa fa-music"></i>
+            
+            <span>娱乐</span>
+        </a>
+    </li>
+    
+    <li class="hide-on-med-and-down">
+        <a href="/about" class="waves-effect waves-light">
+            
+            <i class="fa fa-user-circle-o"></i>
+            
+            <span>关于我</span>
+        </a>
+    </li>
+    
+    <li class="hide-on-med-and-down">
+        <a href="/contact" class="waves-effect waves-light">
+            
+            <i class="fa fa-envelope"></i>
+            
+            <span>留言板</span>
+        </a>
+    </li>
+    
+    <li class="hide-on-med-and-down">
+        <a href="/friends" class="waves-effect waves-light">
+            
+            <i class="fa fa-address-book"></i>
+            
+            <span>友情链接</span>
+        </a>
+    </li>
+    
+    <li>
+        <a href="#searchModal" class="modal-trigger waves-effect waves-light">
+            <i id="searchIcon" class="fa fa-search" title="搜索"></i>
+        </a>
+    </li>
+</ul>
+
+<!-- jiejie 杰杰  modify 2019.08.15-->
+
+<div id="mobile-nav" class="side-nav sidenav">
+
+    <div class="mobile-head bg-color">
+        
+        <img src="/medias/logo/logo.ico" class="logo-img circle responsive-img">
+        <!-- jiejie 杰杰  modify 2019.08.15-->
+        <div class="logo-name">杰杰的博客</div>
+        <div class="logo-desc">
+            
+            物联网 | linux | 操作系统
+            
+        </div>
+    </div>
+
+    
+
+    <ul class="menu-list mobile-menu-list">
+        
+        <li>
+            <a href="/" class="waves-effect waves-light">
+                
+                <i class="fa fa-fw fa-home"></i>
+                
+                首页
+            </a>
+        </li>
+        
+        <li>
+            <a href="/tags" class="waves-effect waves-light">
+                
+                <i class="fa fa-fw fa-tags"></i>
+                
+                标签
+            </a>
+        </li>
+        
+        <li>
+            <a href="/categories" class="waves-effect waves-light">
+                
+                <i class="fa fa-fw fa-bookmark"></i>
+                
+                分类
+            </a>
+        </li>
+        
+        <li>
+            <a href="/archives" class="waves-effect waves-light">
+                
+                <i class="fa fa-fw fa-archive"></i>
+                
+                归档
+            </a>
+        </li>
+        
+        <li>
+            <a href="/AV" class="waves-effect waves-light">
+                
+                <i class="fa fa-fw fa-music"></i>
+                
+                娱乐
+            </a>
+        </li>
+        
+        <li>
+            <a href="/about" class="waves-effect waves-light">
+                
+                <i class="fa fa-fw fa-user-circle-o"></i>
+                
+                关于我
+            </a>
+        </li>
+        
+        <li>
+            <a href="/contact" class="waves-effect waves-light">
+                
+                <i class="fa fa-fw fa-envelope"></i>
+                
+                留言板
+            </a>
+        </li>
+        
+        <li>
+            <a href="/friends" class="waves-effect waves-light">
+                
+                <i class="fa fa-fw fa-address-book"></i>
+                
+                友情链接
+            </a>
+        </li>
+        
+        
+        <li><div class="divider"></div></li>
+        <li>
+            <a href="https://github.com/jiejietop" class="waves-effect waves-light" target="_blank">
+                <i class="fa fa-github-square fa-fw"></i>Fork Me
+            </a>
+        </li>
+        
+    </ul>
+</div>
+
+        </div>
+
+        
+            <style>
+    .nav-transparent .github-corner {
+        display: none !important;
+    }
+
+    .github-corner {
+        position: absolute;
+        z-index: 10;
+        top: 0;
+        right: 0;
+        border: 0;
+        transform: scale(1.1);
+    }
+
+    .github-corner svg {
+        color: #0f9d58;
+        fill: #fff;
+        height: 64px;
+        width: 64px;
+    }
+
+    .github-corner:hover .octo-arm {
+        animation: a 0.56s ease-in-out;
+    }
+
+    .github-corner .octo-arm {
+        animation: none;
+    }
+
+    @keyframes a {
+        0%,
+        to {
+            transform: rotate(0);
+        }
+        20%,
+        60% {
+            transform: rotate(-25deg);
+        }
+        40%,
+        80% {
+            transform: rotate(10deg);
+        }
+    }
+</style>
+
+<a href="https://github.com/jiejietop" class="github-corner tooltipped hide-on-med-and-down" target="_blank"
+   data-tooltip="Fork Me" data-position="left" data-delay="50">
+    <svg viewBox="0 0 250 250" aria-hidden="true">
+        <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path>
+        <path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2"
+              fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path>
+        <path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z"
+              fill="currentColor" class="octo-body"></path>
+    </svg>
+</a>
+        
+    </nav>
+
+</header>
+
+    
+<script src="/libs/cryptojs/crypto-js.min.js"></script>
+<script>
+    (function() {
+        let pwd = '';
+        if (pwd && pwd.length > 0) {
+            if (pwd !== CryptoJS.SHA256(prompt('请输入访问本文章的密码')).toString(CryptoJS.enc.Hex)) {
+                alert('密码错误，将返回主页！');
+                location.href = '/';
+            }
+        }
+    })();
+</script>
+
+
+
+
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/15.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col s12 m12 l12">
+                <div class="brand">
+                    <div class="description center-align post-title">
+                        基于Linux的kfifo移植到STM32（支持os的互斥访问）
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<main class="post-container content">
+
+    
+    <link rel="stylesheet" href="/libs/tocbot/tocbot.css">
+<style>
+    #articleContent h1::before,
+    #articleContent h2::before,
+    #articleContent h3::before,
+    #articleContent h4::before,
+    #articleContent h5::before,
+    #articleContent h6::before {
+        display: block;
+        content: " ";
+        height: 100px;
+        margin-top: -100px;
+        visibility: hidden;
+    }
+
+    #articleContent :focus {
+        outline: none;
+    }
+
+    .toc-fixed {
+        position: fixed;
+        top: 64px;
+    }
+
+    .toc-widget {
+        padding-left: 20px;
+    }
+
+    .toc-widget .toc-title {
+        margin: 35px 0 15px 0;
+        padding-left: 17px;
+        font-size: 1.5rem;
+        font-weight: bold;
+        line-height: 1.5rem;
+    }
+
+    .toc-widget ol {
+        padding: 0;
+        list-style: none;
+    }
+
+    #toc-content ol {
+        padding-left: 10px;
+    }
+
+    #toc-content ol li {
+        padding-left: 10px;
+    }
+
+    #toc-content .toc-link:hover {
+        color: #42b983;
+        font-weight: 700;
+        text-decoration: underline;
+    }
+
+    #toc-content .toc-link::before {
+        background-color: transparent;
+        max-height: 25px;
+    }
+
+    #toc-content .is-active-link {
+        color: #42b983;
+    }
+
+    #toc-content .is-active-link::before {
+        background-color: #42b983;
+    }
+
+    #floating-toc-btn {
+        position: fixed;
+        right: 20px;
+        bottom: 76px;
+        padding-top: 15px;
+        margin-bottom: 0;
+        z-index: 998;
+    }
+
+    #floating-toc-btn .btn-floating {
+        width: 48px;
+        height: 48px;
+    }
+
+    #floating-toc-btn .btn-floating i {
+        line-height: 48px;
+        font-size: 1.4rem;
+    }
+</style>
+<div class="row">
+    <div id="main-content" class="col s12 m12 l9">
+        <!-- jiejie 杰杰  modify 2019.08.15-->
+<!-- 文章内容详情 -->
+<div id="artDetail">
+    <div class="card">
+        <div class="card-content article-info">
+            <div class="row tag-cate">
+                <div class="col s7">
+                    
+                    <div class="article-tag">
+                        
+                            <a href="/tags/STM32/" target="_blank">
+                                <span class="chip bg-color">STM32</span>
+                            </a>
+                        
+                            <a href="/tags/Cortex-M/" target="_blank">
+                                <span class="chip bg-color">Cortex-M</span>
+                            </a>
+                        
+                            <a href="/tags/kfifo/" target="_blank">
+                                <span class="chip bg-color">kfifo</span>
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+                <div class="col s5 right-align">
+                    
+                    <div class="post-cate">
+                        <i class="fa fa-bookmark fa-fw icon-category"></i>
+                        
+                            <a href="/categories/STM32/" class="post-category" target="_blank">
+                                STM32
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+            
+            <div class="post-info">
+                <div class="post-date info-break-policy">
+                    <i class="fa fa-calendar-minus-o fa-fw"></i>发布日期:&nbsp;&nbsp;
+                    2019-10-06
+                </div>
+
+                <div class="post-author info-break-policy">
+                    <i class="fa fa-user-o fa-fw"></i>作者:&nbsp;&nbsp;
+                    
+                        杰杰
+                    
+                </div>
+
+                
+                    
+                    <div class="info-break-policy">
+                        <i class="fa fa-file-word-o fa-fw"></i>文章字数:&nbsp;&nbsp;
+                        2.7k
+                    </div>
+                    
+
+                    
+                    <div class="info-break-policy">
+                        <i class="fa fa-clock-o fa-fw"></i>阅读时长:&nbsp;&nbsp;
+                        12 分
+                    </div>
+                    
+                
+                
+                
+                        <span id="busuanzi_container_site_pv" style='display:none'></span>
+                        <i class="fa fa-eye fa-fw"></i>阅读次数:&nbsp;&nbsp;
+                        <span id="busuanzi_value_page_pv" ></span>
+    
+                
+
+            </div>
+        </div>
+        <hr class="clearfix">
+        <div class="card-content article-card-content">
+            <div id="articleContent">
+                <h2 id="基于Linux的kfifo移植到STM32（支持os的互斥访问）"><a href="#基于Linux的kfifo移植到STM32（支持os的互斥访问）" class="headerlink" title="基于Linux的kfifo移植到STM32（支持os的互斥访问）"></a>基于Linux的kfifo移植到STM32（支持os的互斥访问）</h2><h3 id="关于kfifo"><a href="#关于kfifo" class="headerlink" title="关于kfifo"></a>关于kfifo</h3><p>kfifo是内核里面的一个First In First Out数据结构，它采用环形循环队列的数据结构来实现；它提供一个无边界的字节流服务，最重要的一点是，它使用并行无锁编程技术，即当它用于只有一个入队线程和一个出队线程的场情时，两个线程可以并发操作，而不需要任何加锁行为，就可以保证kfifo的线程安全。</p>
+<blockquote>
+<p>具体什么是环形缓冲区，请看我以前的文章</p>
+</blockquote>
+<h3 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h3><blockquote>
+<p>关于kfifo的相关概念我不会介绍，有兴趣可以看他的相关文档，我只将其实现过程移植重写，移植到适用stm32开发板上，并且按照我个人习惯重新命名，<strong>RingBuff</strong>-&gt;意为环形缓冲区</p>
+</blockquote>
+<h3 id="RingBuff-t"><a href="#RingBuff-t" class="headerlink" title="RingBuff_t"></a>RingBuff_t</h3><p>环形缓冲区的结构体成员变量，具体含义看注释。<br>  buffer: 用于存放数据的缓存<br>  size: buffer空间的大小<br>  in, out: 和buffer一起构成一个循环队列。 in指向buffer中队头，而且out指向buffer中的队尾</p>
+<pre class="line-numbers language-c"><code class="language-c"><span class="token keyword">typedef</span> <span class="token keyword">struct</span> ringbuff 
+<span class="token punctuation">{</span>
+    uint8_t <span class="token operator">*</span>buffer<span class="token punctuation">;</span>      <span class="token comment" spellcheck="true">/* 数据区域 */</span>
+    uint32_t size<span class="token punctuation">;</span>      <span class="token comment" spellcheck="true">/* 环形缓冲区大小 */</span>
+    uint32_t in<span class="token punctuation">;</span>        <span class="token comment" spellcheck="true">/* 数据入队指针 (in % size) */</span>
+    uint32_t out<span class="token punctuation">;</span>       <span class="token comment" spellcheck="true">/* 数据出队指针 (out % size) */</span>
+<span class="token macro property">#<span class="token directive keyword">if</span> USE_MUTEX</span>
+    MUTEX_T <span class="token operator">*</span>mutex<span class="token punctuation">;</span>       <span class="token comment" spellcheck="true">/* 支持rtos的互斥 */</span>
+<span class="token macro property">#<span class="token directive keyword">endif</span></span>
+<span class="token punctuation">}</span>RingBuff_t <span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="Create-RingBuff"><a href="#Create-RingBuff" class="headerlink" title="Create_RingBuff"></a>Create_RingBuff</h3><p>创建一个环形缓冲区，为了适应后续对缓冲区入队出队的高效操作，环形缓冲区的大小应为2^n字节，<br>如果不是这个大小，则系统默认裁剪以对应缓冲区字节。<br>当然还可以优化，不过我目前并未做，思路如下：如果系统支持动态分配内存，则向上对齐，避免浪费内存空间，否则就按照我默认的向下对齐，当内存越大，对齐导致内存泄漏则会越多。对齐采用的函数是<code>roundup_pow_of_two</code>。如果系统支持互斥量，那么还将创建一个互斥量用来做互斥访问，防止多线程同时使用导致数据丢失。</p>
+<pre class="line-numbers language-c"><code class="language-c"><span class="token comment" spellcheck="true">/************************************************************
+  * @brief   Create_RingBuff
+  * @param   rb：环形缓冲区句柄
+  *          buffer：环形缓冲区的数据区域
+  *          size：环形缓冲区的大小，缓冲区大小要为2^n
+  * @return  err_t：ERR_OK表示创建成功，其他表示失败
+  * @author  jiejie
+  * @github  https://github.com/jiejieTop
+  * @date    2018-xx-xx
+  * @version v1.0
+  * @note    用于创建一个环形缓冲区
+  ***********************************************************/</span>
+err_t <span class="token function">Create_RingBuff</span><span class="token punctuation">(</span>RingBuff_t<span class="token operator">*</span> rb<span class="token punctuation">,</span> 
+                      uint8_t <span class="token operator">*</span>buffer<span class="token punctuation">,</span>
+                      uint32_t size
+                                <span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    <span class="token keyword">if</span><span class="token punctuation">(</span><span class="token punctuation">(</span>rb <span class="token operator">==</span> <span class="token constant">NULL</span><span class="token punctuation">)</span><span class="token operator">||</span><span class="token punctuation">(</span>buffer <span class="token operator">==</span> <span class="token constant">NULL</span><span class="token punctuation">)</span><span class="token operator">||</span><span class="token punctuation">(</span>size <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+    <span class="token punctuation">{</span>
+        <span class="token function">PRINT_ERR</span><span class="token punctuation">(</span><span class="token string">"data is null!"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">return</span> ERR_NULL<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token function">PRINT_DEBUG</span><span class="token punctuation">(</span><span class="token string">"ringbuff size is %d!"</span><span class="token punctuation">,</span>size<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment" spellcheck="true">/* 缓冲区大小必须为2^n字节,系统会强制转换,
+         否则可能会导致指针访问非法地址。
+         空间大小越大,强转时丢失内存越多 */</span>
+    <span class="token keyword">if</span><span class="token punctuation">(</span>size<span class="token operator">&amp;</span><span class="token punctuation">(</span>size <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+    <span class="token punctuation">{</span>
+        size <span class="token operator">=</span> <span class="token function">roundup_pow_of_two</span><span class="token punctuation">(</span>size<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token function">PRINT_DEBUG</span><span class="token punctuation">(</span><span class="token string">"change ringbuff size is %d!"</span><span class="token punctuation">,</span>size<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    rb<span class="token operator">-></span>buffer <span class="token operator">=</span> buffer<span class="token punctuation">;</span>
+    rb<span class="token operator">-></span>size <span class="token operator">=</span> size<span class="token punctuation">;</span>
+    rb<span class="token operator">-></span>in <span class="token operator">=</span> rb<span class="token operator">-></span>out <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token macro property">#<span class="token directive keyword">if</span> USE_MUTEX    </span>
+  <span class="token comment" spellcheck="true">/* 创建信号量不成功 */</span>
+  <span class="token keyword">if</span><span class="token punctuation">(</span><span class="token operator">!</span><span class="token function">create_mutex</span><span class="token punctuation">(</span>rb<span class="token operator">-></span>mutex<span class="token punctuation">)</span><span class="token punctuation">)</span>
+  <span class="token punctuation">{</span>
+    <span class="token function">PRINT_ERR</span><span class="token punctuation">(</span><span class="token string">"create mutex fail!"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">ASSERT</span><span class="token punctuation">(</span>ASSERT_ERR<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> ERR_NOK<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token macro property">#<span class="token directive keyword">endif</span></span>
+    <span class="token function">PRINT_DEBUG</span><span class="token punctuation">(</span><span class="token string">"create ringBuff ok!"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> ERR_OK<span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="roundup-pow-of-two"><a href="#roundup-pow-of-two" class="headerlink" title="roundup_pow_of_two"></a>roundup_pow_of_two</h3><pre class="line-numbers language-c"><code class="language-c"><span class="token comment" spellcheck="true">/************************************************************
+  * @brief   roundup_pow_of_two
+  * @param   size：传递进来的数据长度
+  * @return  size：返回处理之后的数据长度
+  * @author  jiejie
+  * @github  https://github.com/jiejieTop
+  * @date    2018-xx-xx
+  * @version v1.0
+  * @note    用于处理数据，使数据长度必须为 2^n
+    *                     如果不是，则转换，丢弃多余部分，如
+    *                     roundup_pow_of_two(66) -> 返回 64
+  ***********************************************************/</span>
+<span class="token keyword">static</span> <span class="token keyword">unsigned</span> <span class="token keyword">long</span> <span class="token function">roundup_pow_of_two</span><span class="token punctuation">(</span><span class="token keyword">unsigned</span> <span class="token keyword">long</span> x<span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    <span class="token keyword">return</span> <span class="token punctuation">(</span><span class="token number">1</span> <span class="token operator">&lt;&lt;</span> <span class="token punctuation">(</span><span class="token function">fls</span><span class="token punctuation">(</span>x<span class="token number">-1</span><span class="token punctuation">)</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>                <span class="token comment" spellcheck="true">//向下对齐</span>
+  <span class="token comment" spellcheck="true">//return (1UL &lt;&lt; fls(x - 1));            //向上对齐，用动态内存可用使用</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="Delete-RingBuff"><a href="#Delete-RingBuff" class="headerlink" title="Delete_RingBuff"></a>Delete_RingBuff</h3><p>删除一个环形缓冲区，删除之后，缓冲区真正存储地址是不会被改变的（目前我是使用自定义数组做缓冲区的），但是删除之后，就无法对缓冲区进行读写操作。并且如果支持os的话，创建的互斥量会被删除。</p>
+<pre class="line-numbers language-c"><code class="language-c"><span class="token comment" spellcheck="true">/************************************************************
+  * @brief   Delete_RingBuff
+  * @param   rb：环形缓冲区句柄
+  * @return  err_t：ERR_OK表示成功，其他表示失败
+  * @author  jiejie
+  * @github  https://github.com/jiejieTop
+  * @date    2018-xx-xx
+  * @version v1.0
+  * @note    删除一个环形缓冲区
+  ***********************************************************/</span>
+err_t <span class="token function">Delete_RingBuff</span><span class="token punctuation">(</span>RingBuff_t <span class="token operator">*</span>rb<span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    <span class="token keyword">if</span><span class="token punctuation">(</span>rb <span class="token operator">==</span> <span class="token constant">NULL</span><span class="token punctuation">)</span>
+    <span class="token punctuation">{</span>
+        <span class="token function">PRINT_ERR</span><span class="token punctuation">(</span><span class="token string">"ringbuff is null!"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">return</span> ERR_NULL<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    rb<span class="token operator">-></span>buffer <span class="token operator">=</span> <span class="token constant">NULL</span><span class="token punctuation">;</span>
+    rb<span class="token operator">-></span>size <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+    rb<span class="token operator">-></span>in <span class="token operator">=</span> rb<span class="token operator">-></span>out <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token macro property">#<span class="token directive keyword">if</span> USE_MUTEX    </span>
+  <span class="token keyword">if</span><span class="token punctuation">(</span><span class="token operator">!</span><span class="token function">deleta_mutex</span><span class="token punctuation">(</span>rb<span class="token operator">-></span>mutex<span class="token punctuation">)</span><span class="token punctuation">)</span>
+  <span class="token punctuation">{</span>
+    <span class="token function">PRINT_DEBUG</span><span class="token punctuation">(</span><span class="token string">"deleta mutex is fail!"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> ERR_NOK<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token macro property">#<span class="token directive keyword">endif</span></span>
+    <span class="token keyword">return</span> ERR_OK<span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="Write-RingBuff"><a href="#Write-RingBuff" class="headerlink" title="Write_RingBuff"></a>Write_RingBuff</h3><p>向环形缓冲区写入指定数据，支持线程互斥访问。用户想要写入缓冲区的数据长度不一定是真正入队的长度，在完成的时候还要看看返回值是否与用户需要的长度一致~<br>这个函数很有意思，也是比较高效的入队操作，将指定区域的数据拷贝到指定的缓冲区中，过程看注释即可</p>
+<pre class="line-numbers language-c"><code class="language-c"><span class="token comment" spellcheck="true">/************************************************************
+  * @brief   Write_RingBuff
+  * @param   rb:环形缓冲区句柄
+  * @param   wbuff:写入的数据起始地址
+  * @param   len:写入数据的长度(字节)
+  * @return  len:实际写入数据的长度(字节)
+  * @author  jiejie
+  * @github  https://github.com/jiejieTop
+  * @date    2018-xx-xx
+  * @version v1.0
+  * @note    这个函数会从buff空间拷贝len字节长度的数据到
+             rb环形缓冲区中的空闲空间。
+  ***********************************************************/</span>
+uint32_t <span class="token function">Write_RingBuff</span><span class="token punctuation">(</span>RingBuff_t <span class="token operator">*</span>rb<span class="token punctuation">,</span>
+                        uint8_t <span class="token operator">*</span>wbuff<span class="token punctuation">,</span> 
+                        uint32_t len<span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+  uint32_t l<span class="token punctuation">;</span>
+<span class="token macro property">#<span class="token directive keyword">if</span> USE_MUTEX</span>
+  <span class="token comment" spellcheck="true">/* 请求互斥量，成功才能进行ringbuff的访问 */</span>
+  <span class="token keyword">if</span><span class="token punctuation">(</span><span class="token operator">!</span><span class="token function">request_mutex</span><span class="token punctuation">(</span>rb<span class="token operator">-></span>mutex<span class="token punctuation">)</span><span class="token punctuation">)</span>
+  <span class="token punctuation">{</span>
+    <span class="token function">PRINT_DEBUG</span><span class="token punctuation">(</span><span class="token string">"request mutex fail!"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  <span class="token keyword">else</span>  <span class="token comment" spellcheck="true">/* 获取互斥量成功 */</span>
+  <span class="token punctuation">{</span>
+<span class="token macro property">#<span class="token directive keyword">endif</span></span>
+    len <span class="token operator">=</span> <span class="token function">min</span><span class="token punctuation">(</span>len<span class="token punctuation">,</span> rb<span class="token operator">-></span>size <span class="token operator">-</span> rb<span class="token operator">-></span>in <span class="token operator">+</span> rb<span class="token operator">-></span>out<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token comment" spellcheck="true">/* 第一部分的拷贝:从环形缓冲区写入数据直至缓冲区最后一个地址 */</span>
+    l <span class="token operator">=</span> <span class="token function">min</span><span class="token punctuation">(</span>len<span class="token punctuation">,</span> rb<span class="token operator">-></span>size <span class="token operator">-</span> <span class="token punctuation">(</span>rb<span class="token operator">-></span>in <span class="token operator">&amp;</span> <span class="token punctuation">(</span>rb<span class="token operator">-></span>size <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">memcpy</span><span class="token punctuation">(</span>rb<span class="token operator">-></span>buffer <span class="token operator">+</span> <span class="token punctuation">(</span>rb<span class="token operator">-></span>in <span class="token operator">&amp;</span> <span class="token punctuation">(</span>rb<span class="token operator">-></span>size <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">,</span> wbuff<span class="token punctuation">,</span> l<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token comment" spellcheck="true">/* 如果溢出则在缓冲区头写入剩余的部分
+       如果没溢出这句代码相当于无效 */</span>
+    <span class="token function">memcpy</span><span class="token punctuation">(</span>rb<span class="token operator">-></span>buffer<span class="token punctuation">,</span> wbuff <span class="token operator">+</span> l<span class="token punctuation">,</span> len <span class="token operator">-</span> l<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    rb<span class="token operator">-></span>in <span class="token operator">+</span><span class="token operator">=</span> len<span class="token punctuation">;</span>
+
+    <span class="token function">PRINT_DEBUG</span><span class="token punctuation">(</span><span class="token string">"write ringBuff len is %d!"</span><span class="token punctuation">,</span>len<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token macro property">#<span class="token directive keyword">if</span> USE_MUTEX</span>
+  <span class="token punctuation">}</span>
+  <span class="token comment" spellcheck="true">/* 释放互斥量 */</span>
+  <span class="token function">release_mutex</span><span class="token punctuation">(</span>rb<span class="token operator">-></span>mutex<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token macro property">#<span class="token directive keyword">endif</span></span>
+  <span class="token keyword">return</span> len<span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="Read-RingBuff"><a href="#Read-RingBuff" class="headerlink" title="Read_RingBuff"></a>Read_RingBuff</h3><p>读取缓冲区数据到指定区域，用户指定读取长度，用户想要读取的长度不一定是真正读取的长度，在读取完成的时候还要看看返回值是否与用户需要的长度一致~也支持多线程互斥访问。<br>也是缓冲区出队的高效操作。过程看代码注释即可</p>
+<pre class="line-numbers language-c"><code class="language-c"><span class="token comment" spellcheck="true">/************************************************************
+  * @brief   Read_RingBuff
+  * @param   rb:环形缓冲区句柄
+  * @param   wbuff:读取数据保存的起始地址
+  * @param   len:想要读取数据的长度(字节)
+  * @return  len:实际读取数据的长度(字节)
+  * @author  jiejie
+  * @github  https://github.com/jiejieTop
+  * @date    2018-xx-xx
+  * @version v1.0
+  * @note    这个函数会从rb环形缓冲区中的数据区域拷贝len字节
+             长度的数据到rbuff空间。
+  ***********************************************************/</span>
+uint32_t <span class="token function">Read_RingBuff</span><span class="token punctuation">(</span>RingBuff_t <span class="token operator">*</span>rb<span class="token punctuation">,</span>
+                       uint8_t <span class="token operator">*</span>rbuff<span class="token punctuation">,</span> 
+                       uint32_t len<span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+  uint32_t l<span class="token punctuation">;</span>
+<span class="token macro property">#<span class="token directive keyword">if</span> USE_MUTEX</span>
+  <span class="token comment" spellcheck="true">/* 请求互斥量，成功才能进行ringbuff的访问 */</span>
+  <span class="token keyword">if</span><span class="token punctuation">(</span><span class="token operator">!</span><span class="token function">request_mutex</span><span class="token punctuation">(</span>rb<span class="token operator">-></span>mutex<span class="token punctuation">)</span><span class="token punctuation">)</span>
+  <span class="token punctuation">{</span>
+    <span class="token function">PRINT_DEBUG</span><span class="token punctuation">(</span><span class="token string">"request mutex fail!"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  <span class="token keyword">else</span>
+  <span class="token punctuation">{</span>
+<span class="token macro property">#<span class="token directive keyword">endif</span></span>
+    len <span class="token operator">=</span> <span class="token function">min</span><span class="token punctuation">(</span>len<span class="token punctuation">,</span> rb<span class="token operator">-></span>in <span class="token operator">-</span> rb<span class="token operator">-></span>out<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token comment" spellcheck="true">/* 第一部分的拷贝:从环形缓冲区读取数据直至缓冲区最后一个 */</span>
+    l <span class="token operator">=</span> <span class="token function">min</span><span class="token punctuation">(</span>len<span class="token punctuation">,</span> rb<span class="token operator">-></span>size <span class="token operator">-</span> <span class="token punctuation">(</span>rb<span class="token operator">-></span>out <span class="token operator">&amp;</span> <span class="token punctuation">(</span>rb<span class="token operator">-></span>size <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">memcpy</span><span class="token punctuation">(</span>rbuff<span class="token punctuation">,</span> rb<span class="token operator">-></span>buffer <span class="token operator">+</span> <span class="token punctuation">(</span>rb<span class="token operator">-></span>out <span class="token operator">&amp;</span> <span class="token punctuation">(</span>rb<span class="token operator">-></span>size <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">,</span> l<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token comment" spellcheck="true">/* 如果溢出则在缓冲区头读取剩余的部分
+       如果没溢出这句代码相当于无效 */</span>
+    <span class="token function">memcpy</span><span class="token punctuation">(</span>rbuff <span class="token operator">+</span> l<span class="token punctuation">,</span> rb<span class="token operator">-></span>buffer<span class="token punctuation">,</span> len <span class="token operator">-</span> l<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    rb<span class="token operator">-></span>out <span class="token operator">+</span><span class="token operator">=</span> len<span class="token punctuation">;</span>
+
+    <span class="token function">PRINT_DEBUG</span><span class="token punctuation">(</span><span class="token string">"read ringBuff len is %d!"</span><span class="token punctuation">,</span>len<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token macro property">#<span class="token directive keyword">if</span> USE_MUTEX</span>
+  <span class="token punctuation">}</span>
+  <span class="token comment" spellcheck="true">/* 释放互斥量 */</span>
+  <span class="token function">release_mutex</span><span class="token punctuation">(</span>rb<span class="token operator">-></span>mutex<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token macro property">#<span class="token directive keyword">endif</span></span>
+  <span class="token keyword">return</span> len<span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="获取缓冲区信息"><a href="#获取缓冲区信息" class="headerlink" title="获取缓冲区信息"></a>获取缓冲区信息</h3><p>这些就比较简单了，看看缓冲区可读可写的数据有多少</p>
+<pre class="line-numbers language-c"><code class="language-c"><span class="token comment" spellcheck="true">/************************************************************
+  * @brief   CanRead_RingBuff
+    * @param   rb:环形缓冲区句柄
+    * @return  uint32:可读数据长度 0 / len
+  * @author  jiejie
+  * @github  https://github.com/jiejieTop
+  * @date    2018-xx-xx
+  * @version v1.0
+  * @note    可读数据长度
+  ***********************************************************/</span>
+uint32_t <span class="token function">CanRead_RingBuff</span><span class="token punctuation">(</span>RingBuff_t <span class="token operator">*</span>rb<span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    <span class="token keyword">if</span><span class="token punctuation">(</span><span class="token constant">NULL</span> <span class="token operator">==</span> rb<span class="token punctuation">)</span>
+    <span class="token punctuation">{</span>
+        <span class="token function">PRINT_ERR</span><span class="token punctuation">(</span><span class="token string">"ringbuff is null!"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">if</span><span class="token punctuation">(</span>rb<span class="token operator">-></span>in <span class="token operator">==</span> rb<span class="token operator">-></span>out<span class="token punctuation">)</span>
+        <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">if</span><span class="token punctuation">(</span>rb<span class="token operator">-></span>in <span class="token operator">></span> rb<span class="token operator">-></span>out<span class="token punctuation">)</span>
+        <span class="token keyword">return</span> <span class="token punctuation">(</span>rb<span class="token operator">-></span>in <span class="token operator">-</span> rb<span class="token operator">-></span>out<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">return</span> <span class="token punctuation">(</span>rb<span class="token operator">-></span>size <span class="token operator">-</span> <span class="token punctuation">(</span>rb<span class="token operator">-></span>out <span class="token operator">-</span> rb<span class="token operator">-></span>in<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment" spellcheck="true">/************************************************************
+  * @brief   CanRead_RingBuff
+    * @param   rb:环形缓冲区句柄
+    * @return  uint32:可写数据长度 0 / len
+  * @author  jiejie
+  * @github  https://github.com/jiejieTop
+  * @date    2018-xx-xx
+  * @version v1.0
+  * @note    可写数据长度
+  ***********************************************************/</span>
+uint32_t <span class="token function">CanWrite_RingBuff</span><span class="token punctuation">(</span>RingBuff_t <span class="token operator">*</span>rb<span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    <span class="token keyword">if</span><span class="token punctuation">(</span><span class="token constant">NULL</span> <span class="token operator">==</span> rb<span class="token punctuation">)</span>
+    <span class="token punctuation">{</span>
+        <span class="token function">PRINT_ERR</span><span class="token punctuation">(</span><span class="token string">"ringbuff is null!"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">return</span> <span class="token punctuation">(</span>rb<span class="token operator">-></span>size <span class="token operator">-</span> <span class="token function">CanRead_RingBuff</span><span class="token punctuation">(</span>rb<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="附带"><a href="#附带" class="headerlink" title="附带"></a>附带</h3><p>这里的代码我是用于测试的，随便写的</p>
+<pre><code>    RingBuff_t ringbuff_handle;
+
+    uint8_t rb[64];
+    uint8_t res[64];
+    Create_RingBuff(&amp;ringbuff_handle, 
+                                rb,
+                                sizeof(rb));
+            Write_RingBuff(&amp;ringbuff_handle,
+                     res, 
+                     datapack.data_length);
+
+            PRINT_DEBUG("CanRead_RingBuff = %d!",CanRead_RingBuff(&amp;ringbuff_handle));
+            PRINT_DEBUG("CanWrite_RingBuff = %d!",CanWrite_RingBuff(&amp;ringbuff_handle));
+
+            Read_RingBuff(&amp;ringbuff_handle,
+                     res, 
+                     datapack.data_length);</code></pre><h3 id="支持多个os的互斥量操作"><a href="#支持多个os的互斥量操作" class="headerlink" title="支持多个os的互斥量操作"></a>支持多个os的互斥量操作</h3><p>此处模仿了文件系统的互斥操作</p>
+<pre class="line-numbers language-c"><code class="language-c"><span class="token macro property">#<span class="token directive keyword">if</span> USE_MUTEX</span>
+<span class="token macro property">#<span class="token directive keyword">define</span>  MUTEX_TIMEOUT   1000     </span><span class="token comment" spellcheck="true">/* 超时时间 */</span>
+<span class="token macro property">#<span class="token directive keyword">define</span>  MUTEX_T         mutex_t  </span><span class="token comment" spellcheck="true">/* 互斥量控制块 */</span>
+<span class="token macro property">#<span class="token directive keyword">endif</span></span>
+
+<span class="token comment" spellcheck="true">/*********************************** mutex **************************************************/</span>
+<span class="token macro property">#<span class="token directive keyword">if</span> USE_MUTEX</span>
+<span class="token comment" spellcheck="true">/************************************************************
+  * @brief   create_mutex
+  * @param   mutex:创建信号量句柄
+  * @return  创建成功为1，0为不成功。
+  * @author  jiejie
+  * @github  https://github.com/jiejieTop
+  * @date    2018-xx-xx
+  * @version v1.0
+  * @note    创建一个互斥量,用户在os中互斥使用ringbuff，
+  *          支持的os有rtt、win32、ucos、FreeRTOS、LiteOS
+  ***********************************************************/</span>
+<span class="token keyword">static</span> err_t <span class="token function">create_mutex</span><span class="token punctuation">(</span>MUTEX_T <span class="token operator">*</span>mutex<span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+  err_t ret <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+
+<span class="token comment" spellcheck="true">//    *mutex = rt_mutex_create("test_mux",RT_IPC_FLAG_PRIO); </span><span class="token comment" spellcheck="true">/* rtt */</span>
+<span class="token comment" spellcheck="true">//    ret = (err_t)(*mutex != RT_NULL);</span>
+
+<span class="token comment" spellcheck="true">//    *mutex = CreateMutex(NULL, FALSE, NULL);        </span><span class="token comment" spellcheck="true">/* Win32 */</span>
+<span class="token comment" spellcheck="true">//    ret = (err_t)(*mutex != INVALID_HANDLE_VALUE);</span>
+
+<span class="token comment" spellcheck="true">//    *mutex = OSMutexCreate(0, &amp;err);        </span><span class="token comment" spellcheck="true">/* uC/OS-II */</span>
+<span class="token comment" spellcheck="true">//    ret = (err_t)(err == OS_NO_ERR);</span>
+
+<span class="token comment" spellcheck="true">//    *mutex = xSemaphoreCreateMutex();    </span><span class="token comment" spellcheck="true">/* FreeRTOS */</span>
+<span class="token comment" spellcheck="true">//    ret = (err_t)(*mutex != NULL);</span>
+
+<span class="token comment" spellcheck="true">//  ret = LOS_MuxCreate(&amp;mutex);  </span><span class="token comment" spellcheck="true">/* LiteOS */</span>
+<span class="token comment" spellcheck="true">//    ret = (err_t)(ret != LOS_OK);</span>
+  <span class="token keyword">return</span> ret<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token comment" spellcheck="true">/************************************************************
+  * @brief   deleta_mutex
+  * @param   mutex:互斥量句柄
+  * @return  NULL
+  * @author  jiejie
+  * @github  https://github.com/jiejieTop
+  * @date    2018-xx-xx
+  * @version v1.0
+  * @note    删除一个互斥量，支持的os有rtt、win32、ucos、FreeRTOS、LiteOS
+  ***********************************************************/</span>
+<span class="token keyword">static</span> err_t <span class="token function">deleta_mutex</span><span class="token punctuation">(</span>MUTEX_T <span class="token operator">*</span>mutex<span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    err_t ret<span class="token punctuation">;</span>
+
+<span class="token comment" spellcheck="true">//    ret = rt_mutex_delete(mutex);    </span><span class="token comment" spellcheck="true">/* rtt */</span>
+
+<span class="token comment" spellcheck="true">//    ret = CloseHandle(mutex);    </span><span class="token comment" spellcheck="true">/* Win32 */</span>
+
+<span class="token comment" spellcheck="true">//    OSMutexDel(mutex, OS_DEL_ALWAYS, &amp;err);    </span><span class="token comment" spellcheck="true">/* uC/OS-II */</span>
+<span class="token comment" spellcheck="true">//    ret = (err_t)(err == OS_NO_ERR);</span>
+
+<span class="token comment" spellcheck="true">//  vSemaphoreDelete(mutex);        </span><span class="token comment" spellcheck="true">/* FreeRTOS */</span>
+<span class="token comment" spellcheck="true">//    ret = 1;</span>
+
+<span class="token comment" spellcheck="true">//  ret = LOS_MuxDelete(&amp;mutex);  </span><span class="token comment" spellcheck="true">/* LiteOS */</span>
+<span class="token comment" spellcheck="true">//    ret = (err_t)(ret != LOS_OK);</span>
+
+    <span class="token keyword">return</span> ret<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token comment" spellcheck="true">/************************************************************
+  * @brief   request_mutex
+  * @param   mutex:互斥量句柄
+  * @return  NULL
+  * @author  jiejie
+  * @github  https://github.com/jiejieTop
+  * @date    2018-xx-xx
+  * @version v1.0
+  * @note    请求一个互斥量，得到互斥量的线程才允许进行访问缓冲区
+  *          支持的os有rtt、win32、ucos、FreeRTOS、LiteOS
+  ***********************************************************/</span>
+<span class="token keyword">static</span> err_t <span class="token function">request_mutex</span><span class="token punctuation">(</span>MUTEX_T <span class="token operator">*</span>mutex<span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    err_t ret<span class="token punctuation">;</span>
+
+<span class="token comment" spellcheck="true">//    ret = (err_t)(rt_mutex_take(mutex, MUTEX_TIMEOUT) == RT_EOK);</span><span class="token comment" spellcheck="true">/* rtt */</span>
+
+<span class="token comment" spellcheck="true">//    ret = (err_t)(WaitForSingleObject(mutex, MUTEX_TIMEOUT) == WAIT_OBJECT_0);    </span><span class="token comment" spellcheck="true">/* Win32 */</span>
+
+<span class="token comment" spellcheck="true">//    OSMutexPend(mutex, MUTEX_TIMEOUT, &amp;err));        </span><span class="token comment" spellcheck="true">/* uC/OS-II */</span>
+<span class="token comment" spellcheck="true">//    ret = (err_t)(err == OS_NO_ERR);</span>
+
+<span class="token comment" spellcheck="true">//    ret = (err_t)(xSemaphoreTake(mutex, MUTEX_TIMEOUT) == pdTRUE);    </span><span class="token comment" spellcheck="true">/* FreeRTOS */</span>
+
+<span class="token comment" spellcheck="true">//  ret = (err_t)(LOS_MuxPend(mutex,MUTEX_TIMEOUT) == LOS_OK);          </span><span class="token comment" spellcheck="true">/* LiteOS */</span>
+
+    <span class="token keyword">return</span> ret<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token comment" spellcheck="true">/************************************************************
+  * @brief   release_mutex
+  * @param   mutex:互斥量句柄
+  * @return  NULL
+  * @author  jiejie
+  * @github  https://github.com/jiejieTop
+  * @date    2018-xx-xx
+  * @version v1.0
+  * @note    释放互斥量，当线程使用完资源必须释放互斥量
+  *          支持的os有rtt、win32、ucos、FreeRTOS、LiteOS
+  ***********************************************************/</span>
+<span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">release_mutex</span><span class="token punctuation">(</span>MUTEX_T <span class="token operator">*</span>mutex<span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+<span class="token comment" spellcheck="true">//    rt_mutex_release(mutex);</span><span class="token comment" spellcheck="true">/* rtt */</span>
+
+<span class="token comment" spellcheck="true">//    ReleaseMutex(mutex);        </span><span class="token comment" spellcheck="true">/* Win32 */</span>
+
+<span class="token comment" spellcheck="true">//    OSMutexPost(mutex);        </span><span class="token comment" spellcheck="true">/* uC/OS-II */</span>
+
+<span class="token comment" spellcheck="true">//    xSemaphoreGive(mutex);    </span><span class="token comment" spellcheck="true">/* FreeRTOS */</span>
+
+<span class="token comment" spellcheck="true">//  LOS_MuxPost(mutex);   </span><span class="token comment" spellcheck="true">/* LiteOS */</span>
+<span class="token punctuation">}</span>
+<span class="token macro property">#<span class="token directive keyword">endif</span></span>
+<span class="token comment" spellcheck="true">/*********************************** mutex **************************************************/</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="debug-h"><a href="#debug-h" class="headerlink" title="debug.h"></a>debug.h</h3><p>最后送一份debug的简便操作源码，因为前文很多时候会调用<br><code>PRINT_ERR</code><br><code>PRINT_DEBUG</code></p>
+<pre class="line-numbers language-c"><code class="language-c"><span class="token macro property">#<span class="token directive keyword">ifndef</span> _DEBUG_H</span>
+<span class="token macro property">#<span class="token directive keyword">define</span> _DEBUG_H</span>
+<span class="token comment" spellcheck="true">/************************************************************
+  * @brief   debug.h
+  * @author  jiejie
+  * @github  https://github.com/jiejieTop
+  * @date    2018-xx-xx
+  * @version v1.0
+  * @note    此文件用于打印日志信息
+  ***********************************************************/</span>
+<span class="token comment" spellcheck="true">/**
+* @name Debug print 
+* @{
+*/</span>
+<span class="token macro property">#<span class="token directive keyword">define</span> PRINT_DEBUG_ENABLE        1        </span><span class="token comment" spellcheck="true">/* 打印调试信息 */</span>
+<span class="token macro property">#<span class="token directive keyword">define</span> PRINT_ERR_ENABLE            1     </span><span class="token comment" spellcheck="true">/* 打印错误信息 */</span>
+<span class="token macro property">#<span class="token directive keyword">define</span> PRINT_INFO_ENABLE            0        </span><span class="token comment" spellcheck="true">/* 打印个人信息 */</span>
+
+
+<span class="token macro property">#<span class="token directive keyword">if</span> PRINT_DEBUG_ENABLE</span>
+<span class="token macro property">#<span class="token directive keyword">define</span> PRINT_DEBUG(fmt, args...)      do{(printf("\n[DEBUG] >> "), printf(fmt, ##args));}while(0)     </span>
+<span class="token macro property">#<span class="token directive keyword">else</span></span>
+<span class="token macro property">#<span class="token directive keyword">define</span> PRINT_DEBUG(fmt, args...)         </span>
+<span class="token macro property">#<span class="token directive keyword">endif</span></span>
+
+<span class="token macro property">#<span class="token directive keyword">if</span> PRINT_ERR_ENABLE</span>
+<span class="token macro property">#<span class="token directive keyword">define</span> PRINT_ERR(fmt, args...)      do{(printf("\n[ERR] >> "), printf(fmt, ##args));}while(0)     </span>
+<span class="token macro property">#<span class="token directive keyword">else</span></span>
+<span class="token macro property">#<span class="token directive keyword">define</span> PRINT_ERR(fmt, args...)           </span>
+<span class="token macro property">#<span class="token directive keyword">endif</span></span>
+
+<span class="token macro property">#<span class="token directive keyword">if</span> PRINT_INFO_ENABLE</span>
+<span class="token macro property">#<span class="token directive keyword">define</span> PRINT_INFO(fmt, args...)      do{(printf("\n[INFO] >> "), printf(fmt, ##args));}while(0)     </span>
+<span class="token macro property">#<span class="token directive keyword">else</span></span>
+<span class="token macro property">#<span class="token directive keyword">define</span> PRINT_INFO(fmt, args...)           </span>
+<span class="token macro property">#<span class="token directive keyword">endif</span></span>
+
+<span class="token comment" spellcheck="true">/**@} */</span>
+
+<span class="token comment" spellcheck="true">//针对不同的编译器调用不同的stdint.h文件</span>
+<span class="token macro property">#<span class="token directive keyword">if</span> defined(__ICCARM__) || defined(__CC_ARM) || defined(__GNUC__)</span>
+    <span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">&lt;stdint.h></span></span>
+<span class="token macro property">#<span class="token directive keyword">endif</span></span>
+
+<span class="token comment" spellcheck="true">/* 断言 Assert */</span>
+<span class="token macro property">#<span class="token directive keyword">define</span> AssertCalled(char,int)     printf("\nError:%s,%d\r\n",char,int)</span>
+<span class="token macro property">#<span class="token directive keyword">define</span> ASSERT(x)   if((x)==0)  AssertCalled(__FILE__,__LINE__)</span>
+
+<span class="token keyword">typedef</span> <span class="token keyword">enum</span> 
+<span class="token punctuation">{</span>
+    ASSERT_ERR <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">,</span>                                <span class="token comment" spellcheck="true">/* 错误 */</span>
+    ASSERT_SUCCESS <span class="token operator">=</span> <span class="token operator">!</span>ASSERT_ERR    <span class="token comment" spellcheck="true">/* 正确 */</span>
+<span class="token punctuation">}</span> Assert_ErrorStatus<span class="token punctuation">;</span>
+
+<span class="token keyword">typedef</span> <span class="token keyword">enum</span> 
+<span class="token punctuation">{</span>
+    FALSE <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">,</span>        <span class="token comment" spellcheck="true">/* 假 */</span>
+    TRUE <span class="token operator">=</span> <span class="token operator">!</span>FALSE    <span class="token comment" spellcheck="true">/* 真 */</span>
+<span class="token punctuation">}</span>ResultStatus<span class="token punctuation">;</span>
+
+<span class="token macro property">#<span class="token directive keyword">endif</span> </span><span class="token comment" spellcheck="true">/* __DEBUG_H */</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h1 id="喜欢就关注我吧！"><a href="#喜欢就关注我吧！" class="headerlink" title="喜欢就关注我吧！"></a>喜欢就关注我吧！</h1><p><img src="./images/loading.png" data-original="http://qiniu.jiejie01.top/gzh.jpg" alt="欢迎关注我公众号"></p>
+<p>相关代码可以在公众号后台获取。</p>
+<script>
+        document.querySelectorAll('.github-emoji')
+          .forEach(el => {
+            if (!el.dataset.src) { return; }
+            const img = document.createElement('img');
+            img.style = 'display:none !important;';
+            img.src = el.dataset.src;
+            img.addEventListener('error', () => {
+              img.remove();
+              el.style.color = 'inherit';
+              el.style.backgroundImage = 'none';
+              el.style.background = 'none';
+            });
+            img.addEventListener('load', () => {
+              img.remove();
+            });
+            document.body.appendChild(img);
+          });
+      </script>
+            </div>
+            <hr/>
+
+            
+            <style>
+    #reward {
+        margin: 40px 0;
+        text-align: center;
+    }
+
+    #reward .reward-link {
+        font-size: 1.88rem;
+    }
+
+    #reward .btn-floating:hover {
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2), 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    #rewardModal {
+        width: 320px;
+        height: 350px;
+    }
+
+    #rewardModal .reward-title {
+        margin: 15px auto;
+        padding-bottom: 5px;
+    }
+
+    #rewardModal .modal-content {
+        padding: 10px;
+    }
+
+    #rewardModal .close {
+        position: absolute;
+        right: 15px;
+        top: 15px;
+        color: rgba(0, 0, 0, 0.5);
+        font-size: 1.3rem;
+        line-height: 20px;
+        cursor: pointer;
+    }
+
+    #rewardModal .close:hover {
+        color: #ef5350;
+        transform: scale(1.3);
+        -moz-transform:scale(1.3);
+        -webkit-transform:scale(1.3);
+        -o-transform:scale(1.3);
+    }
+
+    #rewardModal .reward-tabs {
+        margin: 0 auto;
+        width: 210px;
+    }
+
+    .reward-tabs .tabs {
+        height: 38px;
+        margin: 10px auto;
+        padding-left: 0;
+    }
+
+    .reward-content ul {
+        padding-left: 0 !important;
+    }
+
+    .reward-tabs .tabs .tab {
+        height: 38px;
+        line-height: 38px;
+    }
+
+    .reward-tabs .tab a {
+        color: #fff;
+        background-color: #ccc;
+    }
+
+    .reward-tabs .tab a:hover {
+        background-color: #ccc;
+        color: #fff;
+    }
+
+    .reward-tabs .wechat-tab .active {
+        color: #fff !important;
+        background-color: #22AB38 !important;
+    }
+
+    .reward-tabs .alipay-tab .active {
+        color: #fff !important;
+        background-color: #019FE8 !important;
+    }
+
+    .reward-tabs .reward-img {
+        width: 210px;
+        height: 210px;
+    }
+</style>
+
+<div id="reward">
+    <a href="#rewardModal" class="reward-link modal-trigger btn-floating btn-large waves-effect waves-light red">赏</a>
+
+    <!-- Modal Structure -->
+    <div id="rewardModal" class="modal">
+        <div class="modal-content">
+            <a class="close modal-close"><i class="fa fa-close"></i></a>
+            <h4 class="reward-title">你的赏识是我前进的动力!</h4>
+            <div class="reward-content">
+                <div class="reward-tabs">
+                    <ul class="tabs row">
+                        <li class="tab col s6 alipay-tab waves-effect waves-light"><a href="#alipay">支付宝</a></li>
+                        <li class="tab col s6 wechat-tab waves-effect waves-light"><a href="#wechat">微 信</a></li>
+                    </ul>
+                    <div id="alipay">
+                        <img src="/medias/reward/alipay.bmp" class="reward-img" alt="支付宝打赏二维码">
+                    </div>
+                    <div id="wechat">
+                        <img src="/medias/reward/wechat.bmp" class="reward-img" alt="微信打赏二维码">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $('.tabs').tabs();
+    });
+</script>
+            
+
+            <link rel="stylesheet" type="text/css" href="/libs/share/css/share.min.css">
+
+<div id="article-share">
+    
+    <div class="social-share" data-disabled="qzone" data-wechat-qrcode-helper="<p>微信里点“发现”->“扫一扫”二维码便可查看分享。</p>"></div>
+    
+</div>
+
+<script src="/libs/share/js/social-share.min.js"></script>
+
+            
+            
+            
+            <div class="reprint1">
+                <p>
+                    <span class="reprint1-tip">
+                        <i class="fa fa-exclamation-circle"></i>&nbsp;&nbsp;转载请注明:
+                    </span>
+                    <a href="https://jiejietop.cn" class="b-link-green">杰杰的博客</a>
+                    <i class="fa fa-angle-right fa-lg fa-fw text-color"></i>
+                    <a href="/kfifo/" class="b-link-green">基于Linux的kfifo移植到STM32（支持os的互斥访问）</a>
+                </p>
+            </div>
+
+        </div>
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+        <style>
+    .valine-card {
+        margin: 1.5rem auto;
+    }
+
+    .valine-card .card-content {
+        padding: 20px 20px 5px 20px;
+    }
+
+    #vcomments input[type=text],
+    #vcomments input[type=email],
+    #vcomments input[type=url],
+    #vcomments textarea {
+        box-sizing: border-box;
+    }
+
+    #vcomments p {
+        margin: 2px 2px 10px;
+        font-size: 1.05rem;
+        line-height: 1.78rem;
+    }
+
+    #vcomments blockquote p {
+        text-indent: 0.2rem;
+    }
+
+    #vcomments a {
+        padding: 0 2px;
+        color: #42b983;
+        font-weight: 500;
+        text-decoration: underline;
+    }
+
+    #vcomments img {
+        max-width: 100%;
+        height: auto;
+        cursor: pointer;
+    }
+
+    #vcomments ol li {
+        list-style-type: decimal;
+    }
+
+    #vcomments ol,
+    ul {
+        display: block;
+        padding-left: 2em;
+        word-spacing: 0.05rem;
+    }
+
+    #vcomments ul li,
+    ol li {
+        display: list-item;
+        line-height: 1.8rem;
+        font-size: 1rem;
+    }
+
+    #vcomments ul li {
+        list-style-type: disc;
+    }
+
+    #vcomments ul ul li {
+        list-style-type: circle;
+    }
+
+    #vcomments table, th, td {
+        padding: 12px 13px;
+        border: 1px solid #dfe2e5;
+    }
+
+    #vcomments table, th, td {
+        border: 0;
+    }
+
+    table tr:nth-child(2n), thead {
+        background-color: #fafafa;
+    }
+
+    #vcomments table th {
+        background-color: #f2f2f2;
+        min-width: 80px;
+    }
+
+    #vcomments table td {
+        min-width: 80px;
+    }
+
+    #vcomments h1 {
+        font-size: 1.85rem;
+        font-weight: bold;
+        line-height: 2.2rem;
+    }
+
+    #vcomments h2 {
+        font-size: 1.65rem;
+        font-weight: bold;
+        line-height: 1.9rem;
+    }
+
+    #vcomments h3 {
+        font-size: 1.45rem;
+        font-weight: bold;
+        line-height: 1.7rem;
+    }
+
+    #vcomments h4 {
+        font-size: 1.25rem;
+        font-weight: bold;
+        line-height: 1.5rem;
+    }
+
+    #vcomments h5 {
+        font-size: 1.1rem;
+        font-weight: bold;
+        line-height: 1.4rem;
+    }
+
+    #vcomments h6 {
+        font-size: 1rem;
+        line-height: 1.3rem;
+    }
+
+    #vcomments p {
+        font-size: 1rem;
+        line-height: 1.5rem;
+    }
+
+    #vcomments hr {
+        margin: 12px 0;
+        border: 0;
+        border-top: 1px solid #ccc;
+    }
+
+    #vcomments blockquote {
+        margin: 15px 0;
+        border-left: 5px solid #42b983;
+        padding: 1rem 0.8rem 0.3rem 0.8rem;
+        color: #666;
+        background-color: rgba(66, 185, 131, .1);
+    }
+
+    #vcomments pre {
+        font-family: monospace, monospace;
+        padding: 1.2em;
+        margin: .5em 0;
+        background: #272822;
+        overflow: auto;
+        border-radius: 0.3em;
+        tab-size: 4;
+    }
+
+    #vcomments code {
+        font-family: monospace, monospace;
+        padding: 1px 3px;
+        font-size: 0.92rem;
+        color: #e96900;
+        background-color: #f8f8f8;
+        border-radius: 2px;
+    }
+
+    #vcomments pre code {
+        font-family: monospace, monospace;
+        padding: 0;
+        color: #e8eaf6;
+        background-color: #272822;
+    }
+
+    #vcomments pre[class*="language-"] {
+        padding: 1.2em;
+        margin: .5em 0;
+    }
+
+    #vcomments code[class*="language-"],
+    pre[class*="language-"] {
+        color: #e8eaf6;
+    }
+
+    #vcomments [type="checkbox"]:not(:checked), [type="checkbox"]:checked {
+        position: inherit;
+        margin-left: -1.3rem;
+        margin-right: 0.4rem;
+        margin-top: -1px;
+        vertical-align: middle;
+        left: unset;
+        visibility: visible;
+    }
+
+    #vcomments b,
+    strong {
+        font-weight: bold;
+    }
+
+    #vcomments dfn {
+        font-style: italic;
+    }
+
+    #vcomments small {
+        font-size: 85%;
+    }
+
+    #vcomments cite {
+        font-style: normal;
+    }
+
+    #vcomments mark {
+        background-color: #fcf8e3;
+        padding: .2em;
+    }
+
+    #vcomments table, th, td {
+        padding: 12px 13px;
+        border: 1px solid #dfe2e5;
+    }
+
+    table tr:nth-child(2n), thead {
+        background-color: #fafafa;
+    }
+
+    #vcomments table th {
+        background-color: #f2f2f2;
+        min-width: 80px;
+    }
+
+    #vcomments table td {
+        min-width: 80px;
+    }
+
+    #vcomments [type="checkbox"]:not(:checked), [type="checkbox"]:checked {
+        position: inherit;
+        margin-left: -1.3rem;
+        margin-right: 0.4rem;
+        margin-top: -1px;
+        vertical-align: middle;
+        left: unset;
+        visibility: visible;
+    }
+</style>
+
+<div class="card valine-card" data-aos="fade-up">
+    <div id="vcomments" class="card-content"></div>
+</div>
+
+<script src="/libs/valine/av-min.js"></script>
+<script src="/libs/valine/Valine.min.js"></script>
+<script>
+    new Valine({
+        el: '#vcomments',
+        appId: 'P8ggvR4g3idexcAGf4hkEUqQ-gzGzoHsz',
+        appKey: 'GqHPu44hpoDiC8uOjc4JJFSc',
+        notify: 'true' === 'true',
+        verify: 'true' === 'true',
+        visitor: 'true' === 'true',
+        avatar: 'monsterid',
+        pageSize: '10',
+        lang: 'zh-cn',
+        placeholder: '赶紧留下你的评论吧~'
+    });
+</script>
+    
+
+    
+
+<article id="prenext-posts" class="prev-next articles">
+    <div class="row article-row">
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge left-badge text-color">
+                <i class="fa fa-chevron-left"></i>&nbsp;上一篇</div>
+            <div class="card">
+                <a href="/dwt/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/4.jpg" class="responsive-img" alt="一种Cortex-M内核中的精确延时方法">
+                        
+                        <span class="card-title">一种Cortex-M内核中的精确延时方法</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            本文介绍一种Cortex-M内核中的精确延时方法前言为什么要学习这种延时的方法？
+
+很多时候我们跑操作系统，就一般会占用一个硬件定时器——SysTick，而我们一般操作系统的时钟节拍一般是设置100-1000HZ，也就是1ms——10ms产
+                        
+                    </div>
+                    <div class="publish-info">
+                        <span class="publish-date">
+                            <i class="fa fa-clock-o fa-fw icon-date"></i>2019-10-07
+                        </span>
+                        <span class="publish-author">
+                            
+                            <i class="fa fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/STM32/" class="post-category" target="_blank">
+                                    STM32
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/STM32/" target="_blank">
+                        <span class="chip bg-color">STM32</span>
+                    </a>
+                    
+                    <a href="/tags/Cortex-M/" target="_blank">
+                        <span class="chip bg-color">Cortex-M</span>
+                    </a>
+                    
+                    <a href="/tags/DWT/" target="_blank">
+                        <span class="chip bg-color">DWT</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fa fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/fifo/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/4.jpg" class="responsive-img" alt="STM32进阶之串口环形缓冲区实现">
+                        
+                        <span class="card-title">STM32进阶之串口环形缓冲区实现</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            队列的概念在此之前，我们来回顾一下队列的基本概念：
+队列 (Queue)：是一种先进先出(First In First Out ,简称 FIFO)的线性表，只允许在一端插入（入队），在另一端进行删除（出队）。
+队列的特点类似售票排队窗口，先
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="fa fa-clock-o fa-fw icon-date"></i>2019-10-05
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fa fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/STM32/" class="post-category" target="_blank">
+                                    STM32
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/STM32/" target="_blank">
+                        <span class="chip bg-color">STM32</span>
+                    </a>
+                    
+                    <a href="/tags/Cortex-M/" target="_blank">
+                        <span class="chip bg-color">Cortex-M</span>
+                    </a>
+                    
+                    <a href="/tags/fifo/" target="_blank">
+                        <span class="chip bg-color">fifo</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+    </div>
+</article>
+</div>
+
+
+<script>
+    $('#articleContent').on('copy', function (e) {
+        // IE8 or earlier browser is 'undefined'
+        if (typeof window.getSelection === 'undefined') return;
+
+        var selection = window.getSelection();
+        // if the selection is short let's not annoy our users.
+        if (('' + selection).length < Number.parseInt('120')) {
+            return;
+        }
+
+        // create a div outside of the visible area and fill it with the selected text.
+        var bodyElement = document.getElementsByTagName('body')[0];
+        var newdiv = document.createElement('div');
+        newdiv.style.position = 'absolute';
+        newdiv.style.left = '-99999px';
+        bodyElement.appendChild(newdiv);
+        newdiv.appendChild(selection.getRangeAt(0).cloneContents());
+
+        // we need a <pre> tag workaround.
+        // otherwise the text inside "pre" loses all the line breaks!
+        if (selection.getRangeAt(0).commonAncestorContainer.nodeName === 'PRE') {
+            newdiv.innerHTML = "<pre>" + newdiv.innerHTML + "</pre>";
+        }
+
+        var url = document.location.href;
+        newdiv.innerHTML += '<br />'
+            + '来源: 杰杰的博客<br />'
+            + '作者: 杰杰<br />'
+            + '链接: <a href="' + url + '">' + url + '</a><br />'
+            + '本文章著作权归作者所有，任何形式的转载都请注明出处。';
+
+        selection.selectAllChildren(newdiv);
+        window.setTimeout(function () {bodyElement.removeChild(newdiv);}, 200);
+    });
+</script>
+
+
+    </div>
+    <div id="toc-aside" class="expanded col l3 hide-on-med-and-down">
+        <div class="toc-widget">
+            <div class="toc-title"><i class="fa fa-list-alt"></i>&nbsp;&nbsp;目录</div>
+            <div id="toc-content"></div>
+        </div>
+    </div>
+</div>
+
+<!-- TOC 悬浮按钮. -->
+
+<div id="floating-toc-btn" class="hide-on-med-and-down">
+    <a class="btn-floating btn-large bg-color">
+        <i class="fa fa-list"></i>
+    </a>
+</div>
+
+
+<script src="/libs/tocbot/tocbot.min.js"></script>
+<script>
+    $(function () {
+        tocbot.init({
+            tocSelector: '#toc-content',
+            contentSelector: '#articleContent',
+            headingsOffset: -($(window).height() * 0.4 - 45),
+            // headingsOffset: -205,
+            headingSelector: 'h1, h2, h3, h4, h5'
+        });
+
+        // modify the toc link href to support Chinese.
+        let i = 0;
+        let tocHeading = 'toc-heading-';
+        $('#toc-content a').each(function () {
+            $(this).attr('href', '#' + tocHeading + (++i));
+        });
+
+        // modify the heading title id to support Chinese.
+        i = 0;
+        $('#articleContent').children('h1, h2, h3, h4, h5').each(function () {
+            $(this).attr('id', tocHeading + (++i));
+        });
+
+        // Set scroll toc fixed.
+        let tocHeight = parseInt($(window).height() * 0.4 - 64);
+        let $tocWidget = $('.toc-widget');
+        $(window).scroll(function () {
+            let scroll = $(window).scrollTop();
+            /* add post toc fixed. */
+            if (scroll > tocHeight) {
+                $tocWidget.addClass('toc-fixed');
+            } else {
+                $tocWidget.removeClass('toc-fixed');
+            }
+        });
+
+        
+        /* 修复文章卡片 div 的宽度. */
+        let fixPostCardWidth = function (srcId, targetId) {
+            let srcDiv = $('#' + srcId);
+            if (srcDiv.length === 0) {
+                return;
+            }
+
+            let w = srcDiv.width();
+            if (w >= 450) {
+                w = w + 21;
+            } else if (w >= 350 && w < 450) {
+                w = w + 18;
+            } else if (w >= 300 && w < 350) {
+                w = w + 16;
+            } else {
+                w = w + 14;
+            }
+            $('#' + targetId).width(w);
+        };
+
+        // 切换TOC目录展开收缩的相关操作.
+        const expandedClass = 'expanded';
+        let $tocAside = $('#toc-aside');
+        let $mainContent = $('#main-content');
+        $('#floating-toc-btn .btn-floating').click(function () {
+            if ($tocAside.hasClass(expandedClass)) {
+                $tocAside.removeClass(expandedClass).slideUp(500);
+                $mainContent.removeClass('l9');
+            } else {
+                $tocAside.addClass(expandedClass).slideDown(500);
+                $mainContent.addClass('l9');
+            }
+            fixPostCardWidth('artDetail', 'prenext-posts');
+        });
+        
+    });
+</script>
+    
+
+</main>
+
+
+    <!-- jiejie 杰杰  modify 2019.08.15-->
+
+<footer class="page-footer bg-color">
+    <div class="container row center-align">
+        <div class="col s12 m8 l8 copy-right">
+            &copy; 2019 jiejie. All Rights Reserved.
+
+            
+                &nbsp;<i class="fa fa-area-chart"></i>&nbsp;站点总字数:&nbsp;
+                <span class="white-color">94k</span>
+
+            
+            <br>
+
+            <span id="sitetime"></span>
+
+            
+
+            
+                <br>
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'></span>
+                    <i class="fa fa-heart-o"></i>
+                    本站总访问量 <span id="busuanzi_value_site_pv" class="white-color"></span>
+
+                
+
+                
+                    <span id="busuanzi_container_site_uv" style='display:none'></span>
+                    人次,&nbsp;访客数 <span id="busuanzi_value_site_uv" class="white-color"></span> 人.
+                    
+                
+
+            
+
+        </div>
+
+        <div class="col s12 m4 l4 social-link social-statis">
+    <a href="https://github.com/jiejietop" class="tooltipped" target="_blank" data-tooltip="访问我的GitHub" data-position="top" data-delay="50">
+        <i class="fa fa-github"></i>
+    </a>
+
+
+ 
+    <a href="https://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=jiejietop@gmail.com" class="tooltipped" target="_blank" data-tooltip="邮件联系我" data-position="top" data-delay="50">
+        <i class="fa fa-envelope-open"></i>
+    </a>
+
+
+
+
+    <a href="https://zhihu.com/people/jie-jie-33-9" class="tooltipped" target="_blank" data-tooltip="访问我的知乎" data-position="top" data-delay="50">
+        <i class="fa fa-inverse">知</i>
+    </a>
+
+
+
+    <a href="http://wpa.qq.com/msgrd?v=3&uin=1161959934&site=qq&menu=yes" class="tooltipped" target="_blank" data-tooltip="访问我的QQ空间" data-position="top" data-delay="50">
+        <i class="fa fa-qq"></i>
+    </a>
+
+
+
+    <a href="https://weibo.com/6800623694" class="tooltipped" target="_blank" data-tooltip="关注我的微博" data-position="top" data-delay="50">
+        <i class="fa fa-weibo"></i>
+    </a>
+
+
+
+    <a href="/atom.xml" class="tooltipped" target="_blank" data-tooltip="RSS 订阅" data-position="top" data-delay="50">
+        <i class="fa fa-rss"></i>
+    </a>
+</div>
+
+    </div>
+</footer>
+
+<div class="progress-bar"></div>
+
+<script language=javascript>
+    function siteTime() {
+        window.setTimeout("siteTime()", 1000);
+        var seconds = 1000;
+        var minutes = seconds * 60;
+        var hours = minutes * 60;
+        var days = hours * 24;
+        var years = days * 365;
+        var today = new Date();
+        var todayYear = today.getFullYear();
+        var todayMonth = today.getMonth() + 1;
+        var todayDate = today.getDate();
+        var todayHour = today.getHours();
+        var todayMinute = today.getMinutes();
+        var todaySecond = today.getSeconds();
+
+        /* Date.UTC() -- 返回date对象距世界标准时间(UTC)1970年1月1日午夜之间的毫秒数(时间戳)
+        year - 作为date对象的年份，为4位年份值
+        month - 0-11之间的整数，做为date对象的月份
+        day - 1-31之间的整数，做为date对象的天数
+        hours - 0(午夜24点)-23之间的整数，做为date对象的小时数
+        minutes - 0-59之间的整数，做为date对象的分钟数
+        seconds - 0-59之间的整数，做为date对象的秒数
+        microseconds - 0-999之间的整数，做为date对象的毫秒数 */
+
+        var t1 = Date.UTC(2019, 08, 01, 00, 00, 00); //北京时间2019-8-1 00:00:00
+        var t2 = Date.UTC(todayYear, todayMonth, todayDate, todayHour, todayMinute, todaySecond);
+        var diff = t2 - t1;
+        var diffYears = Math.floor(diff / years);
+        var diffDays = Math.floor((diff / days) - diffYears * 365);
+        var diffHours = Math.floor((diff - (diffYears * 365 + diffDays) * days) / hours);
+        var diffMinutes = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours) / minutes);
+        var diffSeconds = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours - diffMinutes * minutes) / seconds);
+        document.getElementById("sitetime").innerHTML = "本站已运行 " + diffYears + " 年 " + diffDays + " 天 " + diffHours + " 小时 " + diffMinutes + " 分钟 " + diffSeconds + " 秒";
+    }/*因为建站时间还没有一年，就将之注释掉了。需要的可以取消*/
+    siteTime();
+</script>
+
+    <!-- 搜索遮罩框 -->
+<div id="searchModal" class="modal">
+    <div class="modal-content">
+        <div class="search-header">
+            <span class="title"><i class="fa fa-search"></i>&nbsp;&nbsp;搜索</span>
+            <input type="search" id="searchInput" name="s" placeholder="请输入搜索的关键字"
+                   class="search-input">
+        </div>
+        <div id="searchResult"></div>
+    </div>
+</div>
+
+<script src="/js/search.js"></script>
+<script type="text/javascript">
+$(function () {
+    searchFunc("/" + "search.xml", 'searchInput', 'searchResult');
+});
+</script>
+    <!-- 回到顶部按钮 -->
+<div id="backTop" class="top-scroll">
+    <a class="btn-floating btn-large waves-effect waves-light" href="#!">
+        <i class="fa fa-angle-up"></i>
+    </a>
+</div>
+
+
+    <script src="/libs/materialize/materialize.min.js"></script>
+    <script src="/libs/masonry/masonry.pkgd.min.js"></script>
+    <script src="/libs/aos/aos.js"></script>
+    <script src="/libs/scrollprogress/scrollProgress.min.js"></script>
+    <script src="/libs/lightGallery/js/lightgallery-all.min.js"></script>
+    <script src="/js/matery.js"></script>
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+
+
+
+    
+        <script src="/libs/others/clicklove.js"></script>
+    
+    
+    
+        <script async src="/libs/others/busuanzi.pure.mini.js"></script>
+    
+    
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"log":false,"model":{"jsonPath":"/live2dw/assets/wanko.model.json"},"display":{"position":"left","width":150,"height":200},"mobile":{"show":false},"react":{"opacity":0.7}});</script><script>!function(e){var r=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function t(){for(var c=0;c<r.length;c++)t=r[c],void 0,0<=(n=t.getBoundingClientRect()).top&&0<=n.left&&n.top<=(e.innerHeight||document.documentElement.clientHeight)&&function(){var t,n,e,i,o=r[c];t=o,n=function(){r=r.filter(function(t){return o!==t})},e=new Image,i=t.getAttribute("data-original"),e.onload=function(){t.src=i,n&&n()},e.src=i}();var t,n}t(),e.addEventListener("scroll",function(){!function(t,n){clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(n)},500)}(t,e)})}(this);</script></body>
+
+</html>

@@ -1,0 +1,660 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>杰杰的博客</title>
+  
+  <subtitle>ღ( ´･ᴗ･` )我怎么辣么可爱(*╹▽╹*)</subtitle>
+  <link href="/atom.xml" rel="self"/>
+  
+  <link href="https://jiejietop.cn/"/>
+  <updated>2019-12-03T13:04:45.184Z</updated>
+  <id>https://jiejietop.cn/</id>
+  
+  <author>
+    <name>杰杰</name>
+    
+  </author>
+  
+  <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>CMake实战教程（一）</title>
+    <link href="https://jiejietop.cn/cmake-1/"/>
+    <id>https://jiejietop.cn/cmake-1/</id>
+    <published>2019-12-03T13:00:11.000Z</published>
+    <updated>2019-12-03T13:04:45.184Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h1 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot;
+        
+      
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>网络底层知识</title>
+    <link href="https://jiejietop.cn/tcpip-2/"/>
+    <id>https://jiejietop.cn/tcpip-2/</id>
+    <published>2019-10-15T14:56:12.000Z</published>
+    <updated>2019-12-03T12:22:29.832Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h1 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot;
+        
+      
+    
+    </summary>
+    
+      <category term="TCP/IP" scheme="https://jiejietop.cn/categories/TCP-IP/"/>
+    
+    
+      <category term="TCP/IP" scheme="https://jiejietop.cn/tags/TCP-IP/"/>
+    
+      <category term="网络" scheme="https://jiejietop.cn/tags/%E7%BD%91%E7%BB%9C/"/>
+    
+      <category term="LwIP" scheme="https://jiejietop.cn/tags/LwIP/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>ARP协议原理</title>
+    <link href="https://jiejietop.cn/tcpip-3/"/>
+    <id>https://jiejietop.cn/tcpip-3/</id>
+    <published>2019-10-15T14:56:12.000Z</published>
+    <updated>2019-12-03T12:22:29.832Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h1 id=&quot;引言&quot;&gt;&lt;a href=&quot;#引言&quot; class=&quot;headerlink&quot; title=&quot;引言&quot;&gt;&lt;/a&gt;引言&lt;/h1&gt;&lt;p&gt;从前一篇文章中，我们知道计算机中会维护一个ARP缓存表，这个表记录着IP地址与MAC地址的映射关系，我们可以通过在电脑的控制台通过arp
+        
+      
+    
+    </summary>
+    
+      <category term="TCP/IP" scheme="https://jiejietop.cn/categories/TCP-IP/"/>
+    
+    
+      <category term="TCP/IP" scheme="https://jiejietop.cn/tags/TCP-IP/"/>
+    
+      <category term="网络" scheme="https://jiejietop.cn/tags/%E7%BD%91%E7%BB%9C/"/>
+    
+      <category term="LwIP" scheme="https://jiejietop.cn/tags/LwIP/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>TCP/IP协议栈扫盲班</title>
+    <link href="https://jiejietop.cn/tcpip-1/"/>
+    <id>https://jiejietop.cn/tcpip-1/</id>
+    <published>2019-10-15T14:54:12.000Z</published>
+    <updated>2019-12-03T12:22:29.831Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h1 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot;
+        
+      
+    
+    </summary>
+    
+      <category term="TCP/IP" scheme="https://jiejietop.cn/categories/TCP-IP/"/>
+    
+    
+      <category term="TCP/IP" scheme="https://jiejietop.cn/tags/TCP-IP/"/>
+    
+      <category term="网络" scheme="https://jiejietop.cn/tags/%E7%BD%91%E7%BB%9C/"/>
+    
+      <category term="LwIP" scheme="https://jiejietop.cn/tags/LwIP/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>【TencentOS  tiny】深度源码分析（8）——软件定时器</title>
+    <link href="https://jiejietop.cn/tencentos-tiny-10/"/>
+    <id>https://jiejietop.cn/tencentos-tiny-10/</id>
+    <published>2019-10-12T15:19:54.000Z</published>
+    <updated>2019-12-03T12:22:29.819Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h1 id=&quot;软件定时器的基本概念&quot;&gt;&lt;a href=&quot;#软件定时器的基本概念&quot; class=&quot;headerlink&quot; title=&quot;软件定时器的基本概念&quot;&gt;&lt;/a&gt;软件定时器的基本概念&lt;/h1&gt;&lt;p&gt;TencentOS tiny
+        
+      
+    
+    </summary>
+    
+      <category term="操作系统" scheme="https://jiejietop.cn/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
+    
+      <category term="TencentOS tiny" scheme="https://jiejietop.cn/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/TencentOS-tiny/"/>
+    
+    
+      <category term="TencentOS tiny" scheme="https://jiejietop.cn/tags/TencentOS-tiny/"/>
+    
+      <category term="RTOS" scheme="https://jiejietop.cn/tags/RTOS/"/>
+    
+      <category term="操作系统" scheme="https://jiejietop.cn/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
+    
+      <category term="物联网" scheme="https://jiejietop.cn/tags/%E7%89%A9%E8%81%94%E7%BD%91/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>【TencentOS  tiny】深度源码分析（7）——事件</title>
+    <link href="https://jiejietop.cn/tencentos-tiny-9/"/>
+    <id>https://jiejietop.cn/tencentos-tiny-9/</id>
+    <published>2019-10-12T15:18:54.000Z</published>
+    <updated>2019-12-03T12:22:29.823Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h1 id=&quot;引言&quot;&gt;&lt;a href=&quot;#引言&quot; class=&quot;headerlink&quot;
+        
+      
+    
+    </summary>
+    
+      <category term="操作系统" scheme="https://jiejietop.cn/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
+    
+      <category term="TencentOS tiny" scheme="https://jiejietop.cn/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/TencentOS-tiny/"/>
+    
+    
+      <category term="TencentOS tiny" scheme="https://jiejietop.cn/tags/TencentOS-tiny/"/>
+    
+      <category term="RTOS" scheme="https://jiejietop.cn/tags/RTOS/"/>
+    
+      <category term="操作系统" scheme="https://jiejietop.cn/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
+    
+      <category term="物联网" scheme="https://jiejietop.cn/tags/%E7%89%A9%E8%81%94%E7%BD%91/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>【TencentOS  tiny】深度源码分析（6）——互斥锁</title>
+    <link href="https://jiejietop.cn/tencentos-tiny-8/"/>
+    <id>https://jiejietop.cn/tencentos-tiny-8/</id>
+    <published>2019-10-12T15:17:54.000Z</published>
+    <updated>2019-12-03T12:22:29.822Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h1 id=&quot;互斥锁&quot;&gt;&lt;a href=&quot;#互斥锁&quot; class=&quot;headerlink&quot;
+        
+      
+    
+    </summary>
+    
+      <category term="操作系统" scheme="https://jiejietop.cn/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
+    
+      <category term="TencentOS tiny" scheme="https://jiejietop.cn/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/TencentOS-tiny/"/>
+    
+    
+      <category term="TencentOS tiny" scheme="https://jiejietop.cn/tags/TencentOS-tiny/"/>
+    
+      <category term="RTOS" scheme="https://jiejietop.cn/tags/RTOS/"/>
+    
+      <category term="操作系统" scheme="https://jiejietop.cn/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
+    
+      <category term="物联网" scheme="https://jiejietop.cn/tags/%E7%89%A9%E8%81%94%E7%BD%91/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>【TencentOS  tiny】深度源码分析（4）——消息队列</title>
+    <link href="https://jiejietop.cn/tencentos-tiny-6/"/>
+    <id>https://jiejietop.cn/tencentos-tiny-6/</id>
+    <published>2019-10-12T15:16:54.000Z</published>
+    <updated>2019-12-03T12:22:29.821Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h1 id=&quot;消息队列&quot;&gt;&lt;a href=&quot;#消息队列&quot; class=&quot;headerlink&quot; title=&quot;消息队列&quot;&gt;&lt;/a&gt;消息队列&lt;/h1&gt;&lt;p&gt;在前一篇文章中&lt;a
+        
+      
+    
+    </summary>
+    
+      <category term="操作系统" scheme="https://jiejietop.cn/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
+    
+      <category term="TencentOS tiny" scheme="https://jiejietop.cn/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/TencentOS-tiny/"/>
+    
+    
+      <category term="TencentOS tiny" scheme="https://jiejietop.cn/tags/TencentOS-tiny/"/>
+    
+      <category term="RTOS" scheme="https://jiejietop.cn/tags/RTOS/"/>
+    
+      <category term="操作系统" scheme="https://jiejietop.cn/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
+    
+      <category term="物联网" scheme="https://jiejietop.cn/tags/%E7%89%A9%E8%81%94%E7%BD%91/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>【TencentOS  tiny】深度源码分析（5）——信号量</title>
+    <link href="https://jiejietop.cn/tencentos-tiny-7/"/>
+    <id>https://jiejietop.cn/tencentos-tiny-7/</id>
+    <published>2019-10-12T15:16:54.000Z</published>
+    <updated>2019-12-03T12:22:29.822Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h1 id=&quot;信号量&quot;&gt;&lt;a href=&quot;#信号量&quot; class=&quot;headerlink&quot;
+        
+      
+    
+    </summary>
+    
+      <category term="操作系统" scheme="https://jiejietop.cn/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
+    
+      <category term="TencentOS tiny" scheme="https://jiejietop.cn/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/TencentOS-tiny/"/>
+    
+    
+      <category term="TencentOS tiny" scheme="https://jiejietop.cn/tags/TencentOS-tiny/"/>
+    
+      <category term="RTOS" scheme="https://jiejietop.cn/tags/RTOS/"/>
+    
+      <category term="操作系统" scheme="https://jiejietop.cn/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
+    
+      <category term="物联网" scheme="https://jiejietop.cn/tags/%E7%89%A9%E8%81%94%E7%BD%91/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>【TencentOS  tiny】深度源码分析（3）——队列</title>
+    <link href="https://jiejietop.cn/tencentos-tiny-5/"/>
+    <id>https://jiejietop.cn/tencentos-tiny-5/</id>
+    <published>2019-10-12T15:11:54.000Z</published>
+    <updated>2019-12-03T12:22:29.821Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h1 id=&quot;队列基本概念&quot;&gt;&lt;a href=&quot;#队列基本概念&quot; class=&quot;headerlink&quot;
+        
+      
+    
+    </summary>
+    
+      <category term="操作系统" scheme="https://jiejietop.cn/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
+    
+      <category term="TencentOS tiny" scheme="https://jiejietop.cn/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/TencentOS-tiny/"/>
+    
+    
+      <category term="TencentOS tiny" scheme="https://jiejietop.cn/tags/TencentOS-tiny/"/>
+    
+      <category term="RTOS" scheme="https://jiejietop.cn/tags/RTOS/"/>
+    
+      <category term="操作系统" scheme="https://jiejietop.cn/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
+    
+      <category term="物联网" scheme="https://jiejietop.cn/tags/%E7%89%A9%E8%81%94%E7%BD%91/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>【TencentOS  tiny】深度源码分析（2）——调度器</title>
+    <link href="https://jiejietop.cn/tencentos-tiny-4/"/>
+    <id>https://jiejietop.cn/tencentos-tiny-4/</id>
+    <published>2019-10-12T15:10:54.000Z</published>
+    <updated>2019-12-03T12:22:29.820Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;温馨提示：本文不描述与浮点相关的寄存器的内容，如需了解自行查阅（毕竟我自己也不懂）&lt;/strong&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h1 id=&quot;调度器的基本概念&quot;&gt;&lt;a href=&quot;#调度器的基本概念&quot;
+        
+      
+    
+    </summary>
+    
+      <category term="操作系统" scheme="https://jiejietop.cn/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
+    
+      <category term="TencentOS tiny" scheme="https://jiejietop.cn/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/TencentOS-tiny/"/>
+    
+    
+      <category term="TencentOS tiny" scheme="https://jiejietop.cn/tags/TencentOS-tiny/"/>
+    
+      <category term="RTOS" scheme="https://jiejietop.cn/tags/RTOS/"/>
+    
+      <category term="操作系统" scheme="https://jiejietop.cn/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
+    
+      <category term="物联网" scheme="https://jiejietop.cn/tags/%E7%89%A9%E8%81%94%E7%BD%91/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>【TencentOS  tiny】深度源码分析（1）——task</title>
+    <link href="https://jiejietop.cn/tencentos-tiny-3/"/>
+    <id>https://jiejietop.cn/tencentos-tiny-3/</id>
+    <published>2019-10-12T15:07:54.000Z</published>
+    <updated>2019-12-03T12:22:29.820Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h1 id=&quot;任务的基本概念&quot;&gt;&lt;a href=&quot;#任务的基本概念&quot; class=&quot;headerlink&quot; title=&quot;任务的基本概念&quot;&gt;&lt;/a&gt;任务的基本概念&lt;/h1&gt;&lt;p&gt;从系统的角度看，任务是竞争系统资源的最小运行单元。TencentOS 
+        
+      
+    
+    </summary>
+    
+      <category term="操作系统" scheme="https://jiejietop.cn/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
+    
+      <category term="TencentOS tiny" scheme="https://jiejietop.cn/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/TencentOS-tiny/"/>
+    
+    
+      <category term="TencentOS tiny" scheme="https://jiejietop.cn/tags/TencentOS-tiny/"/>
+    
+      <category term="RTOS" scheme="https://jiejietop.cn/tags/RTOS/"/>
+    
+      <category term="操作系统" scheme="https://jiejietop.cn/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
+    
+      <category term="物联网" scheme="https://jiejietop.cn/tags/%E7%89%A9%E8%81%94%E7%BD%91/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>【TencentOS tiny】 移植到STM32F103全教程</title>
+    <link href="https://jiejietop.cn/tencentos-tiny-2/"/>
+    <id>https://jiejietop.cn/tencentos-tiny-2/</id>
+    <published>2019-10-12T14:57:04.000Z</published>
+    <updated>2019-12-03T12:22:29.819Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h1 id=&quot;移植前的准备工作&quot;&gt;&lt;a href=&quot;#移植前的准备工作&quot; class=&quot;headerlink&quot; title=&quot;移植前的准备工作&quot;&gt;&lt;/a&gt;移植前的准备工作&lt;/h1&gt;&lt;h2 id=&quot;1-获取STM32的裸机工程模板&quot;&gt;&lt;a
+        
+      
+    
+    </summary>
+    
+      <category term="操作系统" scheme="https://jiejietop.cn/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
+    
+      <category term="TencentOS tiny" scheme="https://jiejietop.cn/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/TencentOS-tiny/"/>
+    
+    
+      <category term="TencentOS tiny" scheme="https://jiejietop.cn/tags/TencentOS-tiny/"/>
+    
+      <category term="RTOS" scheme="https://jiejietop.cn/tags/RTOS/"/>
+    
+      <category term="操作系统" scheme="https://jiejietop.cn/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
+    
+      <category term="物联网" scheme="https://jiejietop.cn/tags/%E7%89%A9%E8%81%94%E7%BD%91/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>【TencentOS tiny】又有一个操作系统开源</title>
+    <link href="https://jiejietop.cn/tencentos-tiny-1/"/>
+    <id>https://jiejietop.cn/tencentos-tiny-1/</id>
+    <published>2019-10-12T14:52:59.000Z</published>
+    <updated>2019-12-03T12:22:29.818Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h1 id=&quot;新闻&quot;&gt;&lt;a href=&quot;#新闻&quot; class=&quot;headerlink&quot; title=&quot;新闻&quot;&gt;&lt;/a&gt;新闻&lt;/h1&gt;&lt;p&gt;2019年9月18日，腾讯宣布将&lt;code&gt;开源&lt;/code&gt;
+        
+      
+    
+    </summary>
+    
+      <category term="操作系统" scheme="https://jiejietop.cn/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
+    
+      <category term="TencentOS tiny" scheme="https://jiejietop.cn/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/TencentOS-tiny/"/>
+    
+    
+      <category term="TencentOS tiny" scheme="https://jiejietop.cn/tags/TencentOS-tiny/"/>
+    
+      <category term="RTOS" scheme="https://jiejietop.cn/tags/RTOS/"/>
+    
+      <category term="操作系统" scheme="https://jiejietop.cn/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
+    
+      <category term="物联网" scheme="https://jiejietop.cn/tags/%E7%89%A9%E8%81%94%E7%BD%91/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>一种Cortex-M内核中的精确延时方法</title>
+    <link href="https://jiejietop.cn/dwt/"/>
+    <id>https://jiejietop.cn/dwt/</id>
+    <published>2019-10-07T13:58:46.000Z</published>
+    <updated>2019-12-03T12:22:29.825Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h3 id=&quot;本文介绍一种Cortex-M内核中的精确延时方法&quot;&gt;&lt;a href=&quot;#本文介绍一种Cortex-M内核中的精确延时方法&quot; class=&quot;headerlink&quot;
+        
+      
+    
+    </summary>
+    
+      <category term="STM32" scheme="https://jiejietop.cn/categories/STM32/"/>
+    
+    
+      <category term="STM32" scheme="https://jiejietop.cn/tags/STM32/"/>
+    
+      <category term="Cortex-M" scheme="https://jiejietop.cn/tags/Cortex-M/"/>
+    
+      <category term="DWT" scheme="https://jiejietop.cn/tags/DWT/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>基于Linux的kfifo移植到STM32（支持os的互斥访问）</title>
+    <link href="https://jiejietop.cn/kfifo/"/>
+    <id>https://jiejietop.cn/kfifo/</id>
+    <published>2019-10-06T14:07:14.000Z</published>
+    <updated>2019-12-03T12:22:29.830Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h2 id=&quot;基于Linux的kfifo移植到STM32（支持os的互斥访问）&quot;&gt;&lt;a href=&quot;#基于Linux的kfifo移植到STM32（支持os的互斥访问）&quot; class=&quot;headerlink&quot;
+        
+      
+    
+    </summary>
+    
+      <category term="STM32" scheme="https://jiejietop.cn/categories/STM32/"/>
+    
+    
+      <category term="STM32" scheme="https://jiejietop.cn/tags/STM32/"/>
+    
+      <category term="Cortex-M" scheme="https://jiejietop.cn/tags/Cortex-M/"/>
+    
+      <category term="kfifo" scheme="https://jiejietop.cn/tags/kfifo/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>STM32进阶之串口环形缓冲区实现</title>
+    <link href="https://jiejietop.cn/fifo/"/>
+    <id>https://jiejietop.cn/fifo/</id>
+    <published>2019-10-05T14:21:12.000Z</published>
+    <updated>2019-12-03T12:22:29.825Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h1 id=&quot;队列的概念&quot;&gt;&lt;a href=&quot;#队列的概念&quot; class=&quot;headerlink&quot; title=&quot;队列的概念&quot;&gt;&lt;/a&gt;队列的概念&lt;/h1&gt;&lt;p&gt;在此之前，我们来回顾一下队列的基本概念：&lt;/p&gt;
+&lt;p&gt;队列 (Queue)：是一种先进先出(First In
+        
+      
+    
+    </summary>
+    
+      <category term="STM32" scheme="https://jiejietop.cn/categories/STM32/"/>
+    
+    
+      <category term="STM32" scheme="https://jiejietop.cn/tags/STM32/"/>
+    
+      <category term="Cortex-M" scheme="https://jiejietop.cn/tags/Cortex-M/"/>
+    
+      <category term="fifo" scheme="https://jiejietop.cn/tags/fifo/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>STM32之串口DMA接收不定长数据</title>
+    <link href="https://jiejietop.cn/dma/"/>
+    <id>https://jiejietop.cn/dma/</id>
+    <published>2019-10-05T14:11:40.000Z</published>
+    <updated>2019-12-03T12:22:29.824Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h1 id=&quot;STM32之串口DMA接收不定长数据&quot;&gt;&lt;a href=&quot;#STM32之串口DMA接收不定长数据&quot; class=&quot;headerlink&quot; title=&quot;STM32之串口DMA接收不定长数据&quot;&gt;&lt;/a&gt;STM32之串口DMA接收不定长数据&lt;/h1&gt;&lt;h2
+        
+      
+    
+    </summary>
+    
+      <category term="STM32" scheme="https://jiejietop.cn/categories/STM32/"/>
+    
+    
+      <category term="STM32" scheme="https://jiejietop.cn/tags/STM32/"/>
+    
+      <category term="Cortex-M" scheme="https://jiejietop.cn/tags/Cortex-M/"/>
+    
+      <category term="DMA" scheme="https://jiejietop.cn/tags/DMA/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>纯C语言写的按键驱动，将按键逻辑与按键处理事件分离~</title>
+    <link href="https://jiejietop.cn/button/"/>
+    <id>https://jiejietop.cn/button/</id>
+    <published>2019-10-05T02:03:27.000Z</published>
+    <updated>2019-12-03T12:22:29.823Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h1 id=&quot;ButtonDrive&quot;&gt;&lt;a href=&quot;#ButtonDrive&quot; class=&quot;headerlink&quot;
+        
+      
+    
+    </summary>
+    
+      <category term="框架" scheme="https://jiejietop.cn/categories/%E6%A1%86%E6%9E%B6/"/>
+    
+    
+      <category term="框架" scheme="https://jiejietop.cn/tags/%E6%A1%86%E6%9E%B6/"/>
+    
+      <category term="ButtonDrive" scheme="https://jiejietop.cn/tags/ButtonDrive/"/>
+    
+      <category term="STM32" scheme="https://jiejietop.cn/tags/STM32/"/>
+    
+      <category term="开源项目" scheme="https://jiejietop.cn/tags/%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>继续学习FreeRTOS消息队列</title>
+    <link href="https://jiejietop.cn/freertos-10/"/>
+    <id>https://jiejietop.cn/freertos-10/</id>
+    <published>2019-10-05T01:34:58.000Z</published>
+    <updated>2019-12-03T12:22:29.826Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;blockquote&gt;
+&lt;p&gt;写在前面：杰杰这个月很忙~所以并没有时间更新，现在健身房闭馆装修，晚上有空就更新一下！其实在公众号没更新的这段日子，每天都有兄弟在来关注我的公众号，这让我受宠若惊，在这里谢谢大家的支持啦！！谢谢^&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;在这里我
+        
+      
+    
+    </summary>
+    
+      <category term="操作系统" scheme="https://jiejietop.cn/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
+    
+    
+      <category term="RTOS" scheme="https://jiejietop.cn/tags/RTOS/"/>
+    
+      <category term="操作系统" scheme="https://jiejietop.cn/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
+    
+      <category term="FreeRTOS" scheme="https://jiejietop.cn/tags/FreeRTOS/"/>
+    
+  </entry>
+  
+</feed>

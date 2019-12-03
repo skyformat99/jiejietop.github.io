@@ -1,0 +1,1690 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+<!-- jiejie 杰杰  modify 2019.08.15-->
+
+
+
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="utf-8">
+    <meta name="keywords" content="【TencentOS  tiny】深度源码分析（7）——事件, IoT RTOS linux Python jiejie Dora">
+    <meta name="baidu-site-verification" content="fmlEuI34ir">
+    <meta name="google-site-verification" content="KeoTn_OFy4ndJwXNmm2gMeQfPhd7alqE9vQDwI32KCY">
+    <meta name="description" content="引言大家在裸机编程中很可能经常用到flag这种变量，用来标志一下某个事件的发生，然后在循环中判断这些标志是否发生，如果是等待多个事件的话，还可能会if((xxx_flag)&amp;amp;&amp;amp;(xxx_flag))这样子做判断。当然，如果聪">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="renderer" content="webkit|ie-stand|ie-comp">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>【TencentOS  tiny】深度源码分析（7）——事件 | 杰杰的博客</title>
+    <link rel="icon" type="image/x-icon, image/vnd.microsoft.icon" href="/medias/logo/favicon.ico">
+
+    <link rel="stylesheet" type="text/css" href="/libs/awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="/libs/materialize/materialize.min.css">
+    <link rel="stylesheet" type="text/css" href="/libs/aos/aos.css">
+    <link rel="stylesheet" type="text/css" href="/libs/animate/animate.min.css">
+    <link rel="stylesheet" type="text/css" href="/libs/lightGallery/css/lightgallery.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/matery.css">
+    <link rel="stylesheet" type="text/css" href="/css/my.css">
+
+    <meta name="360-site-verification" content="d280ce782ae1e8d546343da41182687d">
+
+    <style type="text/css">
+        
+            
+            code[class*="language-"],
+            pre[class*="language-"] {
+                white-space: pre !important;
+            }
+
+        
+    </style>
+
+    <script src="/libs/jquery/jquery-2.2.0.min.js"></script>
+    <script src="https://sdk.jinrishici.com/v2/browser/jinrishici.js" charset="utf-8"></script>
+    
+    <script>
+        var _hmt = _hmt || [];
+        (function () {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?46e79e71af0709a5b9106bf20cecc493";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+
+    <script>
+        (function(){
+        var src = "https://jspassport.ssl.qhimg.com/11.0.1.js?d182b3f28525f2db83acfaaf6e696dba";
+        document.write('<script src="' + src + '" id="sozz"><\/script>');
+        })();
+    </script>
+
+    
+    
+        <script>
+            (function(){
+                var bp = document.createElement('script');
+                var curProtocol = window.location.protocol.split(':')[0];
+                if (curProtocol === 'https') {
+                    bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+                }
+                else {
+                    bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+                }
+                var s = document.getElementsByTagName("script")[0];
+                s.parentNode.insertBefore(bp, s);
+            })();
+        </script>
+    
+
+<link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
+
+<body>
+
+    <header class="navbar-fixed">
+    <nav id="headNav" class="bg-color nav-transparent">
+        <div id="navContainer" class="nav-wrapper container">
+            <div class="brand-logo">
+                <a href="/" class="waves-effect waves-light">
+                    
+                    <img src="/medias/logo/logo.ico" class="logo-img" alt="LOGO">
+                    
+                    <span class="logo-span">杰杰的博客</span>
+                </a>
+            </div>
+            <!-- jiejie 杰杰  modify 2019.08.15-->
+
+
+
+<a href="#" data-target="mobile-nav" class="sidenav-trigger button-collapse"><i class="fa fa-navicon"></i></a>
+<ul class="right">
+    
+    <li class="hide-on-med-and-down">
+        <a href="/" class="waves-effect waves-light">
+            
+            <i class="fa fa-home"></i>
+            
+            <span>首页</span>
+        </a>
+    </li>
+    
+    <li class="hide-on-med-and-down">
+        <a href="/tags" class="waves-effect waves-light">
+            
+            <i class="fa fa-tags"></i>
+            
+            <span>标签</span>
+        </a>
+    </li>
+    
+    <li class="hide-on-med-and-down">
+        <a href="/categories" class="waves-effect waves-light">
+            
+            <i class="fa fa-bookmark"></i>
+            
+            <span>分类</span>
+        </a>
+    </li>
+    
+    <li class="hide-on-med-and-down">
+        <a href="/archives" class="waves-effect waves-light">
+            
+            <i class="fa fa-archive"></i>
+            
+            <span>归档</span>
+        </a>
+    </li>
+    
+    <li class="hide-on-med-and-down">
+        <a href="/AV" class="waves-effect waves-light">
+            
+            <i class="fa fa-music"></i>
+            
+            <span>娱乐</span>
+        </a>
+    </li>
+    
+    <li class="hide-on-med-and-down">
+        <a href="/about" class="waves-effect waves-light">
+            
+            <i class="fa fa-user-circle-o"></i>
+            
+            <span>关于我</span>
+        </a>
+    </li>
+    
+    <li class="hide-on-med-and-down">
+        <a href="/contact" class="waves-effect waves-light">
+            
+            <i class="fa fa-envelope"></i>
+            
+            <span>留言板</span>
+        </a>
+    </li>
+    
+    <li class="hide-on-med-and-down">
+        <a href="/friends" class="waves-effect waves-light">
+            
+            <i class="fa fa-address-book"></i>
+            
+            <span>友情链接</span>
+        </a>
+    </li>
+    
+    <li>
+        <a href="#searchModal" class="modal-trigger waves-effect waves-light">
+            <i id="searchIcon" class="fa fa-search" title="搜索"></i>
+        </a>
+    </li>
+</ul>
+
+<!-- jiejie 杰杰  modify 2019.08.15-->
+
+<div id="mobile-nav" class="side-nav sidenav">
+
+    <div class="mobile-head bg-color">
+        
+        <img src="/medias/logo/logo.ico" class="logo-img circle responsive-img">
+        <!-- jiejie 杰杰  modify 2019.08.15-->
+        <div class="logo-name">杰杰的博客</div>
+        <div class="logo-desc">
+            
+            物联网 | linux | 操作系统
+            
+        </div>
+    </div>
+
+    
+
+    <ul class="menu-list mobile-menu-list">
+        
+        <li>
+            <a href="/" class="waves-effect waves-light">
+                
+                <i class="fa fa-fw fa-home"></i>
+                
+                首页
+            </a>
+        </li>
+        
+        <li>
+            <a href="/tags" class="waves-effect waves-light">
+                
+                <i class="fa fa-fw fa-tags"></i>
+                
+                标签
+            </a>
+        </li>
+        
+        <li>
+            <a href="/categories" class="waves-effect waves-light">
+                
+                <i class="fa fa-fw fa-bookmark"></i>
+                
+                分类
+            </a>
+        </li>
+        
+        <li>
+            <a href="/archives" class="waves-effect waves-light">
+                
+                <i class="fa fa-fw fa-archive"></i>
+                
+                归档
+            </a>
+        </li>
+        
+        <li>
+            <a href="/AV" class="waves-effect waves-light">
+                
+                <i class="fa fa-fw fa-music"></i>
+                
+                娱乐
+            </a>
+        </li>
+        
+        <li>
+            <a href="/about" class="waves-effect waves-light">
+                
+                <i class="fa fa-fw fa-user-circle-o"></i>
+                
+                关于我
+            </a>
+        </li>
+        
+        <li>
+            <a href="/contact" class="waves-effect waves-light">
+                
+                <i class="fa fa-fw fa-envelope"></i>
+                
+                留言板
+            </a>
+        </li>
+        
+        <li>
+            <a href="/friends" class="waves-effect waves-light">
+                
+                <i class="fa fa-fw fa-address-book"></i>
+                
+                友情链接
+            </a>
+        </li>
+        
+        
+        <li><div class="divider"></div></li>
+        <li>
+            <a href="https://github.com/jiejietop" class="waves-effect waves-light" target="_blank">
+                <i class="fa fa-github-square fa-fw"></i>Fork Me
+            </a>
+        </li>
+        
+    </ul>
+</div>
+
+        </div>
+
+        
+            <style>
+    .nav-transparent .github-corner {
+        display: none !important;
+    }
+
+    .github-corner {
+        position: absolute;
+        z-index: 10;
+        top: 0;
+        right: 0;
+        border: 0;
+        transform: scale(1.1);
+    }
+
+    .github-corner svg {
+        color: #0f9d58;
+        fill: #fff;
+        height: 64px;
+        width: 64px;
+    }
+
+    .github-corner:hover .octo-arm {
+        animation: a 0.56s ease-in-out;
+    }
+
+    .github-corner .octo-arm {
+        animation: none;
+    }
+
+    @keyframes a {
+        0%,
+        to {
+            transform: rotate(0);
+        }
+        20%,
+        60% {
+            transform: rotate(-25deg);
+        }
+        40%,
+        80% {
+            transform: rotate(10deg);
+        }
+    }
+</style>
+
+<a href="https://github.com/jiejietop" class="github-corner tooltipped hide-on-med-and-down" target="_blank"
+   data-tooltip="Fork Me" data-position="left" data-delay="50">
+    <svg viewBox="0 0 250 250" aria-hidden="true">
+        <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path>
+        <path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2"
+              fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path>
+        <path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z"
+              fill="currentColor" class="octo-body"></path>
+    </svg>
+</a>
+        
+    </nav>
+
+</header>
+
+    
+<script src="/libs/cryptojs/crypto-js.min.js"></script>
+<script>
+    (function() {
+        let pwd = '';
+        if (pwd && pwd.length > 0) {
+            if (pwd !== CryptoJS.SHA256(prompt('请输入访问本文章的密码')).toString(CryptoJS.enc.Hex)) {
+                alert('密码错误，将返回主页！');
+                location.href = '/';
+            }
+        }
+    })();
+</script>
+
+
+
+
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/3.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col s12 m12 l12">
+                <div class="brand">
+                    <div class="description center-align post-title">
+                        【TencentOS  tiny】深度源码分析（7）——事件
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<main class="post-container content">
+
+    
+    <link rel="stylesheet" href="/libs/tocbot/tocbot.css">
+<style>
+    #articleContent h1::before,
+    #articleContent h2::before,
+    #articleContent h3::before,
+    #articleContent h4::before,
+    #articleContent h5::before,
+    #articleContent h6::before {
+        display: block;
+        content: " ";
+        height: 100px;
+        margin-top: -100px;
+        visibility: hidden;
+    }
+
+    #articleContent :focus {
+        outline: none;
+    }
+
+    .toc-fixed {
+        position: fixed;
+        top: 64px;
+    }
+
+    .toc-widget {
+        padding-left: 20px;
+    }
+
+    .toc-widget .toc-title {
+        margin: 35px 0 15px 0;
+        padding-left: 17px;
+        font-size: 1.5rem;
+        font-weight: bold;
+        line-height: 1.5rem;
+    }
+
+    .toc-widget ol {
+        padding: 0;
+        list-style: none;
+    }
+
+    #toc-content ol {
+        padding-left: 10px;
+    }
+
+    #toc-content ol li {
+        padding-left: 10px;
+    }
+
+    #toc-content .toc-link:hover {
+        color: #42b983;
+        font-weight: 700;
+        text-decoration: underline;
+    }
+
+    #toc-content .toc-link::before {
+        background-color: transparent;
+        max-height: 25px;
+    }
+
+    #toc-content .is-active-link {
+        color: #42b983;
+    }
+
+    #toc-content .is-active-link::before {
+        background-color: #42b983;
+    }
+
+    #floating-toc-btn {
+        position: fixed;
+        right: 20px;
+        bottom: 76px;
+        padding-top: 15px;
+        margin-bottom: 0;
+        z-index: 998;
+    }
+
+    #floating-toc-btn .btn-floating {
+        width: 48px;
+        height: 48px;
+    }
+
+    #floating-toc-btn .btn-floating i {
+        line-height: 48px;
+        font-size: 1.4rem;
+    }
+</style>
+<div class="row">
+    <div id="main-content" class="col s12 m12 l9">
+        <!-- jiejie 杰杰  modify 2019.08.15-->
+<!-- 文章内容详情 -->
+<div id="artDetail">
+    <div class="card">
+        <div class="card-content article-info">
+            <div class="row tag-cate">
+                <div class="col s7">
+                    
+                    <div class="article-tag">
+                        
+                            <a href="/tags/TencentOS-tiny/" target="_blank">
+                                <span class="chip bg-color">TencentOS tiny</span>
+                            </a>
+                        
+                            <a href="/tags/RTOS/" target="_blank">
+                                <span class="chip bg-color">RTOS</span>
+                            </a>
+                        
+                            <a href="/tags/操作系统/" target="_blank">
+                                <span class="chip bg-color">操作系统</span>
+                            </a>
+                        
+                            <a href="/tags/物联网/" target="_blank">
+                                <span class="chip bg-color">物联网</span>
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+                <div class="col s5 right-align">
+                    
+                    <div class="post-cate">
+                        <i class="fa fa-bookmark fa-fw icon-category"></i>
+                        
+                            <a href="/categories/操作系统/" class="post-category" target="_blank">
+                                操作系统
+                            </a>
+                        
+                            <a href="/categories/操作系统/TencentOS-tiny/" class="post-category" target="_blank">
+                                TencentOS tiny
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+            
+            <div class="post-info">
+                <div class="post-date info-break-policy">
+                    <i class="fa fa-calendar-minus-o fa-fw"></i>发布日期:&nbsp;&nbsp;
+                    2019-10-12
+                </div>
+
+                <div class="post-author info-break-policy">
+                    <i class="fa fa-user-o fa-fw"></i>作者:&nbsp;&nbsp;
+                    
+                        杰杰
+                    
+                </div>
+
+                
+                    
+                    <div class="info-break-policy">
+                        <i class="fa fa-file-word-o fa-fw"></i>文章字数:&nbsp;&nbsp;
+                        3.8k
+                    </div>
+                    
+
+                    
+                    <div class="info-break-policy">
+                        <i class="fa fa-clock-o fa-fw"></i>阅读时长:&nbsp;&nbsp;
+                        14 分
+                    </div>
+                    
+                
+                
+                
+                        <span id="busuanzi_container_site_pv" style='display:none'></span>
+                        <i class="fa fa-eye fa-fw"></i>阅读次数:&nbsp;&nbsp;
+                        <span id="busuanzi_value_page_pv" ></span>
+    
+                
+
+            </div>
+        </div>
+        <hr class="clearfix">
+        <div class="card-content article-card-content">
+            <div id="articleContent">
+                <h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>大家在裸机编程中很可能经常用到<code>flag</code>这种变量，用来标志一下某个事件的发生，然后在循环中判断这些标志是否发生，如果是等待多个事件的话，还可能会<code>if((xxx_flag)&amp;&amp;(xxx_flag))</code>这样子做判断。当然，如果聪明一点的同学就会拿<code>flag</code>的<code>某些位</code>做标志，比如这个变量的第一位表示<code>A</code>事件，第二位表示<code>B</code>事件，当这两个事件都发生的时候，就判断<code>flag&amp;0x03</code>的值是多少，从而判断出哪个事件发生了。</p>
+<p>但在操作系统中又将如何实现呢？</p>
+<h1 id="事件"><a href="#事件" class="headerlink" title="事件"></a>事件</h1><p><strong>在操作系统中，<code>事件</code>是一种内核资源，主要用于<code>任务与任务间、中断与任务间</code>的<code>同步</code>，<code>不提供</code>数据传输功能！</strong></p>
+<p>与使用<code>信号量</code>同步有细微的差别：事件它可以实现一对多，多对多的同步。即一个任务可以等待多个事件的发生：可以是任意一个事件发生时唤醒任务进行事件处理；也可以是几个事件都发生后才唤醒任务进行事件处理。同样，也可以是多个任务同步多个事件。</p>
+<p>每一个事件组只需要极少的<code>RAM</code>空间来保存事件旗标，一个<code>事件（控制块）</code>中包含了一个<code>旗标</code>，这个<code>旗标</code>的每一位表示一个“<code>事件</code>”，旗标存储在一个<code>k_event_flag_t</code>类型的变量中（名字叫<code>flag</code>，旗标简单理解就是<code>事件标记变量</code>），该变量在事件控制块中被定义，每一位代表一个事件，任务通过<code>“逻辑与”</code>或<code>“逻辑或”</code>与一个或多个事件建立关联，在事件发生时任务将被唤醒。</p>
+<ul>
+<li><p>事件“逻辑或”是<code>独立型同步</code>，指的是任务所等待的若干事件中任意一个事件发生即可被唤醒；</p>
+<ul>
+<li>事件“逻辑与”则是<code>关联型同步</code>，指的是任务所等待的若干事件中全部<code>都</code>发生时才被唤醒。</li>
+</ul>
+</li>
+</ul>
+<p>事件是一种实现任务间通信的机制，可用于实现任务间的同步，但事件无数据传输。多任务环境下，任务、中断之间往往需要同步操作，一个事件发生会告知等待中的任务，即形成一个任务与任务、中断与任务间的同步。</p>
+<p>事件<code>无排队性</code>，即多次向任务设置同一事件(如果任务还未来得及读走)，等效于只设置一次。</p>
+<p>此外事件可以提供一对多、多对多的同步操作。</p>
+<ul>
+<li><p><code>一对多</code>同步模型：一个任务等待多个事件的触发，这种情况是比较常见的；</p>
+</li>
+<li><p><code>多对多</code>同步模型：多个任务等待多个事件的触发，任务可以通过设置事件位来实现事件的触发和等待操作。</p>
+</li>
+</ul>
+<h1 id="事件数据结构"><a href="#事件数据结构" class="headerlink" title="事件数据结构"></a>事件数据结构</h1><h2 id="事件控制块"><a href="#事件控制块" class="headerlink" title="事件控制块"></a>事件控制块</h2><p><code>TencentOS tiny</code> 通过事件控制块操作事件，其数据类型为<code>k_event_t</code>，事件控制块由多个元素组成。</p>
+<ul>
+<li><code>pend_obj</code>有点类似于面向对象的继承，继承一些属性，里面有描述内核资源的类型（如互斥锁、队列、互斥量等，同时还有一个等待列表<code>list</code>）。</li>
+<li><code>flag</code>是旗标，一个32位的变量，因此每个事件控制块最多只能标识32个事件发生！<pre class="line-numbers language-js"><code class="language-js">typedef struct k_event_st <span class="token punctuation">{</span>
+ pend_obj_t      pend_obj<span class="token punctuation">;</span>
+ k_event_flag_t  flag<span class="token punctuation">;</span>
+<span class="token punctuation">}</span> k_event_t<span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+</li>
+</ul>
+<h2 id="任务控制块与事件相关的数据结构"><a href="#任务控制块与事件相关的数据结构" class="headerlink" title="任务控制块与事件相关的数据结构"></a>任务控制块与事件相关的数据结构</h2><pre class="line-numbers language-js"><code class="language-js">typedef struct k_task_st <span class="token punctuation">{</span>
+    ···
+    k_opt_t             opt_event_pend<span class="token punctuation">;</span>     <span class="token comment" spellcheck="true">/**&lt; 等待事件的的操作类型：TOS_OPT_EVENT_PEND_ANY 、 TOS_OPT_EVENT_PEND_ALL */</span>
+    k_event_flag_t      flag_expect<span class="token punctuation">;</span>        <span class="token comment" spellcheck="true">/**&lt; 期待发生的事件 */</span>
+    k_event_flag_t     <span class="token operator">*</span>flag_match<span class="token punctuation">;</span>         <span class="token comment" spellcheck="true">/**&lt; 等待到的事件（匹配的事件） */</span>
+    ···
+<span class="token punctuation">}</span> k_task_t<span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="与事件相关的宏定义"><a href="#与事件相关的宏定义" class="headerlink" title="与事件相关的宏定义"></a>与事件相关的宏定义</h2><p>在<code>tos_config.h</code>中，配置事件开关的宏定义是<code>TOS_CFG_EVENT_EN</code></p>
+<pre class="line-numbers language-js"><code class="language-js">#define TOS_CFG_EVENT_EN            1u<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>在<code>tos_event.h</code>中，存在一些宏定义是用于操作事件的（<code>opt选项</code>）：</p>
+<pre class="line-numbers language-js"><code class="language-js"><span class="token comment" spellcheck="true">// if we are pending an event, for any flag we expect is set is ok, this flag should be passed to tos_event_pend </span>
+#define TOS_OPT_EVENT_PEND_ANY          <span class="token punctuation">(</span>k_opt_t<span class="token punctuation">)</span><span class="token number">0x0001</span>
+
+<span class="token comment" spellcheck="true">// if we are pending an event, must all the flag we expect is set is ok, this flag should be passed to tos_event_pend </span>
+#define TOS_OPT_EVENT_PEND_ALL          <span class="token punctuation">(</span>k_opt_t<span class="token punctuation">)</span><span class="token number">0x0002</span>
+
+#define TOS_OPT_EVENT_PEND_CLR          <span class="token punctuation">(</span>k_opt_t<span class="token punctuation">)</span><span class="token number">0x0004</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<ul>
+<li><code>TOS_OPT_EVENT_PEND_ANY</code>：任务在等待任意一个事件发生，即“逻辑或”！</li>
+<li><code>TOS_OPT_EVENT_PEND_ALL</code>：任务在等待所有事件发生，即“逻辑与”！</li>
+<li><code>TOS_OPT_EVENT_PEND_CLR</code>：清除等待到的事件旗标，可以与<code>TOS_OPT_EVENT_PEND_ANY</code>、<code>TOS_OPT_EVENT_PEND_ALL</code>混合使用（通过<code>“|”</code>运算符）。</li>
+</ul>
+<p>除此之外还有一个枚举类型的数据结构，用于发送事件时的选项操作，可以在发送事件时清除事件旗标的其他位（即覆盖，影响其他事件），也可以保持原本旗标中的其他位（不覆盖，不影响其他事件）。</p>
+<pre class="line-numbers language-js"><code class="language-js">typedef <span class="token keyword">enum</span> opt_event_post_en <span class="token punctuation">{</span>
+    OPT_EVENT_POST_KEP<span class="token punctuation">,</span>
+    OPT_EVENT_POST_CLR<span class="token punctuation">,</span>
+<span class="token punctuation">}</span> opt_event_post_t<span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<h1 id="创建事件"><a href="#创建事件" class="headerlink" title="创建事件"></a>创建事件</h1><p>系统中每个事件都有对应的事件控制块，事件控制块中包含了事件的所有信息，比如它的等待列表、它的资源类型，以及它的事件旗标值，那么可以想象一下，创建事件的本质是不是就是对事件控制块进行初始化呢？很显然就是这样子的。因为在后续对事件的操作都是通过事件控制块来操作的，如果控制块没有信息，那怎么能操作嘛~</p>
+<p>创建事件函数是<code>tos_event_create()</code>，传入一个事件控制块的指针<code>*event</code>，除此之外还可以指定事件初始值<code>init_flag</code>。</p>
+<p>事件的创建实际上就是调用<code>pend_object_init()</code>函数将事件控制块中的<code>event-&gt;pend_obj</code>成员变量进行初始化，它的资源类型被标识为<code>PEND_TYPE_EVENT</code>。然后将<code>event-&gt;flag</code>成员变量设置为事件旗标初始值<code>init_flag</code>。</p>
+<pre class="line-numbers language-js"><code class="language-js">__API__ k_err_t <span class="token function">tos_event_create</span><span class="token punctuation">(</span>k_event_t <span class="token operator">*</span>event<span class="token punctuation">,</span> k_event_flag_t init_flag<span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    <span class="token function">TOS_PTR_SANITY_CHECK</span><span class="token punctuation">(</span>event<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token function">pend_object_init</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>event<span class="token operator">-</span><span class="token operator">></span>pend_obj<span class="token punctuation">,</span> PEND_TYPE_EVENT<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    event<span class="token operator">-</span><span class="token operator">></span>flag <span class="token operator">=</span> init_flag<span class="token punctuation">;</span>
+    <span class="token keyword">return</span> K_ERR_NONE<span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h1 id="销毁事件"><a href="#销毁事件" class="headerlink" title="销毁事件"></a>销毁事件</h1><p>事件销毁函数是根据事件控制块直接销毁的，销毁之后事件的所有信息都会被清除，而且不能再次使用这个事件，当事件被销毁时，其等待列表中存在任务，系统有必要将这些等待这些任务唤醒，并告知任务事件已经被销毁了<code>PEND_STATE_DESTROY</code>。然后产生一次任务调度以切换到最高优先级任务执行。</p>
+<p><code>TencentOS tiny</code> 对事件销毁的处理流程如下：</p>
+<ol>
+<li>调用<code>pend_is_nopending()</code>函数判断一下是否有任务在等待事件</li>
+<li>如果有任务在等待事件则调用<code>pend_wakeup_all()</code>函数将这些任务唤醒，并且告知等待任务事件已经被销毁了（即设置任务控制块中的等待状态成员变量<code>pend_state</code>为<code>PEND_STATE_DESTROY</code>）。</li>
+<li>调用<code>pend_object_deinit()</code>函数将事件控制块中的内容清除，最主要的是将控制块中的资源类型设置为<code>PEND_TYPE_NONE</code>，这样子就无法使用这个事件了。</li>
+<li>将<code>event-&gt;flag</code>成员变量恢复为默认值<code>0</code>。</li>
+<li>进行任务调度<code>knl_sched()</code></li>
+</ol>
+<p>注意：如果事件控制块的RAM是由<code>编译器静态分配</code>的，所以即使是销毁了事件，这个内存也是没办法释放的。当然你也可以使用动态内存为事件控制块分配内存，只不过在销毁后要将这个内存释放掉，避免内存泄漏。</p>
+<pre class="line-numbers language-js"><code class="language-js">__API__ k_err_t <span class="token function">tos_event_destroy</span><span class="token punctuation">(</span>k_event_t <span class="token operator">*</span>event<span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    <span class="token function">TOS_CPU_CPSR_ALLOC</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token function">TOS_PTR_SANITY_CHECK</span><span class="token punctuation">(</span>event<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+#<span class="token keyword">if</span> TOS_CFG_OBJECT_VERIFY_EN <span class="token operator">></span> 0u
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token function">pend_object_verify</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>event<span class="token operator">-</span><span class="token operator">></span>pend_obj<span class="token punctuation">,</span> PEND_TYPE_EVENT<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> K_ERR_OBJ_INVALID<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+#endif
+
+    <span class="token function">TOS_CPU_INT_DISABLE</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token function">pend_is_nopending</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>event<span class="token operator">-</span><span class="token operator">></span>pend_obj<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token function">pend_wakeup_all</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>event<span class="token operator">-</span><span class="token operator">></span>pend_obj<span class="token punctuation">,</span> PEND_STATE_DESTROY<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token function">pend_object_deinit</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>event<span class="token operator">-</span><span class="token operator">></span>pend_obj<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    event<span class="token operator">-</span><span class="token operator">></span>flag <span class="token operator">=</span> <span class="token punctuation">(</span>k_event_flag_t<span class="token punctuation">)</span>0u<span class="token punctuation">;</span>
+
+    <span class="token function">TOS_CPU_INT_ENABLE</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">knl_sched</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">return</span> K_ERR_NONE<span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h1 id="等待事件"><a href="#等待事件" class="headerlink" title="等待事件"></a>等待事件</h1><p><code>tos_event_pend()</code>函数用于获取事件，通过这个函数，就可以知道<code>事件旗标</code>中的哪一<code>位</code>被<code>置1</code>，即哪一个事件发生了，然后任务可以对等待的事件指定<code>“逻辑与”、“逻辑或”</code>进行等待操作（<code>opt_pend选项</code>）。</p>
+<p>并且这个函数实现了<code>等待超时</code>机制，且仅当任务等待的事件发生时，任务才能等待到事件。当事件未发生的时候，等待事件的任务会进入阻塞态，阻塞时间<code>timeout</code>由用户指定，在这段时间中，如果事件一直没发生，该任务将保持阻塞状态以等待事件发生。当其它任务或中断服务程序往其等待的事件旗标设置对应的标志位，该任务将自动由阻塞态转为就绪态。当任务等待的时间超过了指定的阻塞时间，即使事件还未发生，任务也会自动从阻塞态转移为就绪态。这样子很有效的体现了操作系统的实时性。</p>
+<p>任务获取了某个事件时，可以选择清除事件操作。</p>
+<p><strong>等待事件的操作不允许在中断上下文环境运行！</strong></p>
+<p>等待事件的过程如下：</p>
+<ol>
+<li>首先检测传入的参数是否正确。，注意<code>opt_pend</code>的选项必须存在<code>TOS_OPT_EVENT_PEND_ALL</code> 或者 <code>TOS_OPT_EVENT_PEND_ANY</code> 之一，且二者不允许同时存在（<code>互斥</code>）。</li>
+<li>调用<code>event_is_match()</code>函数判断等待的事件是否已发生（即任务等待的事件与事件控制块中的旗标是否<code>匹配</code>）。</li>
+<li>在<code>event_is_match()</code>函数中会根据等待选项<code>opt_pend</code>是等待任意一个事件（<code>TOS_OPT_EVENT_PEND_ANY</code>）还是等待所有事件（<code>TOS_OPT_EVENT_PEND_ANY</code>）做出是否匹配的判断，如果是匹配了则返回<code>K_TRUE</code>，反之返回<code>K_FALSE</code>，同时等待到的事件通过<code>flag_match</code>变量返回（已发生匹配）。对于等待所有时间的选项，当且仅当所有事件都发生是才算匹配：<code>(event &amp; flag_expect) == flag_expect)</code>，对于等待任意一个事件的选项，有其中一个事件发生都算匹配：<code>(event &amp; flag_expect)</code>。</li>
+<li>如果事件未发生则可能会阻塞当前获取的任务，看一下用户指定的阻塞时间<code>timeout</code>是否为不阻塞<code>TOS_TIME_NOWAIT</code>，如果不阻塞则直接返回<code>K_ERR_PEND_NOWAIT</code>错误代码。</li>
+<li>如果调度器被锁了<code>knl_is_sched_locked()</code>，则无法进行等待操作，返回错误代码<code>K_ERR_PEND_SCHED_LOCKED</code>，毕竟需要切换任务，调度器被锁则无法切换任务。</li>
+<li>将任务控制块中关于事件的变量设置一下，即设置任务期望等待的事件<code>k_curr_task-&gt;flag_expect</code>，任务匹配的事件<code>k_curr_task-&gt;flag_match</code>，以及任务等待事件的选项<code>k_curr_task-&gt;opt_event_pend</code>。</li>
+<li>调用<code>pend_task_block()</code>函数将任务阻塞，该函数实际上就是将任务从就绪列表中移除<code>k_rdyq.task_list_head[task_prio]</code>，并且插入到等待列表中<code>object-&gt;list</code>，如果等待的时间不是永久等待<code>TOS_TIME_FOREVER</code>，还会将任务插入时间列表中<code>k_tick_list</code>，阻塞时间为<code>timeout</code>，然后进行一次任务调度<code>knl_sched()</code>。</li>
+<li>当程序能继续往下执行时，则表示<code>任务等待到事件</code>，又或者<code>等待发生了超时</code>，任务就不需要等待事件了，此时将任务控制块中的内容清空，即清空任务期望等待的事件<code>k_curr_task-&gt;flag_expect</code>，任务匹配的事件<code>k_curr_task-&gt;flag_match</code>，以及任务等待事件的选项<code>k_curr_task-&gt;opt_event_pend</code>，同时还调用<code>pend_state2errno()</code>函数获取一下任务的等待状态，看一下是哪种情况导致任务恢复运行，并且将结果返回给调用等待事件函数的任务。</li>
+</ol>
+<p>注意：当等待事件的任务能从阻塞中恢复运行，也不一定是等待到事件发生，也有可能是发生了超时，因此在写程序的时候必须要判断一下等待的事件状态，如果是<code>K_ERR_NONE</code>则表示获取成功！</p>
+<p>代码如下：</p>
+<pre class="line-numbers language-js"><code class="language-js">__STATIC__ int <span class="token function">event_is_match</span><span class="token punctuation">(</span>k_event_flag_t event<span class="token punctuation">,</span> k_event_flag_t flag_expect<span class="token punctuation">,</span> k_event_flag_t <span class="token operator">*</span>flag_match<span class="token punctuation">,</span> k_opt_t opt_pend<span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>opt_pend <span class="token operator">&amp;</span> TOS_OPT_EVENT_PEND_ALL<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token punctuation">(</span>event <span class="token operator">&amp;</span> flag_expect<span class="token punctuation">)</span> <span class="token operator">==</span> flag_expect<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token operator">*</span>flag_match <span class="token operator">=</span> flag_expect<span class="token punctuation">;</span>
+            <span class="token keyword">return</span> K_TRUE<span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token keyword">if</span> <span class="token punctuation">(</span>opt_pend <span class="token operator">&amp;</span> TOS_OPT_EVENT_PEND_ANY<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>event <span class="token operator">&amp;</span> flag_expect<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token operator">*</span>flag_match <span class="token operator">=</span> event <span class="token operator">&amp;</span> flag_expect<span class="token punctuation">;</span>
+            <span class="token keyword">return</span> K_TRUE<span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">return</span> K_FALSE<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+__API__ k_err_t <span class="token function">tos_event_pend</span><span class="token punctuation">(</span>k_event_t <span class="token operator">*</span>event<span class="token punctuation">,</span> k_event_flag_t flag_expect<span class="token punctuation">,</span> k_event_flag_t <span class="token operator">*</span>flag_match<span class="token punctuation">,</span> k_tick_t timeout<span class="token punctuation">,</span> k_opt_t opt_pend<span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    <span class="token function">TOS_CPU_CPSR_ALLOC</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token function">TOS_PTR_SANITY_CHECK</span><span class="token punctuation">(</span>event<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">TOS_PTR_SANITY_CHECK</span><span class="token punctuation">(</span>flag_match<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">TOS_IN_IRQ_CHECK</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+#<span class="token keyword">if</span> TOS_CFG_OBJECT_VERIFY_EN <span class="token operator">></span> 0u
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token function">pend_object_verify</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>event<span class="token operator">-</span><span class="token operator">></span>pend_obj<span class="token punctuation">,</span> PEND_TYPE_EVENT<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> K_ERR_OBJ_INVALID<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+#endif
+
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token punctuation">(</span>opt_pend <span class="token operator">&amp;</span> TOS_OPT_EVENT_PEND_ALL<span class="token punctuation">)</span> <span class="token operator">&amp;&amp;</span> <span class="token operator">!</span><span class="token punctuation">(</span>opt_pend <span class="token operator">&amp;</span> TOS_OPT_EVENT_PEND_ANY<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> K_ERR_EVENT_PEND_OPT_INVALID<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token punctuation">(</span>opt_pend <span class="token operator">&amp;</span> TOS_OPT_EVENT_PEND_ALL<span class="token punctuation">)</span> <span class="token operator">&amp;&amp;</span> <span class="token punctuation">(</span>opt_pend <span class="token operator">&amp;</span> TOS_OPT_EVENT_PEND_ANY<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> K_ERR_EVENT_PEND_OPT_INVALID<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token function">TOS_CPU_INT_DISABLE</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token function">event_is_match</span><span class="token punctuation">(</span>event<span class="token operator">-</span><span class="token operator">></span>flag<span class="token punctuation">,</span> flag_expect<span class="token punctuation">,</span> flag_match<span class="token punctuation">,</span> opt_pend<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>opt_pend <span class="token operator">&amp;</span> TOS_OPT_EVENT_PEND_CLR<span class="token punctuation">)</span> <span class="token punctuation">{</span> <span class="token comment" spellcheck="true">// destroy the bridge after get across the river</span>
+            event<span class="token operator">-</span><span class="token operator">></span>flag <span class="token operator">=</span> <span class="token punctuation">(</span>k_event_flag_t<span class="token punctuation">)</span>0u<span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+        <span class="token function">TOS_CPU_INT_ENABLE</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">return</span> K_ERR_NONE<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>timeout <span class="token operator">==</span> TOS_TIME_NOWAIT<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token function">TOS_CPU_INT_ENABLE</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">return</span> K_ERR_PEND_NOWAIT<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token function">knl_is_sched_locked</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token function">TOS_CPU_INT_ENABLE</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">return</span> K_ERR_PEND_SCHED_LOCKED<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    k_curr_task<span class="token operator">-</span><span class="token operator">></span>flag_expect      <span class="token operator">=</span> flag_expect<span class="token punctuation">;</span>
+    k_curr_task<span class="token operator">-</span><span class="token operator">></span>flag_match       <span class="token operator">=</span> flag_match<span class="token punctuation">;</span>
+    k_curr_task<span class="token operator">-</span><span class="token operator">></span>opt_event_pend   <span class="token operator">=</span> opt_pend<span class="token punctuation">;</span>
+
+    <span class="token function">pend_task_block</span><span class="token punctuation">(</span>k_curr_task<span class="token punctuation">,</span> <span class="token operator">&amp;</span>event<span class="token operator">-</span><span class="token operator">></span>pend_obj<span class="token punctuation">,</span> timeout<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token function">TOS_CPU_INT_ENABLE</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">knl_sched</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    k_curr_task<span class="token operator">-</span><span class="token operator">></span>flag_expect      <span class="token operator">=</span> <span class="token punctuation">(</span>k_event_flag_t<span class="token punctuation">)</span>0u<span class="token punctuation">;</span>
+    k_curr_task<span class="token operator">-</span><span class="token operator">></span>flag_match       <span class="token operator">=</span> <span class="token punctuation">(</span>k_event_flag_t <span class="token operator">*</span><span class="token punctuation">)</span>K_NULL<span class="token punctuation">;</span>
+    k_curr_task<span class="token operator">-</span><span class="token operator">></span>opt_event_pend   <span class="token operator">=</span> <span class="token punctuation">(</span>k_opt_t<span class="token punctuation">)</span>0u<span class="token punctuation">;</span>
+
+    <span class="token keyword">return</span> <span class="token function">pend_state2errno</span><span class="token punctuation">(</span>k_curr_task<span class="token operator">-</span><span class="token operator">></span>pend_state<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h1 id="发送事件"><a href="#发送事件" class="headerlink" title="发送事件"></a>发送事件</h1><p><code>TencentOS tiny</code> 提供两个函数发送事件，分别是：<code>tos_event_post()</code>与<code>tos_event_post_keep()</code>，两个函数本质上都是调用同一个函数<code>event_do_post()</code>去实现发送事件的操作的，只不过选项是不同而已，使用<code>tos_event_post()</code>函数会覆盖写入指定的事件，可能影响其他已发生的事件，而<code>tos_event_post_keep()</code>函数则可以保持其他事件位不改变的同时发生事件，在实际情况中后者更常用。</p>
+<p>此函数用于将已发生的事件写入事件旗标中指定的位，当对应的位被置1之后，等待事件的任务将可能被恢复，此时需要遍历等待在事件对象上的事件等待列表，判断是否有任务<code>期望的事件</code>与当前<code>事件旗标</code>的值匹配，如果有，则唤醒该任务。</p>
+<p>简单来说，就是设置自己定义的事件标志位为1，并且看看有没有任务在等待这个事件，有的话就唤醒它。</p>
+<p><code>TencentOS tiny</code> 中设计的很好的地方就是简单与低耦合，这两个api接口本质上都是调用<code>event_do_post()</code>函数去发生事件，只是通过<code>opt_post</code>参数不同选择不同的处理方法。</p>
+<p>在<code>event_do_post()</code>函数中的处理也是非常简单明了的，其执行思路如下：</p>
+<ol>
+<li>首先判断一下发生事件的方式<code>opt_post</code>，如果是<code>OPT_EVENT_POST_KEP</code>则采用或运算<code>“|”</code>写入事件旗标，否则直接赋值。</li>
+<li>使用<code>TOS_LIST_FOR_EACH_SAFE</code>遍历等待在事件对象上的事件等待列表，通过<code>event_is_match()</code>函数判断是否有任务<code>期望的事件</code>与当前<code>事件旗标</code>的值匹配，如果有则调用<code>pend_task_wakeup()</code>函数唤醒对应的任务。</li>
+<li>如果唤醒的等待任务指定了清除对应的事件，那么将清除事件的旗标值。</li>
+<li>最后进行一次任务调度<code>knl_sched()</code>。<pre class="line-numbers language-js"><code class="language-js">__STATIC__ k_err_t <span class="token function">event_do_post</span><span class="token punctuation">(</span>k_event_t <span class="token operator">*</span>event<span class="token punctuation">,</span> k_event_flag_t flag<span class="token punctuation">,</span> opt_event_post_t opt_post<span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+<span class="token function">TOS_CPU_CPSR_ALLOC</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+k_task_t <span class="token operator">*</span>task<span class="token punctuation">;</span>
+k_list_t <span class="token operator">*</span>curr<span class="token punctuation">,</span> <span class="token operator">*</span>next<span class="token punctuation">;</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+</li>
+</ol>
+<p>#if TOS_CFG_OBJECT_VERIFY_EN &gt; 0u<br>    if (!pend_object_verify(&amp;event-&gt;pend_obj, PEND_TYPE_EVENT)) {<br>        return K_ERR_OBJ_INVALID;<br>    }<br>#endif</p>
+<pre><code>if (opt_post == OPT_EVENT_POST_KEP) {
+    event-&gt;flag |= flag;
+} else {
+    event-&gt;flag = flag;
+}
+
+TOS_CPU_INT_DISABLE();
+
+TOS_LIST_FOR_EACH_SAFE(curr, next, &amp;event-&gt;pend_obj.list) {
+    task = TOS_LIST_ENTRY(curr, k_task_t, pend_list);
+
+    if (event_is_match(event-&gt;flag, task-&gt;flag_expect, task-&gt;flag_match, task-&gt;opt_event_pend)) {
+        pend_task_wakeup(TOS_LIST_ENTRY(curr, k_task_t, pend_list), PEND_STATE_POST);
+
+        // if anyone pending the event has set the TOS_OPT_EVENT_PEND_CLR, then no wakeup for the others pendig for the event.
+        if (task-&gt;opt_event_pend &amp; TOS_OPT_EVENT_PEND_CLR) {
+            event-&gt;flag = (k_event_flag_t)0u;
+            break;
+        }
+    }
+}
+
+TOS_CPU_INT_ENABLE();
+knl_sched();
+
+return K_ERR_NONE;</code></pre><p>}</p>
+<p><strong>API</strong> k_err_t tos_event_post(k_event_t *event, k_event_flag_t flag)<br>{<br>    TOS_PTR_SANITY_CHECK(event);</p>
+<pre><code>return event_do_post(event, flag, OPT_EVENT_POST_CLR);</code></pre><p>}</p>
+<p><strong>API</strong> k_err_t tos_event_post_keep(k_event_t *event, k_event_flag_t flag)<br>{<br>    TOS_PTR_SANITY_CHECK(event);</p>
+<pre><code>return event_do_post(event, flag, OPT_EVENT_POST_KEP);</code></pre><p>}</p>
+<p>```</p>
+<h1 id="喜欢就关注我吧！"><a href="#喜欢就关注我吧！" class="headerlink" title="喜欢就关注我吧！"></a>喜欢就关注我吧！</h1><p><img src="./images/loading.png" data-original="http://qiniu.jiejie01.top/gzh.jpg" alt="欢迎关注我公众号"></p>
+<p>相关代码可以在公众号后台回复 “ 19 ” 获取。</p>
+<script>
+        document.querySelectorAll('.github-emoji')
+          .forEach(el => {
+            if (!el.dataset.src) { return; }
+            const img = document.createElement('img');
+            img.style = 'display:none !important;';
+            img.src = el.dataset.src;
+            img.addEventListener('error', () => {
+              img.remove();
+              el.style.color = 'inherit';
+              el.style.backgroundImage = 'none';
+              el.style.background = 'none';
+            });
+            img.addEventListener('load', () => {
+              img.remove();
+            });
+            document.body.appendChild(img);
+          });
+      </script>
+            </div>
+            <hr/>
+
+            
+            <style>
+    #reward {
+        margin: 40px 0;
+        text-align: center;
+    }
+
+    #reward .reward-link {
+        font-size: 1.88rem;
+    }
+
+    #reward .btn-floating:hover {
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2), 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    #rewardModal {
+        width: 320px;
+        height: 350px;
+    }
+
+    #rewardModal .reward-title {
+        margin: 15px auto;
+        padding-bottom: 5px;
+    }
+
+    #rewardModal .modal-content {
+        padding: 10px;
+    }
+
+    #rewardModal .close {
+        position: absolute;
+        right: 15px;
+        top: 15px;
+        color: rgba(0, 0, 0, 0.5);
+        font-size: 1.3rem;
+        line-height: 20px;
+        cursor: pointer;
+    }
+
+    #rewardModal .close:hover {
+        color: #ef5350;
+        transform: scale(1.3);
+        -moz-transform:scale(1.3);
+        -webkit-transform:scale(1.3);
+        -o-transform:scale(1.3);
+    }
+
+    #rewardModal .reward-tabs {
+        margin: 0 auto;
+        width: 210px;
+    }
+
+    .reward-tabs .tabs {
+        height: 38px;
+        margin: 10px auto;
+        padding-left: 0;
+    }
+
+    .reward-content ul {
+        padding-left: 0 !important;
+    }
+
+    .reward-tabs .tabs .tab {
+        height: 38px;
+        line-height: 38px;
+    }
+
+    .reward-tabs .tab a {
+        color: #fff;
+        background-color: #ccc;
+    }
+
+    .reward-tabs .tab a:hover {
+        background-color: #ccc;
+        color: #fff;
+    }
+
+    .reward-tabs .wechat-tab .active {
+        color: #fff !important;
+        background-color: #22AB38 !important;
+    }
+
+    .reward-tabs .alipay-tab .active {
+        color: #fff !important;
+        background-color: #019FE8 !important;
+    }
+
+    .reward-tabs .reward-img {
+        width: 210px;
+        height: 210px;
+    }
+</style>
+
+<div id="reward">
+    <a href="#rewardModal" class="reward-link modal-trigger btn-floating btn-large waves-effect waves-light red">赏</a>
+
+    <!-- Modal Structure -->
+    <div id="rewardModal" class="modal">
+        <div class="modal-content">
+            <a class="close modal-close"><i class="fa fa-close"></i></a>
+            <h4 class="reward-title">你的赏识是我前进的动力!</h4>
+            <div class="reward-content">
+                <div class="reward-tabs">
+                    <ul class="tabs row">
+                        <li class="tab col s6 alipay-tab waves-effect waves-light"><a href="#alipay">支付宝</a></li>
+                        <li class="tab col s6 wechat-tab waves-effect waves-light"><a href="#wechat">微 信</a></li>
+                    </ul>
+                    <div id="alipay">
+                        <img src="/medias/reward/alipay.bmp" class="reward-img" alt="支付宝打赏二维码">
+                    </div>
+                    <div id="wechat">
+                        <img src="/medias/reward/wechat.bmp" class="reward-img" alt="微信打赏二维码">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $('.tabs').tabs();
+    });
+</script>
+            
+
+            <link rel="stylesheet" type="text/css" href="/libs/share/css/share.min.css">
+
+<div id="article-share">
+    
+    <div class="social-share" data-disabled="qzone" data-wechat-qrcode-helper="<p>微信里点“发现”->“扫一扫”二维码便可查看分享。</p>"></div>
+    
+</div>
+
+<script src="/libs/share/js/social-share.min.js"></script>
+
+            
+            
+            
+            <div class="reprint1">
+                <p>
+                    <span class="reprint1-tip">
+                        <i class="fa fa-exclamation-circle"></i>&nbsp;&nbsp;转载请注明:
+                    </span>
+                    <a href="https://jiejietop.cn" class="b-link-green">杰杰的博客</a>
+                    <i class="fa fa-angle-right fa-lg fa-fw text-color"></i>
+                    <a href="/tencentos-tiny-9/" class="b-link-green">【TencentOS  tiny】深度源码分析（7）——事件</a>
+                </p>
+            </div>
+
+        </div>
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+        <style>
+    .valine-card {
+        margin: 1.5rem auto;
+    }
+
+    .valine-card .card-content {
+        padding: 20px 20px 5px 20px;
+    }
+
+    #vcomments input[type=text],
+    #vcomments input[type=email],
+    #vcomments input[type=url],
+    #vcomments textarea {
+        box-sizing: border-box;
+    }
+
+    #vcomments p {
+        margin: 2px 2px 10px;
+        font-size: 1.05rem;
+        line-height: 1.78rem;
+    }
+
+    #vcomments blockquote p {
+        text-indent: 0.2rem;
+    }
+
+    #vcomments a {
+        padding: 0 2px;
+        color: #42b983;
+        font-weight: 500;
+        text-decoration: underline;
+    }
+
+    #vcomments img {
+        max-width: 100%;
+        height: auto;
+        cursor: pointer;
+    }
+
+    #vcomments ol li {
+        list-style-type: decimal;
+    }
+
+    #vcomments ol,
+    ul {
+        display: block;
+        padding-left: 2em;
+        word-spacing: 0.05rem;
+    }
+
+    #vcomments ul li,
+    ol li {
+        display: list-item;
+        line-height: 1.8rem;
+        font-size: 1rem;
+    }
+
+    #vcomments ul li {
+        list-style-type: disc;
+    }
+
+    #vcomments ul ul li {
+        list-style-type: circle;
+    }
+
+    #vcomments table, th, td {
+        padding: 12px 13px;
+        border: 1px solid #dfe2e5;
+    }
+
+    #vcomments table, th, td {
+        border: 0;
+    }
+
+    table tr:nth-child(2n), thead {
+        background-color: #fafafa;
+    }
+
+    #vcomments table th {
+        background-color: #f2f2f2;
+        min-width: 80px;
+    }
+
+    #vcomments table td {
+        min-width: 80px;
+    }
+
+    #vcomments h1 {
+        font-size: 1.85rem;
+        font-weight: bold;
+        line-height: 2.2rem;
+    }
+
+    #vcomments h2 {
+        font-size: 1.65rem;
+        font-weight: bold;
+        line-height: 1.9rem;
+    }
+
+    #vcomments h3 {
+        font-size: 1.45rem;
+        font-weight: bold;
+        line-height: 1.7rem;
+    }
+
+    #vcomments h4 {
+        font-size: 1.25rem;
+        font-weight: bold;
+        line-height: 1.5rem;
+    }
+
+    #vcomments h5 {
+        font-size: 1.1rem;
+        font-weight: bold;
+        line-height: 1.4rem;
+    }
+
+    #vcomments h6 {
+        font-size: 1rem;
+        line-height: 1.3rem;
+    }
+
+    #vcomments p {
+        font-size: 1rem;
+        line-height: 1.5rem;
+    }
+
+    #vcomments hr {
+        margin: 12px 0;
+        border: 0;
+        border-top: 1px solid #ccc;
+    }
+
+    #vcomments blockquote {
+        margin: 15px 0;
+        border-left: 5px solid #42b983;
+        padding: 1rem 0.8rem 0.3rem 0.8rem;
+        color: #666;
+        background-color: rgba(66, 185, 131, .1);
+    }
+
+    #vcomments pre {
+        font-family: monospace, monospace;
+        padding: 1.2em;
+        margin: .5em 0;
+        background: #272822;
+        overflow: auto;
+        border-radius: 0.3em;
+        tab-size: 4;
+    }
+
+    #vcomments code {
+        font-family: monospace, monospace;
+        padding: 1px 3px;
+        font-size: 0.92rem;
+        color: #e96900;
+        background-color: #f8f8f8;
+        border-radius: 2px;
+    }
+
+    #vcomments pre code {
+        font-family: monospace, monospace;
+        padding: 0;
+        color: #e8eaf6;
+        background-color: #272822;
+    }
+
+    #vcomments pre[class*="language-"] {
+        padding: 1.2em;
+        margin: .5em 0;
+    }
+
+    #vcomments code[class*="language-"],
+    pre[class*="language-"] {
+        color: #e8eaf6;
+    }
+
+    #vcomments [type="checkbox"]:not(:checked), [type="checkbox"]:checked {
+        position: inherit;
+        margin-left: -1.3rem;
+        margin-right: 0.4rem;
+        margin-top: -1px;
+        vertical-align: middle;
+        left: unset;
+        visibility: visible;
+    }
+
+    #vcomments b,
+    strong {
+        font-weight: bold;
+    }
+
+    #vcomments dfn {
+        font-style: italic;
+    }
+
+    #vcomments small {
+        font-size: 85%;
+    }
+
+    #vcomments cite {
+        font-style: normal;
+    }
+
+    #vcomments mark {
+        background-color: #fcf8e3;
+        padding: .2em;
+    }
+
+    #vcomments table, th, td {
+        padding: 12px 13px;
+        border: 1px solid #dfe2e5;
+    }
+
+    table tr:nth-child(2n), thead {
+        background-color: #fafafa;
+    }
+
+    #vcomments table th {
+        background-color: #f2f2f2;
+        min-width: 80px;
+    }
+
+    #vcomments table td {
+        min-width: 80px;
+    }
+
+    #vcomments [type="checkbox"]:not(:checked), [type="checkbox"]:checked {
+        position: inherit;
+        margin-left: -1.3rem;
+        margin-right: 0.4rem;
+        margin-top: -1px;
+        vertical-align: middle;
+        left: unset;
+        visibility: visible;
+    }
+</style>
+
+<div class="card valine-card" data-aos="fade-up">
+    <div id="vcomments" class="card-content"></div>
+</div>
+
+<script src="/libs/valine/av-min.js"></script>
+<script src="/libs/valine/Valine.min.js"></script>
+<script>
+    new Valine({
+        el: '#vcomments',
+        appId: 'P8ggvR4g3idexcAGf4hkEUqQ-gzGzoHsz',
+        appKey: 'GqHPu44hpoDiC8uOjc4JJFSc',
+        notify: 'true' === 'true',
+        verify: 'true' === 'true',
+        visitor: 'true' === 'true',
+        avatar: 'monsterid',
+        pageSize: '10',
+        lang: 'zh-cn',
+        placeholder: '赶紧留下你的评论吧~'
+    });
+</script>
+    
+
+    
+
+<article id="prenext-posts" class="prev-next articles">
+    <div class="row article-row">
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge left-badge text-color">
+                <i class="fa fa-chevron-left"></i>&nbsp;上一篇</div>
+            <div class="card">
+                <a href="/tencentos-tiny-10/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/4.jpg" class="responsive-img" alt="【TencentOS  tiny】深度源码分析（8）——软件定时器">
+                        
+                        <span class="card-title">【TencentOS  tiny】深度源码分析（8）——软件定时器</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            软件定时器的基本概念TencentOS tiny 的软件定时器是由操作系统提供的一类系统接口，它构建在硬件定时器基础之上，使系统能够提供不受硬件定时器资源限制的定时器服务，本质上软件定时器的使用相当于扩展了定时器的数量，允许创建更多的定时业
+                        
+                    </div>
+                    <div class="publish-info">
+                        <span class="publish-date">
+                            <i class="fa fa-clock-o fa-fw icon-date"></i>2019-10-12
+                        </span>
+                        <span class="publish-author">
+                            
+                            <i class="fa fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/操作系统/" class="post-category" target="_blank">
+                                    操作系统
+                                </a>
+                            
+                            <a href="/categories/操作系统/TencentOS-tiny/" class="post-category" target="_blank">
+                                    TencentOS tiny
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/TencentOS-tiny/" target="_blank">
+                        <span class="chip bg-color">TencentOS tiny</span>
+                    </a>
+                    
+                    <a href="/tags/RTOS/" target="_blank">
+                        <span class="chip bg-color">RTOS</span>
+                    </a>
+                    
+                    <a href="/tags/操作系统/" target="_blank">
+                        <span class="chip bg-color">操作系统</span>
+                    </a>
+                    
+                    <a href="/tags/物联网/" target="_blank">
+                        <span class="chip bg-color">物联网</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fa fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/tencentos-tiny-8/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/11.jpg" class="responsive-img" alt="【TencentOS  tiny】深度源码分析（6）——互斥锁">
+                        
+                        <span class="card-title">【TencentOS  tiny】深度源码分析（6）——互斥锁</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            互斥锁互斥锁又称互斥互斥锁，是一种特殊的信号量，它和信号量不同的是，它具有互斥锁所有权、递归访问以及优先级继承等特性，在操作系统中常用于对临界资源的独占式处理。在任意时刻互斥锁的状态只有两种，开锁或闭锁，当互斥锁被任务持有时，该互斥锁处于闭
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="fa fa-clock-o fa-fw icon-date"></i>2019-10-12
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fa fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/操作系统/" class="post-category" target="_blank">
+                                    操作系统
+                                </a>
+                            
+                            <a href="/categories/操作系统/TencentOS-tiny/" class="post-category" target="_blank">
+                                    TencentOS tiny
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/TencentOS-tiny/" target="_blank">
+                        <span class="chip bg-color">TencentOS tiny</span>
+                    </a>
+                    
+                    <a href="/tags/RTOS/" target="_blank">
+                        <span class="chip bg-color">RTOS</span>
+                    </a>
+                    
+                    <a href="/tags/操作系统/" target="_blank">
+                        <span class="chip bg-color">操作系统</span>
+                    </a>
+                    
+                    <a href="/tags/物联网/" target="_blank">
+                        <span class="chip bg-color">物联网</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+    </div>
+</article>
+</div>
+
+
+<script>
+    $('#articleContent').on('copy', function (e) {
+        // IE8 or earlier browser is 'undefined'
+        if (typeof window.getSelection === 'undefined') return;
+
+        var selection = window.getSelection();
+        // if the selection is short let's not annoy our users.
+        if (('' + selection).length < Number.parseInt('120')) {
+            return;
+        }
+
+        // create a div outside of the visible area and fill it with the selected text.
+        var bodyElement = document.getElementsByTagName('body')[0];
+        var newdiv = document.createElement('div');
+        newdiv.style.position = 'absolute';
+        newdiv.style.left = '-99999px';
+        bodyElement.appendChild(newdiv);
+        newdiv.appendChild(selection.getRangeAt(0).cloneContents());
+
+        // we need a <pre> tag workaround.
+        // otherwise the text inside "pre" loses all the line breaks!
+        if (selection.getRangeAt(0).commonAncestorContainer.nodeName === 'PRE') {
+            newdiv.innerHTML = "<pre>" + newdiv.innerHTML + "</pre>";
+        }
+
+        var url = document.location.href;
+        newdiv.innerHTML += '<br />'
+            + '来源: 杰杰的博客<br />'
+            + '作者: 杰杰<br />'
+            + '链接: <a href="' + url + '">' + url + '</a><br />'
+            + '本文章著作权归作者所有，任何形式的转载都请注明出处。';
+
+        selection.selectAllChildren(newdiv);
+        window.setTimeout(function () {bodyElement.removeChild(newdiv);}, 200);
+    });
+</script>
+
+
+    </div>
+    <div id="toc-aside" class="expanded col l3 hide-on-med-and-down">
+        <div class="toc-widget">
+            <div class="toc-title"><i class="fa fa-list-alt"></i>&nbsp;&nbsp;目录</div>
+            <div id="toc-content"></div>
+        </div>
+    </div>
+</div>
+
+<!-- TOC 悬浮按钮. -->
+
+<div id="floating-toc-btn" class="hide-on-med-and-down">
+    <a class="btn-floating btn-large bg-color">
+        <i class="fa fa-list"></i>
+    </a>
+</div>
+
+
+<script src="/libs/tocbot/tocbot.min.js"></script>
+<script>
+    $(function () {
+        tocbot.init({
+            tocSelector: '#toc-content',
+            contentSelector: '#articleContent',
+            headingsOffset: -($(window).height() * 0.4 - 45),
+            // headingsOffset: -205,
+            headingSelector: 'h1, h2, h3, h4, h5'
+        });
+
+        // modify the toc link href to support Chinese.
+        let i = 0;
+        let tocHeading = 'toc-heading-';
+        $('#toc-content a').each(function () {
+            $(this).attr('href', '#' + tocHeading + (++i));
+        });
+
+        // modify the heading title id to support Chinese.
+        i = 0;
+        $('#articleContent').children('h1, h2, h3, h4, h5').each(function () {
+            $(this).attr('id', tocHeading + (++i));
+        });
+
+        // Set scroll toc fixed.
+        let tocHeight = parseInt($(window).height() * 0.4 - 64);
+        let $tocWidget = $('.toc-widget');
+        $(window).scroll(function () {
+            let scroll = $(window).scrollTop();
+            /* add post toc fixed. */
+            if (scroll > tocHeight) {
+                $tocWidget.addClass('toc-fixed');
+            } else {
+                $tocWidget.removeClass('toc-fixed');
+            }
+        });
+
+        
+        /* 修复文章卡片 div 的宽度. */
+        let fixPostCardWidth = function (srcId, targetId) {
+            let srcDiv = $('#' + srcId);
+            if (srcDiv.length === 0) {
+                return;
+            }
+
+            let w = srcDiv.width();
+            if (w >= 450) {
+                w = w + 21;
+            } else if (w >= 350 && w < 450) {
+                w = w + 18;
+            } else if (w >= 300 && w < 350) {
+                w = w + 16;
+            } else {
+                w = w + 14;
+            }
+            $('#' + targetId).width(w);
+        };
+
+        // 切换TOC目录展开收缩的相关操作.
+        const expandedClass = 'expanded';
+        let $tocAside = $('#toc-aside');
+        let $mainContent = $('#main-content');
+        $('#floating-toc-btn .btn-floating').click(function () {
+            if ($tocAside.hasClass(expandedClass)) {
+                $tocAside.removeClass(expandedClass).slideUp(500);
+                $mainContent.removeClass('l9');
+            } else {
+                $tocAside.addClass(expandedClass).slideDown(500);
+                $mainContent.addClass('l9');
+            }
+            fixPostCardWidth('artDetail', 'prenext-posts');
+        });
+        
+    });
+</script>
+    
+
+</main>
+
+
+    <!-- jiejie 杰杰  modify 2019.08.15-->
+
+<footer class="page-footer bg-color">
+    <div class="container row center-align">
+        <div class="col s12 m8 l8 copy-right">
+            &copy; 2019 jiejie. All Rights Reserved.
+
+            
+                &nbsp;<i class="fa fa-area-chart"></i>&nbsp;站点总字数:&nbsp;
+                <span class="white-color">94k</span>
+
+            
+            <br>
+
+            <span id="sitetime"></span>
+
+            
+
+            
+                <br>
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'></span>
+                    <i class="fa fa-heart-o"></i>
+                    本站总访问量 <span id="busuanzi_value_site_pv" class="white-color"></span>
+
+                
+
+                
+                    <span id="busuanzi_container_site_uv" style='display:none'></span>
+                    人次,&nbsp;访客数 <span id="busuanzi_value_site_uv" class="white-color"></span> 人.
+                    
+                
+
+            
+
+        </div>
+
+        <div class="col s12 m4 l4 social-link social-statis">
+    <a href="https://github.com/jiejietop" class="tooltipped" target="_blank" data-tooltip="访问我的GitHub" data-position="top" data-delay="50">
+        <i class="fa fa-github"></i>
+    </a>
+
+
+ 
+    <a href="https://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=jiejietop@gmail.com" class="tooltipped" target="_blank" data-tooltip="邮件联系我" data-position="top" data-delay="50">
+        <i class="fa fa-envelope-open"></i>
+    </a>
+
+
+
+
+    <a href="https://zhihu.com/people/jie-jie-33-9" class="tooltipped" target="_blank" data-tooltip="访问我的知乎" data-position="top" data-delay="50">
+        <i class="fa fa-inverse">知</i>
+    </a>
+
+
+
+    <a href="http://wpa.qq.com/msgrd?v=3&uin=1161959934&site=qq&menu=yes" class="tooltipped" target="_blank" data-tooltip="访问我的QQ空间" data-position="top" data-delay="50">
+        <i class="fa fa-qq"></i>
+    </a>
+
+
+
+    <a href="https://weibo.com/6800623694" class="tooltipped" target="_blank" data-tooltip="关注我的微博" data-position="top" data-delay="50">
+        <i class="fa fa-weibo"></i>
+    </a>
+
+
+
+    <a href="/atom.xml" class="tooltipped" target="_blank" data-tooltip="RSS 订阅" data-position="top" data-delay="50">
+        <i class="fa fa-rss"></i>
+    </a>
+</div>
+
+    </div>
+</footer>
+
+<div class="progress-bar"></div>
+
+<script language=javascript>
+    function siteTime() {
+        window.setTimeout("siteTime()", 1000);
+        var seconds = 1000;
+        var minutes = seconds * 60;
+        var hours = minutes * 60;
+        var days = hours * 24;
+        var years = days * 365;
+        var today = new Date();
+        var todayYear = today.getFullYear();
+        var todayMonth = today.getMonth() + 1;
+        var todayDate = today.getDate();
+        var todayHour = today.getHours();
+        var todayMinute = today.getMinutes();
+        var todaySecond = today.getSeconds();
+
+        /* Date.UTC() -- 返回date对象距世界标准时间(UTC)1970年1月1日午夜之间的毫秒数(时间戳)
+        year - 作为date对象的年份，为4位年份值
+        month - 0-11之间的整数，做为date对象的月份
+        day - 1-31之间的整数，做为date对象的天数
+        hours - 0(午夜24点)-23之间的整数，做为date对象的小时数
+        minutes - 0-59之间的整数，做为date对象的分钟数
+        seconds - 0-59之间的整数，做为date对象的秒数
+        microseconds - 0-999之间的整数，做为date对象的毫秒数 */
+
+        var t1 = Date.UTC(2019, 08, 01, 00, 00, 00); //北京时间2019-8-1 00:00:00
+        var t2 = Date.UTC(todayYear, todayMonth, todayDate, todayHour, todayMinute, todaySecond);
+        var diff = t2 - t1;
+        var diffYears = Math.floor(diff / years);
+        var diffDays = Math.floor((diff / days) - diffYears * 365);
+        var diffHours = Math.floor((diff - (diffYears * 365 + diffDays) * days) / hours);
+        var diffMinutes = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours) / minutes);
+        var diffSeconds = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours - diffMinutes * minutes) / seconds);
+        document.getElementById("sitetime").innerHTML = "本站已运行 " + diffYears + " 年 " + diffDays + " 天 " + diffHours + " 小时 " + diffMinutes + " 分钟 " + diffSeconds + " 秒";
+    }/*因为建站时间还没有一年，就将之注释掉了。需要的可以取消*/
+    siteTime();
+</script>
+
+    <!-- 搜索遮罩框 -->
+<div id="searchModal" class="modal">
+    <div class="modal-content">
+        <div class="search-header">
+            <span class="title"><i class="fa fa-search"></i>&nbsp;&nbsp;搜索</span>
+            <input type="search" id="searchInput" name="s" placeholder="请输入搜索的关键字"
+                   class="search-input">
+        </div>
+        <div id="searchResult"></div>
+    </div>
+</div>
+
+<script src="/js/search.js"></script>
+<script type="text/javascript">
+$(function () {
+    searchFunc("/" + "search.xml", 'searchInput', 'searchResult');
+});
+</script>
+    <!-- 回到顶部按钮 -->
+<div id="backTop" class="top-scroll">
+    <a class="btn-floating btn-large waves-effect waves-light" href="#!">
+        <i class="fa fa-angle-up"></i>
+    </a>
+</div>
+
+
+    <script src="/libs/materialize/materialize.min.js"></script>
+    <script src="/libs/masonry/masonry.pkgd.min.js"></script>
+    <script src="/libs/aos/aos.js"></script>
+    <script src="/libs/scrollprogress/scrollProgress.min.js"></script>
+    <script src="/libs/lightGallery/js/lightgallery-all.min.js"></script>
+    <script src="/js/matery.js"></script>
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+
+
+
+    
+        <script src="/libs/others/clicklove.js"></script>
+    
+    
+    
+        <script async src="/libs/others/busuanzi.pure.mini.js"></script>
+    
+    
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"log":false,"model":{"jsonPath":"/live2dw/assets/wanko.model.json"},"display":{"position":"left","width":150,"height":200},"mobile":{"show":false},"react":{"opacity":0.7}});</script><script>!function(e){var r=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function t(){for(var c=0;c<r.length;c++)t=r[c],void 0,0<=(n=t.getBoundingClientRect()).top&&0<=n.left&&n.top<=(e.innerHeight||document.documentElement.clientHeight)&&function(){var t,n,e,i,o=r[c];t=o,n=function(){r=r.filter(function(t){return o!==t})},e=new Image,i=t.getAttribute("data-original"),e.onload=function(){t.src=i,n&&n()},e.src=i}();var t,n}t(),e.addEventListener("scroll",function(){!function(t,n){clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(n)},500)}(t,e)})}(this);</script></body>
+
+</html>
