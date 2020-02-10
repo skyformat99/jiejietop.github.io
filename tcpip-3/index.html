@@ -564,7 +564,7 @@
 <h1 id="ARP表项的建立"><a href="#ARP表项的建立" class="headerlink" title="ARP表项的建立"></a>ARP表项的建立</h1><p>当主机开机的时候，<code>ARP缓存</code>表肯定是空的，那么怎么一步步<code>建立 ARP表项</code>呢？如果此时想发送数据怎么办呢？因为没有<code>ARP表项</code>，说明就找不到<code>IP地址</code>到<code>MAC地址</code>的<code>映射关系</code>，这样子也就无法发送数据了。<br>其实协议栈的实现还是很强大的，如果没有<code>ARP表项</code>，那么主机就会去建立<code>ARP表项</code>。<br>以我们的电脑为例，在开机的时候，我们的电脑肯定是没有<code>ARP表项</code>的（或者应该说只有路由器的<code>ARP表项</code>，因为可能是动态获取IP地址）：</p>
 <p><img src="./images/loading.png" data-original="http://qiniu.jiejie01.top/tcpip-8.png" alt="tcpip-8"></p>
 <h2 id="对于局域网"><a href="#对于局域网" class="headerlink" title="对于局域网"></a>对于局域网</h2><p>如果我想向局域网中的某个电脑发送一个数据，那么我的电脑就会从已有的<code>ARP缓存表</code>中寻找这个IP地址对应的物理地址的<code>ARP表项</code>，然后直接将数据写入以太网数据帧中让网卡进行发送即可，而如果没有找到这个<code>IP地址</code>，那么这个数据就没法立即发送，电脑会先在局域网上广播一个<code>ARP请求</code>（目标MAC地址为<code>FF-FF-FF-FF-FF-FF</code>），广播的ARP请求发出后，处于同一局域网内的所有主机都会接收到这个请求，如果<code>目标IP地址</code>与接收到ARP请求的主机<code>自身IP地址</code>吻合就会<code>返回</code>一个<code>ARP应答</code>，告诉请求者（即我的电脑）自身的<code>MAC地址</code>，当我的电脑收到这个<code>ARP应答</code>后，就去建立一个<code>ARP表项</code>，并且重新将数据发送出去。<br>ARP协议的核心就是对缓存表的操作，发送数据包的时候，查找<code>ARP缓存表</code>以得到对应的<code>MAC地址</code>，在ARP缓存表中的<code>TTL</code>即将过期的时候<code>更新</code>缓存表以保证<code>ARP表项</code>有效，此外ARP协议还需要不断处理来自局域网中其他主机的<code>ARP请求</code>。</p>
-<h2 id="对于公网"><a href="#对于公网" class="headerlink" title="对于公网"></a>对于公网</h2><p>比如我的电脑向访问我的博客：<a href="https://jiejietop.cn">https://jiejietop.cn</a><br>因为我的博客主机是处于外网的，那么我的电脑在访问的时候，也是找不到缓存表的，那它只能通过网关，让网关将数据转发到我的博客主机上，即：</p>
+<h2 id="对于公网"><a href="#对于公网" class="headerlink" title="对于公网"></a>对于公网</h2><p>比如我的电脑向访问我的博客：<a href="https://jiejietop.cn" target="_blank" rel="noopener">https://jiejietop.cn</a><br>因为我的博客主机是处于外网的，那么我的电脑在访问的时候，也是找不到缓存表的，那它只能通过网关，让网关将数据转发到我的博客主机上，即：</p>
 <p><img src="./images/loading.png" data-original="http://qiniu.jiejie01.top/tcpip-9.png" alt="tcpip-9"></p>
 <p>因为我的电脑与博客主机不在一个网段，电脑查询自己的<code>路由表</code>，知道如果想和<code>博客主机</code>通信则必须通过<code>网关（gateway）</code>来中转，所以会在与<code>网关</code>直连的网卡上请求网关的<code>MAC地址</code>，因为电脑要把发给博客主机的数据先发给网关，当合法以太帧到达网关并且顺利接收，网关会将数据递交给<code>IP层</code>，IP层查询路由表，找到与博客主机直连的接口（假设是直连的，实际上肯定不是直连的），网关会发一个<code>ARP请求</code>到博客主机上，请求它的<code>MAC地址</code>，网关收到应答后将建立新的<code>ARP表项</code>并将开始维护<code>ARP缓存表</code>，然后完成最终的通信。</p>
 <h1 id="ARP缓存表的超时处理"><a href="#ARP缓存表的超时处理" class="headerlink" title="ARP缓存表的超时处理"></a>ARP缓存表的超时处理</h1><p>ARP是<code>动态</code>处理的，现在总结一下：<code>ARP表项</code>的生存时间是一般为<code>5-10</code>分钟（<code>LwIP</code>中默认是<code>5</code>分钟），而<code>ARP请求</code>的等待时间是<code>5秒钟</code>，当这些时间到达后，就会<code>更新ARP表项</code>，如果在物理链路层无法连通则会删除表项。<br>因此每个协议栈的实现都必须维护着一个<code>定时器（超时机制）</code>来管理<code>ARP缓存表</code>，在必要的时候更新及删除<code>ARP表项</code>，关于怎么处理的我们就不多追究，有兴趣的可以看LwIP的<code>etharp_tmr()</code>源码。</p>
@@ -754,7 +754,7 @@
                     <span class="reprint1-tip">
                         <i class="fa fa-exclamation-circle"></i>&nbsp;&nbsp;转载请注明:
                     </span>
-                    <a href="https://jiejietop.cn" class="b-link-green">杰杰的博客</a>
+                    <a href="https://jiedev.com" class="b-link-green">杰杰的博客</a>
                     <i class="fa fa-angle-right fa-lg fa-fw text-color"></i>
                     <a href="/tcpip-3/" class="b-link-green">ARP协议原理</a>
                 </p>
@@ -1041,6 +1041,40 @@
             <div class="article-badge left-badge text-color">
                 <i class="fa fa-chevron-left"></i>&nbsp;上一篇</div>
             <div class="card">
+                <a href="/cmake-1/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/4.jpg" class="responsive-img" alt="CMake实战教程（一）">
+                        
+                        <span class="card-title">CMake实战教程（一）</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            前言在学习CMake之前，一直都是自己在手敲Makefile文件，当项目的文件一旦多了起来，自己手动写Makefile就不是那么好玩了，也曾经了解了一下autotools，但是seeed的柱哥说有CMake这个东西，所以我就去学习了，也在网
+                        
+                    </div>
+                    <div class="publish-info">
+                        <span class="publish-date">
+                            <i class="fa fa-clock-o fa-fw icon-date"></i>2019-12-03
+                        </span>
+                        <span class="publish-author">
+                            
+                        </span>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fa fa-chevron-right"></i>
+            </div>
+            <div class="card">
                 <a href="/tcpip-2/">
                     <div class="card-image">
                         
@@ -1055,64 +1089,6 @@
                         
                             前言从前一篇文章，我们也知道大概的网络相关知识，网络这个系列文章就从底层往顶层讲解，本篇文章就来接触一下网络底层的相关知识。
 概述网络中的数据递交当用户发送数据时，将数据向下交给传输层，这是处于应用层的操作，应用层可以通过调用传输层的接口来
-                        
-                    </div>
-                    <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="fa fa-clock-o fa-fw icon-date"></i>2019-10-15
-                        </span>
-                        <span class="publish-author">
-                            
-                            <i class="fa fa-bookmark fa-fw icon-category"></i>
-                            
-                            <a href="/categories/TCP-IP/" class="post-category" target="_blank">
-                                    TCP/IP
-                                </a>
-                            
-                            
-                        </span>
-                    </div>
-                </div>
-                
-                <div class="card-action article-tags">
-                    
-                    <a href="/tags/TCP-IP/" target="_blank">
-                        <span class="chip bg-color">TCP/IP</span>
-                    </a>
-                    
-                    <a href="/tags/网络/" target="_blank">
-                        <span class="chip bg-color">网络</span>
-                    </a>
-                    
-                    <a href="/tags/LwIP/" target="_blank">
-                        <span class="chip bg-color">LwIP</span>
-                    </a>
-                    
-                </div>
-                
-            </div>
-        </div>
-        
-        
-        <div class="article col s12 m6" data-aos="fade-up">
-            <div class="article-badge right-badge text-color">
-                下一篇&nbsp;<i class="fa fa-chevron-right"></i>
-            </div>
-            <div class="card">
-                <a href="/tcpip-1/">
-                    <div class="card-image">
-                        
-                        
-                        <img src="/medias/featureimages/2.jpg" class="responsive-img" alt="TCP/IP协议栈扫盲班">
-                        
-                        <span class="card-title">TCP/IP协议栈扫盲班</span>
-                    </div>
-                </a>
-                <div class="card-content article-content">
-                    <div class="summary block-with-text">
-                        
-                            前言本文的东西是基础理论知识，因此不必记住，前面的操作系统的文章我不想更新了，现在想写一写网络相关的文章，本篇文章是第一篇，仅传递网络相关知识的概念，不必牢记~
-什么是TCP/IP协议简单来说TCP/IP协议是网络中所有相关协议簇的简称，它
                         
                     </div>
                     <div class="publish-info">
@@ -1297,14 +1273,15 @@
 <footer class="page-footer bg-color">
     <div class="container row center-align">
         <div class="col s12 m8 l8 copy-right">
-            &copy; 2019 jiejie. All Rights Reserved.
+            &copy; 2020 jiejie. All Rights Reserved.<a href="http://beian.miit.gov.cn"> 粤ICP备19019080号 </a>
+
+            <br>
 
             
                 &nbsp;<i class="fa fa-area-chart"></i>&nbsp;站点总字数:&nbsp;
-                <span class="white-color">94k</span>
+                <span class="white-color">94k </span>
 
             
-            <br>
 
             <span id="sitetime"></span>
 
