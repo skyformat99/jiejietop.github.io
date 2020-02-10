@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://jiedev.com/"/>
-  <updated>2019-12-03T13:04:45.184Z</updated>
+  <updated>2020-02-10T05:42:54.233Z</updated>
   <id>https://jiedev.com/</id>
   
   <author>
@@ -21,7 +21,7 @@
     <link href="https://jiedev.com/cmake-1/"/>
     <id>https://jiedev.com/cmake-1/</id>
     <published>2019-12-03T13:00:11.000Z</published>
-    <updated>2019-12-03T13:04:45.184Z</updated>
+    <updated>2020-02-10T05:42:54.233Z</updated>
     
     <summary type="html">
     
@@ -35,6 +35,10 @@
     
     </summary>
     
+      <category term="cmake" scheme="https://jiedev.com/categories/cmake/"/>
+    
+    
+      <category term="cmake" scheme="https://jiedev.com/tags/cmake/"/>
     
   </entry>
   
@@ -231,11 +235,11 @@
   </entry>
   
   <entry>
-    <title>【TencentOS  tiny】深度源码分析（4）——消息队列</title>
-    <link href="https://jiedev.com/tencentos-tiny-6/"/>
-    <id>https://jiedev.com/tencentos-tiny-6/</id>
+    <title>【TencentOS  tiny】深度源码分析（5）——信号量</title>
+    <link href="https://jiedev.com/tencentos-tiny-7/"/>
+    <id>https://jiedev.com/tencentos-tiny-7/</id>
     <published>2019-10-12T15:16:54.000Z</published>
-    <updated>2019-12-03T12:22:29.821Z</updated>
+    <updated>2019-12-03T12:22:29.822Z</updated>
     
     <summary type="html">
     
@@ -243,7 +247,7 @@
       
         
         
-          &lt;h1 id=&quot;消息队列&quot;&gt;&lt;a href=&quot;#消息队列&quot; class=&quot;headerlink&quot; title=&quot;消息队列&quot;&gt;&lt;/a&gt;消息队列&lt;/h1&gt;&lt;p&gt;在前一篇文章中&lt;a
+          &lt;h1 id=&quot;信号量&quot;&gt;&lt;a href=&quot;#信号量&quot; class=&quot;headerlink&quot;
         
       
     
@@ -265,11 +269,11 @@
   </entry>
   
   <entry>
-    <title>【TencentOS  tiny】深度源码分析（5）——信号量</title>
-    <link href="https://jiedev.com/tencentos-tiny-7/"/>
-    <id>https://jiedev.com/tencentos-tiny-7/</id>
+    <title>【TencentOS  tiny】深度源码分析（4）——消息队列</title>
+    <link href="https://jiedev.com/tencentos-tiny-6/"/>
+    <id>https://jiedev.com/tencentos-tiny-6/</id>
     <published>2019-10-12T15:16:54.000Z</published>
-    <updated>2019-12-03T12:22:29.822Z</updated>
+    <updated>2019-12-03T12:22:29.821Z</updated>
     
     <summary type="html">
     
@@ -277,7 +281,7 @@
       
         
         
-          &lt;h1 id=&quot;信号量&quot;&gt;&lt;a href=&quot;#信号量&quot; class=&quot;headerlink&quot;
+          &lt;h1 id=&quot;消息队列&quot;&gt;&lt;a href=&quot;#消息队列&quot; class=&quot;headerlink&quot; title=&quot;消息队列&quot;&gt;&lt;/a&gt;消息队列&lt;/h1&gt;&lt;p&gt;在前一篇文章中&lt;a
         
       
     
