@@ -43,9 +43,9 @@
   </entry>
   
   <entry>
-    <title>网络底层知识</title>
-    <link href="https://jiedev.com/tcpip-2/"/>
-    <id>https://jiedev.com/tcpip-2/</id>
+    <title>ARP协议原理</title>
+    <link href="https://jiedev.com/tcpip-3/"/>
+    <id>https://jiedev.com/tcpip-3/</id>
     <published>2019-10-15T14:56:12.000Z</published>
     <updated>2019-12-03T12:22:29.832Z</updated>
     
@@ -55,7 +55,7 @@
       
         
         
-          &lt;h1 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot;
+          &lt;h1 id=&quot;引言&quot;&gt;&lt;a href=&quot;#引言&quot; class=&quot;headerlink&quot; title=&quot;引言&quot;&gt;&lt;/a&gt;引言&lt;/h1&gt;&lt;p&gt;从前一篇文章中，我们知道计算机中会维护一个ARP缓存表，这个表记录着IP地址与MAC地址的映射关系，我们可以通过在电脑的控制台通过arp
         
       
     
@@ -73,9 +73,9 @@
   </entry>
   
   <entry>
-    <title>ARP协议原理</title>
-    <link href="https://jiedev.com/tcpip-3/"/>
-    <id>https://jiedev.com/tcpip-3/</id>
+    <title>网络底层知识</title>
+    <link href="https://jiedev.com/tcpip-2/"/>
+    <id>https://jiedev.com/tcpip-2/</id>
     <published>2019-10-15T14:56:12.000Z</published>
     <updated>2019-12-03T12:22:29.832Z</updated>
     
@@ -85,7 +85,7 @@
       
         
         
-          &lt;h1 id=&quot;引言&quot;&gt;&lt;a href=&quot;#引言&quot; class=&quot;headerlink&quot; title=&quot;引言&quot;&gt;&lt;/a&gt;引言&lt;/h1&gt;&lt;p&gt;从前一篇文章中，我们知道计算机中会维护一个ARP缓存表，这个表记录着IP地址与MAC地址的映射关系，我们可以通过在电脑的控制台通过arp
+          &lt;h1 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot;
         
       
     
