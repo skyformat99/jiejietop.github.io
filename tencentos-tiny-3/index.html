@@ -580,32 +580,50 @@
 <li>等待超时状态（K_TASK_STATE_PENDTIMEOUT）：任务正在等待信号量、队列或者等待事件发生超时的状态。</li>
 <li>睡眠挂起态（K_TASK_STATE_SLEEP_SUSPENDED）：任务在睡眠中被挂起时的状态。</li>
 <li>等待挂起态（K_TASK_STATE_PEND_SUSPENDED）：任务正在等待信号量、队列或者等待事件时被挂起的状态。</li>
-<li>等待超时挂起态（K_TASK_STATE_PENDTIMEOUT_SUSPENDED）：任务正在等待信号量、队列或者等待事件发生超时，但此时任务已经被挂起的状态。<pre class="line-numbers language-js"><code class="language-js"><span class="token comment" spellcheck="true">// ready to schedule</span>
+<li>等待超时挂起态（K_TASK_STATE_PENDTIMEOUT_SUSPENDED）：任务正在等待信号量、队列或者等待事件发生超时，但此时任务已经被挂起的状态。</li>
+</ul>
+<pre class="line-numbers language-js"><code class="language-js"><span class="token comment" spellcheck="true">// ready to schedule</span>
 <span class="token comment" spellcheck="true">// a task's pend_list is in readyqueue</span>
 #define K_TASK_STATE_READY                <span class="token punctuation">(</span>k_task_state_t<span class="token punctuation">)</span><span class="token number">0x0000</span>
-<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
-</li>
-</ul>
-<p>// delayed, or pend for a timeout<br>// a task’s tick_list is in k_tick_list<br>#define K_TASK_STATE_SLEEP                (k_task_state_t)0x0001</p>
-<p>// pend for something<br>// a task’s pend_list is in some pend object’s list<br>#define K_TASK_STATE_PEND                 (k_task_state_t)0x0002</p>
-<p>// suspended<br>#define K_TASK_STATE_SUSPENDED            (k_task_state_t)0x0004</p>
-<p>// deleted<br>#define K_TASK_STATE_DELETED              (k_task_state_t)0x0008</p>
-<p>// actually we don’t really need those TASK_STATE below, if you understand the task state deeply, the code can be much more elegant. </p>
-<p>// we are pending, also we are waitting for a timeout(eg. tos_sem_pend with a valid timeout, not TOS_TIME_FOREVER)<br>// both a task’s tick_list and pend_list is not empty<br>#define K_TASK_STATE_PENDTIMEOUT                      (k_task_state_t)(K_TASK_STATE_PEND | K_TASK_STATE_SLEEP)</p>
-<p>// suspended when sleeping<br>#define K_TASK_STATE_SLEEP_SUSPENDED                  (k_task_state_t)(K_TASK_STATE_SLEEP | K_TASK_STATE_SUSPENDED)</p>
-<p>// suspened when pending<br>#define K_TASK_STATE_PEND_SUSPENDED                   (k_task_state_t)(K_TASK_STATE_PEND | K_TASK_STATE_SUSPENDED)</p>
-<p>// suspended when pendtimeout<br>#define K_TASK_STATE_PENDTIMEOUT_SUSPENDED            (k_task_state_t)(K_TASK_STATE_PENDTIMEOUT | K_TASK_STATE_SUSPENDED)</p>
-<pre><code># TencentOS中维护任务的数据结构
-## 就绪列表
-TencentOS  tiny维护一条就绪列表，用于挂载系统中的所有处于就绪态的任务，他是`readyqueue_t `类型的列表，其成员变量如下：
-```js
-readyqueue_t        k_rdyq;
 
-typedef struct readyqueue_st {
-    k_list_t    task_list_head[TOS_CFG_TASK_PRIO_MAX];
-    uint32_t    prio_mask[K_PRIO_TBL_SIZE];
-    k_prio_t    highest_prio;
-} readyqueue_t;</code></pre><p><code>task_list_head</code>是列表类型<code>k_list_t</code>的数组，TencentOS  tiny为每个优先级的任务都分配一个列表，系统支持最大优先级为<code>TOS_CFG_TASK_PRIO_MAX</code><br><code>prio_mask</code>则是优先级掩码数组，它是一个类型为32位变量的数组，数组成员个数由<code>TOS_CFG_TASK_PRIO_MAX</code>决定：</p>
+<span class="token comment" spellcheck="true">// delayed, or pend for a timeout</span>
+<span class="token comment" spellcheck="true">// a task's tick_list is in k_tick_list</span>
+#define K_TASK_STATE_SLEEP                <span class="token punctuation">(</span>k_task_state_t<span class="token punctuation">)</span><span class="token number">0x0001</span>
+
+<span class="token comment" spellcheck="true">// pend for something</span>
+<span class="token comment" spellcheck="true">// a task's pend_list is in some pend object's list</span>
+#define K_TASK_STATE_PEND                 <span class="token punctuation">(</span>k_task_state_t<span class="token punctuation">)</span><span class="token number">0x0002</span>
+
+<span class="token comment" spellcheck="true">// suspended</span>
+#define K_TASK_STATE_SUSPENDED            <span class="token punctuation">(</span>k_task_state_t<span class="token punctuation">)</span><span class="token number">0x0004</span>
+
+<span class="token comment" spellcheck="true">// deleted</span>
+#define K_TASK_STATE_DELETED              <span class="token punctuation">(</span>k_task_state_t<span class="token punctuation">)</span><span class="token number">0x0008</span>
+
+<span class="token comment" spellcheck="true">// actually we don't really need those TASK_STATE below, if you understand the task state deeply, the code can be much more elegant. </span>
+
+<span class="token comment" spellcheck="true">// we are pending, also we are waitting for a timeout(eg. tos_sem_pend with a valid timeout, not TOS_TIME_FOREVER)</span>
+<span class="token comment" spellcheck="true">// both a task's tick_list and pend_list is not empty</span>
+#define K_TASK_STATE_PENDTIMEOUT                      <span class="token punctuation">(</span>k_task_state_t<span class="token punctuation">)</span><span class="token punctuation">(</span>K_TASK_STATE_PEND <span class="token operator">|</span> K_TASK_STATE_SLEEP<span class="token punctuation">)</span>
+
+<span class="token comment" spellcheck="true">// suspended when sleeping</span>
+#define K_TASK_STATE_SLEEP_SUSPENDED                  <span class="token punctuation">(</span>k_task_state_t<span class="token punctuation">)</span><span class="token punctuation">(</span>K_TASK_STATE_SLEEP <span class="token operator">|</span> K_TASK_STATE_SUSPENDED<span class="token punctuation">)</span>
+
+<span class="token comment" spellcheck="true">// suspened when pending</span>
+#define K_TASK_STATE_PEND_SUSPENDED                   <span class="token punctuation">(</span>k_task_state_t<span class="token punctuation">)</span><span class="token punctuation">(</span>K_TASK_STATE_PEND <span class="token operator">|</span> K_TASK_STATE_SUSPENDED<span class="token punctuation">)</span>
+
+<span class="token comment" spellcheck="true">// suspended when pendtimeout</span>
+#define K_TASK_STATE_PENDTIMEOUT_SUSPENDED            <span class="token punctuation">(</span>k_task_state_t<span class="token punctuation">)</span><span class="token punctuation">(</span>K_TASK_STATE_PENDTIMEOUT <span class="token operator">|</span> K_TASK_STATE_SUSPENDED<span class="token punctuation">)</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h1 id="TencentOS中维护任务的数据结构"><a href="#TencentOS中维护任务的数据结构" class="headerlink" title="TencentOS中维护任务的数据结构"></a>TencentOS中维护任务的数据结构</h1><h2 id="就绪列表"><a href="#就绪列表" class="headerlink" title="就绪列表"></a>就绪列表</h2><p>TencentOS  tiny维护一条就绪列表，用于挂载系统中的所有处于就绪态的任务，他是<code>readyqueue_t</code>类型的列表，其成员变量如下：</p>
+<pre class="line-numbers language-js"><code class="language-js">readyqueue_t        k_rdyq<span class="token punctuation">;</span>
+
+typedef struct readyqueue_st <span class="token punctuation">{</span>
+    k_list_t    task_list_head<span class="token punctuation">[</span>TOS_CFG_TASK_PRIO_MAX<span class="token punctuation">]</span><span class="token punctuation">;</span>
+    uint32_t    prio_mask<span class="token punctuation">[</span>K_PRIO_TBL_SIZE<span class="token punctuation">]</span><span class="token punctuation">;</span>
+    k_prio_t    highest_prio<span class="token punctuation">;</span>
+<span class="token punctuation">}</span> readyqueue_t<span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><code>task_list_head</code>是列表类型<code>k_list_t</code>的数组，TencentOS  tiny为每个优先级的任务都分配一个列表，系统支持最大优先级为<code>TOS_CFG_TASK_PRIO_MAX</code><br><code>prio_mask</code>则是优先级掩码数组，它是一个类型为32位变量的数组，数组成员个数由<code>TOS_CFG_TASK_PRIO_MAX</code>决定：</p>
 <pre class="line-numbers language-js"><code class="language-js">#define K_PRIO_TBL_SIZE         <span class="token punctuation">(</span><span class="token punctuation">(</span>TOS_CFG_TASK_PRIO_MAX <span class="token operator">+</span> <span class="token number">31</span><span class="token punctuation">)</span> <span class="token operator">/</span> <span class="token number">32</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <p>当<code>TOS_CFG_TASK_PRIO_MAX</code>不超过32时数组成员变量只有一个，就是32位的变量数值，那么该变量的每一位代表一个优先级。比如当<code>TOS_CFG_TASK_PRIO_MAX</code>为64时，<code>prio_mask[0]</code>变量的每一位（bit）代表<code>0-31</code>优先级，而<code>prio_mask[1]</code>变量的每一位代表<code>32-63</code>优先级。</p>
 <p><code>highest_prio</code>则是记录当前优先级列表的最高优先级，方便索引<code>task_list_head</code>。</p>
@@ -656,7 +674,47 @@ typedef struct readyqueue_st {
     k_event_flag_t     <span class="token operator">*</span>flag_match<span class="token punctuation">;</span>         <span class="token comment" spellcheck="true">/**&lt; 等待到的事件 */</span>
 #endif
 <span class="token punctuation">}</span> k_task_t<span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<h1 id="创建任务"><a href="#创建任务" class="headerlink" title="创建任务"></a>创建任务</h1><p>在TencentOS  tiny中，凡是使用<code>__API__</code>修饰的函数都是提供给用户使用的，而使用<code>__KERNEL__</code>修饰的代码则是给内核使用的。<br>TencentOS的创建任务函数有好几个参数：<br>|参数| 含义 |<br>|–|–|<br>|task                |        任务控制块     |<br>|name              |        任务名字        |<br>|entry               |        任务主体        |<br>|arg                     |       任务形参        |<br>|prio                    |    优先级                |<br>|stk_base            |    任务栈基地址    |<br>|stk_size            |    任务栈大小        |<br>|timeslice          |    时间片                |</p>
+<h1 id="创建任务"><a href="#创建任务" class="headerlink" title="创建任务"></a>创建任务</h1><p>在TencentOS  tiny中，凡是使用<code>__API__</code>修饰的函数都是提供给用户使用的，而使用<code>__KERNEL__</code>修饰的代码则是给内核使用的。<br>TencentOS的创建任务函数有好几个参数：</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>entry</td>
+<td>任务主体</td>
+</tr>
+<tr>
+<td>name</td>
+<td>任务名字</td>
+</tr>
+<tr>
+<td>arg</td>
+<td>任务形参</td>
+</tr>
+<tr>
+<td>task</td>
+<td>任务控制块</td>
+</tr>
+<tr>
+<td>stk_base</td>
+<td>任务栈基地址</td>
+</tr>
+<tr>
+<td>stk_size</td>
+<td>任务栈大小</td>
+</tr>
+<tr>
+<td>prio</td>
+<td>优先级</td>
+</tr>
+<tr>
+<td>timeslice</td>
+<td>时间片</td>
+</tr>
+</tbody></table>
 <p>参数详解（来源TencentOS  tiny开发指南）：</p>
 <ul>
 <li><p>task</p>
