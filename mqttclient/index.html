@@ -1,0 +1,1684 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+<!-- jiejie 杰杰  modify 2019.08.15-->
+
+
+
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="utf-8">
+    <meta name="keywords" content="一个基于socket API之上的跨平台MQTT客户端，支持qos2, IoT RTOS linux Python jiejie Dora">
+    <meta name="baidu-site-verification" content="TRUUhavuHV">
+    <meta name="google-site-verification" content="v-saR33QlUQmwVrLI7AQd08em9BtdazPy5jvPouEYHg">
+    <meta name="description" content="mqttclient一个基于socket API之上的跨平台MQTT客户端
+源码地址 https://github.com/jiejieTop/mqttclient整体框架
+
+备注：目前只实现了linux平台，TencentOS tiny与">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="renderer" content="webkit|ie-stand|ie-comp">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>一个基于socket API之上的跨平台MQTT客户端，支持qos2 | 杰杰的博客</title>
+    <link rel="icon" type="image/x-icon, image/vnd.microsoft.icon" href="/medias/logo/favicon.ico">
+
+    <link rel="stylesheet" type="text/css" href="/libs/awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="/libs/materialize/materialize.min.css">
+    <link rel="stylesheet" type="text/css" href="/libs/aos/aos.css">
+    <link rel="stylesheet" type="text/css" href="/libs/animate/animate.min.css">
+    <link rel="stylesheet" type="text/css" href="/libs/lightGallery/css/lightgallery.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/matery.css">
+    <link rel="stylesheet" type="text/css" href="/css/my.css">
+
+    <meta name="360-site-verification" content="d280ce782ae1e8d546343da41182687d">
+
+    <style type="text/css">
+        
+            
+            code[class*="language-"],
+            pre[class*="language-"] {
+                white-space: pre !important;
+            }
+
+        
+    </style>
+
+    <script src="/libs/jquery/jquery-2.2.0.min.js"></script>
+    <script src="https://sdk.jinrishici.com/v2/browser/jinrishici.js" charset="utf-8"></script>
+    
+    <script>
+        var _hmt = _hmt || [];
+        (function () {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?46e79e71af0709a5b9106bf20cecc493";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+
+    <script>
+        (function(){
+        var src = "https://jspassport.ssl.qhimg.com/11.0.1.js?d182b3f28525f2db83acfaaf6e696dba";
+        document.write('<script src="' + src + '" id="sozz"><\/script>');
+        })();
+    </script>
+
+    
+    
+        <script>
+            (function(){
+                var bp = document.createElement('script');
+                var curProtocol = window.location.protocol.split(':')[0];
+                if (curProtocol === 'https') {
+                    bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+                }
+                else {
+                    bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+                }
+                var s = document.getElementsByTagName("script")[0];
+                s.parentNode.insertBefore(bp, s);
+            })();
+        </script>
+    
+
+<link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
+
+<body>
+
+    <header class="navbar-fixed">
+    <nav id="headNav" class="bg-color nav-transparent">
+        <div id="navContainer" class="nav-wrapper container">
+            <div class="brand-logo">
+                <a href="/" class="waves-effect waves-light">
+                    
+                    <img src="/medias/logo/logo.ico" class="logo-img" alt="LOGO">
+                    
+                    <span class="logo-span">杰杰的博客</span>
+                </a>
+            </div>
+            <!-- jiejie 杰杰  modify 2019.08.15-->
+
+
+
+<a href="#" data-target="mobile-nav" class="sidenav-trigger button-collapse"><i class="fa fa-navicon"></i></a>
+<ul class="right">
+    
+    <li class="hide-on-med-and-down">
+        <a href="/" class="waves-effect waves-light">
+            
+            <i class="fa fa-home"></i>
+            
+            <span>首页</span>
+        </a>
+    </li>
+    
+    <li class="hide-on-med-and-down">
+        <a href="/tags" class="waves-effect waves-light">
+            
+            <i class="fa fa-tags"></i>
+            
+            <span>标签</span>
+        </a>
+    </li>
+    
+    <li class="hide-on-med-and-down">
+        <a href="/categories" class="waves-effect waves-light">
+            
+            <i class="fa fa-bookmark"></i>
+            
+            <span>分类</span>
+        </a>
+    </li>
+    
+    <li class="hide-on-med-and-down">
+        <a href="/archives" class="waves-effect waves-light">
+            
+            <i class="fa fa-archive"></i>
+            
+            <span>归档</span>
+        </a>
+    </li>
+    
+    <li class="hide-on-med-and-down">
+        <a href="/AV" class="waves-effect waves-light">
+            
+            <i class="fa fa-music"></i>
+            
+            <span>娱乐</span>
+        </a>
+    </li>
+    
+    <li class="hide-on-med-and-down">
+        <a href="/about" class="waves-effect waves-light">
+            
+            <i class="fa fa-user-circle-o"></i>
+            
+            <span>关于我</span>
+        </a>
+    </li>
+    
+    <li class="hide-on-med-and-down">
+        <a href="/contact" class="waves-effect waves-light">
+            
+            <i class="fa fa-envelope"></i>
+            
+            <span>留言板</span>
+        </a>
+    </li>
+    
+    <li class="hide-on-med-and-down">
+        <a href="/friends" class="waves-effect waves-light">
+            
+            <i class="fa fa-address-book"></i>
+            
+            <span>友情链接</span>
+        </a>
+    </li>
+    
+    <li>
+        <a href="#searchModal" class="modal-trigger waves-effect waves-light">
+            <i id="searchIcon" class="fa fa-search" title="搜索"></i>
+        </a>
+    </li>
+</ul>
+
+<!-- jiejie 杰杰  modify 2019.08.15-->
+
+<div id="mobile-nav" class="side-nav sidenav">
+
+    <div class="mobile-head bg-color">
+        
+        <img src="/medias/logo/logo.ico" class="logo-img circle responsive-img">
+        <!-- jiejie 杰杰  modify 2019.08.15-->
+        <div class="logo-name">杰杰的博客</div>
+        <div class="logo-desc">
+            
+            物联网 | linux | 操作系统
+            
+        </div>
+    </div>
+
+    
+
+    <ul class="menu-list mobile-menu-list">
+        
+        <li>
+            <a href="/" class="waves-effect waves-light">
+                
+                <i class="fa fa-fw fa-home"></i>
+                
+                首页
+            </a>
+        </li>
+        
+        <li>
+            <a href="/tags" class="waves-effect waves-light">
+                
+                <i class="fa fa-fw fa-tags"></i>
+                
+                标签
+            </a>
+        </li>
+        
+        <li>
+            <a href="/categories" class="waves-effect waves-light">
+                
+                <i class="fa fa-fw fa-bookmark"></i>
+                
+                分类
+            </a>
+        </li>
+        
+        <li>
+            <a href="/archives" class="waves-effect waves-light">
+                
+                <i class="fa fa-fw fa-archive"></i>
+                
+                归档
+            </a>
+        </li>
+        
+        <li>
+            <a href="/AV" class="waves-effect waves-light">
+                
+                <i class="fa fa-fw fa-music"></i>
+                
+                娱乐
+            </a>
+        </li>
+        
+        <li>
+            <a href="/about" class="waves-effect waves-light">
+                
+                <i class="fa fa-fw fa-user-circle-o"></i>
+                
+                关于我
+            </a>
+        </li>
+        
+        <li>
+            <a href="/contact" class="waves-effect waves-light">
+                
+                <i class="fa fa-fw fa-envelope"></i>
+                
+                留言板
+            </a>
+        </li>
+        
+        <li>
+            <a href="/friends" class="waves-effect waves-light">
+                
+                <i class="fa fa-fw fa-address-book"></i>
+                
+                友情链接
+            </a>
+        </li>
+        
+        
+        <li><div class="divider"></div></li>
+        <li>
+            <a href="https://github.com/jiejietop" class="waves-effect waves-light" target="_blank">
+                <i class="fa fa-github-square fa-fw"></i>Fork Me
+            </a>
+        </li>
+        
+    </ul>
+</div>
+
+        </div>
+
+        
+            <style>
+    .nav-transparent .github-corner {
+        display: none !important;
+    }
+
+    .github-corner {
+        position: absolute;
+        z-index: 10;
+        top: 0;
+        right: 0;
+        border: 0;
+        transform: scale(1.1);
+    }
+
+    .github-corner svg {
+        color: #0f9d58;
+        fill: #fff;
+        height: 64px;
+        width: 64px;
+    }
+
+    .github-corner:hover .octo-arm {
+        animation: a 0.56s ease-in-out;
+    }
+
+    .github-corner .octo-arm {
+        animation: none;
+    }
+
+    @keyframes a {
+        0%,
+        to {
+            transform: rotate(0);
+        }
+        20%,
+        60% {
+            transform: rotate(-25deg);
+        }
+        40%,
+        80% {
+            transform: rotate(10deg);
+        }
+    }
+</style>
+
+<a href="https://github.com/jiejietop" class="github-corner tooltipped hide-on-med-and-down" target="_blank"
+   data-tooltip="Fork Me" data-position="left" data-delay="50">
+    <svg viewBox="0 0 250 250" aria-hidden="true">
+        <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path>
+        <path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2"
+              fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path>
+        <path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z"
+              fill="currentColor" class="octo-body"></path>
+    </svg>
+</a>
+        
+    </nav>
+
+</header>
+
+    
+<script src="/libs/cryptojs/crypto-js.min.js"></script>
+<script>
+    (function() {
+        let pwd = '';
+        if (pwd && pwd.length > 0) {
+            if (pwd !== CryptoJS.SHA256(prompt('请输入访问本文章的密码')).toString(CryptoJS.enc.Hex)) {
+                alert('密码错误，将返回主页！');
+                location.href = '/';
+            }
+        }
+    })();
+</script>
+
+
+
+
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/0.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col s12 m12 l12">
+                <div class="brand">
+                    <div class="description center-align post-title">
+                        一个基于socket API之上的跨平台MQTT客户端，支持qos2
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<main class="post-container content">
+
+    
+    <link rel="stylesheet" href="/libs/tocbot/tocbot.css">
+<style>
+    #articleContent h1::before,
+    #articleContent h2::before,
+    #articleContent h3::before,
+    #articleContent h4::before,
+    #articleContent h5::before,
+    #articleContent h6::before {
+        display: block;
+        content: " ";
+        height: 100px;
+        margin-top: -100px;
+        visibility: hidden;
+    }
+
+    #articleContent :focus {
+        outline: none;
+    }
+
+    .toc-fixed {
+        position: fixed;
+        top: 64px;
+    }
+
+    .toc-widget {
+        padding-left: 20px;
+    }
+
+    .toc-widget .toc-title {
+        margin: 35px 0 15px 0;
+        padding-left: 17px;
+        font-size: 1.5rem;
+        font-weight: bold;
+        line-height: 1.5rem;
+    }
+
+    .toc-widget ol {
+        padding: 0;
+        list-style: none;
+    }
+
+    #toc-content ol {
+        padding-left: 10px;
+    }
+
+    #toc-content ol li {
+        padding-left: 10px;
+    }
+
+    #toc-content .toc-link:hover {
+        color: #42b983;
+        font-weight: 700;
+        text-decoration: underline;
+    }
+
+    #toc-content .toc-link::before {
+        background-color: transparent;
+        max-height: 25px;
+    }
+
+    #toc-content .is-active-link {
+        color: #42b983;
+    }
+
+    #toc-content .is-active-link::before {
+        background-color: #42b983;
+    }
+
+    #floating-toc-btn {
+        position: fixed;
+        right: 20px;
+        bottom: 76px;
+        padding-top: 15px;
+        margin-bottom: 0;
+        z-index: 998;
+    }
+
+    #floating-toc-btn .btn-floating {
+        width: 48px;
+        height: 48px;
+    }
+
+    #floating-toc-btn .btn-floating i {
+        line-height: 48px;
+        font-size: 1.4rem;
+    }
+</style>
+<div class="row">
+    <div id="main-content" class="col s12 m12 l9">
+        <!-- jiejie 杰杰  modify 2019.08.15-->
+<!-- 文章内容详情 -->
+<div id="artDetail">
+    <div class="card">
+        <div class="card-content article-info">
+            <div class="row tag-cate">
+                <div class="col s7">
+                    
+                    <div class="article-tag">
+                        
+                            <a href="/tags/网络/" target="_blank">
+                                <span class="chip bg-color">网络</span>
+                            </a>
+                        
+                            <a href="/tags/mqtt/" target="_blank">
+                                <span class="chip bg-color">mqtt</span>
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+                <div class="col s5 right-align">
+                    
+                    <div class="post-cate">
+                        <i class="fa fa-bookmark fa-fw icon-category"></i>
+                        
+                            <a href="/categories/网络/" class="post-category" target="_blank">
+                                网络
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+            
+            <div class="post-info">
+                <div class="post-date info-break-policy">
+                    <i class="fa fa-calendar-minus-o fa-fw"></i>发布日期:&nbsp;&nbsp;
+                    2020-02-12
+                </div>
+
+                <div class="post-author info-break-policy">
+                    <i class="fa fa-user-o fa-fw"></i>作者:&nbsp;&nbsp;
+                    
+                        杰杰
+                    
+                </div>
+
+                
+                    
+                    <div class="info-break-policy">
+                        <i class="fa fa-file-word-o fa-fw"></i>文章字数:&nbsp;&nbsp;
+                        2.2k
+                    </div>
+                    
+
+                    
+                    <div class="info-break-policy">
+                        <i class="fa fa-clock-o fa-fw"></i>阅读时长:&nbsp;&nbsp;
+                        9 分
+                    </div>
+                    
+                
+                
+                
+                        <span id="busuanzi_container_site_pv" style='display:none'></span>
+                        <i class="fa fa-eye fa-fw"></i>阅读次数:&nbsp;&nbsp;
+                        <span id="busuanzi_value_page_pv" ></span>
+    
+                
+
+            </div>
+        </div>
+        <hr class="clearfix">
+        <div class="card-content article-card-content">
+            <div id="articleContent">
+                <h1 id="mqttclient"><a href="#mqttclient" class="headerlink" title="mqttclient"></a>mqttclient</h1><p><strong>一个基于socket API之上的跨平台MQTT客户端</strong></p>
+<h3 id="源码地址-https-github-com-jiejieTop-mqttclient"><a href="#源码地址-https-github-com-jiejieTop-mqttclient" class="headerlink" title="源码地址 https://github.com/jiejieTop/mqttclient"></a>源码地址 <a href="https://github.com/jiejieTop/mqttclient" target="_blank" rel="noopener">https://github.com/jiejieTop/mqttclient</a></h3><h2 id="整体框架"><a href="#整体框架" class="headerlink" title="整体框架"></a>整体框架</h2><p><img src="./images/loading.png" data-original="http://qiniu.jiejie01.top/mqttclient.png" alt="整体框架"></p>
+<blockquote>
+<p>备注：目前只实现了linux平台，TencentOS tiny与RT-Thread正在移植中</p>
+</blockquote>
+<h2 id="linux平台下测试使用"><a href="#linux平台下测试使用" class="headerlink" title="linux平台下测试使用"></a>linux平台下测试使用</h2><h3 id="安装cmake："><a href="#安装cmake：" class="headerlink" title="安装cmake："></a>安装cmake：</h3><pre class="line-numbers language-bash"><code class="language-bash"><span class="token function">sudo</span> <span class="token function">apt-get</span> <span class="token function">install</span> cmake<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<h3 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h3><p>在<code>mqttclient/test/test.c</code>文件中修改以下内容：</p>
+<pre class="line-numbers language-c"><code class="language-c">    init_params<span class="token punctuation">.</span>connect_params<span class="token punctuation">.</span>network_params<span class="token punctuation">.</span>network_ssl_params<span class="token punctuation">.</span>ca_crt <span class="token operator">=</span> <span class="token function">test_ca_get</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>    <span class="token comment" spellcheck="true">/* CA证书 */</span>
+    init_params<span class="token punctuation">.</span>connect_params<span class="token punctuation">.</span>network_params<span class="token punctuation">.</span>addr <span class="token operator">=</span> <span class="token string">"xxxxxxx"</span><span class="token punctuation">;</span>                             <span class="token comment" spellcheck="true">/* 服务器域名 */</span>
+    init_params<span class="token punctuation">.</span>connect_params<span class="token punctuation">.</span>network_params<span class="token punctuation">.</span>port <span class="token operator">=</span> <span class="token string">"8883"</span><span class="token punctuation">;</span>
+    init_params<span class="token punctuation">.</span>connect_params<span class="token punctuation">.</span>user_name <span class="token operator">=</span> <span class="token string">"xxxxxxx"</span><span class="token punctuation">;</span>                                       <span class="token comment" spellcheck="true">/* 用户名 */</span>
+    init_params<span class="token punctuation">.</span>connect_params<span class="token punctuation">.</span>password <span class="token operator">=</span> <span class="token string">"xxxxxxx"</span><span class="token punctuation">;</span>                                        <span class="token comment" spellcheck="true">/* 密码 */</span>
+    init_params<span class="token punctuation">.</span>connect_params<span class="token punctuation">.</span>client_id <span class="token operator">=</span> <span class="token string">"xxxxxxx"</span><span class="token punctuation">;</span>                                       <span class="token comment" spellcheck="true">/* 客户端id */</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="打开salof"><a href="#打开salof" class="headerlink" title="打开salof"></a>打开salof</h3><p><a href="https://github.com/jiejieTop/salof" target="_blank" rel="noopener">salof</a> 全称是：<code>Synchronous Asynchronous Log Output Framework</code>（同步异步日志输出框架）</p>
+<p>它是一个异步日志输出库，在空闲时候输出对应的日志信息，并且该库与mqttclient无缝衔接，如果不需要则将 <code>LOG_IS_SALOF</code> 定义为0即可。</p>
+<pre class="line-numbers language-c"><code class="language-c"><span class="token macro property">#<span class="token directive keyword">define</span> LOG_IS_SALOF    0</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>在<code>mqttclient/common/log/config.h</code>配置文件中打开对应的日志输出级别：</p>
+<pre class="line-numbers language-c"><code class="language-c"><span class="token macro property">#<span class="token directive keyword">define</span> BASE_LEVEL      (0)</span>
+<span class="token macro property">#<span class="token directive keyword">define</span> ASSERT_LEVEL    (BASE_LEVEL + 1)            </span><span class="token comment" spellcheck="true">/* 日志输出级别：断言级别（非常高优先级） */</span>
+<span class="token macro property">#<span class="token directive keyword">define</span> ERR_LEVEL       (ASSERT_LEVEL + 1)          </span><span class="token comment" spellcheck="true">/* 日志输出级别：错误级别（高优先级） */</span>
+<span class="token macro property">#<span class="token directive keyword">define</span> WARN_LEVEL      (ERR_LEVEL + 1)             </span><span class="token comment" spellcheck="true">/* 日志输出级别：警告级别（中优先级） */</span>
+<span class="token macro property">#<span class="token directive keyword">define</span> INFO_LEVEL      (WARN_LEVEL + 1)            </span><span class="token comment" spellcheck="true">/* 日志输出级别：信息级别（低优先级） */</span>
+<span class="token macro property">#<span class="token directive keyword">define</span> DEBUG_LEVEL     (INFO_LEVEL + 1)            </span><span class="token comment" spellcheck="true">/* 日志输出级别：调试级别（更低优先级） */</span>
+
+<span class="token macro property">#<span class="token directive keyword">define</span>         SALOF_OS                    USE_LINUX       </span><span class="token comment" spellcheck="true">/* 选择对应的平台：Linux/FreeRTOS/TencentOS */</span>
+<span class="token macro property">#<span class="token directive keyword">define</span>         LOG_LEVEL                   WARN_LEVEL      </span><span class="token comment" spellcheck="true">/* 日志输出级别 */</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="mqttclient的配置"><a href="#mqttclient的配置" class="headerlink" title="mqttclient的配置"></a>mqttclient的配置</h3><p>配置文件是：<code>mqttclient/mqtt_config.h</code>，在这里可以根据自身需求配置对应的信息。<br>如是否选择<code>mbedtls</code>加密层：</p>
+<pre class="line-numbers language-c"><code class="language-c"><span class="token macro property">#<span class="token directive keyword">define</span>     MQTT_NETWORK_TYPE_TLS               MQTT_YES</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<h3 id="编译-amp-运行"><a href="#编译-amp-运行" class="headerlink" title="编译 &amp; 运行"></a>编译 &amp; 运行</h3><pre class="line-numbers language-bash"><code class="language-bash">./build.sh<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>运行<code>build.sh</code>脚本后会在 <code>./build/bin/</code>目录下生成可执行文件<code>mqtt-client</code>，直接运行即可。</p>
+<h2 id="设计思想"><a href="#设计思想" class="headerlink" title="设计思想"></a>设计思想</h2><ul>
+<li>整体采用分层式设计，代码实现采用异步设计方式，降低耦合。</li>
+<li>消息的处理使用回调的方式处理：用户指定<code>[订阅的主题]</code>与指定<code>[消息的处理函数]</code></li>
+<li>不对外产生依赖</li>
+</ul>
+<h2 id="API"><a href="#API" class="headerlink" title="API"></a>API</h2><p><code>mqttclient</code>拥有非常简洁的<code>api</code>接口</p>
+<pre class="line-numbers language-c"><code class="language-c"><span class="token keyword">int</span> <span class="token function">mqtt_keep_alive</span><span class="token punctuation">(</span>mqtt_client_t<span class="token operator">*</span> c<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">int</span> <span class="token function">mqtt_init</span><span class="token punctuation">(</span>mqtt_client_t<span class="token operator">*</span> c<span class="token punctuation">,</span> client_init_params_t<span class="token operator">*</span> init<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">int</span> <span class="token function">mqtt_release</span><span class="token punctuation">(</span>mqtt_client_t<span class="token operator">*</span> c<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">int</span> <span class="token function">mqtt_connect</span><span class="token punctuation">(</span>mqtt_client_t<span class="token operator">*</span> c<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">int</span> <span class="token function">mqtt_disconnect</span><span class="token punctuation">(</span>mqtt_client_t<span class="token operator">*</span> c<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">int</span> <span class="token function">mqtt_subscribe</span><span class="token punctuation">(</span>mqtt_client_t<span class="token operator">*</span> c<span class="token punctuation">,</span> <span class="token keyword">const</span> <span class="token keyword">char</span><span class="token operator">*</span> topic_filter<span class="token punctuation">,</span> mqtt_qos_t qos<span class="token punctuation">,</span> message_handler_t msg_handler<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">int</span> <span class="token function">mqtt_unsubscribe</span><span class="token punctuation">(</span>mqtt_client_t<span class="token operator">*</span> c<span class="token punctuation">,</span> <span class="token keyword">const</span> <span class="token keyword">char</span><span class="token operator">*</span> topic_filter<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">int</span> <span class="token function">mqtt_publish</span><span class="token punctuation">(</span>mqtt_client_t<span class="token operator">*</span> c<span class="token punctuation">,</span> <span class="token keyword">const</span> <span class="token keyword">char</span><span class="token operator">*</span> topic_filter<span class="token punctuation">,</span> mqtt_message_t<span class="token operator">*</span> msg<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">int</span> <span class="token function">mqtt_yield</span><span class="token punctuation">(</span>mqtt_client_t<span class="token operator">*</span> c<span class="token punctuation">,</span> <span class="token keyword">int</span> timeout_ms<span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="核心"><a href="#核心" class="headerlink" title="核心"></a>核心</h2><p><strong>mqtt_client_t 结构</strong></p>
+<pre class="line-numbers language-c"><code class="language-c"><span class="token keyword">typedef</span> <span class="token keyword">struct</span> mqtt_client <span class="token punctuation">{</span>
+    <span class="token keyword">unsigned</span> <span class="token keyword">short</span>              packet_id<span class="token punctuation">;</span>
+    <span class="token keyword">unsigned</span> <span class="token keyword">char</span>               <span class="token operator">*</span>read_buf<span class="token punctuation">;</span>
+    <span class="token keyword">unsigned</span> <span class="token keyword">char</span>               <span class="token operator">*</span>write_buf<span class="token punctuation">;</span>
+    <span class="token keyword">unsigned</span> <span class="token keyword">char</span>               ping_outstanding<span class="token punctuation">;</span>
+    <span class="token keyword">unsigned</span> <span class="token keyword">char</span>               ack_handler_number<span class="token punctuation">;</span>
+    <span class="token keyword">unsigned</span> <span class="token keyword">int</span>                cmd_timeout<span class="token punctuation">;</span>
+    <span class="token keyword">unsigned</span> <span class="token keyword">int</span>                read_buf_size<span class="token punctuation">;</span>
+    <span class="token keyword">unsigned</span> <span class="token keyword">int</span>                write_buf_size<span class="token punctuation">;</span>
+    <span class="token keyword">unsigned</span> <span class="token keyword">int</span>                reconnect_try_duration<span class="token punctuation">;</span>
+    <span class="token keyword">void</span>                        <span class="token operator">*</span>reconnect_date<span class="token punctuation">;</span>
+    reconnect_handler_t         reconnect_handler<span class="token punctuation">;</span>
+    client_state_t              client_state<span class="token punctuation">;</span>
+    platform_mutex_t            write_lock<span class="token punctuation">;</span>
+    platform_mutex_t            global_lock<span class="token punctuation">;</span>
+    list_t                      msg_handler_list<span class="token punctuation">;</span>
+    list_t                      ack_handler_list<span class="token punctuation">;</span>
+    network_t                   <span class="token operator">*</span>network<span class="token punctuation">;</span>
+    platform_thread_t           <span class="token operator">*</span>thread<span class="token punctuation">;</span>
+    platform_timer_t            reconnect_timer<span class="token punctuation">;</span>
+    platform_timer_t            ping_timer<span class="token punctuation">;</span>
+    connect_params_t            <span class="token operator">*</span>connect_params<span class="token punctuation">;</span>
+<span class="token punctuation">}</span> mqtt_client_t<span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>该结构主要维护以下内容：</p>
+<ol>
+<li>读写数据缓冲区<code>read_buf、write_buf</code></li>
+<li>命令超时时间<code>cmd_timeout</code>（主要是读写阻塞时间、等待响应的时间、重连等待时间）</li>
+<li>维护<code>ack</code>链表<code>ack_handler_list</code>，这是异步实现的核心，所有等待响应的报文都会被挂载到这个链表上</li>
+<li>维护消息处理列表<code>msg_handler_list</code>，这是<code>mqtt</code>协议必须实现的内容，所有来自服务器的<code>publish</code>报文都会被处理（前提是订阅了对应的消息）</li>
+<li>维护一个网卡接口<code>network</code></li>
+<li>维护一个内部线程<code>thread</code>，所有来自服务器的mqtt包都会在这里被处理！</li>
+<li>两个定时器，分别是掉线重连定时器与保活定时器<code>reconnect_timer、ping_timer</code></li>
+<li>一些连接的参数<code>connect_params</code></li>
+</ol>
+<h2 id="初始化"><a href="#初始化" class="headerlink" title="初始化"></a>初始化</h2><pre class="line-numbers language-c"><code class="language-c"><span class="token keyword">int</span> <span class="token function">mqtt_init</span><span class="token punctuation">(</span>mqtt_client_t<span class="token operator">*</span> c<span class="token punctuation">,</span> client_init_params_t<span class="token operator">*</span> init<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>主要是配置<code>mqtt_client_t</code>结构的相关信息，如果没有指定初始化参数，则系统会提供默认的参数。<br>但连接部分的参数则必须指定：</p>
+<pre class="line-numbers language-c"><code class="language-c">    init_params<span class="token punctuation">.</span>connect_params<span class="token punctuation">.</span>network_params<span class="token punctuation">.</span>addr <span class="token operator">=</span> <span class="token string">"[你的mqtt服务器IP地址或者是域名]"</span><span class="token punctuation">;</span>
+    init_params<span class="token punctuation">.</span>connect_params<span class="token punctuation">.</span>network_params<span class="token punctuation">.</span>port <span class="token operator">=</span> <span class="token number">1883</span><span class="token punctuation">;</span>    <span class="token comment" spellcheck="true">//端口号</span>
+    init_params<span class="token punctuation">.</span>connect_params<span class="token punctuation">.</span>user_name <span class="token operator">=</span> <span class="token string">"jiejietop"</span><span class="token punctuation">;</span>
+    init_params<span class="token punctuation">.</span>connect_params<span class="token punctuation">.</span>password <span class="token operator">=</span> <span class="token string">"123456"</span><span class="token punctuation">;</span>
+    init_params<span class="token punctuation">.</span>connect_params<span class="token punctuation">.</span>client_id <span class="token operator">=</span> <span class="token string">"clientid"</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="连接服务器"><a href="#连接服务器" class="headerlink" title="连接服务器"></a>连接服务器</h2><pre class="line-numbers language-c"><code class="language-c"><span class="token keyword">int</span> <span class="token function">mqtt_connect</span><span class="token punctuation">(</span>mqtt_client_t<span class="token operator">*</span> c<span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>连接服务器则是使用非异步的方式设计，因为必须等待连接上服务器才能进行下一步操作。<br>过程如下</p>
+<ol>
+<li>调用底层的连接函数连接上服务器：</li>
+</ol>
+<pre class="line-numbers language-c"><code class="language-c">c<span class="token operator">-></span>network<span class="token operator">-></span><span class="token function">connect</span><span class="token punctuation">(</span>c<span class="token operator">-></span>network<span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<ol start="2">
+<li>序列化<code>mqtt</code>的<code>CONNECT</code>报文并且发送</li>
+</ol>
+<pre class="line-numbers language-c"><code class="language-c"><span class="token function">MQTTSerialize_connect</span><span class="token punctuation">(</span>c<span class="token operator">-></span>write_buf<span class="token punctuation">,</span> c<span class="token operator">-></span>write_buf_size<span class="token punctuation">,</span> <span class="token operator">&amp;</span>connect_data<span class="token punctuation">)</span>
+<span class="token function">mqtt_send_packet</span><span class="token punctuation">(</span>c<span class="token punctuation">,</span> len<span class="token punctuation">,</span> <span class="token operator">&amp;</span>connect_timer<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<ol start="3">
+<li>等待来自服务器的<code>CONNACK</code>报文</li>
+</ol>
+<pre class="line-numbers language-c"><code class="language-c"><span class="token function">mqtt_wait_packet</span><span class="token punctuation">(</span>c<span class="token punctuation">,</span> CONNACK<span class="token punctuation">,</span> <span class="token operator">&amp;</span>connect_timer<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<ol start="4">
+<li>连接成功后创建一个内部线程<code>mqtt_yield_thread</code></li>
+</ol>
+<pre class="line-numbers language-c"><code class="language-c"><span class="token function">platform_thread_init</span><span class="token punctuation">(</span><span class="token string">"mqtt_yield_thread"</span><span class="token punctuation">,</span> mqtt_yield_thread<span class="token punctuation">,</span> c<span class="token punctuation">,</span> MQTT_THREAD_STACK_SIZE<span class="token punctuation">,</span> MQTT_THREAD_PRIO<span class="token punctuation">,</span> MQTT_THREAD_TICK<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<h2 id="订阅报文"><a href="#订阅报文" class="headerlink" title="订阅报文"></a>订阅报文</h2><pre class="line-numbers language-c"><code class="language-c"><span class="token keyword">int</span> <span class="token function">mqtt_subscribe</span><span class="token punctuation">(</span>mqtt_client_t<span class="token operator">*</span> c<span class="token punctuation">,</span> <span class="token keyword">const</span> <span class="token keyword">char</span><span class="token operator">*</span> topic_filter<span class="token punctuation">,</span> mqtt_qos_t qos<span class="token punctuation">,</span> message_handler_t handler<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>订阅报文使用异步设计来实现的：<br>过程如下：</p>
+<ol>
+<li>序列化订阅报文并且发送给服务器</li>
+</ol>
+<pre class="line-numbers language-c"><code class="language-c"><span class="token function">MQTTSerialize_subscribe</span><span class="token punctuation">(</span>c<span class="token operator">-></span>write_buf<span class="token punctuation">,</span> c<span class="token operator">-></span>write_buf_size<span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token function">mqtt_get_next_packet_id</span><span class="token punctuation">(</span>c<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token operator">&amp;</span>topic<span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token keyword">int</span><span class="token operator">*</span><span class="token punctuation">)</span><span class="token operator">&amp;</span>qos<span class="token punctuation">)</span>
+<span class="token function">mqtt_send_packet</span><span class="token punctuation">(</span>c<span class="token punctuation">,</span> len<span class="token punctuation">,</span> <span class="token operator">&amp;</span>timer<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<ol start="2">
+<li>创建对应的消息处理节点，这个消息节点在收到服务器的<code>SUBACK</code>订阅应答报文后会挂载到消息处理列表<code>msg_handler_list</code>上</li>
+</ol>
+<pre class="line-numbers language-c"><code class="language-c"><span class="token function">mqtt_msg_handler_create</span><span class="token punctuation">(</span>topic_filter<span class="token punctuation">,</span> qos<span class="token punctuation">,</span> handler<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<ol start="3">
+<li>在发送了报文给服务器那就要等待服务器的响应了，记录这个等待<code>SUBACK</code></li>
+</ol>
+<pre class="line-numbers language-c"><code class="language-c"><span class="token function">mqtt_ack_list_record</span><span class="token punctuation">(</span>c<span class="token punctuation">,</span> SUBACK<span class="token punctuation">,</span> <span class="token function">mqtt_get_next_packet_id</span><span class="token punctuation">(</span>c<span class="token punctuation">)</span><span class="token punctuation">,</span> len<span class="token punctuation">,</span> msg_handler<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<h2 id="取消订阅"><a href="#取消订阅" class="headerlink" title="取消订阅"></a>取消订阅</h2><p>与订阅报文的逻辑基本差不多的~</p>
+<h2 id="发布报文"><a href="#发布报文" class="headerlink" title="发布报文"></a>发布报文</h2><pre class="line-numbers language-c"><code class="language-c"><span class="token keyword">int</span> <span class="token function">mqtt_publish</span><span class="token punctuation">(</span>mqtt_client_t<span class="token operator">*</span> c<span class="token punctuation">,</span> <span class="token keyword">const</span> <span class="token keyword">char</span><span class="token operator">*</span> topic_filter<span class="token punctuation">,</span> mqtt_message_t<span class="token operator">*</span> msg<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>核心思想都差不多，过程如下：</p>
+<ol>
+<li>先序列化发布报文，然后发送到服务器</li>
+</ol>
+<pre class="line-numbers language-c"><code class="language-c"><span class="token function">MQTTSerialize_publish</span><span class="token punctuation">(</span>c<span class="token operator">-></span>write_buf<span class="token punctuation">,</span> c<span class="token operator">-></span>write_buf_size<span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> msg<span class="token operator">-></span>qos<span class="token punctuation">,</span> msg<span class="token operator">-></span>retained<span class="token punctuation">,</span> msg<span class="token operator">-></span>id<span class="token punctuation">,</span>
+              topic<span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token keyword">unsigned</span> <span class="token keyword">char</span><span class="token operator">*</span><span class="token punctuation">)</span>msg<span class="token operator">-></span>payload<span class="token punctuation">,</span> msg<span class="token operator">-></span>payloadlen<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token function">mqtt_send_packet</span><span class="token punctuation">(</span>c<span class="token punctuation">,</span> len<span class="token punctuation">,</span> <span class="token operator">&amp;</span>timer<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<ol start="2">
+<li>对于QOS0的逻辑，不做任何处理，对于QOS1和QOS2的报文则需要记录下来，在没收到服务器应答的时候进行重发</li>
+</ol>
+<pre class="line-numbers language-c"><code class="language-c">    <span class="token keyword">if</span> <span class="token punctuation">(</span>QOS1 <span class="token operator">==</span> msg<span class="token operator">-></span>qos<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        rc <span class="token operator">=</span> <span class="token function">mqtt_ack_list_record</span><span class="token punctuation">(</span>c<span class="token punctuation">,</span> PUBACK<span class="token punctuation">,</span> <span class="token function">mqtt_get_next_packet_id</span><span class="token punctuation">(</span>c<span class="token punctuation">)</span><span class="token punctuation">,</span> len<span class="token punctuation">,</span> <span class="token constant">NULL</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token keyword">if</span> <span class="token punctuation">(</span>QOS2 <span class="token operator">==</span> msg<span class="token operator">-></span>qos<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        rc <span class="token operator">=</span> <span class="token function">mqtt_ack_list_record</span><span class="token punctuation">(</span>c<span class="token punctuation">,</span> PUBREC<span class="token punctuation">,</span> <span class="token function">mqtt_get_next_packet_id</span><span class="token punctuation">(</span>c<span class="token punctuation">)</span><span class="token punctuation">,</span> len<span class="token punctuation">,</span> <span class="token constant">NULL</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="内部线程"><a href="#内部线程" class="headerlink" title="内部线程"></a>内部线程</h2><pre class="line-numbers language-c"><code class="language-c"><span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">mqtt_yield_thread</span><span class="token punctuation">(</span><span class="token keyword">void</span> <span class="token operator">*</span>arg<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>主要是对<code>mqtt_yield</code>函数的返回值做处理，比如在<code>disconnect</code>的时候销毁这个线程。</p>
+<h2 id="核心的处理函数mqtt-yield"><a href="#核心的处理函数mqtt-yield" class="headerlink" title="核心的处理函数mqtt_yield"></a>核心的处理函数<code>mqtt_yield</code></h2><ol>
+<li>数据包的处理<code>mqtt_packet_handle</code></li>
+</ol>
+<pre class="line-numbers language-c"><code class="language-c"><span class="token keyword">static</span> <span class="token keyword">int</span> <span class="token function">mqtt_packet_handle</span><span class="token punctuation">(</span>mqtt_client_t<span class="token operator">*</span> c<span class="token punctuation">,</span> platform_timer_t<span class="token operator">*</span> timer<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>对不同的包使用不一样的处理：</p>
+<pre class="line-numbers language-c"><code class="language-c">    <span class="token keyword">switch</span> <span class="token punctuation">(</span>packet_type<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">case</span> <span class="token number">0</span><span class="token punctuation">:</span> <span class="token comment" spellcheck="true">/* timed out reading packet */</span>
+            <span class="token keyword">break</span><span class="token punctuation">;</span>
+
+        <span class="token keyword">case</span> CONNACK<span class="token punctuation">:</span>
+            <span class="token keyword">break</span><span class="token punctuation">;</span>
+
+        <span class="token keyword">case</span> PUBACK<span class="token punctuation">:</span>
+        <span class="token keyword">case</span> PUBCOMP<span class="token punctuation">:</span>
+            rc <span class="token operator">=</span> <span class="token function">mqtt_puback_and_pubcomp_packet_handle</span><span class="token punctuation">(</span>c<span class="token punctuation">,</span> timer<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token keyword">break</span><span class="token punctuation">;</span>
+
+        <span class="token keyword">case</span> SUBACK<span class="token punctuation">:</span>
+            rc <span class="token operator">=</span> <span class="token function">mqtt_suback_packet_handle</span><span class="token punctuation">(</span>c<span class="token punctuation">,</span> timer<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token keyword">break</span><span class="token punctuation">;</span>
+
+        <span class="token keyword">case</span> UNSUBACK<span class="token punctuation">:</span>
+            rc <span class="token operator">=</span> <span class="token function">mqtt_unsuback_packet_handle</span><span class="token punctuation">(</span>c<span class="token punctuation">,</span> timer<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token keyword">break</span><span class="token punctuation">;</span>
+
+        <span class="token keyword">case</span> PUBLISH<span class="token punctuation">:</span>
+            rc <span class="token operator">=</span> <span class="token function">mqtt_publish_packet_handle</span><span class="token punctuation">(</span>c<span class="token punctuation">,</span> timer<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token keyword">break</span><span class="token punctuation">;</span>
+
+        <span class="token keyword">case</span> PUBREC<span class="token punctuation">:</span>
+        <span class="token keyword">case</span> PUBREL<span class="token punctuation">:</span>
+            rc <span class="token operator">=</span> <span class="token function">mqtt_pubrec_and_pubrel_packet_handle</span><span class="token punctuation">(</span>c<span class="token punctuation">,</span> timer<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token keyword">break</span><span class="token punctuation">;</span>
+
+        <span class="token keyword">case</span> PINGRESP<span class="token punctuation">:</span>
+            c<span class="token operator">-></span>ping_outstanding <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+            <span class="token keyword">break</span><span class="token punctuation">;</span>
+
+        <span class="token keyword">default</span><span class="token punctuation">:</span>
+            <span class="token keyword">goto</span> exit<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>并且做保活的处理：</p>
+<pre class="line-numbers language-c"><code class="language-c"><span class="token function">mqtt_keep_alive</span><span class="token punctuation">(</span>c<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<ol start="2">
+<li><code>ack</code>链表的扫描，当收到服务器的报文时，对ack列表进行扫描操作</li>
+</ol>
+<pre class="line-numbers language-c"><code class="language-c"><span class="token function">mqtt_ack_list_scan</span><span class="token punctuation">(</span>c<span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>当超时后就销毁ack链表节点：</p>
+<pre class="line-numbers language-c"><code class="language-c"><span class="token function">mqtt_ack_handler_destroy</span><span class="token punctuation">(</span>ack_handler<span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>当然下面这几种报文则需要重发操作：（<code>PUBACK 、PUBREC、 PUBREL 、PUBCOMP</code>，保证QOS1 QOS2的服务质量）</p>
+<pre class="line-numbers language-c"><code class="language-c"><span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token punctuation">(</span>ack_handler<span class="token operator">-></span>type <span class="token operator">==</span>  PUBACK<span class="token punctuation">)</span> <span class="token operator">||</span> <span class="token punctuation">(</span>ack_handler<span class="token operator">-></span>type <span class="token operator">==</span>  PUBREC<span class="token punctuation">)</span> <span class="token operator">||</span> <span class="token punctuation">(</span>ack_handler<span class="token operator">-></span>type <span class="token operator">==</span>  PUBREL<span class="token punctuation">)</span> <span class="token operator">||</span> <span class="token punctuation">(</span>ack_handler<span class="token operator">-></span>type <span class="token operator">==</span>  PUBCOMP<span class="token punctuation">)</span><span class="token punctuation">)</span>
+    <span class="token function">mqtt_ack_handler_resend</span><span class="token punctuation">(</span>c<span class="token punctuation">,</span> ack_handler<span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<ol start="3">
+<li>保持活性的时间过去了，可能掉线了，需要重连操作</li>
+</ol>
+<pre class="line-numbers language-c"><code class="language-c"><span class="token function">mqtt_try_reconnect</span><span class="token punctuation">(</span>c<span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>重连成功后尝试重新订阅报文，保证恢复原始状态~</p>
+<pre class="line-numbers language-c"><code class="language-c"><span class="token function">mqtt_try_resubscribe</span><span class="token punctuation">(</span>c<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<h2 id="发布应答与发布完成报文的处理"><a href="#发布应答与发布完成报文的处理" class="headerlink" title="发布应答与发布完成报文的处理"></a><code>发布应答</code>与<code>发布完成</code>报文的处理</h2><pre class="line-numbers language-c"><code class="language-c"><span class="token keyword">static</span> <span class="token keyword">int</span> <span class="token function">mqtt_puback_and_pubcomp_packet_handle</span><span class="token punctuation">(</span>mqtt_client_t <span class="token operator">*</span>c<span class="token punctuation">,</span> platform_timer_t <span class="token operator">*</span>timer<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<ol>
+<li>反序列化报文</li>
+</ol>
+<pre class="line-numbers language-c"><code class="language-c"><span class="token function">MQTTDeserialize_ack</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>packet_type<span class="token punctuation">,</span> <span class="token operator">&amp;</span>dup<span class="token punctuation">,</span> <span class="token operator">&amp;</span>packet_id<span class="token punctuation">,</span> c<span class="token operator">-></span>read_buf<span class="token punctuation">,</span> c<span class="token operator">-></span>read_buf_size<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<ol start="2">
+<li>取消对应的ack记录</li>
+</ol>
+<pre class="line-numbers language-c"><code class="language-c"><span class="token function">mqtt_ack_list_unrecord</span><span class="token punctuation">(</span>c<span class="token punctuation">,</span> packet_type<span class="token punctuation">,</span> packet_id<span class="token punctuation">,</span> <span class="token constant">NULL</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<h2 id="订阅应答报文的处理"><a href="#订阅应答报文的处理" class="headerlink" title="订阅应答报文的处理"></a><code>订阅应答</code>报文的处理</h2><pre class="line-numbers language-c"><code class="language-c"><span class="token keyword">static</span> <span class="token keyword">int</span> <span class="token function">mqtt_suback_packet_handle</span><span class="token punctuation">(</span>mqtt_client_t <span class="token operator">*</span>c<span class="token punctuation">,</span> platform_timer_t <span class="token operator">*</span>timer<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<ol>
+<li>反序列化报文</li>
+</ol>
+<pre class="line-numbers language-c"><code class="language-c"><span class="token function">MQTTDeserialize_suback</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>packet_id<span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token operator">&amp;</span>count<span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token keyword">int</span><span class="token operator">*</span><span class="token punctuation">)</span><span class="token operator">&amp;</span>granted_qos<span class="token punctuation">,</span> c<span class="token operator">-></span>read_buf<span class="token punctuation">,</span> c<span class="token operator">-></span>read_buf_size<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<ol start="2">
+<li>取消对应的ack记录</li>
+</ol>
+<pre class="line-numbers language-c"><code class="language-c"><span class="token function">mqtt_ack_list_unrecord</span><span class="token punctuation">(</span>c<span class="token punctuation">,</span> packet_type<span class="token punctuation">,</span> packet_id<span class="token punctuation">,</span> <span class="token constant">NULL</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<ol start="3">
+<li>安装对应的订阅消息处理函数，如果是已存在的则不会安装</li>
+</ol>
+<pre class="line-numbers language-c"><code class="language-c"><span class="token function">mqtt_msg_handlers_install</span><span class="token punctuation">(</span>c<span class="token punctuation">,</span> msg_handler<span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<h2 id="取消订阅应答报文的处理"><a href="#取消订阅应答报文的处理" class="headerlink" title="取消订阅应答报文的处理"></a><code>取消订阅应答</code>报文的处理</h2><pre class="line-numbers language-c"><code class="language-c"><span class="token keyword">static</span> <span class="token keyword">int</span> <span class="token function">mqtt_unsuback_packet_handle</span><span class="token punctuation">(</span>mqtt_client_t <span class="token operator">*</span>c<span class="token punctuation">,</span> platform_timer_t <span class="token operator">*</span>timer<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<ol>
+<li>反序列化报文</li>
+</ol>
+<pre class="line-numbers language-c"><code class="language-c"><span class="token function">MQTTDeserialize_unsuback</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>packet_id<span class="token punctuation">,</span> c<span class="token operator">-></span>read_buf<span class="token punctuation">,</span> c<span class="token operator">-></span>read_buf_size<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<ol start="2">
+<li>取消对应的ack记录</li>
+</ol>
+<pre class="line-numbers language-c"><code class="language-c"><span class="token function">mqtt_ack_list_unrecord</span><span class="token punctuation">(</span>c<span class="token punctuation">,</span> UNSUBACK<span class="token punctuation">,</span> packet_id<span class="token punctuation">,</span> <span class="token operator">&amp;</span>msg_handler<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<ol start="3">
+<li>销毁对应的订阅消息处理函数</li>
+</ol>
+<pre class="line-numbers language-c"><code class="language-c"><span class="token function">mqtt_msg_handler_destory</span><span class="token punctuation">(</span>msg_handler<span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<h2 id="来自服务器的发布报文的处理"><a href="#来自服务器的发布报文的处理" class="headerlink" title="来自服务器的发布报文的处理"></a>来自服务器的<code>发布</code>报文的处理</h2><pre class="line-numbers language-c"><code class="language-c"><span class="token keyword">static</span> <span class="token keyword">int</span> <span class="token function">mqtt_publish_packet_handle</span><span class="token punctuation">(</span>mqtt_client_t <span class="token operator">*</span>c<span class="token punctuation">,</span> platform_timer_t <span class="token operator">*</span>timer<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<ol>
+<li>反序列化报文</li>
+</ol>
+<pre class="line-numbers language-c"><code class="language-c"><span class="token function">MQTTDeserialize_publish</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>msg<span class="token punctuation">.</span>dup<span class="token punctuation">,</span> <span class="token operator">&amp;</span>qos<span class="token punctuation">,</span> <span class="token operator">&amp;</span>msg<span class="token punctuation">.</span>retained<span class="token punctuation">,</span> <span class="token operator">&amp;</span>msg<span class="token punctuation">.</span>id<span class="token punctuation">,</span> <span class="token operator">&amp;</span>topic_name<span class="token punctuation">,</span>
+        <span class="token punctuation">(</span><span class="token keyword">unsigned</span> <span class="token keyword">char</span><span class="token operator">*</span><span class="token operator">*</span><span class="token punctuation">)</span><span class="token operator">&amp;</span>msg<span class="token punctuation">.</span>payload<span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token keyword">int</span><span class="token operator">*</span><span class="token punctuation">)</span><span class="token operator">&amp;</span>msg<span class="token punctuation">.</span>payloadlen<span class="token punctuation">,</span> c<span class="token operator">-></span>read_buf<span class="token punctuation">,</span> c<span class="token operator">-></span>read_buf_size<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<ol start="2">
+<li>对于QOS0、QOS1的报文，直接去处理消息</li>
+</ol>
+<pre class="line-numbers language-c"><code class="language-c"><span class="token function">mqtt_deliver_message</span><span class="token punctuation">(</span>c<span class="token punctuation">,</span> <span class="token operator">&amp;</span>topic_name<span class="token punctuation">,</span> <span class="token operator">&amp;</span>msg<span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<ol start="3">
+<li>对于QOS1的报文，还需要发送一个<code>PUBACK</code>应答报文给服务器</li>
+</ol>
+<pre class="line-numbers language-c"><code class="language-c"><span class="token function">MQTTSerialize_ack</span><span class="token punctuation">(</span>c<span class="token operator">-></span>write_buf<span class="token punctuation">,</span> c<span class="token operator">-></span>write_buf_size<span class="token punctuation">,</span> PUBACK<span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> msg<span class="token punctuation">.</span>id<span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<ol start="4">
+<li>而对于QOS2的报文则需要发送<code>PUBREC</code>报文给服务器，除此之外还需要记录<code>PUBREL</code>到ack链表上，等待服务器的发布释放报文，最后再去处理这个消息</li>
+</ol>
+<pre class="line-numbers language-c"><code class="language-c"><span class="token function">MQTTSerialize_ack</span><span class="token punctuation">(</span>c<span class="token operator">-></span>write_buf<span class="token punctuation">,</span> c<span class="token operator">-></span>write_buf_size<span class="token punctuation">,</span> PUBREC<span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> msg<span class="token punctuation">.</span>id<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token function">mqtt_ack_list_record</span><span class="token punctuation">(</span>c<span class="token punctuation">,</span> PUBREL<span class="token punctuation">,</span> msg<span class="token punctuation">.</span>id <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">,</span> len<span class="token punctuation">,</span> <span class="token constant">NULL</span><span class="token punctuation">)</span>
+<span class="token function">mqtt_deliver_message</span><span class="token punctuation">(</span>c<span class="token punctuation">,</span> <span class="token operator">&amp;</span>topic_name<span class="token punctuation">,</span> <span class="token operator">&amp;</span>msg<span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<blockquote>
+<p>说明：一旦注册到ack列表上的报文，当具有重复的报文是不会重新被注册的，它会通过<code>mqtt_ack_list_node_is_exist</code>函数判断这个节点是否存在，主要是依赖等待响应的消息类型与msgid。</p>
+</blockquote>
+<h2 id="发布收到与发布释放报文的处理"><a href="#发布收到与发布释放报文的处理" class="headerlink" title="发布收到与发布释放报文的处理"></a><code>发布收到</code>与<code>发布释放</code>报文的处理</h2><pre class="line-numbers language-c"><code class="language-c"><span class="token keyword">static</span> <span class="token keyword">int</span> <span class="token function">mqtt_pubrec_and_pubrel_packet_handle</span><span class="token punctuation">(</span>mqtt_client_t <span class="token operator">*</span>c<span class="token punctuation">,</span> platform_timer_t <span class="token operator">*</span>timer<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<ol>
+<li>反序列化报文</li>
+</ol>
+<pre class="line-numbers language-c"><code class="language-c"><span class="token function">MQTTDeserialize_ack</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>packet_type<span class="token punctuation">,</span> <span class="token operator">&amp;</span>dup<span class="token punctuation">,</span> <span class="token operator">&amp;</span>packet_id<span class="token punctuation">,</span> c<span class="token operator">-></span>read_buf<span class="token punctuation">,</span> c<span class="token operator">-></span>read_buf_size<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<ol start="2">
+<li>产生一个对应的应答报文</li>
+</ol>
+<pre class="line-numbers language-c"><code class="language-c"><span class="token function">mqtt_publish_ack_packet</span><span class="token punctuation">(</span>c<span class="token punctuation">,</span> packet_id<span class="token punctuation">,</span> packet_type<span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<ol start="3">
+<li>取消对应的ack记录</li>
+</ol>
+<pre class="line-numbers language-c"><code class="language-c"><span class="token function">mqtt_ack_list_unrecord</span><span class="token punctuation">(</span>c<span class="token punctuation">,</span> UNSUBACK<span class="token punctuation">,</span> packet_id<span class="token punctuation">,</span> <span class="token operator">&amp;</span>msg_handler<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<h3 id="源码地址-https-github-com-jiejieTop-mqttclient-1"><a href="#源码地址-https-github-com-jiejieTop-mqttclient-1" class="headerlink" title="源码地址 https://github.com/jiejieTop/mqttclient"></a>源码地址 <a href="https://github.com/jiejieTop/mqttclient" target="_blank" rel="noopener">https://github.com/jiejieTop/mqttclient</a></h3><script>
+        document.querySelectorAll('.github-emoji')
+          .forEach(el => {
+            if (!el.dataset.src) { return; }
+            const img = document.createElement('img');
+            img.style = 'display:none !important;';
+            img.src = el.dataset.src;
+            img.addEventListener('error', () => {
+              img.remove();
+              el.style.color = 'inherit';
+              el.style.backgroundImage = 'none';
+              el.style.background = 'none';
+            });
+            img.addEventListener('load', () => {
+              img.remove();
+            });
+            document.body.appendChild(img);
+          });
+      </script>
+            </div>
+            <hr/>
+
+            
+            <style>
+    #reward {
+        margin: 40px 0;
+        text-align: center;
+    }
+
+    #reward .reward-link {
+        font-size: 1.88rem;
+    }
+
+    #reward .btn-floating:hover {
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2), 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    #rewardModal {
+        width: 320px;
+        height: 350px;
+    }
+
+    #rewardModal .reward-title {
+        margin: 15px auto;
+        padding-bottom: 5px;
+    }
+
+    #rewardModal .modal-content {
+        padding: 10px;
+    }
+
+    #rewardModal .close {
+        position: absolute;
+        right: 15px;
+        top: 15px;
+        color: rgba(0, 0, 0, 0.5);
+        font-size: 1.3rem;
+        line-height: 20px;
+        cursor: pointer;
+    }
+
+    #rewardModal .close:hover {
+        color: #ef5350;
+        transform: scale(1.3);
+        -moz-transform:scale(1.3);
+        -webkit-transform:scale(1.3);
+        -o-transform:scale(1.3);
+    }
+
+    #rewardModal .reward-tabs {
+        margin: 0 auto;
+        width: 210px;
+    }
+
+    .reward-tabs .tabs {
+        height: 38px;
+        margin: 10px auto;
+        padding-left: 0;
+    }
+
+    .reward-content ul {
+        padding-left: 0 !important;
+    }
+
+    .reward-tabs .tabs .tab {
+        height: 38px;
+        line-height: 38px;
+    }
+
+    .reward-tabs .tab a {
+        color: #fff;
+        background-color: #ccc;
+    }
+
+    .reward-tabs .tab a:hover {
+        background-color: #ccc;
+        color: #fff;
+    }
+
+    .reward-tabs .wechat-tab .active {
+        color: #fff !important;
+        background-color: #22AB38 !important;
+    }
+
+    .reward-tabs .alipay-tab .active {
+        color: #fff !important;
+        background-color: #019FE8 !important;
+    }
+
+    .reward-tabs .reward-img {
+        width: 210px;
+        height: 210px;
+    }
+</style>
+
+<div id="reward">
+    <a href="#rewardModal" class="reward-link modal-trigger btn-floating btn-large waves-effect waves-light red">赏</a>
+
+    <!-- Modal Structure -->
+    <div id="rewardModal" class="modal">
+        <div class="modal-content">
+            <a class="close modal-close"><i class="fa fa-close"></i></a>
+            <h4 class="reward-title">你的赏识是我前进的动力!</h4>
+            <div class="reward-content">
+                <div class="reward-tabs">
+                    <ul class="tabs row">
+                        <li class="tab col s6 alipay-tab waves-effect waves-light"><a href="#alipay">支付宝</a></li>
+                        <li class="tab col s6 wechat-tab waves-effect waves-light"><a href="#wechat">微 信</a></li>
+                    </ul>
+                    <div id="alipay">
+                        <img src="/medias/reward/alipay.bmp" class="reward-img" alt="支付宝打赏二维码">
+                    </div>
+                    <div id="wechat">
+                        <img src="/medias/reward/wechat.bmp" class="reward-img" alt="微信打赏二维码">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $('.tabs').tabs();
+    });
+</script>
+            
+
+            <link rel="stylesheet" type="text/css" href="/libs/share/css/share.min.css">
+
+<div id="article-share">
+    
+    <div class="social-share" data-disabled="qzone" data-wechat-qrcode-helper="<p>微信里点“发现”->“扫一扫”二维码便可查看分享。</p>"></div>
+    
+</div>
+
+<script src="/libs/share/js/social-share.min.js"></script>
+
+            
+            
+            
+            <div class="reprint1">
+                <p>
+                    <span class="reprint1-tip">
+                        <i class="fa fa-exclamation-circle"></i>&nbsp;&nbsp;转载请注明:
+                    </span>
+                    <a href="https://jiedev.com" class="b-link-green">杰杰的博客</a>
+                    <i class="fa fa-angle-right fa-lg fa-fw text-color"></i>
+                    <a href="/mqttclient/" class="b-link-green">一个基于socket API之上的跨平台MQTT客户端，支持qos2</a>
+                </p>
+            </div>
+
+        </div>
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+        <style>
+    .valine-card {
+        margin: 1.5rem auto;
+    }
+
+    .valine-card .card-content {
+        padding: 20px 20px 5px 20px;
+    }
+
+    #vcomments input[type=text],
+    #vcomments input[type=email],
+    #vcomments input[type=url],
+    #vcomments textarea {
+        box-sizing: border-box;
+    }
+
+    #vcomments p {
+        margin: 2px 2px 10px;
+        font-size: 1.05rem;
+        line-height: 1.78rem;
+    }
+
+    #vcomments blockquote p {
+        text-indent: 0.2rem;
+    }
+
+    #vcomments a {
+        padding: 0 2px;
+        color: #42b983;
+        font-weight: 500;
+        text-decoration: underline;
+    }
+
+    #vcomments img {
+        max-width: 100%;
+        height: auto;
+        cursor: pointer;
+    }
+
+    #vcomments ol li {
+        list-style-type: decimal;
+    }
+
+    #vcomments ol,
+    ul {
+        display: block;
+        padding-left: 2em;
+        word-spacing: 0.05rem;
+    }
+
+    #vcomments ul li,
+    ol li {
+        display: list-item;
+        line-height: 1.8rem;
+        font-size: 1rem;
+    }
+
+    #vcomments ul li {
+        list-style-type: disc;
+    }
+
+    #vcomments ul ul li {
+        list-style-type: circle;
+    }
+
+    #vcomments table, th, td {
+        padding: 12px 13px;
+        border: 1px solid #dfe2e5;
+    }
+
+    #vcomments table, th, td {
+        border: 0;
+    }
+
+    table tr:nth-child(2n), thead {
+        background-color: #fafafa;
+    }
+
+    #vcomments table th {
+        background-color: #f2f2f2;
+        min-width: 80px;
+    }
+
+    #vcomments table td {
+        min-width: 80px;
+    }
+
+    #vcomments h1 {
+        font-size: 1.85rem;
+        font-weight: bold;
+        line-height: 2.2rem;
+    }
+
+    #vcomments h2 {
+        font-size: 1.65rem;
+        font-weight: bold;
+        line-height: 1.9rem;
+    }
+
+    #vcomments h3 {
+        font-size: 1.45rem;
+        font-weight: bold;
+        line-height: 1.7rem;
+    }
+
+    #vcomments h4 {
+        font-size: 1.25rem;
+        font-weight: bold;
+        line-height: 1.5rem;
+    }
+
+    #vcomments h5 {
+        font-size: 1.1rem;
+        font-weight: bold;
+        line-height: 1.4rem;
+    }
+
+    #vcomments h6 {
+        font-size: 1rem;
+        line-height: 1.3rem;
+    }
+
+    #vcomments p {
+        font-size: 1rem;
+        line-height: 1.5rem;
+    }
+
+    #vcomments hr {
+        margin: 12px 0;
+        border: 0;
+        border-top: 1px solid #ccc;
+    }
+
+    #vcomments blockquote {
+        margin: 15px 0;
+        border-left: 5px solid #42b983;
+        padding: 1rem 0.8rem 0.3rem 0.8rem;
+        color: #666;
+        background-color: rgba(66, 185, 131, .1);
+    }
+
+    #vcomments pre {
+        font-family: monospace, monospace;
+        padding: 1.2em;
+        margin: .5em 0;
+        background: #272822;
+        overflow: auto;
+        border-radius: 0.3em;
+        tab-size: 4;
+    }
+
+    #vcomments code {
+        font-family: monospace, monospace;
+        padding: 1px 3px;
+        font-size: 0.92rem;
+        color: #e96900;
+        background-color: #f8f8f8;
+        border-radius: 2px;
+    }
+
+    #vcomments pre code {
+        font-family: monospace, monospace;
+        padding: 0;
+        color: #e8eaf6;
+        background-color: #272822;
+    }
+
+    #vcomments pre[class*="language-"] {
+        padding: 1.2em;
+        margin: .5em 0;
+    }
+
+    #vcomments code[class*="language-"],
+    pre[class*="language-"] {
+        color: #e8eaf6;
+    }
+
+    #vcomments [type="checkbox"]:not(:checked), [type="checkbox"]:checked {
+        position: inherit;
+        margin-left: -1.3rem;
+        margin-right: 0.4rem;
+        margin-top: -1px;
+        vertical-align: middle;
+        left: unset;
+        visibility: visible;
+    }
+
+    #vcomments b,
+    strong {
+        font-weight: bold;
+    }
+
+    #vcomments dfn {
+        font-style: italic;
+    }
+
+    #vcomments small {
+        font-size: 85%;
+    }
+
+    #vcomments cite {
+        font-style: normal;
+    }
+
+    #vcomments mark {
+        background-color: #fcf8e3;
+        padding: .2em;
+    }
+
+    #vcomments table, th, td {
+        padding: 12px 13px;
+        border: 1px solid #dfe2e5;
+    }
+
+    table tr:nth-child(2n), thead {
+        background-color: #fafafa;
+    }
+
+    #vcomments table th {
+        background-color: #f2f2f2;
+        min-width: 80px;
+    }
+
+    #vcomments table td {
+        min-width: 80px;
+    }
+
+    #vcomments [type="checkbox"]:not(:checked), [type="checkbox"]:checked {
+        position: inherit;
+        margin-left: -1.3rem;
+        margin-right: 0.4rem;
+        margin-top: -1px;
+        vertical-align: middle;
+        left: unset;
+        visibility: visible;
+    }
+</style>
+
+<div class="card valine-card" data-aos="fade-up">
+    <div id="vcomments" class="card-content"></div>
+</div>
+
+<script src="/libs/valine/av-min.js"></script>
+<script src="/libs/valine/Valine.min.js"></script>
+<script>
+    new Valine({
+        el: '#vcomments',
+        appId: 'P8ggvR4g3idexcAGf4hkEUqQ-gzGzoHsz',
+        appKey: 'GqHPu44hpoDiC8uOjc4JJFSc',
+        notify: 'true' === 'true',
+        verify: 'true' === 'true',
+        visitor: 'true' === 'true',
+        avatar: 'monsterid',
+        pageSize: '10',
+        lang: 'zh-cn',
+        placeholder: '赶紧留下你的评论吧~'
+    });
+</script>
+    
+
+    
+
+<article id="prenext-posts" class="prev-next articles">
+    <div class="row article-row">
+        
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
+            <div class="article-badge left-badge text-color">
+                <i class="fa fa-dot-circle-o"></i>&nbsp;本篇
+            </div>
+            <div class="card">
+                <a href="/mqttclient/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/0.jpg" class="responsive-img" alt="一个基于socket API之上的跨平台MQTT客户端，支持qos2">
+                        
+                        <span class="card-title">一个基于socket API之上的跨平台MQTT客户端，支持qos2</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            mqttclient一个基于socket API之上的跨平台MQTT客户端
+源码地址 https://github.com/jiejieTop/mqttclient整体框架
+
+备注：目前只实现了linux平台，TencentOS tiny与
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="fa fa-clock-o fa-fw icon-date"></i>2020-02-12
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fa fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/网络/" class="post-category" target="_blank">
+                                    网络
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/网络/" target="_blank">
+                        <span class="chip bg-color">网络</span>
+                    </a>
+                    
+                    <a href="/tags/mqtt/" target="_blank">
+                        <span class="chip bg-color">mqtt</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fa fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/cmake-3/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/11.jpg" class="responsive-img" alt="CMake实战教程（三）">
+                        
+                        <span class="card-title">CMake实战教程（三）</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            前言从本小节开始，后面所有的构建我们都将采用 out-of-source build 外部构建的方式去编写构建工程代码，构建目录是工程目录下的 build 目录。
+从上一篇文章我们就知道，通过aux_source_directory命令可以
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="fa fa-clock-o fa-fw icon-date"></i>2020-02-12
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fa fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/cmake/" class="post-category" target="_blank">
+                                    cmake
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/cmake/" target="_blank">
+                        <span class="chip bg-color">cmake</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+    </div>
+</article>
+</div>
+
+
+<script>
+    $('#articleContent').on('copy', function (e) {
+        // IE8 or earlier browser is 'undefined'
+        if (typeof window.getSelection === 'undefined') return;
+
+        var selection = window.getSelection();
+        // if the selection is short let's not annoy our users.
+        if (('' + selection).length < Number.parseInt('120')) {
+            return;
+        }
+
+        // create a div outside of the visible area and fill it with the selected text.
+        var bodyElement = document.getElementsByTagName('body')[0];
+        var newdiv = document.createElement('div');
+        newdiv.style.position = 'absolute';
+        newdiv.style.left = '-99999px';
+        bodyElement.appendChild(newdiv);
+        newdiv.appendChild(selection.getRangeAt(0).cloneContents());
+
+        // we need a <pre> tag workaround.
+        // otherwise the text inside "pre" loses all the line breaks!
+        if (selection.getRangeAt(0).commonAncestorContainer.nodeName === 'PRE') {
+            newdiv.innerHTML = "<pre>" + newdiv.innerHTML + "</pre>";
+        }
+
+        var url = document.location.href;
+        newdiv.innerHTML += '<br />'
+            + '来源: 杰杰的博客<br />'
+            + '作者: 杰杰<br />'
+            + '链接: <a href="' + url + '">' + url + '</a><br />'
+            + '本文章著作权归作者所有，任何形式的转载都请注明出处。';
+
+        selection.selectAllChildren(newdiv);
+        window.setTimeout(function () {bodyElement.removeChild(newdiv);}, 200);
+    });
+</script>
+
+
+    </div>
+    <div id="toc-aside" class="expanded col l3 hide-on-med-and-down">
+        <div class="toc-widget">
+            <div class="toc-title"><i class="fa fa-list-alt"></i>&nbsp;&nbsp;目录</div>
+            <div id="toc-content"></div>
+        </div>
+    </div>
+</div>
+
+<!-- TOC 悬浮按钮. -->
+
+<div id="floating-toc-btn" class="hide-on-med-and-down">
+    <a class="btn-floating btn-large bg-color">
+        <i class="fa fa-list"></i>
+    </a>
+</div>
+
+
+<script src="/libs/tocbot/tocbot.min.js"></script>
+<script>
+    $(function () {
+        tocbot.init({
+            tocSelector: '#toc-content',
+            contentSelector: '#articleContent',
+            headingsOffset: -($(window).height() * 0.4 - 45),
+            // headingsOffset: -205,
+            headingSelector: 'h1, h2, h3, h4, h5'
+        });
+
+        // modify the toc link href to support Chinese.
+        let i = 0;
+        let tocHeading = 'toc-heading-';
+        $('#toc-content a').each(function () {
+            $(this).attr('href', '#' + tocHeading + (++i));
+        });
+
+        // modify the heading title id to support Chinese.
+        i = 0;
+        $('#articleContent').children('h1, h2, h3, h4, h5').each(function () {
+            $(this).attr('id', tocHeading + (++i));
+        });
+
+        // Set scroll toc fixed.
+        let tocHeight = parseInt($(window).height() * 0.4 - 64);
+        let $tocWidget = $('.toc-widget');
+        $(window).scroll(function () {
+            let scroll = $(window).scrollTop();
+            /* add post toc fixed. */
+            if (scroll > tocHeight) {
+                $tocWidget.addClass('toc-fixed');
+            } else {
+                $tocWidget.removeClass('toc-fixed');
+            }
+        });
+
+        
+        /* 修复文章卡片 div 的宽度. */
+        let fixPostCardWidth = function (srcId, targetId) {
+            let srcDiv = $('#' + srcId);
+            if (srcDiv.length === 0) {
+                return;
+            }
+
+            let w = srcDiv.width();
+            if (w >= 450) {
+                w = w + 21;
+            } else if (w >= 350 && w < 450) {
+                w = w + 18;
+            } else if (w >= 300 && w < 350) {
+                w = w + 16;
+            } else {
+                w = w + 14;
+            }
+            $('#' + targetId).width(w);
+        };
+
+        // 切换TOC目录展开收缩的相关操作.
+        const expandedClass = 'expanded';
+        let $tocAside = $('#toc-aside');
+        let $mainContent = $('#main-content');
+        $('#floating-toc-btn .btn-floating').click(function () {
+            if ($tocAside.hasClass(expandedClass)) {
+                $tocAside.removeClass(expandedClass).slideUp(500);
+                $mainContent.removeClass('l9');
+            } else {
+                $tocAside.addClass(expandedClass).slideDown(500);
+                $mainContent.addClass('l9');
+            }
+            fixPostCardWidth('artDetail', 'prenext-posts');
+        });
+        
+    });
+</script>
+    
+
+</main>
+
+
+    <!-- jiejie 杰杰  modify 2019.08.15-->
+
+<footer class="page-footer bg-color">
+    <div class="container row center-align">
+        <div class="col s12 m8 l8 copy-right">
+            &copy; 2020 jiejie. All Rights Reserved.<a href="http://beian.miit.gov.cn"> 粤ICP备19019080号 </a>
+
+            <br>
+
+            
+                &nbsp;<i class="fa fa-area-chart"></i>&nbsp;站点总字数:&nbsp;
+                <span class="white-color">100.5k </span>
+
+            
+
+            <span id="sitetime"></span>
+
+            
+
+            
+                <br>
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'></span>
+                    <i class="fa fa-heart-o"></i>
+                    本站总访问量 <span id="busuanzi_value_site_pv" class="white-color"></span>
+
+                
+
+                
+                    <span id="busuanzi_container_site_uv" style='display:none'></span>
+                    人次,&nbsp;访客数 <span id="busuanzi_value_site_uv" class="white-color"></span> 人.
+                    
+                
+
+            
+
+        </div>
+
+        <div class="col s12 m4 l4 social-link social-statis">
+    <a href="https://github.com/jiejietop" class="tooltipped" target="_blank" data-tooltip="访问我的GitHub" data-position="top" data-delay="50">
+        <i class="fa fa-github"></i>
+    </a>
+
+
+ 
+    <a href="https://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=jiejietop@gmail.com" class="tooltipped" target="_blank" data-tooltip="邮件联系我" data-position="top" data-delay="50">
+        <i class="fa fa-envelope-open"></i>
+    </a>
+
+
+
+
+    <a href="https://zhihu.com/people/jie-jie-33-9" class="tooltipped" target="_blank" data-tooltip="访问我的知乎" data-position="top" data-delay="50">
+        <i class="fa fa-inverse">知</i>
+    </a>
+
+
+
+    <a href="http://wpa.qq.com/msgrd?v=3&uin=1161959934&site=qq&menu=yes" class="tooltipped" target="_blank" data-tooltip="访问我的QQ空间" data-position="top" data-delay="50">
+        <i class="fa fa-qq"></i>
+    </a>
+
+
+
+    <a href="https://weibo.com/6800623694" class="tooltipped" target="_blank" data-tooltip="关注我的微博" data-position="top" data-delay="50">
+        <i class="fa fa-weibo"></i>
+    </a>
+
+
+
+    <a href="/atom.xml" class="tooltipped" target="_blank" data-tooltip="RSS 订阅" data-position="top" data-delay="50">
+        <i class="fa fa-rss"></i>
+    </a>
+</div>
+
+    </div>
+</footer>
+
+<div class="progress-bar"></div>
+
+<script language=javascript>
+    function siteTime() {
+        window.setTimeout("siteTime()", 1000);
+        var seconds = 1000;
+        var minutes = seconds * 60;
+        var hours = minutes * 60;
+        var days = hours * 24;
+        var years = days * 365;
+        var today = new Date();
+        var todayYear = today.getFullYear();
+        var todayMonth = today.getMonth() + 1;
+        var todayDate = today.getDate();
+        var todayHour = today.getHours();
+        var todayMinute = today.getMinutes();
+        var todaySecond = today.getSeconds();
+
+        /* Date.UTC() -- 返回date对象距世界标准时间(UTC)1970年1月1日午夜之间的毫秒数(时间戳)
+        year - 作为date对象的年份，为4位年份值
+        month - 0-11之间的整数，做为date对象的月份
+        day - 1-31之间的整数，做为date对象的天数
+        hours - 0(午夜24点)-23之间的整数，做为date对象的小时数
+        minutes - 0-59之间的整数，做为date对象的分钟数
+        seconds - 0-59之间的整数，做为date对象的秒数
+        microseconds - 0-999之间的整数，做为date对象的毫秒数 */
+
+        var t1 = Date.UTC(2019, 08, 01, 00, 00, 00); //北京时间2019-8-1 00:00:00
+        var t2 = Date.UTC(todayYear, todayMonth, todayDate, todayHour, todayMinute, todaySecond);
+        var diff = t2 - t1;
+        var diffYears = Math.floor(diff / years);
+        var diffDays = Math.floor((diff / days) - diffYears * 365);
+        var diffHours = Math.floor((diff - (diffYears * 365 + diffDays) * days) / hours);
+        var diffMinutes = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours) / minutes);
+        var diffSeconds = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours - diffMinutes * minutes) / seconds);
+        document.getElementById("sitetime").innerHTML = "本站已运行 " + diffYears + " 年 " + diffDays + " 天 " + diffHours + " 小时 " + diffMinutes + " 分钟 " + diffSeconds + " 秒";
+    }/*因为建站时间还没有一年，就将之注释掉了。需要的可以取消*/
+    siteTime();
+</script>
+
+    <!-- 搜索遮罩框 -->
+<div id="searchModal" class="modal">
+    <div class="modal-content">
+        <div class="search-header">
+            <span class="title"><i class="fa fa-search"></i>&nbsp;&nbsp;搜索</span>
+            <input type="search" id="searchInput" name="s" placeholder="请输入搜索的关键字"
+                   class="search-input">
+        </div>
+        <div id="searchResult"></div>
+    </div>
+</div>
+
+<script src="/js/search.js"></script>
+<script type="text/javascript">
+$(function () {
+    searchFunc("/" + "search.xml", 'searchInput', 'searchResult');
+});
+</script>
+    <!-- 回到顶部按钮 -->
+<div id="backTop" class="top-scroll">
+    <a class="btn-floating btn-large waves-effect waves-light" href="#!">
+        <i class="fa fa-angle-up"></i>
+    </a>
+</div>
+
+
+    <script src="/libs/materialize/materialize.min.js"></script>
+    <script src="/libs/masonry/masonry.pkgd.min.js"></script>
+    <script src="/libs/aos/aos.js"></script>
+    <script src="/libs/scrollprogress/scrollProgress.min.js"></script>
+    <script src="/libs/lightGallery/js/lightgallery-all.min.js"></script>
+    <script src="/js/matery.js"></script>
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+
+
+
+    
+        <script src="/libs/others/clicklove.js"></script>
+    
+    
+    
+        <script async src="/libs/others/busuanzi.pure.mini.js"></script>
+    
+    
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"log":false,"model":{"jsonPath":"/live2dw/assets/wanko.model.json"},"display":{"position":"left","width":150,"height":200},"mobile":{"show":false},"react":{"opacity":0.7}});</script><script>!function(e){var r=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function t(){for(var c=0;c<r.length;c++)t=r[c],void 0,0<=(n=t.getBoundingClientRect()).top&&0<=n.left&&n.top<=(e.innerHeight||document.documentElement.clientHeight)&&function(){var t,n,e,i,o=r[c];t=o,n=function(){r=r.filter(function(t){return o!==t})},e=new Image,i=t.getAttribute("data-original"),e.onload=function(){t.src=i,n&&n()},e.src=i}();var t,n}t(),e.addEventListener("scroll",function(){!function(t,n){clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(n)},500)}(t,e)})}(this);</script></body>
+
+</html>
