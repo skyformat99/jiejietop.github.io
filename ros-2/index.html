@@ -6,14 +6,16 @@
 
 <head><meta name="generator" content="Hexo 3.9.0">
     <meta charset="utf-8">
-    <meta name="keywords" content="从单片机到操作系统⑦——深入了解FreeRTOS的延时机制, IoT RTOS linux Python jiejie Dora">
+    <meta name="keywords" content="【ROS入门-2】ROS文件系统介绍, IoT RTOS linux Python jiejie Dora">
     <meta name="baidu-site-verification" content="TRUUhavuHV">
     <meta name="google-site-verification" content="v-saR33QlUQmwVrLI7AQd08em9BtdazPy5jvPouEYHg">
-    <meta name="description" content="
-没研究过操作系统的源码都不算学过操作系统
+    <meta name="description" content="前言ROS的架构经过设计并划分成了三部分， 每一部分都代表一个层级的概念：
 
-FreeRTOS 时间管理时间管理包括两个方面：系统节拍以及任务延时管理。
-系统节拍：在前面的文章也讲得很多，想要系统正常运行，那么时钟节拍是必不可少的，FreeRTOS的时钟节拍通常由SysT">
+文件系统级（Filesystem level）
+
+主要有ROS的内部构成、 文件夹结构， 以及工作所需的核心文件。
+
+计算图级（Computation Graph">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -21,7 +23,7 @@ FreeRTOS 时间管理时间管理包括两个方面：系统节拍以及任务�
     <meta name="format-detection" content="telephone=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>从单片机到操作系统⑦——深入了解FreeRTOS的延时机制 | 杰杰的博客</title>
+    <title>【ROS入门-2】ROS文件系统介绍 | 杰杰的博客</title>
     <link rel="icon" type="image/x-icon, image/vnd.microsoft.icon" href="/medias/logo/favicon.ico">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/font-awesome.min.css">
@@ -368,13 +370,13 @@ FreeRTOS 时间管理时间管理包括两个方面：系统节拍以及任务�
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/0.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/8.jpg')">
     <div class="container">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
                     <div class="description center-align post-title">
-                        从单片机到操作系统⑦——深入了解FreeRTOS的延时机制
+                        【ROS入门-2】ROS文件系统介绍
                     </div>
                 </div>
             </div>
@@ -486,16 +488,12 @@ FreeRTOS 时间管理时间管理包括两个方面：系统节拍以及任务�
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/RTOS/" target="_blank">
-                                <span class="chip bg-color">RTOS</span>
+                            <a href="/tags/ROS/" target="_blank">
+                                <span class="chip bg-color">ROS</span>
                             </a>
                         
-                            <a href="/tags/操作系统/" target="_blank">
-                                <span class="chip bg-color">操作系统</span>
-                            </a>
-                        
-                            <a href="/tags/FreeRTOS/" target="_blank">
-                                <span class="chip bg-color">FreeRTOS</span>
+                            <a href="/tags/机器人操作系统/" target="_blank">
+                                <span class="chip bg-color">机器人操作系统</span>
                             </a>
                         
                     </div>
@@ -506,8 +504,8 @@ FreeRTOS 时间管理时间管理包括两个方面：系统节拍以及任务�
                     <div class="post-cate">
                         <i class="fa fa-bookmark fa-fw icon-category"></i>
                         
-                            <a href="/categories/操作系统/" class="post-category" target="_blank">
-                                操作系统
+                            <a href="/categories/ROS/" class="post-category" target="_blank">
+                                ROS
                             </a>
                         
                     </div>
@@ -518,7 +516,7 @@ FreeRTOS 时间管理时间管理包括两个方面：系统节拍以及任务�
             <div class="post-info">
                 <div class="post-date info-break-policy">
                     <i class="fa fa-calendar-minus-o fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2019-10-04
+                    2020-04-05
                 </div>
 
                 <div class="post-author info-break-policy">
@@ -532,14 +530,14 @@ FreeRTOS 时间管理时间管理包括两个方面：系统节拍以及任务�
                     
                     <div class="info-break-policy">
                         <i class="fa fa-file-word-o fa-fw"></i>文章字数:&nbsp;&nbsp;
-                        2.8k
+                        822
                     </div>
                     
 
                     
                     <div class="info-break-policy">
                         <i class="fa fa-clock-o fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                        10 分
+                        3 分
                     </div>
                     
                 
@@ -556,223 +554,56 @@ FreeRTOS 时间管理时间管理包括两个方面：系统节拍以及任务�
         <hr class="clearfix">
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <blockquote>
-<p>没研究过操作系统的源码都不算学过操作系统</p>
-</blockquote>
-<h1 id="FreeRTOS-时间管理"><a href="#FreeRTOS-时间管理" class="headerlink" title="FreeRTOS 时间管理"></a>FreeRTOS 时间管理</h1><p>时间管理包括两个方面：系统节拍以及任务延时管理。</p>
-<h2 id="系统节拍："><a href="#系统节拍：" class="headerlink" title="系统节拍："></a>系统节拍：</h2><p>在前面的文章也讲得很多，想要系统正常运行，那么时钟节拍是必不可少的，<code>FreeRTOS</code>的时钟节拍通常由<code>SysTick</code>提供，它周期性的产生定时中断，所谓的时钟节拍管理的核心就是这个定时中断的服务程序。<code>FreeRTOS</code>的时钟节拍isr中核心的工作就是调用<code>vTaskIncrementTick()</code>函数。具体见上之前的文章。</p>
-<h2 id="延时管理"><a href="#延时管理" class="headerlink" title="延时管理"></a>延时管理</h2><p>FreeRTOS提供了两个系统延时函数：</p>
+                <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>ROS的架构经过设计并划分成了三部分， 每一部分都代表一个层级的概念：</p>
 <ul>
-<li>相对延时函数<code>vTaskDelay()</code></li>
-<li>绝对延时函数<code>vTaskDelayUntil()</code>。</li>
+<li>文件系统级（Filesystem level）</li>
 </ul>
-<p>这些延时函数可不像我们以前用裸机写代码的延时函数操作系统不允许CPU在死等消耗着时间，因为这样效率太低了。</p>
-<p>同时，要告诫学操作系统的同学，千万别用裸机的思想去学操作系统。</p>
-<h2 id="任务延时"><a href="#任务延时" class="headerlink" title="任务延时"></a>任务延时</h2><p>任务可能需要延时，两种情况，一种是任务被<code>vTaskDelay</code>或者<code>vTaskDelayUntil</code>延时，另外一种情况就是任务等待事件（比如等待某个信号量、或者某个消息队列）时候指定了<code>timeout</code>（即最多等待timeout时间，如果等待的事件还没发生，则不再继续等待），在每个任务的循环中都必须要有阻塞的情况出现，否则比该任务优先级低的任务就永远无法运行。</p>
-<h2 id="相对延时与绝对延时的区别"><a href="#相对延时与绝对延时的区别" class="headerlink" title="相对延时与绝对延时的区别"></a>相对延时与绝对延时的区别</h2><p><strong>相对延时：vTaskDelay()：</strong></p>
-<p>相对延时是指每次延时都是从任务执行函数<code>vTaskDelay()</code>开始，延时指定的时间结束</p>
-<p><strong>绝对延时：vTaskDelayUntil()：</strong></p>
-<p>绝对延时是指调用<code>vTaskDelayUntil()</code>的任务每隔x时间运行一次。也就是任务周期运行。</p>
-<p><strong>相对延时：vTaskDelay()</strong></p>
-<p>相对延时<code>vTaskDelay()</code>是从调用<code>vTaskDelay()</code>这个函数的时候开始延时，但是任务执行的时候，可能发生了中断，导致任务执行时间变长了，但是整个任务的延时时间还是1000个tick，这就不是周期性了，简单看看下面代码：</p>
-<pre class="line-numbers language-js"><code class="language-js"><span class="token keyword">void</span> <span class="token function">vTaskA</span><span class="token punctuation">(</span> <span class="token keyword">void</span> <span class="token operator">*</span> pvParameters <span class="token punctuation">)</span>  
- <span class="token punctuation">{</span>  
-    <span class="token keyword">while</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span> 
-     <span class="token punctuation">{</span>  
-         <span class="token comment" spellcheck="true">//  ...</span>
-         <span class="token comment" spellcheck="true">//  这里为任务主体代码</span>
-         <span class="token comment" spellcheck="true">//  ...</span>
-
-         <span class="token comment" spellcheck="true">/* 调用相对延时函数,阻塞1000个tick */</span>
-         <span class="token function">vTaskDelay</span><span class="token punctuation">(</span> <span class="token number">1000</span> <span class="token punctuation">)</span><span class="token punctuation">;</span>  
-     <span class="token punctuation">}</span>  
-<span class="token punctuation">}</span> <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<p>可能说的不够明确，可以看看图解。</p>
-<p><img src="./images/loading.png" data-original="http://qiniu.jiejie01.top/freertos-delay-1.png" alt="freertos-delay-1"></p>
-<p>当任务运行的时候，假设被某个高级任务或者是中断打断了，那么任务的执行时间就更长了，然而延时还是延时<code>1000</code>个<code>tick</code>这样子，整个系统的时间就混乱了。</p>
-<p>如果还不够明确，看看vTaskDelay()的源码</p>
-<pre class="line-numbers language-js"><code class="language-js"><span class="token keyword">void</span> <span class="token function">vTaskDelay</span><span class="token punctuation">(</span> <span class="token keyword">const</span> TickType_t xTicksToDelay <span class="token punctuation">)</span>
-<span class="token punctuation">{</span>
-    BaseType_t xAlreadyYielded <span class="token operator">=</span> pdFALSE<span class="token punctuation">;</span>
-
-    <span class="token comment" spellcheck="true">/* 延迟时间为零只会强制切换任务。 */</span>
-    <span class="token keyword">if</span><span class="token punctuation">(</span> xTicksToDelay <span class="token operator">></span> <span class="token punctuation">(</span> TickType_t <span class="token punctuation">)</span> 0U <span class="token punctuation">)</span>        <span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span>
-    <span class="token punctuation">{</span>
-        <span class="token function">configASSERT</span><span class="token punctuation">(</span> uxSchedulerSuspended <span class="token operator">==</span> <span class="token number">0</span> <span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token function">vTaskSuspendAll</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>                        <span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span>
-        <span class="token punctuation">{</span>
-            <span class="token function">traceTASK_DELAY</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-            <span class="token comment" spellcheck="true">/*将当前任务从就绪列表中移除,并根据当前系统节拍
-            计数器值计算唤醒时间,然后将任务加入延时列表 */</span>
-            <span class="token function">prvAddCurrentTaskToDelayedList</span><span class="token punctuation">(</span> xTicksToDelay<span class="token punctuation">,</span> pdFALSE <span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token punctuation">}</span>
-        xAlreadyYielded <span class="token operator">=</span> <span class="token function">xTaskResumeAll</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-    <span class="token keyword">else</span>
-    <span class="token punctuation">{</span>
-        <span class="token function">mtCOVERAGE_TEST_MARKER</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-
-    <span class="token comment" spellcheck="true">/* 强制执行一次上下文切换 */</span>
-    <span class="token keyword">if</span><span class="token punctuation">(</span> xAlreadyYielded <span class="token operator">==</span> pdFALSE <span class="token punctuation">)</span>
-    <span class="token punctuation">{</span>
-        <span class="token function">portYIELD_WITHIN_API</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-    <span class="token keyword">else</span>
-    <span class="token punctuation">{</span>
-        <span class="token function">mtCOVERAGE_TEST_MARKER</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>主要有ROS的内部构成、 文件夹结构， 以及工作所需的核心文件。</p>
 <ul>
-<li>(1):如果传递进来的延时时间是<code>0</code>，只能进行强制切换任务了，调用的是<code>portYIELD_WITHIN_API()</code>，它其实是一个宏，真正起作用的是<code>portYIELD()</code>，下面是它的源码：</li>
+<li>计算图级（Computation Graph level）</li>
 </ul>
-<pre class="line-numbers language-js"><code class="language-js">#define <span class="token function">portYIELD</span><span class="token punctuation">(</span><span class="token punctuation">)</span>                                                \
-<span class="token punctuation">{</span>                                                                \
-    <span class="token comment" spellcheck="true">/* 设置PendSV以请求上下文切换。 */</span>                            \
-    portNVIC_INT_CTRL_REG <span class="token operator">=</span> portNVIC_PENDSVSET_BIT<span class="token punctuation">;</span>                \
-    <span class="token function">__dsb</span><span class="token punctuation">(</span> portSY_FULL_READ_WRITE <span class="token punctuation">)</span><span class="token punctuation">;</span>                            \
-    <span class="token function">__isb</span><span class="token punctuation">(</span> portSY_FULL_READ_WRITE <span class="token punctuation">)</span><span class="token punctuation">;</span>                            \
-<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>主要是进程和系统之间的通信，包括建立系统、 处理各类进程、 与多台计算机通信等。</p>
 <ul>
-<li>(2):挂起当前任务</li>
+<li>社区级（Community level）</li>
 </ul>
-<p>然后将当前任务从就绪列表删除，然后加入到延时列表。是调用函数<code>prvAddCurrentTaskToDelayedList()</code>完成这一过程的。由于这个函数篇幅过长，就不讲解了，有兴趣可以看看，我就简单说说过程。在<code>FreeRTOS</code>中有这么一个变量，是用来记录<code>systick</code>的值的。</p>
-<pre class="line-numbers language-js"><code class="language-js">PRIVILEGED_DATA <span class="token keyword">static</span> volatile TickType_t xTickCount     <span class="token operator">=</span> <span class="token punctuation">(</span> TickType_t <span class="token punctuation">)</span> 0U<span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-<p>在每次<code>tick</code>中断时<code>xTickCount</code>加一，它的值表示了系统节拍中断的次数，那么啥时候唤醒被加入延时列表的任务呢？其实很简单，FreeRTOS的做法将<code>xTickCount</code>(当前系统时间) + <code>xTicksToDelay</code>(要延时的时间)即可。当这个相对的延时时间到了之后就唤醒了，这个<code>(xTickCount+ xTicksToDelay)</code>时间会被记录在该任务的任务控制块中。</p>
-<p>看到这肯定有人问，这个变量是<code>TickType_t</code>类型(32位)的，那肯定会溢出啊，没错，是变量都会有溢出的一天，可是<code>FreeRTOS</code>乃是世界第一的操作系统啊，<code>FreeRTOS</code>使用了两个延时列表：</p>
-<p><code>xDelayedTaskList1 和 xDelayedTaskList2</code></p>
-<p>并使用两个列表指针类型变量<code>pxDelayedTaskList</code>和<code>pxOverflowDelayedTaskList</code>分别指向上面的延时列表1和延时列表2（在创建任务时将延时列表指针指向延时列表）如果内核判断出<code>xTickCount+xTicksToDelay</code>溢出，就将当前任务挂接到列表指针 <code>pxOverflowDelayedTaskList</code>指向的列表中，否则就挂接到列表指针<code>pxDelayedTaskList</code>指向的列表中。当时间到了，就会将延时的任务从延时列表中删除，加入就绪列表中，当然这时候就是由调度器觉得任务能不能运行了，如果任务的优先级大于当前运行的任务，那么调度器才会进行任务的调度。</p>
-<p><strong>绝对延时：vTaskDelayUntil()</strong></p>
-<p><code>vTaskDelayUntil()</code>的参数指定了确切的滴答计数值</p>
-<p>调用<code>vTaskDelayUntil()</code>是希望任务以固定频率定期执行，而不受外部的影响，任务从上一次运行开始到下一次运行开始的时间间隔是绝对的，而不是相对的。假设主体任务被打断<code>0.3s</code>，但是下次唤醒的时间是固定的，所以还是会周期运行。</p>
-<p><img src="./images/loading.png" data-original="http://qiniu.jiejie01.top/freertos-delay-2.png" alt="freertos-delay-2"></p>
-<p>下面看看<code>vTaskDelayUntil()</code>的使用方法，注意了，这<code>vTaskDelayUntil()</code>的使用方法与<code>vTaskDelay()</code>不一样：</p>
-<pre class="line-numbers language-js"><code class="language-js"><span class="token keyword">void</span> <span class="token function">vTaskA</span><span class="token punctuation">(</span> <span class="token keyword">void</span> <span class="token operator">*</span> pvParameters <span class="token punctuation">)</span>  
-<span class="token punctuation">{</span>  
-    <span class="token comment" spellcheck="true">/* 用于保存上次时间。调用后系统自动更新 */</span>
-    <span class="token keyword">static</span> portTickType PreviousWakeTime<span class="token punctuation">;</span>
-    <span class="token comment" spellcheck="true">/* 设置延时时间，将时间转为节拍数 */</span>
-    <span class="token keyword">const</span> portTickType TimeIncrement <span class="token operator">=</span> <span class="token function">pdMS_TO_TICKS</span><span class="token punctuation">(</span><span class="token number">1000</span><span class="token punctuation">)</span><span class="token punctuation">;</span> 
-    <span class="token comment" spellcheck="true">/* 获取当前系统时间 */</span>
-    PreviousWakeTime <span class="token operator">=</span> <span class="token function">xTaskGetTickCount</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> 
-    <span class="token keyword">while</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span> 
-     <span class="token punctuation">{</span>  
+<p>主要是在开发人员之间共享知识、 算法和代码，塑造了ROS强大的开源社区。</p>
+<h1 id="本章的准备工作"><a href="#本章的准备工作" class="headerlink" title="本章的准备工作"></a>本章的准备工作</h1><p>本文章中我们将会用到<code>ros-tutorials</code>程序包，要先用apt命令去安装：</p>
+<pre class="line-numbers language-bash"><code class="language-bash"><span class="token function">sudo</span> <span class="token function">apt-get</span> <span class="token function">install</span> -y ros-<span class="token operator">&lt;</span>distro<span class="token operator">></span>-ros-tutorials<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>将 <code>&lt;distro&gt;</code>替换成你所安装的版本（比如 kinetic、melodic 等）。</p>
+<p>从我们上一篇文章安装的是<code>melodic</code>版本，那么命令就是：</p>
+<pre class="line-numbers language-bash"><code class="language-bash"><span class="token function">sudo</span> <span class="token function">apt-get</span> <span class="token function">install</span> -y ros-melodic-ros-tutorials<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<h1 id="ROS文件系统的概念"><a href="#ROS文件系统的概念" class="headerlink" title="ROS文件系统的概念"></a>ROS文件系统的概念</h1><p>ROS文件系统可以将项目构建过程集中化， 同时提供很好的灵活性和工具来分散之间的依赖性。</p>
+<h2 id="Packages"><a href="#Packages" class="headerlink" title="Packages"></a>Packages</h2><p>功能包，也可以被称之为软件包，是ROS应用程序代码的组织单元，每个功能包都可以包含程序库、可执行文件、脚本或者其它手动创建的东西。</p>
+<h2 id="Manifest"><a href="#Manifest" class="headerlink" title="Manifest"></a>Manifest</h2><p>清单，它包含了关于<code>Packages</code>的维护者、许可协议、依赖关系以及编译标志等的信息，由一个名为<code>package.xml</code>的文件管理。</p>
+<h2 id="Metapackage"><a href="#Metapackage" class="headerlink" title="Metapackage"></a>Metapackage</h2><p>元功能包：多个具有某些功能的包组织在一起，称为元功能包。</p>
+<h2 id="Metapackage-Manifest"><a href="#Metapackage-Manifest" class="headerlink" title="Metapackage Manifest"></a>Metapackage Manifest</h2><p>元功能包清单：由一个名字为<code>package.xml</code>的文件管理，类似普通功能包但有一个XML格式的导出标记。 </p>
+<h1 id="文件系统工具"><a href="#文件系统工具" class="headerlink" title="文件系统工具"></a>文件系统工具</h1><p>由于ROS中大量代码分散在众多的packages和Metapackage之中，linux本身的命令工具ls和cd已不能满足检索要求，因此ROS提供了一套自己的命令工具来完成与这些命令相似的工作。</p>
+<h2 id="rospack"><a href="#rospack" class="headerlink" title="rospack"></a>rospack</h2><p><code>rospack</code>允许用户获取功能包的有关信息，比如我们找一个<code>roscpp</code>功能包所在的位置，可以通过以下命令：</p>
+<pre class="line-numbers language-bash"><code class="language-bash">➜  ~ rospack <span class="token function">find</span> roscpp
 
-         <span class="token comment" spellcheck="true">/* 调用绝对延时函数,任务时间间隔为1000个tick */</span>
-         <span class="token function">vTaskDelayUntil</span><span class="token punctuation">(</span> <span class="token operator">&amp;</span>PreviousWakeTime，TimeIncrement <span class="token punctuation">)</span><span class="token punctuation">;</span>  
-
-         <span class="token comment" spellcheck="true">//  ...</span>
-         <span class="token comment" spellcheck="true">//  这里为任务主体代码</span>
-         <span class="token comment" spellcheck="true">//  ...</span>
-
-     <span class="token punctuation">}</span>  
-<span class="token punctuation">}</span> <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<p>在使用的时候要将延时时间转化为系统节拍，在任务主体之前要调用延时函数。</p>
-<p>任务会先调用<code>vTaskDelayUntil()</code>使任务进入阻塞态，等到时间到了就从阻塞中解除，然后执行主体代码，任务主体代码执行完毕。会继续调用<code>vTaskDelayUntil()</code>使任务进入阻塞态，然后就是循环这样子执行。即使任务在执行过程中发生中断，那么也不会影响这个任务的运行周期，仅仅是缩短了阻塞的时间而已。</p>
-<p>下面来看看<code>vTaskDelayUntil()</code>的源码：</p>
-<pre class="line-numbers language-js"><code class="language-js"><span class="token keyword">void</span> <span class="token function">vTaskDelayUntil</span><span class="token punctuation">(</span> TickType_t <span class="token operator">*</span> <span class="token keyword">const</span> pxPreviousWakeTime<span class="token punctuation">,</span> <span class="token keyword">const</span> TickType_t xTimeIncrement <span class="token punctuation">)</span>
-<span class="token punctuation">{</span>
-    TickType_t xTimeToWake<span class="token punctuation">;</span>
-    BaseType_t xAlreadyYielded<span class="token punctuation">,</span> xShouldDelay <span class="token operator">=</span> pdFALSE<span class="token punctuation">;</span>
-
-    <span class="token function">configASSERT</span><span class="token punctuation">(</span> pxPreviousWakeTime <span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token function">configASSERT</span><span class="token punctuation">(</span> <span class="token punctuation">(</span> xTimeIncrement <span class="token operator">></span> 0U <span class="token punctuation">)</span> <span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token function">configASSERT</span><span class="token punctuation">(</span> uxSchedulerSuspended <span class="token operator">==</span> <span class="token number">0</span> <span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-    <span class="token function">vTaskSuspendAll</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>                                 <span class="token comment" spellcheck="true">// (1)</span>
-    <span class="token punctuation">{</span>
-        <span class="token comment" spellcheck="true">/* 保存系统节拍中断次数计数器 */</span>
-        <span class="token keyword">const</span> TickType_t xConstTickCount <span class="token operator">=</span> xTickCount<span class="token punctuation">;</span>
-
-        <span class="token comment" spellcheck="true">/* 生成任务要唤醒的滴答时间。*/</span>
-        xTimeToWake <span class="token operator">=</span> <span class="token operator">*</span>pxPreviousWakeTime <span class="token operator">+</span> xTimeIncrement<span class="token punctuation">;</span>
-
-        <span class="token comment" spellcheck="true">/* pxPreviousWakeTime中保存的是上次唤醒时间,唤醒后需要一定时间执行任务主体代码,
-            如果上次唤醒时间大于当前时间,说明节拍计数器溢出了 具体见图片 */</span>
-        <span class="token keyword">if</span><span class="token punctuation">(</span> xConstTickCount <span class="token operator">&lt;</span> <span class="token operator">*</span>pxPreviousWakeTime <span class="token punctuation">)</span>
-        <span class="token punctuation">{</span>
-           <span class="token comment" spellcheck="true">/* 由于此功能，滴答计数已溢出持续呼唤。 在这种情况下，我们唯一的时间实际延迟是如果唤醒时间也溢出，
-              唤醒时间大于滴答时间。 当这个就是这样，好像两个时间都没有溢出。*/</span>
-
-           <span class="token keyword">if</span><span class="token punctuation">(</span> <span class="token punctuation">(</span> xTimeToWake <span class="token operator">&lt;</span> <span class="token operator">*</span>pxPreviousWakeTime <span class="token punctuation">)</span> <span class="token operator">&amp;&amp;</span> <span class="token punctuation">(</span> xTimeToWake <span class="token operator">></span> xConstTickCount <span class="token punctuation">)</span> <span class="token punctuation">)</span>
-           <span class="token punctuation">{</span>
-               xShouldDelay <span class="token operator">=</span> pdTRUE<span class="token punctuation">;</span>
-           <span class="token punctuation">}</span>
-           <span class="token keyword">else</span>
-           <span class="token punctuation">{</span>
-               <span class="token function">mtCOVERAGE_TEST_MARKER</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-           <span class="token punctuation">}</span>
-        <span class="token punctuation">}</span>
-        <span class="token keyword">else</span>
-        <span class="token punctuation">{</span>
-           <span class="token comment" spellcheck="true">/* 滴答时间没有溢出。 在这种情况下，如果唤醒时间溢出，
-              或滴答时间小于唤醒时间，我们将延迟。*/</span>
-
-           <span class="token keyword">if</span><span class="token punctuation">(</span> <span class="token punctuation">(</span> xTimeToWake <span class="token operator">&lt;</span> <span class="token operator">*</span>pxPreviousWakeTime <span class="token punctuation">)</span> <span class="token operator">||</span> <span class="token punctuation">(</span> xTimeToWake <span class="token operator">></span> xConstTickCount <span class="token punctuation">)</span> <span class="token punctuation">)</span>
-           <span class="token punctuation">{</span>
-               xShouldDelay <span class="token operator">=</span> pdTRUE<span class="token punctuation">;</span>
-           <span class="token punctuation">}</span>
-           <span class="token keyword">else</span>
-           <span class="token punctuation">{</span>
-               <span class="token function">mtCOVERAGE_TEST_MARKER</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-           <span class="token punctuation">}</span>
-      <span class="token punctuation">}</span>
-
-      <span class="token comment" spellcheck="true">/* 更新唤醒时间,为下一次调用本函数做准备. */</span>
-      <span class="token operator">*</span>pxPreviousWakeTime <span class="token operator">=</span> xTimeToWake<span class="token punctuation">;</span>
-
-      <span class="token keyword">if</span><span class="token punctuation">(</span> xShouldDelay <span class="token operator">!=</span> pdFALSE <span class="token punctuation">)</span>
-      <span class="token punctuation">{</span>
-          <span class="token function">traceTASK_DELAY_UNTIL</span><span class="token punctuation">(</span> xTimeToWake <span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-          <span class="token comment" spellcheck="true">/* prvAddCurrentTaskToDelayedList（）需要块时间，而不是唤醒时间，因此减去当前的滴答计数。 */</span>
-          <span class="token function">prvAddCurrentTaskToDelayedList</span><span class="token punctuation">(</span> xTimeToWake <span class="token operator">-</span> xConstTickCount<span class="token punctuation">,</span> pdFALSE <span class="token punctuation">)</span><span class="token punctuation">;</span>
-      <span class="token punctuation">}</span>
-      <span class="token keyword">else</span>
-      <span class="token punctuation">{</span>
-          <span class="token function">mtCOVERAGE_TEST_MARKER</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-      <span class="token punctuation">}</span>
-  <span class="token punctuation">}</span>
-  xAlreadyYielded <span class="token operator">=</span> <span class="token function">xTaskResumeAll</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-  <span class="token comment" spellcheck="true">/* 如果xTaskResumeAll尚未执行重新安排，我们可能会让自己入睡。*/</span>
-  <span class="token keyword">if</span><span class="token punctuation">(</span> xAlreadyYielded <span class="token operator">==</span> pdFALSE <span class="token punctuation">)</span>
-  <span class="token punctuation">{</span>
-    <span class="token function">portYIELD_WITHIN_API</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token punctuation">}</span>
-  <span class="token keyword">else</span>
-  <span class="token punctuation">{</span>
-    <span class="token function">mtCOVERAGE_TEST_MARKER</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token punctuation">}</span>
-<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<p>与相对延时函数<code>vTaskDelay</code>不同，本函数增加了一个参数<code>pxPreviousWakeTime</code>用于指向一个变量，变量保存上次任务解除阻塞的时间，此后函数<code>vTaskDelayUntil()</code>在内部自动更新这个变量。由于变量<code>xTickCount</code>可能会溢出，所以程序必须检测各种溢出情况，并且要保证延时周期不得小于任务主体代码执行时间。</p>
-<p>就会有以下3种情况，才能将任务加入延时链表中。</p>
-<p>请记住这几个单词的含义：</p>
-<ul>
-<li><code>xTimeIncrement</code>：任务周期时间</li>
-<li><code>pxPreviousWakeTime</code>：上一次唤醒的时间点</li>
-<li><code>xTimeToWake</code>：下一次唤醒的系统时间点</li>
-<li><code>xConstTickCount</code>：进入延时的时间点</li>
-</ul>
-<ol start="3">
-<li>第三种情况：常规无溢出的情况。</li>
-</ol>
-<p>以时间为横轴，上一次唤醒的时间点小于下一次唤醒的时间点，这是很正常的情况。</p>
-<p><img src="./images/loading.png" data-original="http://qiniu.jiejie01.top/freertos-delay-3.png" alt="freertos-delay-3"></p>
-<ol start="2">
-<li>第二种情况：唤醒时间计数器（<code>xTimeToWake</code>）溢出情况。</li>
-</ol>
-<p>也就是代码中<code>if( ( xTimeToWake &lt; *pxPreviousWakeTime ) || ( xTimeToWake &gt; xConstTickCount ) )</code></p>
-<p><img src="./images/loading.png" data-original="http://qiniu.jiejie01.top/freertos-delay-4.png" alt="freertos-delay-4"></p>
-<ol>
-<li>第一种情况：唤醒时间（<code>xTimeToWake</code>）与进入延时的时间点（<code>xConstTickCount</code>）都溢出情况。</li>
-</ol>
-<p>也就是代码中<code>if( ( xTimeToWake &lt; *pxPreviousWakeTime ) &amp;&amp; ( xTimeToWake &gt; xConstTickCount ) )</code></p>
-<p><img src="./images/loading.png" data-original="http://qiniu.jiejie01.top/freertos-delay-5.png" alt="freertos-delay-5"></p>
-<p>从图中可以看出不管是溢出还是无溢出，都要求在下次唤醒任务之前，当前任务主体代码必须被执行完。也就是说任务执行的时间不允许大于延时的时间，总不能存在每<code>10ms</code>就要执行一次<code>20ms</code>时间的任务吧。计算的唤醒时间合法后，就将当前任务加入延时列表，同样延时列表也有两个。每次系统节拍中断，中断服务函数都会检查这两个延时列表，查看延时的任务是否到期，如果时间到期，则将任务从延时列表中删除，重新加入就绪列表。如果新加入就绪列表的任务优先级大于当前任务，则会触发一次上下文切换。</p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>如果任务调用相对延时，其运行周期完全是不可测的，如果任务的优先级不是最高的话，其误差更大，就好比一个必须要在<code>5ms</code>内相应的任务，假如使用了相对延时1ms，那么很有可能在该任务执行的时候被更高优先级的任务打断，从而错过<code>5ms</code>内的相应，但是调用绝对延时，则任务会周期性将该任务在阻塞列表中解除，但是，任务能不能运行，还得取决于任务的优先级，如果优先级最高的话，任务周期还是比较精确的（相对<code>vTaskDelay</code>来说），如果想要更加想精确周期性执行某个任务，可以使用系统节拍钩子函数<code>vApplicationTickHook()</code>，它在<code>tick</code>中断服务函数中被调用，因此这个函数中的代码必须简洁，并且不允许出现阻塞的情况。</p>
-<h1 id="喜欢就关注我吧！"><a href="#喜欢就关注我吧！" class="headerlink" title="喜欢就关注我吧！"></a>喜欢就关注我吧！</h1><p><img src="./images/loading.png" data-original="http://qiniu.jiejie01.top/gzh.jpg" alt="欢迎关注我公众号"></p>
-<p>相关代码可以在公众号后台获取。</p>
+/opt/ros/melodic/share/roscpp<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p><code>rospack</code>的用法是：</p>
+<pre class="line-numbers language-bash"><code class="language-bash">rospack <span class="token function">find</span> <span class="token punctuation">[</span>功能包名称<span class="token punctuation">]</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p><img src="./images/loading.png" data-original="http://qiniu.jiejie01.top/ros006.png" alt="ros006"></p>
+<h2 id="roscd"><a href="#roscd" class="headerlink" title="roscd"></a>roscd</h2><p><code>roscd</code>是<code>rosbash</code>命令集中的一部分，它允许你直接切换（cd）工作目录到某个软件包或者软件包集当中。</p>
+<p><code>roscd</code>的用法是：</p>
+<pre class="line-numbers language-bash"><code class="language-bash">roscd <span class="token punctuation">[</span>功能包名称<span class="token punctuation">[</span>/子目录<span class="token punctuation">]</span><span class="token punctuation">]</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>比如切换到<code>roscpp</code>目录下：</p>
+<pre class="line-numbers language-bash"><code class="language-bash">roscd roscpp<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>比如切换到<code>roscpp</code>的子目录<code>msg</code>下：</p>
+<pre class="line-numbers language-bash"><code class="language-bash">roscd roscpp/msg<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p><img src="./images/loading.png" data-original="http://qiniu.jiejie01.top/ros007.png" alt="ros007"></p>
+<h2 id="rosls"><a href="#rosls" class="headerlink" title="rosls"></a>rosls</h2><p>这个命令更linux下的ls很像，但它允许你在任何位置列出某个功能包的当前目录或者其子目录的内容，而不需要在绝对路径执行ls。</p>
+<p><code>rosls</code>的用法是：</p>
+<pre class="line-numbers language-bash"><code class="language-bash">rosls <span class="token punctuation">[</span>功能包名称<span class="token punctuation">[</span>/子目录<span class="token punctuation">]</span><span class="token punctuation">]</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>比如列出<code>roscpp</code>目录下的内容：</p>
+<pre class="line-numbers language-bash"><code class="language-bash">rosls roscpp<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>比如列出<code>roscpp</code>的子目录<code>msg</code>下的内容：</p>
+<pre class="line-numbers language-bash"><code class="language-bash">rosls roscpp/msg<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p><img src="./images/loading.png" data-original="http://qiniu.jiejie01.top/ros008.png" alt="ros008"></p>
+<p><strong>同时它们都支持<code>Tab补全</code>，非常方便</strong></p>
+<h1 id="参考："><a href="#参考：" class="headerlink" title="参考："></a>参考：</h1><p><a href="http://wiki.ros.org/cn/ROS/Tutorials/NavigatingTheFilesystem" target="_blank" rel="noopener">ROS官方wiki</a></p>
+<p><a href="https://joveh-h.blog.csdn.net/article/details/90412882" target="_blank" rel="noopener">ROS笔记（5） ROS架构</a></p>
 <script>
         document.querySelectorAll('.github-emoji')
           .forEach(el => {
@@ -941,7 +772,7 @@ FreeRTOS 时间管理时间管理包括两个方面：系统节拍以及任务�
                     </span>
                     <a href="https://jiedev.com" class="b-link-green">杰杰的博客</a>
                     <i class="fa fa-angle-right fa-lg fa-fw text-color"></i>
-                    <a href="/freertos-7/" class="b-link-green">从单片机到操作系统⑦——深入了解FreeRTOS的延时机制</a>
+                    <a href="/ros-2/" class="b-link-green">【ROS入门-2】ROS文件系统介绍</a>
                 </p>
             </div>
 
@@ -1222,56 +1053,58 @@ FreeRTOS 时间管理时间管理包括两个方面：系统节拍以及任务�
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fa fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="fa fa-dot-circle-o"></i>&nbsp;本篇
+            </div>
             <div class="card">
-                <a href="/freertos-8/">
+                <a href="/ros-2/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/14.jpg" class="responsive-img" alt="超详细的FreeRTOS移植全教程——基于srm32">
+                        <img src="/medias/featureimages/8.jpg" class="responsive-img" alt="【ROS入门-2】ROS文件系统介绍">
                         
-                        <span class="card-title">超详细的FreeRTOS移植全教程——基于srm32</span>
+                        <span class="card-title">【ROS入门-2】ROS文件系统介绍</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            准备在移植之前，我们首先要获取到FreeRTOS的官方的源码包。这里我们提供两个下载链接:
+                            前言ROS的架构经过设计并划分成了三部分， 每一部分都代表一个层级的概念：
 
-一个是官网：http://www.freertos.org/另外一个是代码托管网站：https://sourceforge.net/project
+文件系统级（Filesystem level）
+
+主要有ROS的内部构成、 文件夹结构， 以及工作所需的核心文件。
+
+计算图级（Computation Graph
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="fa fa-clock-o fa-fw icon-date"></i>2019-10-05
-                        </span>
+                            <span class="publish-date">
+                                <i class="fa fa-clock-o fa-fw icon-date"></i>2020-04-05
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fa fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/操作系统/" class="post-category" target="_blank">
-                                    操作系统
+                            <a href="/categories/ROS/" class="post-category" target="_blank">
+                                    ROS
                                 </a>
                             
                             
                         </span>
                     </div>
                 </div>
+
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/RTOS/" target="_blank">
-                        <span class="chip bg-color">RTOS</span>
+                    <a href="/tags/ROS/" target="_blank">
+                        <span class="chip bg-color">ROS</span>
                     </a>
                     
-                    <a href="/tags/操作系统/" target="_blank">
-                        <span class="chip bg-color">操作系统</span>
-                    </a>
-                    
-                    <a href="/tags/FreeRTOS/" target="_blank">
-                        <span class="chip bg-color">FreeRTOS</span>
+                    <a href="/tags/机器人操作系统/" target="_blank">
+                        <span class="chip bg-color">机器人操作系统</span>
                     </a>
                     
                 </div>
@@ -1285,32 +1118,36 @@ FreeRTOS 时间管理时间管理包括两个方面：系统节拍以及任务�
                 下一篇&nbsp;<i class="fa fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/freertos-6/">
+                <a href="/ros-1/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/9.jpg" class="responsive-img" alt="从0开始学FreeRTOS-(列表&列表项)-6">
+                        <img src="/medias/featureimages/6.jpg" class="responsive-img" alt="【ROS入门-1】在Ubuntu18.04安装ROS">
                         
-                        <span class="card-title">从0开始学FreeRTOS-(列表&列表项)-6</span>
+                        <span class="card-title">【ROS入门-1】在Ubuntu18.04安装ROS</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            FreeRTOS列表&amp;列表项的源码解读第一次看列表与列表项的时候，感觉很像是链表，虽然我自己的链表也不太会，但是就是感觉很像。
-在FreeRTOS中，列表与列表项使用得非常多，是FreeRTOS的一个数据结构，学习过数据结构的同学都
+                            引言先来一张ROS的美照：
+
+参考官方wiki安装：http://wiki.ros.org/melodic/Installation/Ubuntu
+在Ubuntu的【软件和更新】配置如下：
+
+添加软件源sudo sh -c 'echo "d
                         
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="fa fa-clock-o fa-fw icon-date"></i>2019-09-25
+                                <i class="fa fa-clock-o fa-fw icon-date"></i>2020-04-04
                             </span>
                         <span class="publish-author">
                             
                             <i class="fa fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/操作系统/" class="post-category" target="_blank">
-                                    操作系统
+                            <a href="/categories/ROS/" class="post-category" target="_blank">
+                                    ROS
                                 </a>
                             
                             
@@ -1320,16 +1157,12 @@ FreeRTOS 时间管理时间管理包括两个方面：系统节拍以及任务�
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/RTOS/" target="_blank">
-                        <span class="chip bg-color">RTOS</span>
+                    <a href="/tags/ROS/" target="_blank">
+                        <span class="chip bg-color">ROS</span>
                     </a>
                     
-                    <a href="/tags/操作系统/" target="_blank">
-                        <span class="chip bg-color">操作系统</span>
-                    </a>
-                    
-                    <a href="/tags/FreeRTOS/" target="_blank">
-                        <span class="chip bg-color">FreeRTOS</span>
+                    <a href="/tags/机器人操作系统/" target="_blank">
+                        <span class="chip bg-color">机器人操作系统</span>
                     </a>
                     
                 </div>
