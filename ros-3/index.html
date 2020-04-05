@@ -6,13 +6,14 @@
 
 <head><meta name="generator" content="Hexo 3.9.0">
     <meta charset="utf-8">
-    <meta name="keywords" content="hellolo world, IoT RTOS linux Python jiejie Dora">
+    <meta name="keywords" content="【ROS入门-3】嘴对嘴讲解ROS的核心概念——节点与节点管理器, IoT RTOS linux Python jiejie Dora">
     <meta name="baidu-site-verification" content="TRUUhavuHV">
     <meta name="google-site-verification" content="v-saR33QlUQmwVrLI7AQd08em9BtdazPy5jvPouEYHg">
-    <meta name="description" content="hello
-网络的好朋友，你好，我是杰杰！如果我的博客有什么不足的地方，欢迎向我反馈；如果我的博客对你有帮助，那是我的荣幸！如果觉得文章很好，欢迎动动小手指，点个赞或者转发        —–杰杰。
+    <meta name="description" content="前言我要给大家来介绍一下ROS当中一些核心的概念，帮助大家去在后面的ROS学习当中更快地吸收这些概念。
+ROS系列文章
+【ROS入门-1】手把手教你在Ubuntu18.04安装ROS Melodic
 
-欢迎关注我个人微信公众号，来一起全栈开">
+【ROS入门-2】带你看ROS文件系统">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -20,7 +21,7 @@
     <meta name="format-detection" content="telephone=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>hellolo world | 杰杰的博客</title>
+    <title>【ROS入门-3】嘴对嘴讲解ROS的核心概念——节点与节点管理器 | 杰杰的博客</title>
     <link rel="icon" type="image/x-icon, image/vnd.microsoft.icon" href="/medias/logo/favicon.ico">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/font-awesome.min.css">
@@ -367,13 +368,13 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/7.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/1.jpg')">
     <div class="container">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
                     <div class="description center-align post-title">
-                        hellolo world
+                        【ROS入门-3】嘴对嘴讲解ROS的核心概念——节点与节点管理器
                     </div>
                 </div>
             </div>
@@ -485,8 +486,12 @@
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/随笔/" target="_blank">
-                                <span class="chip bg-color">随笔</span>
+                            <a href="/tags/ROS/" target="_blank">
+                                <span class="chip bg-color">ROS</span>
+                            </a>
+                        
+                            <a href="/tags/机器人操作系统/" target="_blank">
+                                <span class="chip bg-color">机器人操作系统</span>
                             </a>
                         
                     </div>
@@ -497,8 +502,8 @@
                     <div class="post-cate">
                         <i class="fa fa-bookmark fa-fw icon-category"></i>
                         
-                            <a href="/categories/随笔/" class="post-category" target="_blank">
-                                随笔
+                            <a href="/categories/ROS/" class="post-category" target="_blank">
+                                ROS
                             </a>
                         
                     </div>
@@ -509,7 +514,7 @@
             <div class="post-info">
                 <div class="post-date info-break-policy">
                     <i class="fa fa-calendar-minus-o fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2019-08-30
+                    2020-04-05
                 </div>
 
                 <div class="post-author info-break-policy">
@@ -523,14 +528,14 @@
                     
                     <div class="info-break-policy">
                         <i class="fa fa-file-word-o fa-fw"></i>文章字数:&nbsp;&nbsp;
-                        839
+                        1.7k
                     </div>
                     
 
                     
                     <div class="info-break-policy">
                         <i class="fa fa-clock-o fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                        3 分
+                        6 分
                     </div>
                     
                 
@@ -547,129 +552,72 @@
         <hr class="clearfix">
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h1 id="hello"><a href="#hello" class="headerlink" title="hello"></a>hello</h1><blockquote>
-<p>网络的好朋友，你好，我是杰杰！如果我的博客有什么不足的地方，欢迎向我反馈；如果我的博客对你有帮助，那是我的荣幸！如果觉得文章很好，欢迎动动小手指，点个赞或者转发        —–杰杰。</p>
+                <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>我要给大家来介绍一下ROS当中一些核心的概念，帮助大家去在后面的ROS学习当中更快地吸收这些概念。</p>
+<h1 id="ROS系列文章"><a href="#ROS系列文章" class="headerlink" title="ROS系列文章"></a>ROS系列文章</h1><ul>
+<li><p><a href="https://jiedev.com/ros-1/">【ROS入门-1】手把手教你在Ubuntu18.04安装ROS Melodic</a></p>
+</li>
+<li><p><a href="https://jiedev.com/ros-2/">【ROS入门-2】带你看ROS文件系统及其工具</a></p>
+</li>
+</ul>
+<h1 id="ROS的通信机制"><a href="#ROS的通信机制" class="headerlink" title="ROS的通信机制"></a>ROS的通信机制</h1><p>ROS的通信机制是一个 <strong><code>松散耦合的分布式软件框架</code></strong> 设计而来的，比如下面这张图：</p>
+<p><img src="./images/loading.png" data-original="http://qiniu.jiejie01.top/ros009.png" alt="ros009"></p>
+<p>在这个图当中看到这里面有很多Node（节点），每个节点是在整个机器人中完成一个具体功能的这样一个一个的进程，比如说一个Node是完成图像的识别，另一个Node就完成图像驱动，然后它们之间会有一系列的图像之间的一个数据的传输，所有节点之间它的位置也不是固定的，比如说我们这有两台电脑，一个A，一个B，一些节点运行在A当中，一些节点运行在B当中，它们可以通过一系列的这个数据的传输方式来完成通讯（后面会讲解这个通信方式）。</p>
+<p>还有每个节点它的编程语言也不是也不是固定的，比如说这个Node是用Python开发，它有很好的便利性，另一个节点是用C++开发，它有很高的效率等等。我们可以分布式完成这件的开发，最终只要有统一的这个通讯的标准，就可以完成我们整个系统这样一个搭建了，那这里面就会有很多的节点，节点之间会有很多的通讯，很多的数据，然后它包括通讯的方式，包括所有节点的一个管理，会涉及到很多核心通信机制。</p>
+<p><strong>我们接下来讲解ROS的核心概念——节点与节点管理器。</strong></p>
+<h1 id="节点（Node）"><a href="#节点（Node）" class="headerlink" title="节点（Node）"></a>节点（Node）</h1><p>首先看一张图片，我们结合图片来讲解：</p>
+<p><img src="./images/loading.png" data-original="http://qiniu.jiejie01.top/ros010.png" alt="ros010"></p>
+<p>首先最重要的概念就是节点啊，<strong>节点在ROS当中是一个最小处理器单元</strong>，它是一个执行单元。</p>
+<p>比如说它要执行某个任务，它其实相当于我们系统里面的某一个具体的进程，无论是完成图像识别也好，完成摄像头的驱动也好，或者是完成你的思路算法的这个处理也好，它都是一个处理任务的进程。建议为一个目的创建一个节点，建议设计时注重可重用性，将每个程序细分化，但节点在整个系统中的名称必须是唯一的。</p>
+<p>不同节点之间我们可以用不同的编程语言，比如说有的人善于做图像处理，他就可以用Python来做处理，有的人善于做驱动。他可能要用C++或C来完成这个设备的驱动，最终大家可以通过ROS框架完成很快这个功能的拼接，那这个ROS里面也是给我们提供了这样一系列的机制，很快速完成这样一个分布式的工作。</p>
+<p>节点在整个系统当中的名称必须是唯一的啊，比如说你要干一个什么事儿，要做一个命名，而为了方便我们整个的管理，每一个节点的名字都必须是唯一的，否则会重名重名之后你的ROS就找不到具体是哪个节点了。</p>
+<p><strong>总结一下节点的特性：</strong></p>
+<ul>
+<li><p>执行具体任务的进程、独立运行的可执行文件。</p>
+</li>
+<li><p>不同节点可使用不同的编程语言，可分布式运行在不同的主机。</p>
+</li>
+<li><p>节点在系统中的名称必须是唯一的。</p>
+</li>
+<li><p>所有节点之间的消息通信都必须使用节点管理器。</p>
+</li>
+</ul>
+<p>可以使用<code>rosrun</code>命令运行一个包内的节点（不需要知道这个包的路径）。</p>
+<pre class="line-numbers language-bash"><code class="language-bash">rosrun <span class="token punctuation">[</span>包名字<span class="token punctuation">]</span> <span class="token punctuation">[</span>节点名字<span class="token punctuation">]</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<h1 id="节点管理器（Master）"><a href="#节点管理器（Master）" class="headerlink" title="节点管理器（Master）"></a>节点管理器（Master）</h1><blockquote>
+<p>在某些书籍资料中，节点管理器也被称作是主节点，都是一个意思的东西。</p>
 </blockquote>
-<p>欢迎关注我个人微信公众号，来一起全栈开发~<br><img src="./images/loading.png" data-original="https://imgconvert.csdnimg.cn/aHR0cDovL2ppZWppZTAxLnRvcC9Mb2dvL0daLnBuZw?x-oss-process=image/format,png" alt=""></p>
-<h1 id="网络协议栈-【推荐】"><a href="#网络协议栈-【推荐】" class="headerlink" title="网络协议栈 【推荐】"></a>网络协议栈 【推荐】</h1><ol>
-<li><a href="https://blog.csdn.net/jiejiemcu/article/details/85233198" target="_blank" rel="noopener">lwip源码下载地址</a></li>
-<li><a href="https://blog.csdn.net/jiejiemcu/article/details/88024614" target="_blank" rel="noopener">TCP/IP协议栈扫盲班</a></li>
-<li><a href="https://blog.csdn.net/jiejiemcu/article/details/88204770" target="_blank" rel="noopener">网络底层知识</a></li>
-<li><a href="https://blog.csdn.net/jiejiemcu/article/details/88406088" target="_blank" rel="noopener">ARP协议原理</a></li>
-<li><a href="https://blog.csdn.net/jiejiemcu/article/details/88879553" target="_blank" rel="noopener">LwIP中的ARP实现（1）之ARP缓存表的数据结构</a></li>
-<li><a href="https://blog.csdn.net/jiejiemcu/article/details/88887437" target="_blank" rel="noopener">LwIP中的ARP实现（2）之ARP缓存表的超时处理</a></li>
-<li><a href="https://blog.csdn.net/jiejiemcu/article/details/88887466" target="_blank" rel="noopener">LwIP中的ARP实现（3）之发送ARP请求包</a></li>
-<li><a href="https://blog.csdn.net/jiejiemcu/article/details/88887494" target="_blank" rel="noopener">LwIP中的ARP实现（4）之ARP数据包接收</a></li>
-<li><a href="https://blog.csdn.net/jiejiemcu/article/details/88887520" target="_blank" rel="noopener">LwIP中的ARP实现（5）之ARP数据包发送 </a></li>
-<li><a href="https://blog.csdn.net/jiejiemcu/article/details/89072812" target="_blank" rel="noopener">IP协议基础扫盲班</a></li>
-<li><a href="https://blog.csdn.net/jiejiemcu/article/details/89072834" target="_blank" rel="noopener">IP地址相关知识深入了解~</a></li>
-<li><a href="https://blog.csdn.net/jiejiemcu/article/details/89072573" target="_blank" rel="noopener">IP数据报格式分析</a></li>
-</ol>
-<p>未完待续…</p>
-<h1 id="RTOS操作系统相关"><a href="#RTOS操作系统相关" class="headerlink" title="RTOS操作系统相关"></a>RTOS操作系统相关</h1><ol>
-<li><p><a href="https://blog.csdn.net/jiejiemcu/article/details/86701792" target="_blank" rel="noopener">FreeRTOS移植——基于stm32f1</a></p>
+<p>节点管理器（Master）负责节点到节点的连接和消息通信，类似于服务器（Server）。<code>roscore</code>是它的运行命令，当运行节点管理器时，你可以注册每个节点的名字，并根据需要获取信息。没有节点管理器，就不能在节点之间建立访问和消息交流（如话题和服务），所以我们从上面的途中就看到一个很关键的成员——ROS Master。</p>
+<p>系统中的每个节点都需要去找<code>Master</code>去注册，需要告诉<code>Master</code>，我要启动了，我要干个什么事，我要跟谁去发什么数据，这些的管理的这个注册信息都是由<code>Master</code>一手掌握的，简单来说就是<code>Master</code>里面会有一个小本本，它会把所有的节点的各种信息都记下来，然后帮助它们，比如让节点与节点之间去建立连接等。</p>
+<p>就拿上面的图来说，<code>Image Processing Node</code>节点要去处理数据，<code>Camera Node</code>节点要去发布图像数据，<code>Image Display Node</code>节点要去显示图像的数据，那这里面两个节点之间就会发生一个图像的传输，那<code>Master</code>就是要帮助两者建立起来一个传输数据的渠道啊，不然两个毫无瓜葛的节点怎么知道彼此的存在呢。</p>
+<p>在<code>Master</code>里面还有很重要的功能，就是它提供一个<strong>参数服务器</strong>的功能，这个东西很重要，上面会记录一些全局变量的变量名跟变量值，那这个变量名和变量值就可以由各个节点去访问、去设置或者去读写，然后节点之间就可以通过这些变量的设置来读取一些配置文件的信息，读取一些参数配置啊等等。</p>
+<p><strong>总结一下节点管理器的特性：</strong></p>
+<ul>
+<li><p>为节点提供命名和注册服务。</p>
 </li>
-<li><p><a href="https://blog.csdn.net/jiejiemcu/article/details/80308052" target="_blank" rel="noopener">【连载】从单片机到操作系统③——走进FreeRTOS</a></p>
+<li><p>跟踪和记录话题/服务通信，辅助节点相互查找、建立连接。</p>
 </li>
-<li><p><a href="https://blog.csdn.net/jiejiemcu/article/details/80463911" target="_blank" rel="noopener">【连载】从单片机到操作系统④——FreeRTOS创建任务&amp;开启调度详解</a></p>
+<li><p>提供参数服务器，节点使用此服务器存储和检索运行时的参数。</p>
 </li>
-<li><p><a href="https://blog.csdn.net/jiejiemcu/article/details/80637559" target="_blank" rel="noopener">【连载】从单片机到操作系统⑤——FreeRTOS列表&amp;列表项的源码解读</a></p>
-</li>
-<li><p><a href="https://blog.csdn.net/jiejiemcu/article/details/81039707" target="_blank" rel="noopener">【连载】从单片机到操作系统⑥——FreeRTOS任务切换机制详解</a></p>
-</li>
-<li><p><a href="https://blog.csdn.net/jiejiemcu/article/details/81515788" target="_blank" rel="noopener">【连载】从单片机到操作系统⑦——深入了解FreeRTOS的延时机制</a></p>
-</li>
-<li><p><a href="https://blog.csdn.net/jiejiemcu/article/details/82534974" target="_blank" rel="noopener">RTOS的临界段知识详解</a></p>
-</li>
-<li><p><a href="https://blog.csdn.net/jiejiemcu/article/details/86715766" target="_blank" rel="noopener">FreeRTOS消息队列</a></p>
-</li>
-<li><p><a href="https://blog.csdn.net/jiejiemcu/article/details/87174666" target="_blank" rel="noopener">FreeRTOS优化与错误排查方法</a></p>
-</li>
-<li><p><a href="https://blog.csdn.net/jiejiemcu/article/details/84778522" target="_blank" rel="noopener">继续学习FreeRTOS~</a></p>
-</li>
-<li><p><a href="https://blog.csdn.net/jiejiemcu/article/details/82588304" target="_blank" rel="noopener">RT-Thread内核实现的思维导图——线程&amp;调度器</a></p>
-<p>未完待续…</p>
-</li>
-</ol>
-<h1 id="STM8"><a href="#STM8" class="headerlink" title="STM8"></a>STM8</h1><ol>
-<li><a href="https://blog.csdn.net/jiejiemcu/article/details/80543012" target="_blank" rel="noopener"> STM8L051F3_0d_基础介绍</a></li>
-<li><a href="https://blog.csdn.net/jiejiemcu/article/details/80219795" target="_blank" rel="noopener">STM8L051F3_0b_开发环境搭建</a></li>
-<li><a href="https://blog.csdn.net/jiejiemcu/article/details/80219830" target="_blank" rel="noopener">STM8L051F3_0c_新建工程</a></li>
-<li><a href="https://blog.csdn.net/jiejiemcu/article/details/80543043" target="_blank" rel="noopener">STM8L051F3_01_GPIO应用</a></li>
-<li><a href="https://blog.csdn.net/jiejiemcu/article/details/80574810" target="_blank" rel="noopener">STM8L051F3_02_EXTI应用</a></li>
-<li><a href="https://blog.csdn.net/jiejiemcu/article/details/80629051" target="_blank" rel="noopener">STM8L051F3_03_CLK应用</a></li>
-<li><a href="https://blog.csdn.net/jiejiemcu/article/details/80659610" target="_blank" rel="noopener">STM8L051F3_04_PWR应用</a></li>
-</ol>
-<p>未完待续…</p>
-<h1 id="STM32"><a href="#STM32" class="headerlink" title="STM32"></a>STM32</h1><ol>
-<li><p><a href="https://blog.csdn.net/jiejiemcu/article/details/80179096" target="_blank" rel="noopener">【干货】老外的GitHub整理的stm32f4驱动库</a></p>
-</li>
-<li><p><a href="https://blog.csdn.net/jiejiemcu/article/details/80542667" target="_blank" rel="noopener">【重写】简析stm32启动过程</a></p>
-</li>
-<li><p><a href="https://blog.csdn.net/jiejiemcu/article/details/80563422" target="_blank" rel="noopener">STM32进阶之串口环形缓冲区实现</a></p>
-</li>
-<li><p><a href="https://blog.csdn.net/jiejiemcu/article/details/80565426" target="_blank" rel="noopener">嵌入式重定向 printf</a></p>
-</li>
-<li><p><a href="https://blog.csdn.net/jiejiemcu/article/details/82227824" target="_blank" rel="noopener">数据处理相关源码</a></p>
-</li>
-<li><p><a href="https://blog.csdn.net/jiejiemcu/article/details/82743945" target="_blank" rel="noopener">STM32之串口DMA接收不定长数据</a></p>
-</li>
-<li><p><a href="https://blog.csdn.net/jiejiemcu/article/details/82898387" target="_blank" rel="noopener">基于Linux的kfifo移植到STM32（支持os的互斥访问）</a></p>
-</li>
-<li><p><a href="https://blog.csdn.net/jiejiemcu/article/details/83685631" target="_blank" rel="noopener">纯C语言写的按键驱动，将按键逻辑与按键处理事件分离~</a></p>
-</li>
-<li><p><a href="https://blog.csdn.net/jiejiemcu/article/details/83932913" target="_blank" rel="noopener">一种Cortex-M内核中的精确延时方法</a></p>
-</li>
-<li><p><a href="https://blog.csdn.net/jiejiemcu/article/details/87615397" target="_blank" rel="noopener">CmBacktrace: ARM Cortex-M 系列 MCU 错误追踪库</a></p>
-<p>未完待续…</p>
-</li>
-</ol>
-<h1 id="学习随笔"><a href="#学习随笔" class="headerlink" title="学习随笔"></a>学习随笔</h1><ol>
-<li><p><a href="https://blog.csdn.net/jiejiemcu/article/details/82049104" target="_blank" rel="noopener">git常用命令</a></p>
-</li>
-<li><p><a href="https://blog.csdn.net/jiejiemcu/article/details/82262712" target="_blank" rel="noopener">vs code 随笔</a></p>
-</li>
-<li><p><a href="https://blog.csdn.net/jiejiemcu/article/details/82430157" target="_blank" rel="noopener">STM32等处理器的MDK离线支持包下载地址</a></p>
-</li>
-<li><p><a href="https://blog.csdn.net/jiejiemcu/article/details/84857382" target="_blank" rel="noopener">mdk5.26、5.27下载地址</a></p>
-</li>
-<li><p><a href="https://blog.csdn.net/jiejiemcu/article/details/85165949" target="_blank" rel="noopener">mdk工程的批量操作文件</a></p>
-</li>
-<li><p><a href="https://blog.csdn.net/jiejiemcu/article/details/87340868" target="_blank" rel="noopener">PDF Drive</a></p>
-</li>
-<li><p><a href="https://blog.csdn.net/jiejiemcu/article/details/87904149" target="_blank" rel="noopener">基于腾讯云Ubuntu主机搭建ghost</a></p>
-</li>
-<li><p><a href="https://blog.csdn.net/jiejiemcu/article/details/88097620" target="_blank" rel="noopener">基于ubuntu腾讯云主机搭建书库</a></p>
-</li>
-<li><p><a href="https://blog.csdn.net/jiejiemcu/article/details/88070640" target="_blank" rel="noopener">http客户端</a></p>
-</li>
-<li><p><a href="https://blog.csdn.net/jiejiemcu/article/details/80543529" target="_blank" rel="noopener">基于小程序、单片机与PLC组合的共享车库信息平台平台【已经实现】</a></p>
-</li>
-<li><p><a href="https://blog.csdn.net/jiejiemcu/article/details/79307249" target="_blank" rel="noopener">超声波测距原理与实现</a></p>
-</li>
-<li><p><a href="https://blog.csdn.net/jiejiemcu/article/details/79469682" target="_blank" rel="noopener">openmv学习之旅①</a></p>
-</li>
-<li><p><a href="https://blog.csdn.net/jiejiemcu/article/details/80579893" target="_blank" rel="noopener">openmv学习之旅②之色块追踪算法的改善</a></p>
-</li>
-<li><p><a href="https://blog.csdn.net/jiejiemcu/article/details/80537935" target="_blank" rel="noopener">【野火®】i.MX RT1052评测——移植RT-Thread</a></p>
-</li>
-<li><p><a href="https://blog.csdn.net/jiejiemcu/article/details/80495612" target="_blank" rel="noopener">开源一个串口上位机源码</a></p>
-</li>
-<li><p><a href="https://blog.csdn.net/jiejiemcu/article/details/80543069" target="_blank" rel="noopener">win10 64位JLink v8固件丢失修复经验</a></p>
-</li>
-<li><p><a href="https://blog.csdn.net/jiejiemcu/article/details/79307319" target="_blank" rel="noopener">如何阅读看懂datasheet</a></p>
-<p>未完待续…</p>
-</li>
-</ol>
-<h1 id="C语言"><a href="#C语言" class="headerlink" title="C语言"></a>C语言</h1><ol>
-<li><p><a href="https://blog.csdn.net/jiejiemcu/article/details/80861760" target="_blank" rel="noopener">C语言字符串匹配与数据提取源码</a></p>
-</li>
-<li><p><a href="https://blog.csdn.net/jiejiemcu/article/details/79307332" target="_blank" rel="noopener">单片机C语言知识用法之#define</a></p>
-<p>未完待续…</p>
-</li>
-</ol>
-<h1 id="喜欢就关注我吧！"><a href="#喜欢就关注我吧！" class="headerlink" title="喜欢就关注我吧！"></a>喜欢就关注我吧！</h1><p><img src="./images/loading.png" data-original="http://qiniu.jiejie01.top/gzh.jpg" alt="欢迎关注我公众号"></p>
-<p>相关代码可以在公众号后台获取。</p>
+</ul>
+<h1 id="简单运行"><a href="#简单运行" class="headerlink" title="简单运行"></a>简单运行</h1><p>大家可以去运行一下节点管理器与节点：</p>
+<ul>
+<li>运行节点管理器：</li>
+</ul>
+<pre class="line-numbers language-bash"><code class="language-bash">roscore<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p><img src="./images/loading.png" data-original="http://qiniu.jiejie01.top/ros004.png" alt="节点管理器"></p>
+<ul>
+<li>在新终端运行一个节点：</li>
+</ul>
+<pre class="line-numbers language-bash"><code class="language-bash">rosrun turtlesim turtlesim_node<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<ul>
+<li>在新终端列出当前运行的节点：</li>
+</ul>
+<pre class="line-numbers language-bash"><code class="language-bash">rosnode list<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>效果如下：</p>
+<p><img src="./images/loading.png" data-original="http://qiniu.jiejie01.top/ros011.png" alt="ros011"></p>
+<h1 id="引用说明"><a href="#引用说明" class="headerlink" title="引用说明"></a>引用说明</h1><p>本文的部分截图来自<a href="https://github.com/huchunxu/ros_21_tutorials" target="_blank" rel="noopener">《古月居ROS入门21讲》</a>的课件。</p>
+<h1 id="参考："><a href="#参考：" class="headerlink" title="参考："></a>参考：</h1><p><a href="http://wiki.ros.org/cn/ROS/Tutorials/UnderstandingNodes" target="_blank" rel="noopener">ROS官方wiki</a></p>
+<p><a href="https://joveh-h.blog.csdn.net/article/details/90477682" target="_blank" rel="noopener">ROS笔记（6） ROS通讯机制</a></p>
 <script>
         document.querySelectorAll('.github-emoji')
           .forEach(el => {
@@ -838,7 +786,7 @@
                     </span>
                     <a href="https://jiedev.com" class="b-link-green">杰杰的博客</a>
                     <i class="fa fa-angle-right fa-lg fa-fw text-color"></i>
-                    <a href="/hello-world/" class="b-link-green">hellolo world</a>
+                    <a href="/ros-3/" class="b-link-green">【ROS入门-3】嘴对嘴讲解ROS的核心概念——节点与节点管理器</a>
                 </p>
             </div>
 
@@ -1123,32 +1071,37 @@
             <div class="article-badge left-badge text-color">
                 <i class="fa fa-chevron-left"></i>&nbsp;上一篇</div>
             <div class="card">
-                <a href="/c-define/">
+                <a href="/ros-2/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/1.jpg" class="responsive-img" alt="单片机C语言知识用法之#define">
+                        <img src="/medias/featureimages/9.jpg" class="responsive-img" alt="【ROS入门-2】带你看ROS文件系统及其工具">
                         
-                        <span class="card-title">单片机C语言知识用法之#define</span>
+                        <span class="card-title">【ROS入门-2】带你看ROS文件系统及其工具</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            #define的定义：#define是C语言中的一个预处理指令，其中的“#”表示这是一条预处理命令·。凡是以“#”开头的均为预处理命令，“define”为宏定义命令，“标识符”为所定义的宏名。
-#define TIME_NUM  1000 
+                            前言ROS的架构经过设计并划分成了三部分， 每一部分都代表一个层级的概念：
+
+文件系统级（Filesystem level）
+
+主要有ROS的内部构成、 文件夹结构， 以及工作所需的核心文件。
+
+计算图级（Computation Graph
                         
                     </div>
                     <div class="publish-info">
                         <span class="publish-date">
-                            <i class="fa fa-clock-o fa-fw icon-date"></i>2019-08-31
+                            <i class="fa fa-clock-o fa-fw icon-date"></i>2020-04-05
                         </span>
                         <span class="publish-author">
                             
                             <i class="fa fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/C语言/" class="post-category" target="_blank">
-                                    C语言
+                            <a href="/categories/ROS/" class="post-category" target="_blank">
+                                    ROS
                                 </a>
                             
                             
@@ -1158,8 +1111,12 @@
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/C语言/" target="_blank">
-                        <span class="chip bg-color">C语言</span>
+                    <a href="/tags/ROS/" target="_blank">
+                        <span class="chip bg-color">ROS</span>
+                    </a>
+                    
+                    <a href="/tags/机器人操作系统/" target="_blank">
+                        <span class="chip bg-color">机器人操作系统</span>
                     </a>
                     
                 </div>
@@ -1170,49 +1127,54 @@
         
         <div class="article col s12 m6" data-aos="fade-up">
             <div class="article-badge right-badge text-color">
-                本篇&nbsp;<i class="fa fa-dot-circle-o"></i>
+                下一篇&nbsp;<i class="fa fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/hello-world/">
+                <a href="/ros-1/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/7.jpg" class="responsive-img" alt="hellolo world">
+                        <img src="/medias/featureimages/2.jpg" class="responsive-img" alt="【ROS入门-1】手把手教你在Ubuntu18.04安装ROS Melodic">
                         
-                        <span class="card-title">hellolo world</span>
+                        <span class="card-title">【ROS入门-1】手把手教你在Ubuntu18.04安装ROS Melodic</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            hello
-网络的好朋友，你好，我是杰杰！如果我的博客有什么不足的地方，欢迎向我反馈；如果我的博客对你有帮助，那是我的荣幸！如果觉得文章很好，欢迎动动小手指，点个赞或者转发        —–杰杰。
+                            引言先来一张ROS的美照：
 
-欢迎关注我个人微信公众号，来一起全栈开
+参考官方wiki安装：http://wiki.ros.org/melodic/Installation/Ubuntu
+在Ubuntu的【软件和更新】配置如下：
+
+添加软件源sudo sh -c 'echo "d
                         
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="fa fa-clock-o fa-fw icon-date"></i>2019-08-30
+                                <i class="fa fa-clock-o fa-fw icon-date"></i>2020-04-04
                             </span>
                         <span class="publish-author">
                             
                             <i class="fa fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/随笔/" class="post-category" target="_blank">
-                                    随笔
+                            <a href="/categories/ROS/" class="post-category" target="_blank">
+                                    ROS
                                 </a>
                             
                             
                         </span>
                     </div>
                 </div>
-
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/随笔/" target="_blank">
-                        <span class="chip bg-color">随笔</span>
+                    <a href="/tags/ROS/" target="_blank">
+                        <span class="chip bg-color">ROS</span>
+                    </a>
+                    
+                    <a href="/tags/机器人操作系统/" target="_blank">
+                        <span class="chip bg-color">机器人操作系统</span>
                     </a>
                     
                 </div>
@@ -1360,13 +1322,6 @@
 
 </main>
 
-
-<script src="https://cdn.bootcss.com/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-<script>
-    MathJax.Hub.Config({
-        tex2jax: {inlineMath: [['$', '$'], ['\(', '\)']]}
-    });
-</script>
 
     <!-- jiejie 杰杰  modify 2019.08.15-->
 
