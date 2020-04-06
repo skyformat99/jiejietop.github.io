@@ -6,12 +6,12 @@
 
 <head><meta name="generator" content="Hexo 3.9.0">
     <meta charset="utf-8">
-    <meta name="keywords" content="CMake实战教程（二）, IoT RTOS linux Python jiejie Dora">
+    <meta name="keywords" content="【ROS入门-3】嘴对嘴讲解ROS的核心概念——ROS话题通信机制, IoT RTOS linux Python jiejie Dora">
     <meta name="baidu-site-verification" content="TRUUhavuHV">
     <meta name="google-site-verification" content="v-saR33QlUQmwVrLI7AQd08em9BtdazPy5jvPouEYHg">
-    <meta name="description" content="前言从上一篇的文章中，相信大家也了解了CMake这个东西，但是呢它不是只是看一下就能会的，这种东西还是要实践才能学会，那么如果你已经实践过了，就会体会到上一篇文章在实际中使用到底是多么的难搞，比如：
-
-生成很多垃圾文件，这是我的第一个体会…">
+    <meta name="description" content="前言我要给大家来介绍一下ROS当中一些核心的概念，帮助大家去在后面的ROS学习当中更快地吸收这些概念，今天讲解的是ROS中的通信机制——话题通信。
+ROS系列文章
+【ROS入门-1】手把手教你在Ubuntu18.04安装ROS Melodi">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -19,7 +19,7 @@
     <meta name="format-detection" content="telephone=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>CMake实战教程（二） | 杰杰的博客</title>
+    <title>【ROS入门-3】嘴对嘴讲解ROS的核心概念——ROS话题通信机制 | 杰杰的博客</title>
     <link rel="icon" type="image/x-icon, image/vnd.microsoft.icon" href="/medias/logo/favicon.ico">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/font-awesome.min.css">
@@ -366,13 +366,13 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/8.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/6.jpg')">
     <div class="container">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
                     <div class="description center-align post-title">
-                        CMake实战教程（二）
+                        【ROS入门-3】嘴对嘴讲解ROS的核心概念——ROS话题通信机制
                     </div>
                 </div>
             </div>
@@ -484,8 +484,12 @@
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/cmake/" target="_blank">
-                                <span class="chip bg-color">cmake</span>
+                            <a href="/tags/ROS/" target="_blank">
+                                <span class="chip bg-color">ROS</span>
+                            </a>
+                        
+                            <a href="/tags/机器人操作系统/" target="_blank">
+                                <span class="chip bg-color">机器人操作系统</span>
                             </a>
                         
                     </div>
@@ -496,8 +500,8 @@
                     <div class="post-cate">
                         <i class="fa fa-bookmark fa-fw icon-category"></i>
                         
-                            <a href="/categories/cmake/" class="post-category" target="_blank">
-                                cmake
+                            <a href="/categories/ROS/" class="post-category" target="_blank">
+                                ROS
                             </a>
                         
                     </div>
@@ -508,7 +512,7 @@
             <div class="post-info">
                 <div class="post-date info-break-policy">
                     <i class="fa fa-calendar-minus-o fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2020-02-12
+                    2020-04-06
                 </div>
 
                 <div class="post-author info-break-policy">
@@ -522,14 +526,14 @@
                     
                     <div class="info-break-policy">
                         <i class="fa fa-file-word-o fa-fw"></i>文章字数:&nbsp;&nbsp;
-                        2.2k
+                        2.1k
                     </div>
                     
 
                     
                     <div class="info-break-policy">
                         <i class="fa fa-clock-o fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                        8 分
+                        7 分
                     </div>
                     
                 
@@ -546,165 +550,181 @@
         <hr class="clearfix">
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>从上一篇的文章中，相信大家也了解了<code>CMake</code>这个东西，但是呢它不是只是看一下就能会的，这种东西还是要实践才能学会，那么如果你已经实践过了，就会体会到上一篇文章在实际中使用到底是多么的难搞，比如：</p>
-<ul>
-<li>生成很多垃圾文件，这是我的第一个体会….</li>
-<li>需要手动去指定编译的文件</li>
-<li>无法指定编译器，编译选项等等很多东西….</li>
-<li>如果有子目录也不能完全适用….</li>
-<li>以及一些其他的问题….</li>
+                <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>我要给大家来介绍一下ROS当中一些核心的概念，帮助大家去在后面的ROS学习当中更快地吸收这些概念，今天讲解的是ROS中的通信机制——话题通信。</p>
+<h1 id="ROS系列文章"><a href="#ROS系列文章" class="headerlink" title="ROS系列文章"></a>ROS系列文章</h1><ul>
+<li><p><a href="https://jiedev.com/ros-1/">【ROS入门-1】手把手教你在Ubuntu18.04安装ROS Melodic</a></p>
+</li>
+<li><p><a href="https://jiedev.com/ros-2/">【ROS入门-2】带你看ROS文件系统及其工具</a></p>
+</li>
+<li><p><a href="https://jiedev.com/ros-3/">【ROS入门-3】嘴对嘴讲解ROS的核心概念——节点与节点管理器</a></p>
+</li>
 </ul>
-<p>总的来说就是在真正项目中压根就没法适用的工程，那为什么我要写呢，因为那是我学习的过程，总不能一口吞下一个大胖子是不是，接下来的一系列文章我就会让<code>CMake</code>变得能在实际中使用，越来越自动化，更方便构建。。。</p>
-<h1 id="外部构建"><a href="#外部构建" class="headerlink" title="外部构建"></a>外部构建</h1><p>第一个问题，在运行<code>cmake .</code>后会产生很多垃圾文件，那么我们可以让它在一个build目录下去编译，生成的垃圾文件放在这个目录下就好了，不需要的时候直接清除即可。</p>
-<p>可能有人会问，它不能像Makefile一样直接<code>make clean</code> 或者<code>make distclean</code>清除编译的垃圾文件吗，我当时学的时候也谷歌过，但是，很遗憾没有，使用我才让它产生的垃圾文件放在build目录下，其实不能说是垃圾文件，只不过是一些中间文件，记录某些东西的，我用不上它，所以认为是垃圾…仅此而已。</p>
-<p>对此官方的解释是：</p>
-<blockquote>
-<p>CMakeLists.txt 可以执行脚本并通过脚本生成一些临时文件，但是却没有办法来跟踪这些临时文件到底是哪些，因此，没有办法提供一个可靠的 clean 方案。</p>
-</blockquote>
-<p>那怎么办呢？很简单，从<code>CMake</code>的语法我们就知道，它在构建的时候指定了<code>PATH</code>，也就是顶层<code>CMakeLists.txt</code> 入口的路径。</p>
-<pre class="line-numbers language-js"><code class="language-js">cmake PATH<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-<p>那么很显然，它可以是相对路径而不是绝对路径，毕竟<strong>点<code>‘.’</code></strong>  表示当前路径， <strong>点点<code>‘..’</code></strong> 表示上一级路径，那么我们可以新建一个build目录，然后在build目录下去运行：</p>
-<pre class="line-numbers language-bash"><code class="language-bash">cmake <span class="token punctuation">..</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-<p>这在<code>CMake</code>中称之为外部构建（out-of-source build），而 <code>CMake</code> 强烈推荐的就是外部构建！</p>
-<p>我自己也写了个build的脚本，内容非常简单，主要做两件事：</p>
+<h1 id="ROS的通信机制"><a href="#ROS的通信机制" class="headerlink" title="ROS的通信机制"></a>ROS的通信机制</h1><p>从前面的文章我们知道，ROS的通信机制是一个 <strong><code>松散耦合的分布式软件框架</code></strong> 设计而来的，而节点间的通讯就会必然是有几种通讯方式，那ROS主要给节点之间提供两种核心的通讯方式，一种叫做话题（topic），一种叫做服务（server）.</p>
+<p><strong>我们接下来讲解ROS的核心概念——ROS话题通信机制。</strong></p>
+<h1 id="话题（topic）"><a href="#话题（topic）" class="headerlink" title="话题（topic）"></a>话题（topic）</h1><p><code>话题</code>就是ROS中一个数据传输的<strong>有名字的通道</strong>。</p>
+<p>topic这个单词对我来说是非常熟悉的，因为我在物联网领域老是捣鼓网络协议栈，在MQTT协议里面经常看到topic，巧合的是ROS中的topic跟MQTT协议中的topic是非常像的，基本可以说是同样的模型。</p>
+<p>比如我们看下面这张图：</p>
+<p><img src="./images/loading.png" data-original="http://qiniu.jiejie01.top/ros012.png" alt="ros012"></p>
+<p>话题通讯的模型比较简单，这张图的模型里面会分为<strong>发布者（publisher）</strong>和<strong>订阅者（subscriber）</strong>，话题的这种通讯的方式是单向数据传输。比如说有一个节点它要发布一个数据，这个摄像头驱动节点它来驱动摄像头，并且获取摄像头的数据，然后传出来给处理数据的节点去处理，所以它会不断的往外发送一些图像数据，那它发到哪里呢？这个节点作为发布者，需要向某个<code>话题（topic，也可以称为主题）</code>发布这些数据，那么当系统中可能有多个节点要去处理图像，比如有一个节点是需要显示图像数据的，有一个节点是做图像处理的，它们实现要获取到这些数据后，才能处理对吧，而这些节点就是订阅者，它们从<code>话题（topic）</code>中接收这些数据，然后去处理它。</p>
+<h1 id="发布者"><a href="#发布者" class="headerlink" title="发布者"></a>发布者</h1><p>发布者：发布（publish）是指以将数据发布到某个话题中，为了可以正常执行发布操作。发布者（publisher）必须在节点管理器上注册自己的话题等多种信息。</p>
+<p><strong>发布者</strong>的工作过程如下：</p>
 <ol>
-<li>创建一个build目录（存在就不会重新创建的）</li>
-<li>进入build目录</li>
-<li>然后外部构建cmake</li>
-<li>生成Makefile文件后运行make命令编译</li>
+<li><p>向节点管理器注册节点。</p>
+</li>
+<li><p>告诉管理器要向哪个话题发布数据。</p>
+</li>
+<li><p>节点运行时采集数据，然后发布到这个话题。</p>
+</li>
 </ol>
-<pre class="line-numbers language-bash"><code class="language-bash"><span class="token shebang important">#!/bin/bash</span>
-
-<span class="token function">mkdir</span> -p build
-<span class="token function">cd</span> build
-cmake <span class="token punctuation">..</span>
-<span class="token function">make</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<p>因此在编译的时候直接运行这个脚本即可，生成的内容全部都在build目录下。</p>
+<h1 id="订阅者："><a href="#订阅者：" class="headerlink" title="订阅者："></a>订阅者：</h1><p>订阅是指订阅者节点想要接收来自某个话题的数据。为了可以正常执行订阅的操作，订阅者节点必须在节点管理器上注册自己想要订阅的话题等多种信息，并从节点管理器接收来自发布者的数据信息，同一个话题可以有多个发布者也可以有多个订阅者，但一般情况下发布者只有一个，而订阅者是一个或者多个。</p>
+<p><strong>订阅者</strong>的工作过程如下：</p>
+<ol>
+<li><p>向节点管理器注册节点。</p>
+</li>
+<li><p>订阅话题，告诉管理器要接收哪个话题的数据。</p>
+</li>
+<li><p>节点运行时就接收数据，然后去处理数据（一般来说会注册回调函数，当有数据的时候就在回调函数中处理）。</p>
+</li>
+</ol>
+<p>总的来说，话题就像是一个数据传输的管道。打个比方，你可以在运输牛奶的管道接到牛奶，在运输煤气的管道上接收到煤气，在水管上接到水。。。</p>
+<p><img src="./images/loading.png" data-original="http://qiniu.jiejie01.top/ros013.png" alt="ros013"></p>
+<p>就拿上面的图来说，<code>Camera Node</code>节点是发布者，它负责采集图像数据并且发布；<code>Image Processing Node</code>节点是订阅者，在接收到图像数据后要去处理数据，<code>Image Display Node</code>节点也是订阅者，在接收到图像数据后要去显示图像的数据。</p>
+<p>话题通讯它是一种<strong>异步通讯</strong>，因为我们没有办法知道发布者跟订阅者之间单向传输的这个时效性啊，我可能发不出去之后，订阅者可能等很长时间啊或者阻塞才会接收，到那很多情况下，我们更希望我的数据发出去之后，对方能给我一个。</p>
+<h1 id="消息（Message）"><a href="#消息（Message）" class="headerlink" title="消息（Message）"></a>消息（Message）</h1><p>大家有没有考虑过，话题之间的数据叫什么呢？没错，就是叫<strong>消息</strong>。</p>
+<p>节点之间通过消息（message）来发送和接收数据。消息是用来描述我们传输话题数据的，消息可以是各种类型的数据，比如整形、浮点型、字符等不定程度的数据，我们还可以在消息中使用一些数据结构来描述这些消息。</p>
+<h1 id="用C-来写话题通信的代码"><a href="#用C-来写话题通信的代码" class="headerlink" title="用C++来写话题通信的代码"></a>用C++来写话题通信的代码</h1><p>因为本系列文章还没介绍到工作空间，那么就先简单看看怎么去写代码吧：</p>
 <ul>
-<li>这是原始目录</li>
+<li>头文件</li>
 </ul>
-<pre class="line-numbers language-bash"><code class="language-bash"><span class="token keyword">.</span>
-├── build.sh
-├── CMakeLists.txt
-└── main.c
+<pre class="line-numbers language-c++"><code class="language-c++">#include <ros/ros.h>
+#include <geometry_msgs/Twist.h><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<h2 id="发布者："><a href="#发布者：" class="headerlink" title="发布者："></a>发布者：</h2><ul>
+<li>创建节点句柄，并且告诉节点管理器准备向<code>test_topic</code>话题发布消息。</li>
+</ul>
+<pre class="line-numbers language-c++"><code class="language-c++">    // ROS节点初始化
+    ros::init(argc, argv, "publisher_topic");
 
-0 directories, 3 files<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<p>编译后在build目录下生成很多文件，包括 <code>Makefile、section2(可执行程序)</code>等</p>
-<pre class="line-numbers language-bash"><code class="language-bash">CMakeCache.txt  CMakeFiles  cmake_install.cmake  Makefile  section2<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-<p><strong>补充一点，如果你想看到cmake生成的垃圾文件比你源码还多的时候，你就会爱死外部构建这种骚操作了~</strong></p>
-<h1 id="自动查找源码"><a href="#自动查找源码" class="headerlink" title="自动查找源码"></a>自动查找源码</h1><p>不得不说，cmake是个很好的自动化构建工具，既然是自动化，那么很的东西都是自动的，比如查找源码，cmake就提供查找源码的命令：</p>
-<pre class="line-numbers language-js"><code class="language-js"><span class="token function">aux_source_directory</span><span class="token punctuation">(</span><span class="token operator">&lt;</span>dir<span class="token operator">></span> <span class="token operator">&lt;</span>variable<span class="token operator">></span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-<p>它的主要作用就是：<strong>查找在某个路径下的所有源文件</strong>，注意，是所有源码文件，当你的目录下有很多个源码文件的时候，他就主动去查找了，哦，当然，它也只会查找源码文件，比如<code>*.c 、 *.cpp 、*.cc</code>啦，反正只要是源码就可以了，但是什么<code>txt  、 *.h</code>文件这些它是不会记录下来的。</p>
+    // 创建节点句柄
+    ros::NodeHandle n;
+
+    // 创建一个Publisher，发布名为test_topic，消息类型为gstd_msgs::String，队列长度100
+    ros::Publisher pub_topic = n.advertise<std_msgs::String>("test_topic", 100);<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <ul>
-<li><code>dir</code> ： 指定的目录（可以是绝对路径也可以是相对路径）</li>
-<li><code>variable</code>：将输出结果列表储存在指定的<code>&lt;variable&gt;</code>变量中。</li>
+<li>填充消息的内容并且向话题发布消息：</li>
 </ul>
-<p>反正这个命令就很方便，我在某个目录下有啥源码文件，我都会被记录到<code>&lt;variable&gt;</code>变量，然后在<code>CMake</code>直接使用即可。当然后续也有其他的命令去找源码文件，一口吃不了一个大胖子，先了解这个先，后续慢慢学习~</p>
-<h1 id="变量"><a href="#变量" class="headerlink" title="变量"></a>变量</h1><p>在<code>CMake</code>中，变量是十分常见的，我正在就简单讲解下基本的语法吧：</p>
-<p>定义变量常用的函数是：</p>
-<pre class="line-numbers language-js"><code class="language-js"><span class="token keyword">set</span><span class="token punctuation">(</span>VARIABLE_NAME VARIABLE<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-<p>取消定义变量是</p>
-<pre class="line-numbers language-js"><code class="language-js"><span class="token function">unset</span><span class="token punctuation">(</span>VARIABLE_NAME <span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<pre class="line-numbers language-c++"><code class="language-c++">    // 初始化std_msgs::String类型的消息
+    std_msgs::String str_msg;
+
+    str_msg.data = "this is a test_topic message!";
+
+    // 发布消息
+    pub_topic.publish(str_msg);<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="订阅者"><a href="#订阅者" class="headerlink" title="订阅者"></a>订阅者</h2><ul>
+<li>创建节点句柄，并且告诉节点管理器订阅一个话题<code>test_topic</code></li>
+</ul>
+<pre class="line-numbers language-c++"><code class="language-c++">    // 接收到订阅的消息后，会进入消息回调函数
+    void test_topic_cb(const std_msgs::String::ConstPtr& msg)
+    {
+        // 将接收到的消息打印出来
+        ROS_INFO("I heard: [%s]", msg->data.c_str());
+    }
+
+    // 初始化ROS节点
+    ros::init(argc, argv, "subscriber_topic");
+
+    // 创建节点句柄
+    ros::NodeHandle n;
+
+    // 创建一个Subscriber，订阅名为test_topic的消息，注册回调函数test_topic_cb
+    ros::Subscriber sub_topic = n.subscribe("test_topic", 100, test_topic_cb);
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <ul>
-<li><code>VARIABLE_NAME</code> ： 变量名字</li>
-<li><code>VARIABLE</code>：变量的值</li>
+<li>循环等待来自话题<code>test_topic</code>的消息，当收到消息后会进入回调函数<code>test_topic_cb()</code>中处理：</li>
 </ul>
-<p>变量的的值始终是<code>string（字符串）</code>类型，变量名字是区分大小写的，一般变量命名还是正常点比较好，别搞太多乱七八糟的特殊符号，只要数字、字母，下划线<code>"_"</code> 、横线<code>"-"</code>就差不多了，变量的作用域也是有全局与局部之分，与C语言、Java都差不多，我也不多说了。我的例程中<code>全局变量是全部大写，局部变量是全小写</code>的，也是比较好区分。</p>
-<p>变量引用的形式为<code>${variable_name}</code>，变量引用被变量的值替换，或者如果变量没有被设置，则由空字符串替换。变量引用可以嵌套，例如<code>${outer_${inner_variable}veriable}</code>；环境变量引用的形式为<code>$ENV{VARIABLE}</code>，并在相同的上下文中作为正常变量引用。</p>
-<h1 id="打印日志"><a href="#打印日志" class="headerlink" title="打印日志"></a>打印日志</h1><p>在<code>CMake</code>构建的时候，你可能不知道某些变量是啥内容，那么就在终端打印出来看看就好了，这根我们写代码中的printf函数差不多，给直接打一串字符串出来瞧瞧….</p>
-<pre class="line-numbers language-js"><code class="language-js"><span class="token function">message</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token operator">&lt;</span>mode<span class="token operator">></span><span class="token punctuation">]</span> <span class="token string">"message to display"</span> <span class="token operator">...</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-<p>首先呢，<code>&lt;mode&gt;</code>是指定消息的类型：</p>
+<pre class="line-numbers language-c++"><code class="language-c++">    // 循环等待回调函数
+    ros::spin();<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p>此处需要在工作空间进行实验，分别打开新的终端运行节点管理器、发布者节点、订阅者节点，实验效果如下：</p>
+<p><img src="./images/loading.png" data-original="http://qiniu.jiejie01.top/ros014.png" alt="ros014"></p>
+<h1 id="使用rqt-graph"><a href="#使用rqt-graph" class="headerlink" title="使用rqt_graph"></a>使用rqt_graph</h1><p><code>publisher_topic</code>节点和<code>subscriber_topic</code>节点之间是通过一个<code>test_topic</code>话题来互相通信的，我们可以使用<code>rqt_graph</code>来显示当前运行的节点和话题。</p>
+<p>rqt_graph是rqt程序包中的一部分，如果你没有安装，请通过以下命令来安装：</p>
+<pre class="line-numbers language-bash"><code class="language-bash"><span class="token function">sudo</span> <span class="token function">apt-get</span> <span class="token function">install</span> ros-<span class="token operator">&lt;</span>distro<span class="token operator">></span>-rqt
+<span class="token function">sudo</span> <span class="token function">apt-get</span> <span class="token function">install</span> ros-<span class="token operator">&lt;</span>distro<span class="token operator">></span>-rqt-common-plugins<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p>将 <code>&lt;distro&gt;</code>替换成你所安装的版本（比如 kinetic、melodic 等）。</p>
+<p>在一个新终端中运行:</p>
+<pre class="line-numbers language-bash"><code class="language-bash">rosrun rqt_graph rqt_graph<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>你会看到以下界面：</p>
+<p><img src="./images/loading.png" data-original="http://qiniu.jiejie01.top/ros015.png" alt="ros015"></p>
+<h1 id="源码附录"><a href="#源码附录" class="headerlink" title="源码附录"></a>源码附录</h1><ul>
+<li>subscriber_topic.cpp:</li>
+</ul>
+<pre class="line-numbers language-c++"><code class="language-c++">#include <ros/ros.h>
+#include <std_msgs/String.h>
+
+// 接收到订阅的消息后，会进入消息回调函数
+void test_topic_cb(const std_msgs::String::ConstPtr& msg)
+{
+    // 将接收到的消息打印出来
+    ROS_INFO("I heard: [%s]", msg->data.c_str());
+}
+
+int main(int argc, char **argv)
+{
+    // 初始化ROS节点
+    ros::init(argc, argv, "subscriber_topic");
+
+    // 创建节点句柄
+    ros::NodeHandle n;
+
+    // 创建一个Subscriber，订阅名为test_topic的消息，注册回调函数test_topic_cb
+    ros::Subscriber sub_topic = n.subscribe("test_topic", 100, test_topic_cb);
+
+    // 循环等待回调函数
+    ros::spin();
+
+    return 0;
+}<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <ul>
-<li><code>(无)</code> = 重要消息；</li>
-<li><code>STATUS</code> = 非重要消息；</li>
-<li><code>WARNING</code> = CMake 警告, 会继续执行；</li>
-<li><code>AUTHOR_WARNING</code> = CMake 警告 (dev), 会继续执行；</li>
-<li><code>SEND_ERROR</code> = CMake 错误, 继续执行，但是会跳过生成的步骤；</li>
-<li><code>FATAL_ERROR</code> = CMake 错误, 终止所有处理过程；</li>
+<li>publisher_topic.cpp:</li>
 </ul>
-<p>正常情况下我都是输出一些状态信息——<code>STATUS</code>，打印个变量啦，打印下代码的执行顺序啦等等….</p>
-<p>后面就是有些字符串信息了，变量在这里直接引用就好，毕竟变量本身就是字符串….</p>
-<h1 id="section3"><a href="#section3" class="headerlink" title="section3"></a>section3</h1><p>给出个实例代码：<br>当前目录存在2个c文件，分别是<code>main.c</code>、<code>power.c</code>就是简单计算x的y次方，纯粹是个demo，我自己也懒得写，并不是因为代码有多高深，所以这代码我是从网上找的，来自<a href="https://github.com/wzpan" target="_blank" rel="noopener">潘伟洲</a>大神的cmake测试代码：<a href="https://github.com/wzpan/cmake-demo" target="_blank" rel="noopener">https://github.com/wzpan/cmake-demo</a>。</p>
-<ul>
-<li>main.c</li>
-</ul>
-<pre class="line-numbers language-c"><code class="language-c"><span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">&lt;stdio.h></span></span>
-<span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">&lt;stdlib.h></span></span>
-<span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">"power.h"</span></span>
+<pre class="line-numbers language-c++"><code class="language-c++">#include <ros/ros.h>
+#include "std_msgs/String.h"
 
-<span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token keyword">int</span> argc<span class="token punctuation">,</span> <span class="token keyword">char</span> <span class="token operator">*</span>argv<span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
-<span class="token punctuation">{</span>
-    <span class="token keyword">if</span> <span class="token punctuation">(</span>argc <span class="token operator">&lt;</span> <span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
-        <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"Usage: %s base exponent \n"</span><span class="token punctuation">,</span> argv<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token keyword">return</span> <span class="token number">1</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-    <span class="token keyword">double</span> base <span class="token operator">=</span> <span class="token function">atof</span><span class="token punctuation">(</span>argv<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token keyword">int</span> exponent <span class="token operator">=</span> <span class="token function">atoi</span><span class="token punctuation">(</span>argv<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token keyword">double</span> result <span class="token operator">=</span> <span class="token function">power</span><span class="token punctuation">(</span>base<span class="token punctuation">,</span> exponent<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"%g ^ %d is %g\n"</span><span class="token punctuation">,</span> base<span class="token punctuation">,</span> exponent<span class="token punctuation">,</span> result<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<ul>
-<li>power.c</li>
-</ul>
-<pre class="line-numbers language-c"><code class="language-c"><span class="token keyword">double</span> <span class="token function">power</span><span class="token punctuation">(</span><span class="token keyword">double</span> base<span class="token punctuation">,</span> <span class="token keyword">int</span> exponent<span class="token punctuation">)</span>
-<span class="token punctuation">{</span>
-    <span class="token keyword">int</span> result <span class="token operator">=</span> base<span class="token punctuation">;</span>
-    <span class="token keyword">int</span> i<span class="token punctuation">;</span>
+int main(int argc, char **argv)
+{
+    // ROS节点初始化
+    ros::init(argc, argv, "publisher_topic");
 
-    <span class="token keyword">if</span> <span class="token punctuation">(</span>exponent <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        <span class="token keyword">return</span> <span class="token number">1</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
+    // 创建节点句柄
+    ros::NodeHandle n;
 
-    <span class="token keyword">for</span><span class="token punctuation">(</span>i <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> exponent<span class="token punctuation">;</span> <span class="token operator">++</span>i<span class="token punctuation">)</span><span class="token punctuation">{</span>
-        result <span class="token operator">=</span> result <span class="token operator">*</span> base<span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
+    // 创建一个Publisher，发布名为test_topic，消息类型为gstd_msgs::String，队列长度100
+    ros::Publisher pub_topic = n.advertise<std_msgs::String>("test_topic", 100);
 
-    <span class="token keyword">return</span> result<span class="token punctuation">;</span>
-<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<p>然后就是<code>CMakeLists.txt</code>文件：</p>
-<pre class="line-numbers language-js"><code class="language-js"># CMake 最低版本号要求
-cmake_minimum_required <span class="token punctuation">(</span>VERSION <span class="token number">2.8</span><span class="token punctuation">)</span>
+    // 设置循环的频率
+    ros::Rate loop_rate(10);
 
-# 项目信息
-project <span class="token punctuation">(</span>section3<span class="token punctuation">)</span>
+    while (ros::ok())
+    {
+        // 初始化std_msgs::String类型的消息
+        std_msgs::String str_msg;
 
-# 查找当前目录下的所有源文件
-# 并将名称保存到 DIR_SRCS 变量
-<span class="token function">aux_source_directory</span><span class="token punctuation">(</span><span class="token punctuation">.</span> DIR_SRCS<span class="token punctuation">)</span>
+        str_msg.data = "this is a test_topic message!";
 
-# 指定生成目标
-<span class="token function">add_executable</span><span class="token punctuation">(</span>section3 $<span class="token punctuation">{</span>DIR_SRCS<span class="token punctuation">}</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<p>相比于上一篇文章，我这个<code>CMakeLists.txt</code>文件只是添加了<code>aux_source_directory</code>命令去自动扫描当前目录下的源码文件，并且保存到<code>DIR_SRCS</code> 变量中，仅此而已！！</p>
-<p>然后在<code>add_executable</code>命令中，用<code>${DIR_SRCS}</code>变量代替指定的源码文件<code>source1 source2 ... sourceN</code>，当然你也可以打印一下<code>${DIR_SRCS}</code>变量到底保存了什么，如果不出意外的话，它保存的就是<code>./main.c;   ./power.c</code>，表示的是当前目录下的<code>main.c</code>、<code>power.c</code>这两个文件，而分号代表它是一个list，后续会讲解怎么去提取list的内容….</p>
-<pre class="line-numbers language-bash"><code class="language-bash">message<span class="token punctuation">(</span>STATUS <span class="token string">"<span class="token variable">${DIR_SRCS}</span>"</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-<p>然后用外部构建的方式去编译代码：</p>
-<pre class="line-numbers language-bash"><code class="language-bash">jie@pc:~/github/cmake/section3$ ./build.sh 
--- The C compiler identification is GNU 7.4.0
--- The CXX compiler identification is GNU 7.4.0
--- Check <span class="token keyword">for</span> working C compiler: /usr/bin/cc
--- Check <span class="token keyword">for</span> working C compiler: /usr/bin/cc -- works
--- Detecting C compiler ABI info
--- Detecting C compiler ABI info - <span class="token keyword">done</span>
--- Detecting C compile features
--- Detecting C compile features - <span class="token keyword">done</span>
--- Check <span class="token keyword">for</span> working CXX compiler: /usr/bin/c++
--- Check <span class="token keyword">for</span> working CXX compiler: /usr/bin/c++ -- works
--- Detecting CXX compiler ABI info
--- Detecting CXX compiler ABI info - <span class="token keyword">done</span>
--- Detecting CXX compile features
--- Detecting CXX compile features - <span class="token keyword">done</span>
--- Configuring <span class="token keyword">done</span>
--- Generating <span class="token keyword">done</span>
--- Build files have been written to: /home/jie/github/cmake/section3/build
-Scanning dependencies of target section3
-<span class="token punctuation">[</span> 33%<span class="token punctuation">]</span> Building C object CMakeFiles/section3.dir/main.c.o
-<span class="token punctuation">[</span> 66%<span class="token punctuation">]</span> Building C object CMakeFiles/section3.dir/power.c.o
-<span class="token punctuation">[</span>100%<span class="token punctuation">]</span> Linking C executable section3
-<span class="token punctuation">[</span>100%<span class="token punctuation">]</span> Built target section3<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<p>很明显生成了正确可执行文件~</p>
-<h1 id="代码下载"><a href="#代码下载" class="headerlink" title="代码下载"></a>代码下载</h1><p><a href="https://github.com/jiejieTop/cmake" target="_blank" rel="noopener">https://github.com/jiejieTop/cmake</a></p>
-<p>未完待续….</p>
+        // 发布消息
+        pub_topic.publish(str_msg);
+
+        // 按照循环频率延时
+        loop_rate.sleep();
+    }
+
+    return 0;
+}<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<blockquote>
+<p>当然你也可以用Python语言来实现话题通信，可以参考我后文中给出的链接~</p>
+</blockquote>
+<h1 id="引用说明"><a href="#引用说明" class="headerlink" title="引用说明"></a>引用说明</h1><p>本文的部分截图来自<a href="https://github.com/huchunxu/ros_21_tutorials" target="_blank" rel="noopener">《古月居·ROS入门21讲》</a>的课件。</p>
+<h1 id="参考："><a href="#参考：" class="headerlink" title="参考："></a>参考：</h1><p><a href="http://wiki.ros.org/cn/ROS/Tutorials/UnderstandingTopics" target="_blank" rel="noopener">ROS官方wiki</a></p>
+<p><a href="https://joveh-h.blog.csdn.net/article/details/90551432" target="_blank" rel="noopener">ROS笔记（7） 话题通信</a></p>
 <script>
         document.querySelectorAll('.github-emoji')
           .forEach(el => {
@@ -873,7 +893,7 @@ Scanning dependencies of target section3
                     </span>
                     <a href="https://jiedev.com" class="b-link-green">杰杰的博客</a>
                     <i class="fa fa-angle-right fa-lg fa-fw text-color"></i>
-                    <a href="/cmake-2/" class="b-link-green">CMake实战教程（二）</a>
+                    <a href="/ros-4/" class="b-link-green">【ROS入门-3】嘴对嘴讲解ROS的核心概念——ROS话题通信机制</a>
                 </p>
             </div>
 
@@ -1154,47 +1174,54 @@ Scanning dependencies of target section3
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fa fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="fa fa-dot-circle-o"></i>&nbsp;本篇
+            </div>
             <div class="card">
-                <a href="/cmake-3/">
+                <a href="/ros-4/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/11.jpg" class="responsive-img" alt="CMake实战教程（三）">
+                        <img src="/medias/featureimages/6.jpg" class="responsive-img" alt="【ROS入门-3】嘴对嘴讲解ROS的核心概念——ROS话题通信机制">
                         
-                        <span class="card-title">CMake实战教程（三）</span>
+                        <span class="card-title">【ROS入门-3】嘴对嘴讲解ROS的核心概念——ROS话题通信机制</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            前言从本小节开始，后面所有的构建我们都将采用 out-of-source build 外部构建的方式去编写构建工程代码，构建目录是工程目录下的 build 目录。
-从上一篇文章我们就知道，通过aux_source_directory命令可以
+                            前言我要给大家来介绍一下ROS当中一些核心的概念，帮助大家去在后面的ROS学习当中更快地吸收这些概念，今天讲解的是ROS中的通信机制——话题通信。
+ROS系列文章
+【ROS入门-1】手把手教你在Ubuntu18.04安装ROS Melodi
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="fa fa-clock-o fa-fw icon-date"></i>2020-02-12
-                        </span>
+                            <span class="publish-date">
+                                <i class="fa fa-clock-o fa-fw icon-date"></i>2020-04-06
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fa fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/cmake/" class="post-category" target="_blank">
-                                    cmake
+                            <a href="/categories/ROS/" class="post-category" target="_blank">
+                                    ROS
                                 </a>
                             
                             
                         </span>
                     </div>
                 </div>
+
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/cmake/" target="_blank">
-                        <span class="chip bg-color">cmake</span>
+                    <a href="/tags/ROS/" target="_blank">
+                        <span class="chip bg-color">ROS</span>
+                    </a>
+                    
+                    <a href="/tags/机器人操作系统/" target="_blank">
+                        <span class="chip bg-color">机器人操作系统</span>
                     </a>
                     
                 </div>
@@ -1208,31 +1235,35 @@ Scanning dependencies of target section3
                 下一篇&nbsp;<i class="fa fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/cmake-1/">
+                <a href="/ros-3/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/4.jpg" class="responsive-img" alt="CMake实战教程（一）">
+                        <img src="/medias/featureimages/1.jpg" class="responsive-img" alt="【ROS入门-3】嘴对嘴讲解ROS的核心概念——节点与节点管理器">
                         
-                        <span class="card-title">CMake实战教程（一）</span>
+                        <span class="card-title">【ROS入门-3】嘴对嘴讲解ROS的核心概念——节点与节点管理器</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            前言在学习CMake之前，一直都是自己在手敲Makefile文件，当项目的文件一旦多了起来，自己手动写Makefile就不是那么好玩了，也曾经了解了一下autotools，但是seeed的柱哥说有CMake这个东西，所以我就去学习了，也在网
+                            前言我要给大家来介绍一下ROS当中一些核心的概念，帮助大家去在后面的ROS学习当中更快地吸收这些概念。
+ROS系列文章
+【ROS入门-1】手把手教你在Ubuntu18.04安装ROS Melodic
+
+【ROS入门-2】带你看ROS文件系统
                         
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="fa fa-clock-o fa-fw icon-date"></i>2019-12-03
+                                <i class="fa fa-clock-o fa-fw icon-date"></i>2020-04-05
                             </span>
                         <span class="publish-author">
                             
                             <i class="fa fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/cmake/" class="post-category" target="_blank">
-                                    cmake
+                            <a href="/categories/ROS/" class="post-category" target="_blank">
+                                    ROS
                                 </a>
                             
                             
@@ -1242,8 +1273,12 @@ Scanning dependencies of target section3
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/cmake/" target="_blank">
-                        <span class="chip bg-color">cmake</span>
+                    <a href="/tags/ROS/" target="_blank">
+                        <span class="chip bg-color">ROS</span>
+                    </a>
+                    
+                    <a href="/tags/机器人操作系统/" target="_blank">
+                        <span class="chip bg-color">机器人操作系统</span>
                     </a>
                     
                 </div>

@@ -396,20 +396,20 @@ $('.bg-cover').css('background-image', 'url(/medias/banner/' + new Date().getDay
             
             <div class="article col s12 m6 l4" data-aos="zoom-in">
                 <div class="card">
-                    <a href="/tencentos-tiny-8/" target="_blank">
+                    <a href="/tencentos-tiny-9/" target="_blank">
                         <div class="card-image">
                             
                             
-                            <img src="/medias/featureimages/11.jpg" class="responsive-img" alt="【TencentOS  tiny】深度源码分析（6）——互斥锁">
+                            <img src="/medias/featureimages/3.jpg" class="responsive-img" alt="【TencentOS  tiny】深度源码分析（7）——事件">
                             
-                            <span class="card-title">【TencentOS  tiny】深度源码分析（6）——互斥锁</span>
+                            <span class="card-title">【TencentOS  tiny】深度源码分析（7）——事件</span>
                         </div>
                     </a>
 
                     <div class="card-content article-content">
                         <div class="summary block-with-text">
                             
-                            互斥锁互斥锁又称互斥互斥锁，是一种特殊的信号量，它和信号量不同的是，它具有互斥锁所有权、递归访问以及优先级继承等特性，在操作系统中常用于对临界资源的独占式处理。在任意时刻互斥锁的状态只有两种，开锁或闭锁，当互斥锁被任务持有时，该互斥锁处于闭
+                            引言大家在裸机编程中很可能经常用到flag这种变量，用来标志一下某个事件的发生，然后在循环中判断这些标志是否发生，如果是等待多个事件的话，还可能会if((xxx_flag)&amp;&amp;(xxx_flag))这样子做判断。当然，如果聪
                             
                         </div>
                         <div class="publish-info">
@@ -459,21 +459,20 @@ $('.bg-cover').css('background-image', 'url(/medias/banner/' + new Date().getDay
             
             <div class="article col s12 m6 l4" data-aos="zoom-in">
                 <div class="card">
-                    <a href="/tencentos-tiny-6/" target="_blank">
+                    <a href="/tencentos-tiny-8/" target="_blank">
                         <div class="card-image">
                             
                             
-                            <img src="/medias/featureimages/4.jpg" class="responsive-img" alt="【TencentOS  tiny】深度源码分析（4）——消息队列">
+                            <img src="/medias/featureimages/11.jpg" class="responsive-img" alt="【TencentOS  tiny】深度源码分析（6）——互斥锁">
                             
-                            <span class="card-title">【TencentOS  tiny】深度源码分析（4）——消息队列</span>
+                            <span class="card-title">【TencentOS  tiny】深度源码分析（6）——互斥锁</span>
                         </div>
                     </a>
 
                     <div class="card-content article-content">
                         <div class="summary block-with-text">
                             
-                            消息队列在前一篇文章中【TencentOS tiny学习】源码分析（3）——队列我们描述了TencentOS tiny的队列实现，同时也点出了TencentOS tiny的队列是依赖于消息队列的，那么我们今天来看看消息队列的实现。
-其实消息
+                            互斥锁互斥锁又称互斥互斥锁，是一种特殊的信号量，它和信号量不同的是，它具有互斥锁所有权、递归访问以及优先级继承等特性，在操作系统中常用于对临界资源的独占式处理。在任意时刻互斥锁的状态只有两种，开锁或闭锁，当互斥锁被任务持有时，该互斥锁处于闭
                             
                         </div>
                         <div class="publish-info">
@@ -538,6 +537,70 @@ $('.bg-cover').css('background-image', 'url(/medias/banner/' + new Date().getDay
                             
                             信号量信号量（sem）在操作系统中是一种实现系统中任务与任务、任务与中断间同步或者临界资源互斥保护的机制。在多任务系统中，各任务之间常需要同步或互斥，信号量就可以为用户提供这方面的支持。
 抽象来说，信号量是一个非负整数，每当信号量被获取（p
+                            
+                        </div>
+                        <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="fa fa-clock-o fa-fw icon-date"></i>2019-10-12
+                            </span>
+                            <span class="publish-author">
+                                
+                                <i class="fa fa-bookmark fa-fw icon-category"></i>
+                                
+                                <a href="/categories/操作系统/" class="post-category" target="_blank">
+                                    操作系统
+                                </a>
+                                
+                                <a href="/categories/操作系统/TencentOS-tiny/" class="post-category" target="_blank">
+                                    TencentOS tiny
+                                </a>
+                                
+                                
+                            </span>
+                        </div>
+                    </div>
+
+                    
+                    <div class="card-action article-tags">
+                        
+                        <a href="/tags/TencentOS-tiny/" target="_blank">
+                            <span class="chip bg-color">TencentOS tiny</span>
+                        </a>
+                        
+                        <a href="/tags/RTOS/" target="_blank">
+                            <span class="chip bg-color">RTOS</span>
+                        </a>
+                        
+                        <a href="/tags/操作系统/" target="_blank">
+                            <span class="chip bg-color">操作系统</span>
+                        </a>
+                        
+                        <a href="/tags/物联网/" target="_blank">
+                            <span class="chip bg-color">物联网</span>
+                        </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+            
+            <div class="article col s12 m6 l4" data-aos="zoom-in">
+                <div class="card">
+                    <a href="/tencentos-tiny-6/" target="_blank">
+                        <div class="card-image">
+                            
+                            
+                            <img src="/medias/featureimages/4.jpg" class="responsive-img" alt="【TencentOS  tiny】深度源码分析（4）——消息队列">
+                            
+                            <span class="card-title">【TencentOS  tiny】深度源码分析（4）——消息队列</span>
+                        </div>
+                    </a>
+
+                    <div class="card-content article-content">
+                        <div class="summary block-with-text">
+                            
+                            消息队列在前一篇文章中【TencentOS tiny学习】源码分析（3）——队列我们描述了TencentOS tiny的队列实现，同时也点出了TencentOS tiny的队列是依赖于消息队列的，那么我们今天来看看消息队列的实现。
+其实消息
                             
                         </div>
                         <div class="publish-info">
@@ -1074,66 +1137,6 @@ $('.bg-cover').css('background-image', 'url(/medias/banner/' + new Date().getDay
                 </div>
             </div>
             
-            <div class="article col s12 m6 l4" data-aos="zoom-in">
-                <div class="card">
-                    <a href="/dma/" target="_blank">
-                        <div class="card-image">
-                            
-                            
-                            <img src="/medias/featureimages/8.jpg" class="responsive-img" alt="STM32之串口DMA接收不定长数据">
-                            
-                            <span class="card-title">STM32之串口DMA接收不定长数据</span>
-                        </div>
-                    </a>
-
-                    <div class="card-content article-content">
-                        <div class="summary block-with-text">
-                            
-                            STM32之串口DMA接收不定长数据引言在使用stm32或者其他单片机的时候，会经常使用到串口通讯，那么如何有效地接收数据呢？假如这段数据是不定长的有如何高效接收呢？
-
-同学A：数据来了就会进入串口中断，在中断中读取数据就行了！
-
-
-中断就
-                            
-                        </div>
-                        <div class="publish-info">
-                            <span class="publish-date">
-                                <i class="fa fa-clock-o fa-fw icon-date"></i>2019-10-05
-                            </span>
-                            <span class="publish-author">
-                                
-                                <i class="fa fa-bookmark fa-fw icon-category"></i>
-                                
-                                <a href="/categories/STM32/" class="post-category" target="_blank">
-                                    STM32
-                                </a>
-                                
-                                
-                            </span>
-                        </div>
-                    </div>
-
-                    
-                    <div class="card-action article-tags">
-                        
-                        <a href="/tags/STM32/" target="_blank">
-                            <span class="chip bg-color">STM32</span>
-                        </a>
-                        
-                        <a href="/tags/Cortex-M/" target="_blank">
-                            <span class="chip bg-color">Cortex-M</span>
-                        </a>
-                        
-                        <a href="/tags/DMA/" target="_blank">
-                            <span class="chip bg-color">DMA</span>
-                        </a>
-                        
-                    </div>
-                    
-                </div>
-            </div>
-            
         </div>
     </article>
 
@@ -1176,7 +1179,7 @@ $('.bg-cover').css('background-image', 'url(/medias/banner/' + new Date().getDay
 
             
                 &nbsp;<i class="fa fa-area-chart"></i>&nbsp;站点总字数:&nbsp;
-                <span class="white-color">106.3k </span>
+                <span class="white-color">108.4k </span>
 
             
 
