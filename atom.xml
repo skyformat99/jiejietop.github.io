@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://jiedev.com/"/>
-  <updated>2020-04-06T11:41:17.230Z</updated>
+  <updated>2020-04-06T11:50:28.059Z</updated>
   <id>https://jiedev.com/</id>
   
   <author>
@@ -17,11 +17,11 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>【ROS入门-3】嘴对嘴讲解ROS的核心概念——ROS话题通信机制</title>
+    <title>【ROS入门-4】嘴对嘴讲解ROS的核心概念——ROS话题通信机制</title>
     <link href="https://jiedev.com/ros-4/"/>
     <id>https://jiedev.com/ros-4/</id>
     <published>2020-04-05T16:29:08.000Z</published>
-    <updated>2020-04-06T11:41:17.230Z</updated>
+    <updated>2020-04-06T11:50:28.059Z</updated>
     
     <summary type="html">
     
@@ -49,7 +49,7 @@
     <link href="https://jiedev.com/ros-3/"/>
     <id>https://jiedev.com/ros-3/</id>
     <published>2020-04-04T16:29:08.000Z</published>
-    <updated>2020-04-05T09:49:39.499Z</updated>
+    <updated>2020-04-06T11:50:27.080Z</updated>
     
     <summary type="html">
     
