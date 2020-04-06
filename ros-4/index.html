@@ -526,7 +526,7 @@ ROS系列文章
                     
                     <div class="info-break-policy">
                         <i class="fa fa-file-word-o fa-fw"></i>文章字数:&nbsp;&nbsp;
-                        2.1k
+                        2.3k
                     </div>
                     
 
@@ -561,8 +561,8 @@ ROS系列文章
 </ul>
 <h1 id="ROS的通信机制"><a href="#ROS的通信机制" class="headerlink" title="ROS的通信机制"></a>ROS的通信机制</h1><p>从前面的文章我们知道，ROS的通信机制是一个 <strong><code>松散耦合的分布式软件框架</code></strong> 设计而来的，而节点间的通讯就会必然是有几种通讯方式，那ROS主要给节点之间提供两种核心的通讯方式，一种叫做话题（topic），一种叫做服务（server）.</p>
 <p><strong>我们接下来讲解ROS的核心概念——ROS话题通信机制。</strong></p>
-<h1 id="话题（topic）"><a href="#话题（topic）" class="headerlink" title="话题（topic）"></a>话题（topic）</h1><p><code>话题</code>就是ROS中一个数据传输的<strong>有名字的通道</strong>。</p>
-<p>topic这个单词对我来说是非常熟悉的，因为我在物联网领域老是捣鼓网络协议栈，在MQTT协议里面经常看到topic，巧合的是ROS中的topic跟MQTT协议中的topic是非常像的，基本可以说是同样的模型。</p>
+<h1 id="话题（topic）"><a href="#话题（topic）" class="headerlink" title="话题（topic）"></a>话题（topic）</h1><p><code>话题</code>就是ROS中一个数据传输的<strong>有名字的通道</strong>。当一个节点想要分享信息时，它就会发布(publish)消息到对应的一个或者多个话题；当一个节点想要接收信息时，它就会订阅(subscribe)它所需要的一个或者多个话题。 ROS节点管理器负责确保发布节点和订阅节点能找到对方；<strong>而且消息是直接地从发布节点传递到订阅节点，中间并不经过节点管理器转交。</strong></p>
+<p>topic这个单词对我来说是非常熟悉的，因为我在物联网领域老是捣鼓网络协议栈，在MQTT协议里面经常看到topic，巧合的是ROS中的topic跟MQTT协议中的topic是非常像的，基本可以说是同样的模型，但MQTT协议里面需要服务器转发数据。</p>
 <p>比如我们看下面这张图：</p>
 <p><img src="./images/loading.png" data-original="http://qiniu.jiejie01.top/ros012.png" alt="ros012"></p>
 <p>话题通讯的模型比较简单，这张图的模型里面会分为<strong>发布者（publisher）</strong>和<strong>订阅者（subscriber）</strong>，话题的这种通讯的方式是单向数据传输。比如说有一个节点它要发布一个数据，这个摄像头驱动节点它来驱动摄像头，并且获取摄像头的数据，然后传出来给处理数据的节点去处理，所以它会不断的往外发送一些图像数据，那它发到哪里呢？这个节点作为发布者，需要向某个<code>话题（topic，也可以称为主题）</code>发布这些数据，那么当系统中可能有多个节点要去处理图像，比如有一个节点是需要显示图像数据的，有一个节点是做图像处理的，它们实现要获取到这些数据后，才能处理对吧，而这些节点就是订阅者，它们从<code>话题（topic）</code>中接收这些数据，然后去处理它。</p>
@@ -1438,7 +1438,7 @@ ROS系列文章
 
             
                 &nbsp;<i class="fa fa-area-chart"></i>&nbsp;站点总字数:&nbsp;
-                <span class="white-color">108.4k </span>
+                <span class="white-color">108.6k </span>
 
             
 
