@@ -526,7 +526,7 @@ ROS系列文章
                     
                     <div class="info-break-policy">
                         <i class="fa fa-file-word-o fa-fw"></i>文章字数:&nbsp;&nbsp;
-                        812
+                        966
                     </div>
                     
 
@@ -575,6 +575,8 @@ ROS系列文章
 <h1 id="⑤发布者Talker确认连接请求"><a href="#⑤发布者Talker确认连接请求" class="headerlink" title="⑤发布者Talker确认连接请求"></a>⑤发布者<code>Talker</code>确认连接请求</h1><p><code>Talker</code>接收到<code>Listener</code>发送的连接请求后，继续通过RPC向<code>Listener</code>确认连接信息，同时发送自身相关的信息。</p>
 <h1 id="⑥Listener尝试与Talker建立网络连接"><a href="#⑥Listener尝试与Talker建立网络连接" class="headerlink" title="⑥Listener尝试与Talker建立网络连接"></a>⑥<code>Listener</code>尝试与<code>Talker</code>建立网络连接</h1><p>Listener接收到确认信息后，使用TCP尝试与<code>Talker</code>建立网络连接。</p>
 <h1 id="⑦Talker向Listener发布消息"><a href="#⑦Talker向Listener发布消息" class="headerlink" title="⑦Talker向Listener发布消息"></a>⑦<code>Talker</code>向<code>Listener</code>发布消息</h1><p>成功建立连接后，<code>Talker</code>开始向<code>Listener</code>发送话题消息数据。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>在节点与节点建立连接前，他们的通信协议都是RPC，而这主要都是依赖于节点管理器的，在节点与节点建立连接后，就直接是使用TCP协议进行数据传输，而不需要依赖节点管理器，此时节点管理器允许被关闭，但在关闭后，其他节点就不能订阅、发布这个话题消息了。</p>
+<p>总之节点管理器<code>ROS Master</code>在节点建立连接的过程中起到了重要作用，<strong>但是并不参与节点之间最终的数据传输。</strong></p>
 <h1 id="引用说明"><a href="#引用说明" class="headerlink" title="引用说明"></a>引用说明</h1><p>本文的部分截图来自书籍<a href="https://item.jd.com/12377412.html" target="_blank" rel="noopener">《ROS机器人开发实践》 胡春旭 著</a>。</p>
 <h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p><a href="http://wiki.ros.org/cn/ROS/Tutorials/UnderstandingTopics" target="_blank" rel="noopener">ROS官方wiki</a></p>
 <p><a href="https://joveh-h.blog.csdn.net/article/details/90551432" target="_blank" rel="noopener">ROS笔记（7） 话题通信</a></p>
@@ -1289,7 +1291,7 @@ ROS系列文章
 
             
                 &nbsp;<i class="fa fa-area-chart"></i>&nbsp;站点总字数:&nbsp;
-                <span class="white-color">109.7k </span>
+                <span class="white-color">109.8k </span>
 
             
 
