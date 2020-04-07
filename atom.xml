@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://jiedev.com/"/>
-  <updated>2020-04-06T12:42:11.045Z</updated>
+  <updated>2020-04-07T14:18:16.764Z</updated>
   <id>https://jiedev.com/</id>
   
   <author>
@@ -17,11 +17,39 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>【ROS入门-5】深入了解ROS话题通信机制的过程</title>
+    <link href="https://jiedev.com/ros-5/"/>
+    <id>https://jiedev.com/ros-5/</id>
+    <published>2020-04-06T16:29:08.000Z</published>
+    <updated>2020-04-07T14:18:16.764Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h1 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h1&gt;&lt;p&gt;在上一篇文章中简单了解了ROS话题通信机制，但是它内部的通信过程，很多人都是不知道的，今天我看了 &lt;a
+        
+      
+    
+    </summary>
+    
+      <category term="ROS" scheme="https://jiedev.com/categories/ROS/"/>
+    
+    
+      <category term="ROS" scheme="https://jiedev.com/tags/ROS/"/>
+    
+      <category term="机器人操作系统" scheme="https://jiedev.com/tags/%E6%9C%BA%E5%99%A8%E4%BA%BA%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
+    
+  </entry>
+  
+  <entry>
     <title>【ROS入门-4】嘴对嘴讲解ROS的核心概念——ROS话题通信机制</title>
     <link href="https://jiedev.com/ros-4/"/>
     <id>https://jiedev.com/ros-4/</id>
     <published>2020-04-05T16:29:08.000Z</published>
-    <updated>2020-04-06T12:42:11.045Z</updated>
+    <updated>2020-04-07T11:50:44.498Z</updated>
     
     <summary type="html">
     
@@ -433,11 +461,11 @@
   </entry>
   
   <entry>
-    <title>【TencentOS  tiny】深度源码分析（4）——消息队列</title>
-    <link href="https://jiedev.com/tencentos-tiny-6/"/>
-    <id>https://jiedev.com/tencentos-tiny-6/</id>
+    <title>【TencentOS  tiny】深度源码分析（5）——信号量</title>
+    <link href="https://jiedev.com/tencentos-tiny-7/"/>
+    <id>https://jiedev.com/tencentos-tiny-7/</id>
     <published>2019-10-12T15:16:54.000Z</published>
-    <updated>2019-12-03T12:22:29.821Z</updated>
+    <updated>2019-12-03T12:22:29.822Z</updated>
     
     <summary type="html">
     
@@ -445,7 +473,7 @@
       
         
         
-          &lt;h1 id=&quot;消息队列&quot;&gt;&lt;a href=&quot;#消息队列&quot; class=&quot;headerlink&quot; title=&quot;消息队列&quot;&gt;&lt;/a&gt;消息队列&lt;/h1&gt;&lt;p&gt;在前一篇文章中&lt;a
+          &lt;h1 id=&quot;信号量&quot;&gt;&lt;a href=&quot;#信号量&quot; class=&quot;headerlink&quot;
         
       
     
@@ -467,11 +495,11 @@
   </entry>
   
   <entry>
-    <title>【TencentOS  tiny】深度源码分析（5）——信号量</title>
-    <link href="https://jiedev.com/tencentos-tiny-7/"/>
-    <id>https://jiedev.com/tencentos-tiny-7/</id>
+    <title>【TencentOS  tiny】深度源码分析（4）——消息队列</title>
+    <link href="https://jiedev.com/tencentos-tiny-6/"/>
+    <id>https://jiedev.com/tencentos-tiny-6/</id>
     <published>2019-10-12T15:16:54.000Z</published>
-    <updated>2019-12-03T12:22:29.822Z</updated>
+    <updated>2019-12-03T12:22:29.821Z</updated>
     
     <summary type="html">
     
@@ -479,7 +507,7 @@
       
         
         
-          &lt;h1 id=&quot;信号量&quot;&gt;&lt;a href=&quot;#信号量&quot; class=&quot;headerlink&quot;
+          &lt;h1 id=&quot;消息队列&quot;&gt;&lt;a href=&quot;#消息队列&quot; class=&quot;headerlink&quot; title=&quot;消息队列&quot;&gt;&lt;/a&gt;消息队列&lt;/h1&gt;&lt;p&gt;在前一篇文章中&lt;a
         
       
     
@@ -585,40 +613,6 @@
         
         
           &lt;h1 id=&quot;任务的基本概念&quot;&gt;&lt;a href=&quot;#任务的基本概念&quot; class=&quot;headerlink&quot; title=&quot;任务的基本概念&quot;&gt;&lt;/a&gt;任务的基本概念&lt;/h1&gt;&lt;p&gt;从系统的角度看，任务是竞争系统资源的最小运行单元。TencentOS 
-        
-      
-    
-    </summary>
-    
-      <category term="操作系统" scheme="https://jiedev.com/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
-    
-      <category term="TencentOS tiny" scheme="https://jiedev.com/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/TencentOS-tiny/"/>
-    
-    
-      <category term="TencentOS tiny" scheme="https://jiedev.com/tags/TencentOS-tiny/"/>
-    
-      <category term="RTOS" scheme="https://jiedev.com/tags/RTOS/"/>
-    
-      <category term="操作系统" scheme="https://jiedev.com/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
-    
-      <category term="物联网" scheme="https://jiedev.com/tags/%E7%89%A9%E8%81%94%E7%BD%91/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>【TencentOS tiny】 移植到STM32F103全教程</title>
-    <link href="https://jiedev.com/tencentos-tiny-2/"/>
-    <id>https://jiedev.com/tencentos-tiny-2/</id>
-    <published>2019-10-12T14:57:04.000Z</published>
-    <updated>2019-12-03T12:22:29.819Z</updated>
-    
-    <summary type="html">
-    
-      
-      
-        
-        
-          &lt;h1 id=&quot;移植前的准备工作&quot;&gt;&lt;a href=&quot;#移植前的准备工作&quot; class=&quot;headerlink&quot; title=&quot;移植前的准备工作&quot;&gt;&lt;/a&gt;移植前的准备工作&lt;/h1&gt;&lt;h2 id=&quot;1-获取STM32的裸机工程模板&quot;&gt;&lt;a
         
       
     

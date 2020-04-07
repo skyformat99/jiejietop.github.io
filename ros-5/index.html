@@ -6,10 +6,12 @@
 
 <head><meta name="generator" content="Hexo 3.9.0">
     <meta charset="utf-8">
-    <meta name="keywords" content="纯C语言写的按键驱动，将按键逻辑与按键处理事件分离~, IoT RTOS linux Python jiejie Dora">
+    <meta name="keywords" content="【ROS入门-5】深入了解ROS话题通信机制的过程, IoT RTOS linux Python jiejie Dora">
     <meta name="baidu-site-verification" content="TRUUhavuHV">
     <meta name="google-site-verification" content="v-saR33QlUQmwVrLI7AQd08em9BtdazPy5jvPouEYHg">
-    <meta name="description" content="ButtonDrive自己写的一个按键驱动，支持单双击、连按、长按；采用回调处理按键事件（自定义消抖时间），使用只需3步，创建按键，按键事件与回调处理函数链接映射，周期检查按键。源码地址：https://github.com/jiejieT">
+    <meta name="description" content="前言在上一篇文章中简单了解了ROS话题通信机制，但是它内部的通信过程，很多人都是不知道的，今天我看了  胡春旭的书籍——《ROS机器人开发实践》，又加深了对ROS话题通信的理解，打算接着讲解一下其过程是怎么样的。
+ROS系列文章
+【ROS入">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -17,7 +19,7 @@
     <meta name="format-detection" content="telephone=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>纯C语言写的按键驱动，将按键逻辑与按键处理事件分离~ | 杰杰的博客</title>
+    <title>【ROS入门-5】深入了解ROS话题通信机制的过程 | 杰杰的博客</title>
     <link rel="icon" type="image/x-icon, image/vnd.microsoft.icon" href="/medias/logo/favicon.ico">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/font-awesome.min.css">
@@ -364,13 +366,13 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/12.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/11.jpg')">
     <div class="container">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
                     <div class="description center-align post-title">
-                        纯C语言写的按键驱动，将按键逻辑与按键处理事件分离~
+                        【ROS入门-5】深入了解ROS话题通信机制的过程
                     </div>
                 </div>
             </div>
@@ -482,20 +484,12 @@
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/框架/" target="_blank">
-                                <span class="chip bg-color">框架</span>
+                            <a href="/tags/ROS/" target="_blank">
+                                <span class="chip bg-color">ROS</span>
                             </a>
                         
-                            <a href="/tags/ButtonDrive/" target="_blank">
-                                <span class="chip bg-color">ButtonDrive</span>
-                            </a>
-                        
-                            <a href="/tags/STM32/" target="_blank">
-                                <span class="chip bg-color">STM32</span>
-                            </a>
-                        
-                            <a href="/tags/开源项目/" target="_blank">
-                                <span class="chip bg-color">开源项目</span>
+                            <a href="/tags/机器人操作系统/" target="_blank">
+                                <span class="chip bg-color">机器人操作系统</span>
                             </a>
                         
                     </div>
@@ -506,8 +500,8 @@
                     <div class="post-cate">
                         <i class="fa fa-bookmark fa-fw icon-category"></i>
                         
-                            <a href="/categories/框架/" class="post-category" target="_blank">
-                                框架
+                            <a href="/categories/ROS/" class="post-category" target="_blank">
+                                ROS
                             </a>
                         
                     </div>
@@ -518,7 +512,7 @@
             <div class="post-info">
                 <div class="post-date info-break-policy">
                     <i class="fa fa-calendar-minus-o fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2019-10-05
+                    2020-04-07
                 </div>
 
                 <div class="post-author info-break-policy">
@@ -532,14 +526,14 @@
                     
                     <div class="info-break-policy">
                         <i class="fa fa-file-word-o fa-fw"></i>文章字数:&nbsp;&nbsp;
-                        2.3k
+                        794
                     </div>
                     
 
                     
                     <div class="info-break-policy">
                         <i class="fa fa-clock-o fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                        8 分
+                        2 分
                     </div>
                     
                 
@@ -556,286 +550,32 @@
         <hr class="clearfix">
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h1 id="ButtonDrive"><a href="#ButtonDrive" class="headerlink" title="ButtonDrive"></a>ButtonDrive</h1><p>自己写的一个按键驱动，支持单双击、连按、长按；采用回调处理按键事件（自定义消抖时间），使用只需3步，创建按键，按键事件与回调处理函数链接映射，周期检查按键。<br>源码地址：<a href="https://github.com/jiejieTop/ButtonDrive" target="_blank" rel="noopener">https://github.com/jiejieTop/ButtonDrive</a></p>
-<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>前几天写了个按键驱动，参考了<a href="https://github.com/0x1abin/MultiButton" target="_blank" rel="noopener">MulitButton</a>的数据结构的用法，逻辑实现并不一样。<br>在这里感谢所有的开源开发者，让我从中学到了很多，同时网络也是一个好平台，也希望所有的开发者能形成良性循环，从网络中学知识，回馈到网络中去。感谢<a href="https://github.com/0x1abin/MultiButton" target="_blank" rel="noopener">MulitButton</a>的作者<a href="https://github.com/0x1abin" target="_blank" rel="noopener">0x1abin</a>，感谢两位rtt的大佬：<a href="https://github.com/uestczyh222" target="_blank" rel="noopener">大法师</a>、<a href="https://github.com/liu2guang" target="_blank" rel="noopener">流光</a>。</p>
-<h2 id="Button-drive简介"><a href="#Button-drive简介" class="headerlink" title="Button_drive简介"></a>Button_drive简介</h2><p>Button_drive是一个小巧的按键驱动，支持单击、双击、长按、连续触发等（后续可以在按键控制块中添加触发事件），理论上可无限量扩展Button，Button_drive采用按键触发事件回调方式处理业务逻辑，支持在RTOS中使用，我目前仅在<a href="https://github.com/RT-Thread/rt-thread" target="_blank" rel="noopener">RT-Thread</a>上测试过。<br>写按键驱动的目的是想要将用户按键逻辑与按键处理事件分离，用户无需处理复杂麻烦的逻辑事件。</p>
-<h2 id="Button-drive使用效果"><a href="#Button-drive使用效果" class="headerlink" title="Button_drive使用效果"></a>Button_drive使用效果</h2><ol>
-<li><strong>单击与长按</strong></li>
-</ol>
-<p><img src="./images/loading.png" data-original="https://img-blog.csdnimg.cn/20191017200917803.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9qaWVqaWUuYmxvZy5jc2RuLm5ldA==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
-<ol start="2">
-<li><strong>双击</strong></li>
-</ol>
-<p><img src="./images/loading.png" data-original="https://img-blog.csdnimg.cn/20191017200928625.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9qaWVqaWUuYmxvZy5jc2RuLm5ldA==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
-<ol start="3">
-<li><strong>连按</strong></li>
-</ol>
-<p><img src="./images/loading.png" data-original="https://img-blog.csdnimg.cn/20191017200939523.png" alt="在这里插入图片描述"><br>4. <strong>连按释放</strong></p>
-<p><img src="./images/loading.png" data-original="https://img-blog.csdnimg.cn/20191017200953789.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9qaWVqaWUuYmxvZy5jc2RuLm5ldA==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
-<h2 id="使用方法"><a href="#使用方法" class="headerlink" title="使用方法"></a>使用方法</h2><ol>
-<li><p>创建按键句柄</p>
-<pre><code>Button_t Button1;
-Button_t Button2; </code></pre></li>
-<li><p>创建按键，初始化按键信息，包括按键名字、按键电平检测函数接口、按键触发电平。</p>
-<pre><code>Button_Create("Button1",                //按键名字
-             &amp;Button1,                 //按键句柄
-             Read_Button1_Level,     //按键电平检测函数接口
-             BTN_TRIGGER);               //触发电平
-
-             ......</code></pre></li>
-<li><p>按键触发事件与事件回调函数链接映射，当按键事件被触发的时候，自动跳转回调函数中处理业务逻辑。</p>
-<pre><code>Button_Attach(&amp;Button1,BUTTON_DOWM,Btn2_Dowm_CallBack);        //按键单击
-Button_Attach(&amp;Button1,BUTTON_DOUBLE,Btn2_Double_CallBack);    //双击
-Button_Attach(&amp;Button1,BUTTON_LONG,Btn2_Long_CallBack);        //长按
-
-             .......</code></pre></li>
-<li><p>周期调用回调按键处理函数即可，建议调用周期20-50ms。</p>
-<pre><code>Button_Process();     //需要周期调用按键处理函数</code></pre></li>
-</ol>
-<hr>
-<p>需要用户实现的 <strong>2</strong> 个函数：</p>
-<ul>
-<li>按键电平检测接口：<pre><code>uint8_t Read_Button1_Level(void)
-{
-return GPIO_ReadInputDataBit(BTN1_GPIO_PORT,BTN1_GPIO_PIN);
-}
-</code></pre></li>
-</ul>
-<p>uint8_t Read_Button2_Level(void)<br>{<br>  return GPIO_ReadInputDataBit(BTN2_GPIO_PORT,BTN2_GPIO_PIN);<br>}</p>
-<p>// 这是我在stm32上简单测试的伪代码，以实际源码为准</p>
-<pre><code>
-- 按键逻辑处理</code></pre><p>void Btn1_Dowm_CallBack(void *btn)<br>{<br>  PRINT_INFO(“Button1 单击!”);<br>}</p>
-<p>void Btn1_Double_CallBack(void *btn)<br>{<br>  PRINT_INFO(“Button1 双击!”);<br>}</p>
-<p>void Btn1_Long_CallBack(void *btn)<br>{<br>  PRINT_INFO(“Button1 长按!”);</p>
-<p>  Button_Delete(&amp;Button2);<br>  PRINT_INFO(“删除Button1”);<br>  Search_Button();<br>}</p>
-<pre><code>
-##  特点
-Button_drive开放源码，按键控制块采用数据结构方式，按键事件采用枚举类型，确保不会重复，也便于添加用户需要逻辑，采用宏定义方式定义消抖时间、连按触发时间、双击时间间隔、长按时间等，便于修改。
-同时所有被创建的按键采用单链表方式连击，用户只管创建，无需理会按键处理，只需调用`Button_Process()`即可，在函数中会自动遍历所有被创建的按键。
-支持按键删除操作，用户无需在代码中删除对应的按键创建于映射链接代码，也无需删除关于按键的任何回调事件处理函数，只需调用`Button_Delete()`函数即可，这样子，就不会处理关于被删除按键的任何状态。当然目前按键内存不会释放，如果使用os的话，建议释放按键内存。
-##### 按键控制块
-```c
-/*
-    每个按键对应1个全局的结构体变量。
-    其成员变量是实现消抖和多种按键状态所必须的
-*/
-typedef struct button
-{
-    /* 下面是一个函数指针，指向判断按键手否按下的函数 */
-    uint8_t (*Read_Button_Level)(void); /* 读取按键电平函数，需要用户实现 */
-
-  char Name[BTN_NAME_MAX];
-
-  uint8_t Button_State              :   4;      /* 按键当前状态（按下还是弹起） */
-  uint8_t Button_Last_State         :   4;      /* 上一次的按键状态，用于判断双击 */
-  uint8_t Button_Trigger_Level      :   2;    /* 按键触发电平 */
-  uint8_t Button_Last_Level         :   2;    /* 按键当前电平 */
-
-  uint8_t Button_Trigger_Event;     /* 按键触发事件，单击，双击，长按等 */
-
-  Button_CallBack CallBack_Function[number_of_event];
-  uint8_t Button_Cycle;               /* 连续按键周期 */
-
-  uint8_t Timer_Count;            /* 计时 */
-  uint8_t Debounce_Time;        /* 消抖时间 */
-
-  uint8_t Long_Time;          /* 按键按下持续时间 */
-
-  struct button *Next;
-
-}Button_t;
-</code></pre><h5 id="触发事件"><a href="#触发事件" class="headerlink" title="触发事件"></a>触发事件</h5><pre class="line-numbers language-c"><code class="language-c"><span class="token keyword">typedef</span> <span class="token keyword">enum</span> <span class="token punctuation">{</span>
-  BUTTON_DOWM <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">,</span>
-  BUTTON_UP<span class="token punctuation">,</span>
-  BUTTON_DOUBLE<span class="token punctuation">,</span>
-  BUTTON_LONG<span class="token punctuation">,</span>
-  BUTTON_CONTINUOS<span class="token punctuation">,</span>
-  BUTTON_CONTINUOS_FREE<span class="token punctuation">,</span>
-  BUTTON_ALL_RIGGER<span class="token punctuation">,</span>
-  number_of_event<span class="token punctuation">,</span> <span class="token comment" spellcheck="true">/* 触发回调的事件 */</span>
-  NONE_TRIGGER
-<span class="token punctuation">}</span>Button_Event<span class="token punctuation">;</span>
-<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<h5 id="宏定义选择"><a href="#宏定义选择" class="headerlink" title="宏定义选择"></a>宏定义选择</h5><pre class="line-numbers language-c"><code class="language-c"><span class="token macro property">#<span class="token directive keyword">define</span> BTN_NAME_MAX  32     </span><span class="token comment" spellcheck="true">//名字最大为32字节</span>
-
-<span class="token comment" spellcheck="true">/* 按键消抖时间40ms, 建议调用周期为20ms
- 只有连续检测到40ms状态不变才认为有效，包括弹起和按下两种事件
-*/</span>
-
-<span class="token macro property">#<span class="token directive keyword">define</span> CONTINUOS_TRIGGER             0  </span><span class="token comment" spellcheck="true">//是否支持连续触发，连发的话就不要检测单双击与长按了    </span>
-
-<span class="token comment" spellcheck="true">/* 是否支持单击&amp;双击同时存在触发，如果选择开启宏定义的话，单双击都回调，只不过单击会延迟响应，
-   因为必须判断单击之后是否触发了双击否则，延迟时间是双击间隔时间 BUTTON_DOUBLE_TIME。
-   而如果不开启这个宏定义，建议工程中只存在单击/双击中的一个，否则，在双击响应的时候会触发一次单击，
-   因为双击必须是有一次按下并且释放之后才产生的 */</span>
-<span class="token macro property">#<span class="token directive keyword">define</span> SINGLE_AND_DOUBLE_TRIGGER     1 </span>
-
-<span class="token comment" spellcheck="true">/* 是否支持长按释放才触发，如果打开这个宏定义，那么长按释放之后才触发单次长按，
-   否则在长按指定时间就一直触发长按，触发周期由 BUTTON_LONG_CYCLE 决定 */</span>
-<span class="token macro property">#<span class="token directive keyword">define</span> LONG_FREE_TRIGGER             0 </span>
-
-<span class="token macro property">#<span class="token directive keyword">define</span> BUTTON_DEBOUNCE_TIME       2   </span><span class="token comment" spellcheck="true">//消抖时间      (n-1)*调用周期</span>
-<span class="token macro property">#<span class="token directive keyword">define</span> BUTTON_CONTINUOS_CYCLE  1      </span><span class="token comment" spellcheck="true">//连按触发周期时间  (n-1)*调用周期  </span>
-<span class="token macro property">#<span class="token directive keyword">define</span> BUTTON_LONG_CYCLE       1      </span><span class="token comment" spellcheck="true">//长按触发周期时间  (n-1)*调用周期 </span>
-<span class="token macro property">#<span class="token directive keyword">define</span> BUTTON_DOUBLE_TIME      15     </span><span class="token comment" spellcheck="true">//双击间隔时间  (n-1)*调用周期  建议在200-600ms</span>
-<span class="token macro property">#<span class="token directive keyword">define</span> BUTTON_LONG_TIME           50        </span><span class="token comment" spellcheck="true">/* 持续n秒((n-1)*调用周期 ms)，认为长按事件 */</span>
-
-<span class="token macro property">#<span class="token directive keyword">define</span> TRIGGER_CB(event)   \
-        if(btn->CallBack_Function[event]) \
-          btn->CallBack_Function[event]((Button_t*)btn)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<h5 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h5><pre class="line-numbers language-c"><code class="language-c">  <span class="token function">Button_Create</span><span class="token punctuation">(</span><span class="token string">"Button1"</span><span class="token punctuation">,</span>
-              <span class="token operator">&amp;</span>Button1<span class="token punctuation">,</span> 
-              Read_KEY1_Level<span class="token punctuation">,</span> 
-              KEY_ON<span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token function">Button_Attach</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>Button1<span class="token punctuation">,</span>BUTTON_DOWM<span class="token punctuation">,</span>Btn1_Dowm_CallBack<span class="token punctuation">)</span><span class="token punctuation">;</span>                       <span class="token comment" spellcheck="true">//单击</span>
-  <span class="token function">Button_Attach</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>Button1<span class="token punctuation">,</span>BUTTON_DOUBLE<span class="token punctuation">,</span>Btn1_Double_CallBack<span class="token punctuation">)</span><span class="token punctuation">;</span>                   <span class="token comment" spellcheck="true">//双击</span>
-  <span class="token function">Button_Attach</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>Button1<span class="token punctuation">,</span>BUTTON_CONTINUOS<span class="token punctuation">,</span>Btn1_Continuos_CallBack<span class="token punctuation">)</span><span class="token punctuation">;</span>             <span class="token comment" spellcheck="true">//连按  </span>
-  <span class="token function">Button_Attach</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>Button1<span class="token punctuation">,</span>BUTTON_CONTINUOS_FREE<span class="token punctuation">,</span>Btn1_ContinuosFree_CallBack<span class="token punctuation">)</span><span class="token punctuation">;</span>    <span class="token comment" spellcheck="true">//连按释放  </span>
-  <span class="token function">Button_Attach</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>Button1<span class="token punctuation">,</span>BUTTON_LONG<span class="token punctuation">,</span>Btn1_Long_CallBack<span class="token punctuation">)</span><span class="token punctuation">;</span>                       <span class="token comment" spellcheck="true">//长按</span>
-
-
-  <span class="token function">Button_Create</span><span class="token punctuation">(</span><span class="token string">"Button2"</span><span class="token punctuation">,</span>
-              <span class="token operator">&amp;</span>Button2<span class="token punctuation">,</span> 
-              Read_KEY2_Level<span class="token punctuation">,</span> 
-              KEY_ON<span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token function">Button_Attach</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>Button2<span class="token punctuation">,</span>BUTTON_DOWM<span class="token punctuation">,</span>Btn2_Dowm_CallBack<span class="token punctuation">)</span><span class="token punctuation">;</span>                     <span class="token comment" spellcheck="true">//单击</span>
-  <span class="token function">Button_Attach</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>Button2<span class="token punctuation">,</span>BUTTON_DOUBLE<span class="token punctuation">,</span>Btn2_Double_CallBack<span class="token punctuation">)</span><span class="token punctuation">;</span>                 <span class="token comment" spellcheck="true">//双击</span>
-  <span class="token function">Button_Attach</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>Button2<span class="token punctuation">,</span>BUTTON_CONTINUOS<span class="token punctuation">,</span>Btn2_Continuos_CallBack<span class="token punctuation">)</span><span class="token punctuation">;</span>           <span class="token comment" spellcheck="true">//连按</span>
-  <span class="token function">Button_Attach</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>Button2<span class="token punctuation">,</span>BUTTON_CONTINUOS_FREE<span class="token punctuation">,</span>Btn2_ContinuosFree_CallBack<span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment" spellcheck="true">//连按释放</span>
-  <span class="token function">Button_Attach</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>Button2<span class="token punctuation">,</span>BUTTON_LONG<span class="token punctuation">,</span>Btn2_Long_CallBack<span class="token punctuation">)</span><span class="token punctuation">;</span>                     <span class="token comment" spellcheck="true">//长按</span>
-
-  <span class="token function">Get_Button_Event</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>Button1<span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token function">Get_Button_Event</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>Button2<span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<h2 id="后续"><a href="#后续" class="headerlink" title="后续"></a>后续</h2><p><a href="https://github.com/liu2guang" target="_blank" rel="noopener">流光</a>大佬的要求，让我玩一玩RTT的<a href="https://github.com/liu2guang/buildpkg" target="_blank" rel="noopener">rtkpgs</a>，打算用Button_drive练一练手吧。</p>
-<h2 id="ButtonDrive在env使用"><a href="#ButtonDrive在env使用" class="headerlink" title="ButtonDrive在env使用"></a>ButtonDrive在env使用</h2><p>目前我已将按键驱动做成软件包（packages），如果使用RT-Thread操作系统的话，可以在env中直接配置使用!</p>
-<p>步骤如下：</p>
-<ol>
-<li><strong>选择在线软件包</strong></li>
-</ol>
-<p><img src="./images/loading.png" data-original="https://img-blog.csdnimg.cn/20191017201032261.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9qaWVqaWUuYmxvZy5jc2RuLm5ldA==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
-<ol start="2">
-<li><strong>选择软件包属性为外设相关</strong></li>
-</ol>
-<p><img src="./images/loading.png" data-original="https://img-blog.csdnimg.cn/201910172010447.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9qaWVqaWUuYmxvZy5jc2RuLm5ldA==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
-<ol start="3">
-<li><strong>选择button_drive</strong></li>
-</ol>
-<p><img src="./images/loading.png" data-original="https://img-blog.csdnimg.cn/20191017201103483.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9qaWVqaWUuYmxvZy5jc2RuLm5ldA==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
-<ol start="4">
-<li><strong>进入驱动的选项配置（自带默认属性）</strong></li>
-</ol>
-<p><img src="./images/loading.png" data-original="https://img-blog.csdnimg.cn/20191017201118160.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9qaWVqaWUuYmxvZy5jc2RuLm5ldA==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
-<ol start="5">
-<li><p><strong>如果不懂按键的配置是什么意思，按下“shift+？”，即可有解释</strong><br><img src="./images/loading.png" data-original="https://img-blog.csdnimg.cn/20191017201124140.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9qaWVqaWUuYmxvZy5jc2RuLm5ldA==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+                <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>在上一篇文章中简单了解了ROS话题通信机制，但是它内部的通信过程，很多人都是不知道的，今天我看了 <a href="https://item.jd.com/12377412.html" target="_blank" rel="noopener"> 胡春旭的书籍——《ROS机器人开发实践》</a>，又加深了对ROS话题通信的理解，打算接着讲解一下其过程是怎么样的。</p>
+<h1 id="ROS系列文章"><a href="#ROS系列文章" class="headerlink" title="ROS系列文章"></a>ROS系列文章</h1><ul>
+<li><p><a href="https://jiedev.com/ros-1/">【ROS入门-1】手把手教你在Ubuntu18.04安装ROS Melodic</a></p>
 </li>
-<li><p><strong>编译生成mdk/iar工程</strong></p>
+<li><p><a href="https://jiedev.com/ros-2/">【ROS入门-2】带你看ROS文件系统及其工具</a></p>
 </li>
-</ol>
-<p><img src="./images/loading.png" data-original="https://img-blog.csdnimg.cn/20191017201130458.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9qaWVqaWUuYmxvZy5jc2RuLm5ldA==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br><img src="./images/loading.png" data-original="https://img-blog.csdnimg.cn/20191017201134524.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9qaWVqaWUuYmxvZy5jc2RuLm5ldA==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
-<h2 id="关于rtkpgs"><a href="#关于rtkpgs" class="headerlink" title="关于rtkpgs"></a>关于<a href="https://github.com/liu2guang/buildpkg" target="_blank" rel="noopener">rtkpgs</a></h2><h2 id="简介-English"><a href="#简介-English" class="headerlink" title="简介 (English)"></a>简介 (<a href="/readme.en.md">English</a>)</h2><p>buildpkg 是用于生成 RT-Thread package 的快速构建工具。</p>
-<p>一个优秀的 package 应该是这样的：</p>
-<ol>
-<li>代码优雅, 规范化。</li>
-<li>examples 例程，提供通俗易懂的使用例程。</li>
-<li>SConscript 文件，用于和 RT-Thread 环境一起进行编译。</li>
-<li>README.md 文档，向用户提供必要的功能说明。</li>
-<li>docs 文件夹, 放置除了 README 之外的其他细节文档。</li>
-<li>license 许可文件，版权说明。</li>
-</ol>
-<p>为了方便快速的生成 RT-Thread package 规范化模板 以及 减轻开源仓库迁移 RT-Thread 的前期准备工作的负担，基于此目的的 buildpkg 应运而生，为开发 Rt-Thread 的 package 的开发者提供辅助开发工具。</p>
-<table>
-<thead>
-<tr>
-<th align="left">序号</th>
-<th align="left">支持功能</th>
-<th align="left">描述</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="left">1</td>
-<td align="left">构建 package 模板</td>
-<td align="left">创建指定名称 package , 自动添加 readme /版本号/ github ci脚本/demo/开源协议文件</td>
-</tr>
-<tr>
-<td align="left">2</td>
-<td align="left">迁移开源仓库</td>
-<td align="left">从指定 git 仓库构建 package , 自动添加readme/版本号/ github ci脚本/demo/开源协议文件, 但是迁移的仓库需要用户自己按照实际情况修改</td>
-</tr>
-<tr>
-<td align="left">3</td>
-<td align="left">更新 package</td>
-<td align="left">生成package后可以再次更新之前设定的版本号，开源协议或者scons脚本等</td>
-</tr>
-</tbody></table>
-<h2 id="使用说明"><a href="#使用说明" class="headerlink" title="使用说明"></a>使用说明</h2><h3 id="1-构建package"><a href="#1-构建package" class="headerlink" title="1. 构建package"></a>1. 构建package</h3><blockquote>
-<p>buildpkg.exe make pkgdemo</p>
-</blockquote>
-<h3 id="2-迁移开源仓库"><a href="#2-迁移开源仓库" class="headerlink" title="2. 迁移开源仓库"></a>2. 迁移开源仓库</h3><blockquote>
-<p>buildpkg.exe make cstring <a href="https://github.com/liu2guang/cstring.git" target="_blank" rel="noopener">https://github.com/liu2guang/cstring.git</a></p>
-</blockquote>
-<h3 id="3-更新package"><a href="#3-更新package" class="headerlink" title="3. 更新package"></a>3. 更新package</h3><blockquote>
-<p>buildpkg.exe update pkgname</p>
-</blockquote>
-<h3 id="4-可选配置"><a href="#4-可选配置" class="headerlink" title="4. 可选配置"></a>4. 可选配置</h3><table>
-<thead>
-<tr>
-<th align="left">长参数</th>
-<th align="left">短参数</th>
-<th align="left">描述</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="left">–version=v1.0.0</td>
-<td align="left">-v v1.0.0</td>
-<td align="left">设置 package 的版本</td>
-</tr>
-<tr>
-<td align="left">–license=MIT</td>
-<td align="left">-l MIT</td>
-<td align="left">设置 package 所遵循的版权协议</td>
-</tr>
-<tr>
-<td align="left">–submodule</td>
-<td align="left">-s</td>
-<td align="left">删除 git 子模块</td>
-</tr>
-</tbody></table>
-<h2 id="测试平台"><a href="#测试平台" class="headerlink" title="测试平台"></a>测试平台</h2><table>
-<thead>
-<tr>
-<th align="left">序号</th>
-<th align="left">测试平台</th>
-<th align="left">测试结果</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="left">1</td>
-<td align="left">win10</td>
-<td align="left">exe测试通过, py测试通过</td>
-</tr>
-<tr>
-<td align="left">2</td>
-<td align="left">win7</td>
-<td align="left">exe待测试, py待测试</td>
-</tr>
-<tr>
-<td align="left">3</td>
-<td align="left">mac</td>
-<td align="left">py脚本不知道是否兼容, 没有测试条件, 后面维护下</td>
-</tr>
-<tr>
-<td align="left">4</td>
-<td align="left">linux</td>
-<td align="left">py脚本不知道是否兼容, 没有测试条件, 后面维护下</td>
-</tr>
-</tbody></table>
-<h2 id="联系人"><a href="#联系人" class="headerlink" title="联系人"></a>联系人</h2><ul>
-<li>邮箱：<a href="mailto:1004383796@qq.com" target="_blank" rel="noopener">1004383796@qq.com</a></li>
-<li>主页：<a href="https://github.com/liu2guang" target="_blank" rel="noopener">liu2guang</a></li>
-<li>仓库：<a href="https://github.com/liu2guang" target="_blank" rel="noopener">Github</a>, <a href="https://github.com/liu2guang" target="_blank" rel="noopener">Gitee</a> </li>
+<li><p><a href="https://jiedev.com/ros-3/">【ROS入门-3】嘴对嘴讲解ROS的核心概念——节点与节点管理器</a></p>
+</li>
+<li><p><a href="https://jiedev.com/ros-4/">【ROS入门-4】嘴对嘴讲解ROS的核心概念——ROS话题通信机制</a></p>
+</li>
 </ul>
-<h1 id="喜欢就关注我吧！"><a href="#喜欢就关注我吧！" class="headerlink" title="喜欢就关注我吧！"></a>喜欢就关注我吧！</h1><p><img src="./images/loading.png" data-original="http://qiniu.jiejie01.top/gzh.jpg" alt="欢迎关注我公众号"></p>
-<p>相关代码可以在公众号后台获取。</p>
+<h1 id="节点的连接"><a href="#节点的连接" class="headerlink" title="节点的连接"></a>节点的连接</h1><p>一个节点需要与系统中其他节点进行通信才有意义，系统中任何单独的一个节点其实都是没有意义的。下图是一个话题通讯的过程示意图，一个节点通过节点管理器连接到另一个节点，最终请求话题数据流。</p>
+<p><img src="./images/loading.png" data-original="http://qiniu.jiejie01.top/ros016.png" alt="ros016"></p>
+<blockquote>
+<p>ps：在ROS中有两个节点：一个是发布者<code>Talker</code>，另一个是订阅者<code>Listener</code>，两个节点分别发布、订阅同一个话题<code>bar</code>。</p>
+</blockquote>
+<h1 id="①发布者Talker注册"><a href="#①发布者Talker注册" class="headerlink" title="①发布者Talker注册"></a>①发布者<code>Talker</code>注册</h1><p>在系统中，节点与节点是没有任何关系的，都靠节点管理器来处理相关的请求与服务，首先第一步，发布者<code>Talker</code>需要向节点管理器<code>ROS Master</code>注册相关信息，包括节点的信息、需要发布的话题名等，然后节点管理器<code>ROS Master</code>会记录下来<code>Talker</code>节点的信息。</p>
+<h1 id="②订阅者Listener注册"><a href="#②订阅者Listener注册" class="headerlink" title="②订阅者Listener注册"></a>②订阅者<code>Listener</code>注册</h1><p>同理订阅者<code>Listener</code>也需要向节点管理器<code>ROS Master</code>注册相关信息，这其实是启动两个节点时候就已经做了的事情。</p>
+<h1 id="③节点管理器ROS-Master进行话题匹配"><a href="#③节点管理器ROS-Master进行话题匹配" class="headerlink" title="③节点管理器ROS Master进行话题匹配"></a>③节点管理器<code>ROS Master</code>进行话题匹配</h1><p>因为发布者<code>Talker</code>与订阅者<code>Listener</code>节点都在节点管理器<code>ROS Master</code>注册了信息，那么节点管理器<code>ROS Master</code>就会发现有相同的话题信息，此时它就需要将订阅与发布话题的两个节点匹配在一起，会通过RPC向订阅者<code>Listener</code>发送<code>Talker</code>节点的RPC地址信息。</p>
+<h1 id="④订阅者Listener向Talker发送连接请求"><a href="#④订阅者Listener向Talker发送连接请求" class="headerlink" title="④订阅者Listener向Talker发送连接请求"></a>④订阅者<code>Listener</code>向<code>Talker</code>发送连接请求</h1><p>订阅者<code>Listener</code>知道发布者<code>Talker</code>后，就会主动找到它，并且通过RPC向T<code>Talker</code><br>发送连接请求，传输订阅的话题名、消息类型以及通信协议。</p>
+<h1 id="⑤发布者Talker确认连接请求"><a href="#⑤发布者Talker确认连接请求" class="headerlink" title="⑤发布者Talker确认连接请求"></a>⑤发布者<code>Talker</code>确认连接请求</h1><p><code>Talker</code>接收到<code>Listener</code>发送的连接请求后，继续通过RPC向<code>Listener</code>确认连接信息，同时发送自身相关的信息。</p>
+<h1 id="⑥Listener尝试与Talker建立网络连接"><a href="#⑥Listener尝试与Talker建立网络连接" class="headerlink" title="⑥Listener尝试与Talker建立网络连接"></a>⑥<code>Listener</code>尝试与<code>Talker</code>建立网络连接</h1><p>Listener接收到确认信息后，使用TCP尝试与<code>Talker</code>建立网络连接。</p>
+<h1 id="⑦Talker向Listener发布消息"><a href="#⑦Talker向Listener发布消息" class="headerlink" title="⑦Talker向Listener发布消息"></a>⑦<code>Talker</code>向<code>Listener</code>发布消息</h1><p>成功建立连接后，<code>Talker</code>开始向<code>Listener</code>发送话题消息数据。</p>
+<h1 id="引用说明"><a href="#引用说明" class="headerlink" title="引用说明"></a>引用说明</h1><p>本文的部分截图来自书籍<a href="https://item.jd.com/12377412.html" target="_blank" rel="noopener">《ROS机器人开发实践》 胡春旭 著</a>。</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p><a href="http://wiki.ros.org/cn/ROS/Tutorials/UnderstandingTopics" target="_blank" rel="noopener">ROS官方wiki</a></p>
+<p><a href="https://joveh-h.blog.csdn.net/article/details/90551432" target="_blank" rel="noopener">ROS笔记（7） 话题通信</a></p>
 <script>
         document.querySelectorAll('.github-emoji')
           .forEach(el => {
@@ -1004,7 +744,7 @@ typedef struct button
                     </span>
                     <a href="https://jiedev.com" class="b-link-green">杰杰的博客</a>
                     <i class="fa fa-angle-right fa-lg fa-fw text-color"></i>
-                    <a href="/button/" class="b-link-green">纯C语言写的按键驱动，将按键逻辑与按键处理事件分离~</a>
+                    <a href="/ros-5/" class="b-link-green">【ROS入门-5】深入了解ROS话题通信机制的过程</a>
                 </p>
             </div>
 
@@ -1285,59 +1025,54 @@ typedef struct button
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fa fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="fa fa-dot-circle-o"></i>&nbsp;本篇
+            </div>
             <div class="card">
-                <a href="/dma/">
+                <a href="/ros-5/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/8.jpg" class="responsive-img" alt="STM32之串口DMA接收不定长数据">
+                        <img src="/medias/featureimages/11.jpg" class="responsive-img" alt="【ROS入门-5】深入了解ROS话题通信机制的过程">
                         
-                        <span class="card-title">STM32之串口DMA接收不定长数据</span>
+                        <span class="card-title">【ROS入门-5】深入了解ROS话题通信机制的过程</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            STM32之串口DMA接收不定长数据引言在使用stm32或者其他单片机的时候，会经常使用到串口通讯，那么如何有效地接收数据呢？假如这段数据是不定长的有如何高效接收呢？
-
-同学A：数据来了就会进入串口中断，在中断中读取数据就行了！
-
-
-中断就
+                            前言在上一篇文章中简单了解了ROS话题通信机制，但是它内部的通信过程，很多人都是不知道的，今天我看了  胡春旭的书籍——《ROS机器人开发实践》，又加深了对ROS话题通信的理解，打算接着讲解一下其过程是怎么样的。
+ROS系列文章
+【ROS入
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="fa fa-clock-o fa-fw icon-date"></i>2019-10-05
-                        </span>
+                            <span class="publish-date">
+                                <i class="fa fa-clock-o fa-fw icon-date"></i>2020-04-07
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fa fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/STM32/" class="post-category" target="_blank">
-                                    STM32
+                            <a href="/categories/ROS/" class="post-category" target="_blank">
+                                    ROS
                                 </a>
                             
                             
                         </span>
                     </div>
                 </div>
+
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/STM32/" target="_blank">
-                        <span class="chip bg-color">STM32</span>
+                    <a href="/tags/ROS/" target="_blank">
+                        <span class="chip bg-color">ROS</span>
                     </a>
                     
-                    <a href="/tags/Cortex-M/" target="_blank">
-                        <span class="chip bg-color">Cortex-M</span>
-                    </a>
-                    
-                    <a href="/tags/DMA/" target="_blank">
-                        <span class="chip bg-color">DMA</span>
+                    <a href="/tags/机器人操作系统/" target="_blank">
+                        <span class="chip bg-color">机器人操作系统</span>
                     </a>
                     
                 </div>
@@ -1351,34 +1086,33 @@ typedef struct button
                 下一篇&nbsp;<i class="fa fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/freertos-10/">
+                <a href="/ros-4/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/1.jpg" class="responsive-img" alt="继续学习FreeRTOS消息队列">
+                        <img src="/medias/featureimages/7.jpg" class="responsive-img" alt="【ROS入门-4】嘴对嘴讲解ROS的核心概念——ROS话题通信机制">
                         
-                        <span class="card-title">继续学习FreeRTOS消息队列</span>
+                        <span class="card-title">【ROS入门-4】嘴对嘴讲解ROS的核心概念——ROS话题通信机制</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            
-写在前面：杰杰这个月很忙~所以并没有时间更新，现在健身房闭馆装修，晚上有空就更新一下！其实在公众号没更新的这段日子，每天都有兄弟在来关注我的公众号，这让我受宠若惊，在这里谢谢大家的支持啦！！谢谢^
-
-在这里我们就跟着火哥的书来学习一下Fr
+                            前言我要给大家来介绍一下ROS当中一些核心的概念，帮助大家去在后面的ROS学习当中更快地吸收这些概念，今天讲解的是ROS中的通信机制——话题通信。
+ROS系列文章
+【ROS入门-1】手把手教你在Ubuntu18.04安装ROS Melodi
                         
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="fa fa-clock-o fa-fw icon-date"></i>2019-10-05
+                                <i class="fa fa-clock-o fa-fw icon-date"></i>2020-04-06
                             </span>
                         <span class="publish-author">
                             
                             <i class="fa fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/操作系统/" class="post-category" target="_blank">
-                                    操作系统
+                            <a href="/categories/ROS/" class="post-category" target="_blank">
+                                    ROS
                                 </a>
                             
                             
@@ -1388,16 +1122,12 @@ typedef struct button
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/RTOS/" target="_blank">
-                        <span class="chip bg-color">RTOS</span>
+                    <a href="/tags/ROS/" target="_blank">
+                        <span class="chip bg-color">ROS</span>
                     </a>
                     
-                    <a href="/tags/操作系统/" target="_blank">
-                        <span class="chip bg-color">操作系统</span>
-                    </a>
-                    
-                    <a href="/tags/FreeRTOS/" target="_blank">
-                        <span class="chip bg-color">FreeRTOS</span>
+                    <a href="/tags/机器人操作系统/" target="_blank">
+                        <span class="chip bg-color">机器人操作系统</span>
                     </a>
                     
                 </div>
