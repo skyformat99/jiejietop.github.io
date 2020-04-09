@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://jiedev.com/"/>
-  <updated>2020-04-07T14:27:52.932Z</updated>
+  <updated>2020-04-09T12:00:55.131Z</updated>
   <id>https://jiedev.com/</id>
   
   <author>
@@ -15,6 +15,34 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>【ROS入门-6】ROS工作空间、package 及 catkin 编译系统</title>
+    <link href="https://jiedev.com/ros-6/"/>
+    <id>https://jiedev.com/ros-6/</id>
+    <published>2020-04-08T13:43:41.000Z</published>
+    <updated>2020-04-09T12:00:55.131Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h1 id=&quot;引言&quot;&gt;&lt;a href=&quot;#引言&quot; class=&quot;headerlink&quot; title=&quot;引言&quot;&gt;&lt;/a&gt;引言&lt;/h1&gt;&lt;p&gt;其实从前几篇文章中我也有提及过&lt;strong&gt;ROS
+        
+      
+    
+    </summary>
+    
+      <category term="ROS" scheme="https://jiedev.com/categories/ROS/"/>
+    
+    
+      <category term="ROS" scheme="https://jiedev.com/tags/ROS/"/>
+    
+      <category term="机器人操作系统" scheme="https://jiedev.com/tags/%E6%9C%BA%E5%99%A8%E4%BA%BA%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
+    
+  </entry>
   
   <entry>
     <title>【ROS入门-5】深入了解ROS话题通信机制的过程</title>
@@ -579,40 +607,6 @@
 &lt;p&gt;&lt;strong&gt;温馨提示：本文不描述与浮点相关的寄存器的内容，如需了解自行查阅（毕竟我自己也不懂）&lt;/strong&gt;&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;h1 id=&quot;调度器的基本概念&quot;&gt;&lt;a href=&quot;#调度器的基本概念&quot;
-        
-      
-    
-    </summary>
-    
-      <category term="操作系统" scheme="https://jiedev.com/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
-    
-      <category term="TencentOS tiny" scheme="https://jiedev.com/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/TencentOS-tiny/"/>
-    
-    
-      <category term="TencentOS tiny" scheme="https://jiedev.com/tags/TencentOS-tiny/"/>
-    
-      <category term="RTOS" scheme="https://jiedev.com/tags/RTOS/"/>
-    
-      <category term="操作系统" scheme="https://jiedev.com/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
-    
-      <category term="物联网" scheme="https://jiedev.com/tags/%E7%89%A9%E8%81%94%E7%BD%91/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>【TencentOS  tiny】深度源码分析（1）——task</title>
-    <link href="https://jiedev.com/tencentos-tiny-3/"/>
-    <id>https://jiedev.com/tencentos-tiny-3/</id>
-    <published>2019-10-12T15:07:54.000Z</published>
-    <updated>2020-02-10T05:51:20.378Z</updated>
-    
-    <summary type="html">
-    
-      
-      
-        
-        
-          &lt;h1 id=&quot;任务的基本概念&quot;&gt;&lt;a href=&quot;#任务的基本概念&quot; class=&quot;headerlink&quot; title=&quot;任务的基本概念&quot;&gt;&lt;/a&gt;任务的基本概念&lt;/h1&gt;&lt;p&gt;从系统的角度看，任务是竞争系统资源的最小运行单元。TencentOS 
         
       
     

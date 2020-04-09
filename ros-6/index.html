@@ -6,10 +6,12 @@
 
 <head><meta name="generator" content="Hexo 3.9.0">
     <meta charset="utf-8">
-    <meta name="keywords" content="从0开始学FreeRTOS-1, IoT RTOS linux Python jiejie Dora">
+    <meta name="keywords" content="【ROS入门-6】ROS工作空间、package 及 catkin 编译系统, IoT RTOS linux Python jiejie Dora">
     <meta name="baidu-site-verification" content="TRUUhavuHV">
     <meta name="google-site-verification" content="v-saR33QlUQmwVrLI7AQd08em9BtdazPy5jvPouEYHg">
-    <meta name="description" content="我们知道，（单核）单片机某一时刻只能干一件事，会造成单片机资源的浪费，而且还有可能响应不够及时，所以，在比较庞大的程序或者是要求实时性比较高的情况下，我们可以移植操作系统。因为这种情况下操作系统比裸机方便很多，效率也高。下面，杰杰将带你们走">
+    <meta name="description" content="引言其实从前几篇文章中我也有提及过ROS 工作空间，而且代码也是在工作空间中编译、运行的。
+其实在 ROS 中，我们创建的软件代码，都会被组织成功能包的形式，所以在我们开始代码之前，第一步是创建一个容纳我们的工作空间。
+因此本文将介绍ROS">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -17,7 +19,7 @@
     <meta name="format-detection" content="telephone=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>从0开始学FreeRTOS-1 | 杰杰的博客</title>
+    <title>【ROS入门-6】ROS工作空间、package 及 catkin 编译系统 | 杰杰的博客</title>
     <link rel="icon" type="image/x-icon, image/vnd.microsoft.icon" href="/medias/logo/favicon.ico">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/font-awesome.min.css">
@@ -364,13 +366,13 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/1.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/4.jpg')">
     <div class="container">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
                     <div class="description center-align post-title">
-                        从0开始学FreeRTOS-1
+                        【ROS入门-6】ROS工作空间、package 及 catkin 编译系统
                     </div>
                 </div>
             </div>
@@ -482,16 +484,12 @@
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/RTOS/" target="_blank">
-                                <span class="chip bg-color">RTOS</span>
+                            <a href="/tags/ROS/" target="_blank">
+                                <span class="chip bg-color">ROS</span>
                             </a>
                         
-                            <a href="/tags/操作系统/" target="_blank">
-                                <span class="chip bg-color">操作系统</span>
-                            </a>
-                        
-                            <a href="/tags/FreeRTOS/" target="_blank">
-                                <span class="chip bg-color">FreeRTOS</span>
+                            <a href="/tags/机器人操作系统/" target="_blank">
+                                <span class="chip bg-color">机器人操作系统</span>
                             </a>
                         
                     </div>
@@ -502,8 +500,8 @@
                     <div class="post-cate">
                         <i class="fa fa-bookmark fa-fw icon-category"></i>
                         
-                            <a href="/categories/操作系统/" class="post-category" target="_blank">
-                                操作系统
+                            <a href="/categories/ROS/" class="post-category" target="_blank">
+                                ROS
                             </a>
                         
                     </div>
@@ -514,7 +512,7 @@
             <div class="post-info">
                 <div class="post-date info-break-policy">
                     <i class="fa fa-calendar-minus-o fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2019-08-31
+                    2020-04-08
                 </div>
 
                 <div class="post-author info-break-policy">
@@ -528,7 +526,7 @@
                     
                     <div class="info-break-policy">
                         <i class="fa fa-file-word-o fa-fw"></i>文章字数:&nbsp;&nbsp;
-                        2.1k
+                        2k
                     </div>
                     
 
@@ -552,84 +550,127 @@
         <hr class="clearfix">
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <p>我们知道，（单核）单片机某一时刻只能干一件事，会造成单片机资源的浪费，而且还有可能响应不够及时，所以，在比较庞大的程序或者是要求实时性比较高的情况下，我们可以移植操作系统。因为这种情况下操作系统比裸机方便很多，效率也高。下面，杰杰将带你们走进FreeRTOS的世界随便看看。</p>
-<p>下面正式开始本文内容。</p>
-<p>在没有用到操作系统之前，单片机的运行是顺序执行，就是说，很多时候，单片机在执行这件事的时候，无法切换到另一件事。这就造成了资源的浪费，以及错过了突发的信号。那么，用上了操作系统的时候，很容易避免了这样的问题。</p>
-<p>很简单，从感觉上，单片机像是同时在干多件事，为什么说像呢，因为单片机的执行速度很快，快到我们根本没办法感觉出来，但是同时做两件事是不可能的，在（单核）单片机中，因为它的硬件结构决定了CPU只能在一个时间段做一件事如：<br><img src="./images/loading.png" data-original="http://qiniu.jiejie01.top/freertos-1.jpg" alt="not os"></p>
-<p>如这张图，都是按照顺序来执行这些事的，假设每个任务（事件）的time无限小，小到我们根本没法分辨出来，那么我们也会感觉单片机在同时做这六件事。</p>
-<p>真相就是：所有任务都好像在执行，但实际上在任何一个时刻都只有一个任务在执行</p>
-<p>如是加上了中断系统的话，就可以将上图理解为下图：<br><img src="./images/loading.png" data-original="http://qiniu.jiejie01.top/freertos2.png" alt="os"></p>
-<p>通常把程序分为两部分：前台系统和后台系统。 简单的小系统通常是前后台系统，这样的程序包括一个死循环和若干个中断服务程序：应用程序是一个无限循环，循环中调用API函数完成所需的操作，这个大循环就叫做后台系统。中断服务程序用于处理系统的异步事件，也就是前台系统。前台是中断级，后台是任务级。简单来说就是程序一直按顺序执行，有中断来了就做中断（前台）的事情。处理完中断（前台）的事情，就回到大循环（后台）继续按顺序执行。</p>
-<p>那么问题来了，这样子的系统肯定不是好的系统，我在做第一个任务的时候想做第四个任务，根本做不到啊，其实也能做到，让程序执行的指针cp指向第四个任务就行了。但是任务一旦复杂，那么整个工程的代码的结构，可移植性，及可读性，肯定会差啦。</p>
-<p> FreeRTOS</p>
-<p>那么操作系统的移植就是不可或缺的了。什么叫RTOS？：Real Time OS，实时操作系统，强调的是实时性，就是要规定什么时间该做什么任务。那么假如同一个时刻，需要执行两个或者多个任务怎么办。那么我们可以人为地把任务划分优先级，哪个任务重要，就先做，因为前面一直强调，单片机无法同时做两件事，在某一个时刻只能做一件事。</p>
-<p>那么FreeRTOS是怎么操作的呢？先看看FreeRTOS的内核吧：</p>
-<p>FreeRTOS是一个可裁剪、可剥夺型的多任务内核，而且没有任务数限制。FreeRTOS提供了实时操作系统所需的所有功能，包括资源管理、同步、任务通信等。 FreeRTOS是用C和汇编来写的，其中绝大部分都是用C语言编写的，只有极少数的与处理器密切相关的部分代码才是用汇编写的，FreeRTOS结构简洁，可读性很强！RTOS的内核负责管理所有的任务，内核决定了运行哪个任务，何时停止当前任务切换到其他任务，这个是内核的多任务管理能力。</p>
-<p>可剥夺内核顾名思义就是可以剥夺其他任务的CPU使用权，它总是运行就绪任务中的优先级最高的那个任务。<br><img src="./images/loading.png" data-original="http://qiniu.jiejie01.top/freertos3.png" alt="freertos"></p>
-<p>在FreeRTOS中，每个任务都是无限循环的，一般来说任务是不会结束运行的，也不允许有返回值，任务的结构一般都是</p>
-<pre class="line-numbers language-js"><code class="language-js"><span class="token function">While</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span>
-<span class="token punctuation">{</span>
-<span class="token comment" spellcheck="true">/****一直在循环执行*****/</span>
-<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
-<p>如果不需要这个任务了，那就把它删除。</p>
-<p>移植的教程我就不写了，超级简单的，按照已有的大把教程来做就行了。（如果没有资源，可以在后台找我，我给一份移植的教程/源码）</p>
-<p>其实FreeRTOS的运用及其简单，移植成功按照自己的意愿来配置即可，而且FreeRTOS有很多手册，虽然作者英语很差，但是我有谷歌翻译！！！哈哈哈</p>
-<p>既然一直都说任务任务，那肯定要有任务啊，创建任务：</p>
-<pre class="line-numbers language-js"><code class="language-js"><span class="token comment" spellcheck="true">// task. h  task.c</span>
-BaseType_t <span class="token function">xTaskCreate</span><span class="token punctuation">(</span>      TaskFunction_t pvTaskCode<span class="token punctuation">,</span>
-                              <span class="token keyword">const</span> char <span class="token operator">*</span> <span class="token keyword">const</span> pcName<span class="token punctuation">,</span>
-                              uint16_t usStackDepth<span class="token punctuation">,</span>
-                              <span class="token keyword">void</span> <span class="token operator">*</span>pvParameters<span class="token punctuation">,</span>
-                              UBaseType_t uxPriority<span class="token punctuation">,</span>
-                              TaskHandle_t <span class="token operator">*</span>pvCreatedTask
-                          <span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<p>函数的原型都有，按照字面的理解</p>
-<pre class="line-numbers language-js"><code class="language-js">TaskFunction_t pvTaskCode        <span class="token comment" spellcheck="true">//传递进来的是任务函数</span>
-<span class="token keyword">const</span> char <span class="token operator">*</span> <span class="token keyword">const</span> pcName         <span class="token comment" spellcheck="true">//传递进来的是任务Name</span>
-uint16_t usStackDepth            <span class="token comment" spellcheck="true">//传入的是堆栈的大小</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
-<p>在这里要说明一下，在裸机中开发，我们不管局部变量还是全局变量，反正定义了就能用，中断发生时，函数返回地址发哪里，我们也不管。但是在操作系统中，我们必须弄清楚我们的参数是怎么储存的，他们的大小是多大，就需要我们去定义这个堆栈的大小。它就是用来存放我们的这些东西的。太小，导致堆栈溢出，发生异常。（栈是单片机 RAM 里面一段连续的内存空间）</p>
-<p>因为在多任务系统中，每个任务都是独立的，互不干扰的，所以要为每个任务都分配独立的栈空间。</p>
-<pre class="line-numbers language-js"><code class="language-js"><span class="token keyword">void</span> <span class="token operator">*</span>pvParameters              <span class="token comment" spellcheck="true">//传递给任务函数的参数</span>
-UBaseType_t uxPriority          <span class="token comment" spellcheck="true">//任务优先级</span>
-TaskHandle_t <span class="token operator">*</span>pvCreatedTask     <span class="token comment" spellcheck="true">//任务句柄</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
-<p>任务句柄也是很重要的东西，我们怎么删除任务也是要用到任务句柄，其实说白了，我操作系统怎么知道你是什么任务，靠的就是任务句柄的判断，才知道哪个任务在执行，哪个任务被挂起。下一个要执行的任务是哪个等等，靠的都是任务句柄。</p>
-<p>那么要使用这些东西，我们肯定要实现啦，下面就是实现的定义，要定义优先级，堆栈大小，任务句柄，任务函数等。</p>
-<pre class="line-numbers language-js"><code class="language-js"><span class="token comment" spellcheck="true">//任务优先级</span>
-#define LED_TASK_PRIO           <span class="token number">2</span>
-<span class="token comment" spellcheck="true">//任务堆栈大小     </span>
-#define LED_STK_SIZE             <span class="token number">50</span>
-<span class="token comment" spellcheck="true">//任务句柄</span>
-TaskHandle_t LED_Task_Handler<span class="token punctuation">;</span>
-<span class="token comment" spellcheck="true">//任务函数</span>
-<span class="token keyword">void</span> <span class="token function">LED_Task</span><span class="token punctuation">(</span><span class="token keyword">void</span> <span class="token operator">*</span>pvParameters<span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<p>创建任务后，可以开启任务调度了，然后系统就开始运行。</p>
-<pre class="line-numbers language-js"><code class="language-js"><span class="token function">xTaskCreate</span><span class="token punctuation">(</span><span class="token punctuation">(</span>TaskFunction_t <span class="token punctuation">)</span>LED_Task<span class="token punctuation">,</span>    <span class="token comment" spellcheck="true">//任务函数</span>
-            <span class="token punctuation">(</span><span class="token keyword">const</span> char<span class="token operator">*</span>    <span class="token punctuation">)</span><span class="token string">"led_task"</span><span class="token punctuation">,</span>   <span class="token comment" spellcheck="true">//任务名称</span>
-            <span class="token punctuation">(</span>uint16_t       <span class="token punctuation">)</span>LED_STK_SIZE<span class="token punctuation">,</span> <span class="token comment" spellcheck="true">//任务堆栈大小</span>
-            <span class="token punctuation">(</span><span class="token keyword">void</span><span class="token operator">*</span>          <span class="token punctuation">)</span>NULL<span class="token punctuation">,</span> <span class="token comment" spellcheck="true">//传递给任务函数的参数</span>
-            <span class="token punctuation">(</span>UBaseType_t    <span class="token punctuation">)</span>START_TASK_PRIO<span class="token punctuation">,</span> <span class="token comment" spellcheck="true">//任务优先级</span>
-            <span class="token punctuation">(</span>TaskHandle_t<span class="token operator">*</span>  <span class="token punctuation">)</span><span class="token operator">&amp;</span>LED_Task_Handler<span class="token punctuation">)</span><span class="token punctuation">;</span><span class="token comment" spellcheck="true">//任务句柄 </span>
- <span class="token function">vTaskStartScheduler</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>          <span class="token comment" spellcheck="true">//开启任务调度</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<p>这个创建任务的函数 xTaskCreate 是有返回值的，其返回值的类型是BaseType_t。</p>
-<p>我们在描述中看看：</p>
-<pre class="line-numbers language-js"><code class="language-js"><span class="token comment" spellcheck="true">// @return pdPASS if the task was successfully created and added to a readylist, otherwise an error code defined in the file projdefs.h</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-<p>我们其实可以在任务调度的时候判断一下返回值是否为pdPASS从而知道任务创是否建成功。并且打印一个信息作为调试。因为后面使用信号量这些的时候都要知道信号量是否创建成功，使得代码健壮一些。免得有隐藏的bug。</p>
-<p>然后就是具体实现我们的任务LED_Task是在做什么的</p>
-<p>当然可以实现多个任务。还是很简单的。</p>
-<pre class="line-numbers language-js"><code class="language-js"><span class="token comment" spellcheck="true">//LED任务函数</span>
-<span class="token keyword">void</span> <span class="token function">LED_Task</span><span class="token punctuation">(</span><span class="token keyword">void</span> <span class="token operator">*</span>pvParameters<span class="token punctuation">)</span>
-<span class="token punctuation">{</span>
-    <span class="token keyword">while</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span>
-    <span class="token punctuation">{</span>
-        LED0  <span class="token operator">=</span>  <span class="token operator">!</span>LED0<span class="token punctuation">;</span>
-        <span class="token function">vTaskDelay</span><span class="token punctuation">(</span><span class="token number">1000</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<p>这就是一个简单的操作系统的概述。</p>
-<p>下一篇，应该是讲述开启任务调度与任务切换的具体过程。</p>
-<p>这个可以参考野火的书籍《从 0 到 1 教你写 uCOS-III》</p>
-<h1 id="喜欢就关注我吧！"><a href="#喜欢就关注我吧！" class="headerlink" title="喜欢就关注我吧！"></a>喜欢就关注我吧！</h1><p><img src="./images/loading.png" data-original="http://qiniu.jiejie01.top/gzh.jpg" alt="欢迎关注我公众号"></p>
-<p>相关代码可以在公众号后台获取。</p>
+                <h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>其实从前几篇文章中我也有提及过<strong>ROS 工作空间</strong>，而且代码也是在工作空间中编译、运行的。</p>
+<p>其实在 ROS 中，我们创建的软件代码，都会被组织成功能包的形式，所以在我们开始代码之前，第一步是创建一个容纳我们的工作空间。</p>
+<p>因此本文将介绍<strong>ROS工作空间、package 及 catkin 编译系统</strong>。</p>
+<h1 id="ROS系列文章"><a href="#ROS系列文章" class="headerlink" title="ROS系列文章"></a>ROS系列文章</h1><ul>
+<li><p><a href="https://jiedev.com/ros-1/">【ROS入门-1】手把手教你在Ubuntu18.04安装ROS Melodic</a></p>
+</li>
+<li><p><a href="https://jiedev.com/ros-2/">【ROS入门-2】带你看ROS文件系统及其工具</a></p>
+</li>
+<li><p><a href="https://jiedev.com/ros-3/">【ROS入门-3】嘴对嘴讲解ROS的核心概念——节点与节点管理器</a></p>
+</li>
+<li><p><a href="https://jiedev.com/ros-4/">【ROS入门-4】嘴对嘴讲解ROS的核心概念——ROS话题通信机制</a></p>
+</li>
+<li><p><a href="https://jiedev.com/ros-5/">【ROS入门-5】深入了解ROS话题通信机制的过程</a></p>
+</li>
+<li><p><a href="https://jiedev.com/ros-6/">【ROS入门-6】ROS工作空间、package 及 catkin 编译系统</a></p>
+</li>
+</ul>
+<h1 id="ROS-工作空间"><a href="#ROS-工作空间" class="headerlink" title="ROS 工作空间"></a>ROS 工作空间</h1><p>简单地说，ROS 工作空间（ROS workspace）就是统一存放 ROS 文件的地方，这里的文件包括源码、功能包、编译产生的中间文件等，一个项目的所有 ROS 文件最好都放在一个 workspace 中，便于统一管理、编译和调用。</p>
+<p>一般来说，对于初学者，ROS的工作空间不需要经常建立，因为很多代码只是demo，一般只建立一个就好了，但是如果你的工作涉及大量的功能包，或者涉及几个相互独立的的项目，还是建立多个工作空间比较好，这东西看情况使用就好了。</p>
+<p>我们可以在任意位置创建工作目录，一般来说工作空间都有4个文件夹：</p>
+<ul>
+<li><p>src：代码空间，是用来放置我们的功能包的，包括功能包的代码、功能包的配置文件配置等，这个功能包可以是自己写的，也可以是别人的功能包，总之都放在这。</p>
+</li>
+<li><p>build：编译空间，里面会有编译时产生的一些中间的文件，这个文件夹大家基本上是不用去关心的。</p>
+</li>
+<li><p>devel：开发空间，里面会放置我们编译生成的一些可执行文件，还包括一些库、一些脚本等等都放在这里。</p>
+</li>
+<li><p>install： 安装空间，在编译成功后，可以使用<code>make install</code>命令将可执行文件安装到该空间中，这个文件夹并不一定需要，实际上很多工作空间都不需要这个文件夹。</p>
+</li>
+</ul>
+<h1 id="创建工作空间"><a href="#创建工作空间" class="headerlink" title="创建工作空间"></a>创建工作空间</h1><p>在任意目录下创建一个文件夹，名字你随意起，我就起ros_ws，然后在这个文件夹下创建src文件夹：</p>
+<p><img src="./images/loading.png" data-original="http://qiniu.jiejie01.top/ros017.png" alt="ros017"></p>
+<p>然后在这个src文件夹下运行以下命令去初始化工作空间：</p>
+<pre class="line-numbers language-bash"><code class="language-bash">catkin_init_workspace<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>然后你就会发现在src目录下生成了一个<code>CMakeLists.txt</code>文件，这其实是CMake的构建规则的文件，这个文件包含了一系列的编译指令，包括应该生成哪种可执行文件，需要哪些源文件，以及在哪里可以找到所需的头文件和链接库。当然，这个文件表明 catkin 在内部使用了 CMake。有兴趣的可以去看看我以前的博文，就是讲解CMake的。</p>
+<h1 id="编译工作空间"><a href="#编译工作空间" class="headerlink" title="编译工作空间"></a>编译工作空间</h1><p>工作空间里面虽然没有任何代码，<strong>但是你依然可以去编译啊</strong>，只不过是一个空的工程，那在这里我们一样可以针对ROS的空的空间做编译，大家可以来熟悉一下这个编译的方式，我们要回到你的这个工作空间的根目录ros_ws，在这个目录下进行编译。</p>
+<pre class="line-numbers language-bash"><code class="language-bash"><span class="token function">cd</span> <span class="token punctuation">..</span>
+
+<span class="token comment" spellcheck="true"># 编译</span>
+catkin_make
+
+<span class="token comment" spellcheck="true"># 输出内容</span>
+
+···
+···
+-- Using Python nosetests: /usr/bin/nosetests-2.7
+-- catkin 0.7.23
+-- BUILD_SHARED_LIBS is on
+-- BUILD_SHARED_LIBS is on
+-- Configuring <span class="token keyword">done</span>
+-- Generating <span class="token keyword">done</span>
+-- Build files have been written to: /home/jie/ros_ws/build<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>看到有对应的内容输出了，就表示编译成功，然后你的ros_ws目录下回多了两个文件夹，分别为build、devel，这两个文件夹的作用就是前面讲解的了。</p>
+<h1 id="导出环境变量"><a href="#导出环境变量" class="headerlink" title="导出环境变量"></a>导出环境变量</h1><p>devel目录就是我们的环境变量，假设我们当前的工作空间有代码，那么编译成功后会产生可执行文件，那么ROS如何去找到这个可执行文件呢，它不是全能的，需要我们去指定这个可执行文件在哪里，它才能找到，因此我们需要将编译产生的可执行文件、脚本等内容都要告诉系统，我称之为<strong>导出环境变量</strong>。</p>
+<p>如果你查看一下在<code>devel</code>文件夹里面你可以看到几个setup.sh文件。source这些文件中的任何一个都可以将当前工作空间设置在ROS工作环境的最顶层。</p>
+<p>如果你的终端是bash（Ubuntu默认终端），那么就运行：</p>
+<pre class="line-numbers language-bash"><code class="language-bash"><span class="token function">source</span> devel/setup.bash <span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>我个人用的终端是zsh，我是修改过了的，我运行以下命令：</p>
+<pre class="line-numbers language-bash"><code class="language-bash"><span class="token function">source</span> devel/setup.zsh<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>然后用<code>echo $ROS_PACKAGE_PATH</code>命令去检查环境变量是否导出，当输出包含了你工作空间的目录就表示环境变量已经导出成功了：</p>
+<pre class="line-numbers language-bash"><code class="language-bash">➜  ros_ws <span class="token keyword">echo</span> <span class="token variable">$ROS_PACKAGE_PATH</span> 
+
+/home/jie/ros_ws/src:/opt/ros/melodic/share<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<h1 id="创建功能包"><a href="#创建功能包" class="headerlink" title="创建功能包"></a>创建功能包</h1><p>写代码就要创建一个功能包，放着源码文件，在工作空间的src目录下可以直接运行<code>catkin_create_pkg</code>命令去创建功能包，这个命令有非常多的功能，你可以通过<code>catkin_create_pkg -h</code>去细看它的功能，而我就简单讲解一下：</p>
+<p>简单的命令用法：</p>
+<pre class="line-numbers language-bash"><code class="language-bash">catkin_create_pkg <span class="token punctuation">[</span>功能包名称<span class="token punctuation">]</span> <span class="token punctuation">[</span>依赖功能包1<span class="token punctuation">]</span> <span class="token punctuation">[</span>依赖功能包2<span class="token punctuation">]</span> <span class="token punctuation">[</span>依赖功能包n<span class="token punctuation">]</span> <span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>创建mytopic001功能包，依赖roscpp、rospy、std_msgs这几个功能包，其实rospy不是必须的，我们目前写的是c++的代码，不过放进去都无所谓。</p>
+<pre class="line-numbers language-bash"><code class="language-bash">catkin_create_pkg mytopic001 roscpp rospy std_msgs<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p><code>catkin_create_pkg</code>命令在创建用户功能包时会生成catkin构建系统所需的CMakeLists.txt和package.xml文件，还有存放代码的src文件夹，和include文件夹，注意这里的src并不是工作目录下的src，而是功能包的src文件夹。</p>
+<p><img src="./images/loading.png" data-original="http://qiniu.jiejie01.top/ros018.png" alt="ros018"></p>
+<p>你可以手动去修改功能包的依赖关系，比如编辑<code>package.xml</code>文件：</p>
+<p><img src="./images/loading.png" data-original="http://qiniu.jiejie01.top/ros019.png" alt="ros019"></p>
+<h1 id="添加源代码"><a href="#添加源代码" class="headerlink" title="添加源代码"></a>添加源代码</h1><p>我们将上一篇文章<a href="https://jiedev.com/ros-4/">【ROS入门-4】嘴对嘴讲解ROS的核心概念——ROS话题通信机制</a>的源代码添加到这个工作空间中，存放的位置是：<code>ros_ws/src/mytopic001/src</code>，</p>
+<p><img src="./images/loading.png" data-original="http://qiniu.jiejie01.top/ros020.png" alt="ros020"></p>
+<h1 id="修改构建规则"><a href="#修改构建规则" class="headerlink" title="修改构建规则"></a>修改构建规则</h1><p>修改<code>ros_ws/src/mytopic001</code>目录下的<code>CMakeLists.txt</code>文件就是修改对应的构建规则，可以在这个文件中设置可执行文件的创建规则、依赖关系、连接关系等等。</p>
+<pre class="line-numbers language-js"><code class="language-js"><span class="token function">add_executable</span><span class="token punctuation">(</span>publisher_topic src<span class="token operator">/</span>publisher_topic<span class="token punctuation">.</span>cpp<span class="token punctuation">)</span>
+<span class="token function">target_link_libraries</span><span class="token punctuation">(</span>publisher_topic $<span class="token punctuation">{</span>catkin_LIBRARIES<span class="token punctuation">}</span><span class="token punctuation">)</span>
+
+<span class="token function">add_executable</span><span class="token punctuation">(</span>subscriber_topic src<span class="token operator">/</span>subscriber_topic<span class="token punctuation">.</span>cpp<span class="token punctuation">)</span>
+<span class="token function">target_link_libraries</span><span class="token punctuation">(</span>subscriber_topic $<span class="token punctuation">{</span>catkin_LIBRARIES<span class="token punctuation">}</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><img src="./images/loading.png" data-original="http://qiniu.jiejie01.top/ros021.png" alt="ros021"></p>
+<p>其实如果你会了CMake后，这东西是非常简单的。。。上面的操作起始就是编译两个可执行文件<code>publisher_topic</code>和<code>subscriber_topic</code>，分别执行发布与订阅的操作。</p>
+<h1 id="编译功能包"><a href="#编译功能包" class="headerlink" title="编译功能包"></a>编译功能包</h1><p>回到工作空间的根目录下<code>ros_ws</code>，运行<code>catkin_make</code>命令编译，当输出以下内容时，表示编译成功：</p>
+<pre class="line-numbers language-bash"><code class="language-bash">catkin_make
+
+<span class="token comment" spellcheck="true"># 输出内容</span>
+···
+···
+Scanning dependencies of target subscriber_topic
+Scanning dependencies of target publisher_topic
+<span class="token punctuation">[</span> 50%<span class="token punctuation">]</span> Building CXX object mytopic001/CMakeFiles/publisher_topic.dir/src/publisher_topic.cpp.o
+<span class="token punctuation">[</span> 50%<span class="token punctuation">]</span> Building CXX object mytopic001/CMakeFiles/subscriber_topic.dir/src/subscriber_topic.cpp.o
+<span class="token punctuation">[</span> 75%<span class="token punctuation">]</span> Linking CXX executable /home/jie/ros_ws/devel/lib/mytopic001/publisher_topic
+<span class="token punctuation">[</span>100%<span class="token punctuation">]</span> Linking CXX executable /home/jie/ros_ws/devel/lib/mytopic001/subscriber_topic
+<span class="token punctuation">[</span>100%<span class="token punctuation">]</span> Built target publisher_topic
+<span class="token punctuation">[</span>100%<span class="token punctuation">]</span> Built target subscriber_topic<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h1 id="验证"><a href="#验证" class="headerlink" title="验证"></a>验证</h1><p>步骤如下：</p>
+<ol>
+<li>首先导出环境变量（注意根据你的终端配置运行命令）</li>
+</ol>
+<pre class="line-numbers language-bash"><code class="language-bash"><span class="token function">source</span> devel/setup.zsh<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<ol start="2">
+<li>运行节点管理器</li>
+</ol>
+<pre class="line-numbers language-bash"><code class="language-bash">roscore<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<ol start="3">
+<li>在新终端运行发布者节点，也是需要导出环境变量的，不然ROS找不到你的可执行程序位置</li>
+</ol>
+<pre class="line-numbers language-bash"><code class="language-bash"><span class="token function">source</span> ros_ws/devel/setup.zsh
+
+rosrun mytopic001 publisher_topic <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<ol start="4">
+<li>在新终端运行订阅者者节点</li>
+</ol>
+<pre class="line-numbers language-bash"><code class="language-bash"><span class="token function">source</span> ros_ws/devel/setup.zsh
+
+rosrun mytopic001 subscriber_topic <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p>最终效果：</p>
+<p><img src="./images/loading.png" data-original="http://qiniu.jiejie01.top/ros022.png" alt="ros022"></p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p><a href="https://blog.csdn.net/ZhangRelay/article/details/79302460" target="_blank" rel="noopener">张老师的书籍《ROS_Robot_Programming》</a></p>
+<p><a href="https://blog.csdn.net/jiejiemcu/category_9558411.html" target="_blank" rel="noopener">CMake实战教程</a></p>
 <script>
         document.querySelectorAll('.github-emoji')
           .forEach(el => {
@@ -798,7 +839,7 @@ TaskHandle_t LED_Task_Handler<span class="token punctuation">;</span>
                     </span>
                     <a href="https://jiedev.com" class="b-link-green">杰杰的博客</a>
                     <i class="fa fa-angle-right fa-lg fa-fw text-color"></i>
-                    <a href="/freertos-1/" class="b-link-green">从0开始学FreeRTOS-1</a>
+                    <a href="/ros-6/" class="b-link-green">【ROS入门-6】ROS工作空间、package 及 catkin 编译系统</a>
                 </p>
             </div>
 
@@ -1079,56 +1120,54 @@ TaskHandle_t LED_Task_Handler<span class="token punctuation">;</span>
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fa fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="fa fa-dot-circle-o"></i>&nbsp;本篇
+            </div>
             <div class="card">
-                <a href="/freertos-2/">
+                <a href="/ros-6/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/3.jpg" class="responsive-img" alt="从0开始学FreeRTOS-(创建任务)-2">
+                        <img src="/medias/featureimages/4.jpg" class="responsive-img" alt="【ROS入门-6】ROS工作空间、package 及 catkin 编译系统">
                         
-                        <span class="card-title">从0开始学FreeRTOS-(创建任务)-2</span>
+                        <span class="card-title">【ROS入门-6】ROS工作空间、package 及 catkin 编译系统</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            补充开始今天的内容之前，先补充一下上篇文章从单片机到操作系统-1的一点点遗漏的知识点。
- BaseType_t xTaskCreate(       TaskFunction_t pvTaskCode,
-                  
+                            引言其实从前几篇文章中我也有提及过ROS 工作空间，而且代码也是在工作空间中编译、运行的。
+其实在 ROS 中，我们创建的软件代码，都会被组织成功能包的形式，所以在我们开始代码之前，第一步是创建一个容纳我们的工作空间。
+因此本文将介绍ROS
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="fa fa-clock-o fa-fw icon-date"></i>2019-08-31
-                        </span>
+                            <span class="publish-date">
+                                <i class="fa fa-clock-o fa-fw icon-date"></i>2020-04-08
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fa fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/操作系统/" class="post-category" target="_blank">
-                                    操作系统
+                            <a href="/categories/ROS/" class="post-category" target="_blank">
+                                    ROS
                                 </a>
                             
                             
                         </span>
                     </div>
                 </div>
+
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/RTOS/" target="_blank">
-                        <span class="chip bg-color">RTOS</span>
+                    <a href="/tags/ROS/" target="_blank">
+                        <span class="chip bg-color">ROS</span>
                     </a>
                     
-                    <a href="/tags/操作系统/" target="_blank">
-                        <span class="chip bg-color">操作系统</span>
-                    </a>
-                    
-                    <a href="/tags/FreeRTOS/" target="_blank">
-                        <span class="chip bg-color">FreeRTOS</span>
+                    <a href="/tags/机器人操作系统/" target="_blank">
+                        <span class="chip bg-color">机器人操作系统</span>
                     </a>
                     
                 </div>
@@ -1142,35 +1181,33 @@ TaskHandle_t LED_Task_Handler<span class="token punctuation">;</span>
                 下一篇&nbsp;<i class="fa fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/openmv-2/">
+                <a href="/ros-5/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/4.jpg" class="responsive-img" alt="openmv学习之旅-2">
+                        <img src="/medias/featureimages/11.jpg" class="responsive-img" alt="【ROS入门-5】深入了解ROS话题通信机制的过程">
                         
-                        <span class="card-title">openmv学习之旅-2</span>
+                        <span class="card-title">【ROS入门-5】深入了解ROS话题通信机制的过程</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            大家好，我是杰杰。
-从上一篇openmv的学习中openmv学习之旅-1
-我们可以很简单运用micropython在openmv上做我们想做的事情。
-Python这个东西用起来是很简单的，，下面来说说改善色块追踪的算法
-先做个改善前的分析吧
+                            前言在上一篇文章中简单了解了ROS话题通信机制，但是它内部的通信过程，很多人都是不知道的，今天我看了  胡春旭的书籍——《ROS机器人开发实践》，又加深了对ROS话题通信的理解，打算接着讲解一下其过程是怎么样的。
+ROS系列文章
+【ROS入
                         
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="fa fa-clock-o fa-fw icon-date"></i>2019-08-31
+                                <i class="fa fa-clock-o fa-fw icon-date"></i>2020-04-07
                             </span>
                         <span class="publish-author">
                             
                             <i class="fa fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/机器视觉/" class="post-category" target="_blank">
-                                    机器视觉
+                            <a href="/categories/ROS/" class="post-category" target="_blank">
+                                    ROS
                                 </a>
                             
                             
@@ -1180,8 +1217,12 @@ Python这个东西用起来是很简单的，，下面来说说改善色块追�
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/机器视觉/" target="_blank">
-                        <span class="chip bg-color">机器视觉</span>
+                    <a href="/tags/ROS/" target="_blank">
+                        <span class="chip bg-color">ROS</span>
+                    </a>
+                    
+                    <a href="/tags/机器人操作系统/" target="_blank">
+                        <span class="chip bg-color">机器人操作系统</span>
                     </a>
                     
                 </div>
