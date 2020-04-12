@@ -670,7 +670,7 @@ msr basepri<span class="token punctuation">,</span> r0<span aria-hidden="true" c
                                                                                                     \
         <span class="token comment" spellcheck="true">/* Find the highest priority list that contains ready tasks. */</span>                             \
         <span class="token function">portGET_HIGHEST_PRIORITY</span><span class="token punctuation">(</span> uxTopPriority<span class="token punctuation">,</span> uxTopReadyPriority <span class="token punctuation">)</span><span class="token punctuation">;</span>                              \
-        <span class="token function">configASSERT</span><span class="token punctuation">(</span> <span class="token function">listCURRENT_LIST_LENGTH</span><span class="token punctuation">(</span> <span class="token operator">&amp;</span><span class="token punctuation">(</span> pxReadyTasksLists<span class="token punctuation">[</span> uxTopPriority <span class="token punctuation">]</span> <span class="token punctuation">)</span> <span class="token punctuation">)</span> <span class="token operator">></span> <span class="token number">0</span> <span class="token punctuation">)</span><span class="token punctuation">;</span>     \
+        <span class="token function">configASSERT</span><span class="token punctuation">(</span> <span class="token function">listCURRENT_LIST_LENGTH</span><span class="token punctuation">(</span> <span class="token operator">&amp;</span><span class="token punctuation">(</span> pxReadyTasksLists<span class="token punctuation">[</span> uxTopPriority <span class="token punctuation">]</span> <span class="token punctuation">)</span> <span class="token punctuation">)</span> <span class="token operator">&gt;</span> <span class="token number">0</span> <span class="token punctuation">)</span><span class="token punctuation">;</span>     \
         <span class="token function">listGET_OWNER_OF_NEXT_ENTRY</span><span class="token punctuation">(</span> pxCurrentTCB<span class="token punctuation">,</span> <span class="token operator">&amp;</span><span class="token punctuation">(</span> pxReadyTasksLists<span class="token punctuation">[</span> uxTopPriority <span class="token punctuation">]</span> <span class="token punctuation">)</span> <span class="token punctuation">)</span><span class="token punctuation">;</span>       \
     <span class="token punctuation">}</span> <span class="token comment" spellcheck="true">/* taskSELECT_HIGHEST_PRIORITY_TASK() */</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>其方法是利用硬件提供的计算前导零指令CLZ，具体宏定义为：</p>
@@ -1393,7 +1393,7 @@ msr basepri<span class="token punctuation">,</span> r0<span aria-hidden="true" c
 
             
                 &nbsp;<i class="fa fa-area-chart"></i>&nbsp;站点总字数:&nbsp;
-                <span class="white-color">111.9k </span>
+                <span class="white-color">114.7k </span>
 
             
 

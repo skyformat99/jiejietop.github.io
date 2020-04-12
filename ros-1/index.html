@@ -531,7 +531,7 @@ ROS系列文章
                     
                     <div class="info-break-policy">
                         <i class="fa fa-file-word-o fa-fw"></i>文章字数:&nbsp;&nbsp;
-                        911
+                        914
                     </div>
                     
 
@@ -572,7 +572,7 @@ ROS系列文章
 <p><strong>参考官方wiki安装：</strong><br><a href="http://wiki.ros.org/melodic/Installation/Ubuntu" target="_blank" rel="noopener">http://wiki.ros.org/melodic/Installation/Ubuntu</a></p>
 <p>在Ubuntu的【软件和更新】配置如下：</p>
 <p><img src="./images/loading.png" data-original="http://qiniu.jiejie01.top/ros001.png" alt="ros001"></p>
-<h1 id="添加软件源"><a href="#添加软件源" class="headerlink" title="添加软件源"></a>添加软件源</h1><pre class="line-numbers language-bash"><code class="language-bash"><span class="token function">sudo</span> sh -c <span class="token string">'echo "deb http://packages.ros.org/ros/ubuntu <span class="token variable"><span class="token variable">$(</span>lsb_release -sc<span class="token variable">)</span></span> main" > /etc/apt/sources.list.d/ros-latest.list'</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<h1 id="添加软件源"><a href="#添加软件源" class="headerlink" title="添加软件源"></a>添加软件源</h1><pre class="line-numbers language-bash"><code class="language-bash"><span class="token function">sudo</span> sh -c <span class="token string">'echo "deb http://packages.ros.org/ros/ubuntu <span class="token variable"><span class="token variable">$(</span>lsb_release -sc<span class="token variable">)</span></span> main" &gt; /etc/apt/sources.list.d/ros-latest.list'</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <h1 id="配置秘钥"><a href="#配置秘钥" class="headerlink" title="配置秘钥"></a>配置秘钥</h1><pre class="line-numbers language-bash"><code class="language-bash"><span class="token function">sudo</span> apt-key adv --keyserver <span class="token string">'hkp://keyserver.ubuntu.com:80'</span> --recv-key C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <h1 id="更新软件源"><a href="#更新软件源" class="headerlink" title="更新软件源"></a>更新软件源</h1><pre class="line-numbers language-bash"><code class="language-bash"><span class="token function">sudo</span> apt update<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <h1 id="安装一些依赖"><a href="#安装一些依赖" class="headerlink" title="安装一些依赖"></a>安装一些依赖</h1><pre class="line-numbers language-bash"><code class="language-bash"><span class="token function">sudo</span> apt <span class="token function">install</span> -y python-rosdep2<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
@@ -607,7 +607,7 @@ ROS系列文章
 <p><img src="./images/loading.png" data-original="http://qiniu.jiejie01.top/ros002.png" alt="ros002"></p>
 <p>如果出错请参考文末的 <strong>【错误排查】</strong></p>
 <h1 id="设置环境变量"><a href="#设置环境变量" class="headerlink" title="设置环境变量"></a>设置环境变量</h1><p>为了能每次在终端打开时，都能将ROS环境变量自动设置好，我们可以这样做：</p>
-<pre class="line-numbers language-bash"><code class="language-bash"><span class="token keyword">echo</span> <span class="token string">"source /opt/ros/melodic/setup.bash"</span> <span class="token operator">>></span> ~/.bashrc
+<pre class="line-numbers language-bash"><code class="language-bash"><span class="token keyword">echo</span> <span class="token string">"source /opt/ros/melodic/setup.bash"</span> <span class="token operator">&gt;&gt;</span> ~/.bashrc
 <span class="token function">source</span> ~/.bashrc<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
 <h1 id="构建软件包的依赖关系"><a href="#构建软件包的依赖关系" class="headerlink" title="构建软件包的依赖关系"></a>构建软件包的依赖关系</h1><p>到目前为止，我们已经安装了运行核心ROS软件包所需的软件。为了创建和管理自己的ROS工作区，有各种工具和要求分别分发，我们可以通过一个 <code>rosinstall</code> 命令轻松下载ROS软件包的许多源代码树。</p>
 <p>安装此工具和其他依赖项以构建ROS软件包，运行：</p>
@@ -1350,7 +1350,7 @@ ROS系列文章
 
             
                 &nbsp;<i class="fa fa-area-chart"></i>&nbsp;站点总字数:&nbsp;
-                <span class="white-color">111.9k </span>
+                <span class="white-color">114.7k </span>
 
             
 

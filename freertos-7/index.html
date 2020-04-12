@@ -596,7 +596,7 @@ FreeRTOS 时间管理时间管理包括两个方面：系统节拍以及任务�
     BaseType_t xAlreadyYielded <span class="token operator">=</span> pdFALSE<span class="token punctuation">;</span>
 
     <span class="token comment" spellcheck="true">/* 延迟时间为零只会强制切换任务。 */</span>
-    <span class="token keyword">if</span><span class="token punctuation">(</span> xTicksToDelay <span class="token operator">></span> <span class="token punctuation">(</span> TickType_t <span class="token punctuation">)</span> 0U <span class="token punctuation">)</span>        <span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span>
+    <span class="token keyword">if</span><span class="token punctuation">(</span> xTicksToDelay <span class="token operator">&gt;</span> <span class="token punctuation">(</span> TickType_t <span class="token punctuation">)</span> 0U <span class="token punctuation">)</span>        <span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span>
     <span class="token punctuation">{</span>
         <span class="token function">configASSERT</span><span class="token punctuation">(</span> uxSchedulerSuspended <span class="token operator">==</span> <span class="token number">0</span> <span class="token punctuation">)</span><span class="token punctuation">;</span>
         <span class="token function">vTaskSuspendAll</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>                        <span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span>
@@ -676,7 +676,7 @@ FreeRTOS 时间管理时间管理包括两个方面：系统节拍以及任务�
     BaseType_t xAlreadyYielded<span class="token punctuation">,</span> xShouldDelay <span class="token operator">=</span> pdFALSE<span class="token punctuation">;</span>
 
     <span class="token function">configASSERT</span><span class="token punctuation">(</span> pxPreviousWakeTime <span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token function">configASSERT</span><span class="token punctuation">(</span> <span class="token punctuation">(</span> xTimeIncrement <span class="token operator">></span> 0U <span class="token punctuation">)</span> <span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">configASSERT</span><span class="token punctuation">(</span> <span class="token punctuation">(</span> xTimeIncrement <span class="token operator">&gt;</span> 0U <span class="token punctuation">)</span> <span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token function">configASSERT</span><span class="token punctuation">(</span> uxSchedulerSuspended <span class="token operator">==</span> <span class="token number">0</span> <span class="token punctuation">)</span><span class="token punctuation">;</span>
 
     <span class="token function">vTaskSuspendAll</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>                                 <span class="token comment" spellcheck="true">// (1)</span>
@@ -694,7 +694,7 @@ FreeRTOS 时间管理时间管理包括两个方面：系统节拍以及任务�
            <span class="token comment" spellcheck="true">/* 由于此功能，滴答计数已溢出持续呼唤。 在这种情况下，我们唯一的时间实际延迟是如果唤醒时间也溢出，
               唤醒时间大于滴答时间。 当这个就是这样，好像两个时间都没有溢出。*/</span>
 
-           <span class="token keyword">if</span><span class="token punctuation">(</span> <span class="token punctuation">(</span> xTimeToWake <span class="token operator">&lt;</span> <span class="token operator">*</span>pxPreviousWakeTime <span class="token punctuation">)</span> <span class="token operator">&amp;&amp;</span> <span class="token punctuation">(</span> xTimeToWake <span class="token operator">></span> xConstTickCount <span class="token punctuation">)</span> <span class="token punctuation">)</span>
+           <span class="token keyword">if</span><span class="token punctuation">(</span> <span class="token punctuation">(</span> xTimeToWake <span class="token operator">&lt;</span> <span class="token operator">*</span>pxPreviousWakeTime <span class="token punctuation">)</span> <span class="token operator">&amp;&amp;</span> <span class="token punctuation">(</span> xTimeToWake <span class="token operator">&gt;</span> xConstTickCount <span class="token punctuation">)</span> <span class="token punctuation">)</span>
            <span class="token punctuation">{</span>
                xShouldDelay <span class="token operator">=</span> pdTRUE<span class="token punctuation">;</span>
            <span class="token punctuation">}</span>
@@ -708,7 +708,7 @@ FreeRTOS 时间管理时间管理包括两个方面：系统节拍以及任务�
            <span class="token comment" spellcheck="true">/* 滴答时间没有溢出。 在这种情况下，如果唤醒时间溢出，
               或滴答时间小于唤醒时间，我们将延迟。*/</span>
 
-           <span class="token keyword">if</span><span class="token punctuation">(</span> <span class="token punctuation">(</span> xTimeToWake <span class="token operator">&lt;</span> <span class="token operator">*</span>pxPreviousWakeTime <span class="token punctuation">)</span> <span class="token operator">||</span> <span class="token punctuation">(</span> xTimeToWake <span class="token operator">></span> xConstTickCount <span class="token punctuation">)</span> <span class="token punctuation">)</span>
+           <span class="token keyword">if</span><span class="token punctuation">(</span> <span class="token punctuation">(</span> xTimeToWake <span class="token operator">&lt;</span> <span class="token operator">*</span>pxPreviousWakeTime <span class="token punctuation">)</span> <span class="token operator">||</span> <span class="token punctuation">(</span> xTimeToWake <span class="token operator">&gt;</span> xConstTickCount <span class="token punctuation">)</span> <span class="token punctuation">)</span>
            <span class="token punctuation">{</span>
                xShouldDelay <span class="token operator">=</span> pdTRUE<span class="token punctuation">;</span>
            <span class="token punctuation">}</span>
@@ -1489,7 +1489,7 @@ FreeRTOS 时间管理时间管理包括两个方面：系统节拍以及任务�
 
             
                 &nbsp;<i class="fa fa-area-chart"></i>&nbsp;站点总字数:&nbsp;
-                <span class="white-color">111.9k </span>
+                <span class="white-color">114.7k </span>
 
             
 
