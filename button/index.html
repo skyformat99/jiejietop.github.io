@@ -681,8 +681,8 @@ typedef struct button
 <span class="token macro property">#<span class="token directive keyword">define</span> BUTTON_LONG_TIME           50        </span><span class="token comment" spellcheck="true">/* 持续n秒((n-1)*调用周期 ms)，认为长按事件 */</span>
 
 <span class="token macro property">#<span class="token directive keyword">define</span> TRIGGER_CB(event)   \
-        if(btn-&gt;CallBack_Function[event]) \
-          btn-&gt;CallBack_Function[event]((Button_t*)btn)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+        if(btn->CallBack_Function[event]) \
+          btn->CallBack_Function[event]((Button_t*)btn)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <h5 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h5><pre class="line-numbers language-c"><code class="language-c">  <span class="token function">Button_Create</span><span class="token punctuation">(</span><span class="token string">"Button1"</span><span class="token punctuation">,</span>
               <span class="token operator">&amp;</span>Button1<span class="token punctuation">,</span> 
               Read_KEY1_Level<span class="token punctuation">,</span> 
@@ -1557,7 +1557,7 @@ typedef struct button
 
             
                 &nbsp;<i class="fa fa-area-chart"></i>&nbsp;站点总字数:&nbsp;
-                <span class="white-color">114.7k </span>
+                <span class="white-color">115.1k </span>
 
             
 

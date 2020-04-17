@@ -786,7 +786,7 @@
     <span class="token function">PRINT_DEBUG</span><span class="token punctuation">(</span><span class="token string">"buff_length = %d\n "</span><span class="token punctuation">,</span>buff_length<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
     <span class="token comment" spellcheck="true">/* 重新赋值计数值，必须大于等于最大可能接收到的数据帧数目 */</span>
-    USART_RX_DMA_CHANNEL<span class="token operator">-&gt;</span>CNDTR <span class="token operator">=</span> USART_RX_BUFF_SIZE<span class="token punctuation">;</span>    
+    USART_RX_DMA_CHANNEL<span class="token operator">-></span>CNDTR <span class="token operator">=</span> USART_RX_BUFF_SIZE<span class="token punctuation">;</span>    
 
     <span class="token comment" spellcheck="true">/* 此处应该在处理完数据再打开，如在 DataPack_Process() 打开*/</span>
     <span class="token function">DMA_Cmd</span><span class="token punctuation">(</span>USART_RX_DMA_CHANNEL<span class="token punctuation">,</span> ENABLE<span class="token punctuation">)</span><span class="token punctuation">;</span>      
@@ -1529,7 +1529,7 @@
 
             
                 &nbsp;<i class="fa fa-area-chart"></i>&nbsp;站点总字数:&nbsp;
-                <span class="white-color">114.7k </span>
+                <span class="white-color">115.1k </span>
 
             
 

@@ -543,7 +543,7 @@
                     
                     <div class="info-break-policy">
                         <i class="fa fa-clock-o fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                        13 分
+                        12 分
                     </div>
                     
                 
@@ -632,7 +632,7 @@ typedef struct readyqueue_st <span class="token punctuation">{</span>
 <pre class="line-numbers language-js"><code class="language-js">typedef struct k_task_st <span class="token punctuation">{</span>
     k_stack_t          <span class="token operator">*</span>sp<span class="token punctuation">;</span>                 <span class="token comment" spellcheck="true">/**&lt; 任务栈指针,用于切换上下文*/</span>
 
-#<span class="token keyword">if</span> TOS_CFG_OBJECT_VERIFY_EN <span class="token operator">&gt;</span> 0u
+#<span class="token keyword">if</span> TOS_CFG_OBJECT_VERIFY_EN <span class="token operator">></span> 0u
     knl_obj_t           knl_obj<span class="token punctuation">;</span>            <span class="token comment" spellcheck="true">/**&lt; 只是为了验证，测试当前对象是否真的是一项任务。*/</span>
 #endif
 
@@ -650,7 +650,7 @@ typedef struct readyqueue_st <span class="token punctuation">{</span>
     k_list_t            tick_list<span class="token punctuation">;</span>          <span class="token comment" spellcheck="true">/**&lt; 延时列表 */</span>
     k_list_t            pend_list<span class="token punctuation">;</span>          <span class="token comment" spellcheck="true">/**&lt; 就绪、等待列表 */</span>
 
-#<span class="token keyword">if</span> TOS_CFG_MUTEX_EN <span class="token operator">&gt;</span> 0u
+#<span class="token keyword">if</span> TOS_CFG_MUTEX_EN <span class="token operator">></span> 0u
     k_list_t            mutex_own_list<span class="token punctuation">;</span>     <span class="token comment" spellcheck="true">/**&lt; 任务拥有的互斥量 */</span>
     k_prio_t            prio_pending<span class="token punctuation">;</span>       <span class="token comment" spellcheck="true">/*&lt; 用于记录持有互斥量的任务初始优先级，在优先级继承中使用 */</span>
 #endif
@@ -658,17 +658,17 @@ typedef struct readyqueue_st <span class="token punctuation">{</span>
     pend_obj_t         <span class="token operator">*</span>pending_obj<span class="token punctuation">;</span>       <span class="token comment" spellcheck="true">/**&lt; 记录任务此时挂载到的列表 */</span>
     pend_state_t        pend_state<span class="token punctuation">;</span>         <span class="token comment" spellcheck="true">/**&lt; 等待被唤醒的原因（状态） */</span>
 
-#<span class="token keyword">if</span> TOS_CFG_ROUND_ROBIN_EN <span class="token operator">&gt;</span> 0u
+#<span class="token keyword">if</span> TOS_CFG_ROUND_ROBIN_EN <span class="token operator">></span> 0u
     k_timeslice_t       timeslice_reload<span class="token punctuation">;</span>   <span class="token comment" spellcheck="true">/**&lt; 时间片初始值（重装载值） */</span>
     k_timeslice_t       timeslice<span class="token punctuation">;</span>          <span class="token comment" spellcheck="true">/**&lt; 剩余时间片 */</span>
 #endif
 
-#<span class="token keyword">if</span> TOS_CFG_MSG_EN <span class="token operator">&gt;</span> 0u
+#<span class="token keyword">if</span> TOS_CFG_MSG_EN <span class="token operator">></span> 0u
     <span class="token keyword">void</span>               <span class="token operator">*</span>msg_addr<span class="token punctuation">;</span>           <span class="token comment" spellcheck="true">/**&lt; 保存接收到的消息 */</span>
     size_t              msg_size<span class="token punctuation">;</span>            <span class="token comment" spellcheck="true">/**&lt; 保存接收到的消息大小 */</span>
 #endif
 
-#<span class="token keyword">if</span> TOS_CFG_EVENT_EN <span class="token operator">&gt;</span> 0u
+#<span class="token keyword">if</span> TOS_CFG_EVENT_EN <span class="token operator">></span> 0u
     k_opt_t             opt_event_pend<span class="token punctuation">;</span>     <span class="token comment" spellcheck="true">/**&lt; 等待事件的的操作类型：TOS_OPT_EVENT_PEND_ANY 、 TOS_OPT_EVENT_PEND_ALL */</span>
     k_event_flag_t      flag_expect<span class="token punctuation">;</span>        <span class="token comment" spellcheck="true">/**&lt; 期待发生的事件 */</span>
     k_event_flag_t     <span class="token operator">*</span>flag_match<span class="token punctuation">;</span>         <span class="token comment" spellcheck="true">/**&lt; 等待到的事件 */</span>
@@ -772,30 +772,30 @@ typedef struct readyqueue_st <span class="token punctuation">{</span>
         <span class="token keyword">return</span> K_ERR_TASK_PRIO_INVALID<span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
 
-    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token function">unlikely</span><span class="token punctuation">(</span>prio <span class="token operator">&gt;</span> K_TASK_PRIO_IDLE<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token function">unlikely</span><span class="token punctuation">(</span>prio <span class="token operator">></span> K_TASK_PRIO_IDLE<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
         <span class="token keyword">return</span> K_ERR_TASK_PRIO_INVALID<span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
 
     <span class="token function">task_reset</span><span class="token punctuation">(</span>task<span class="token punctuation">)</span><span class="token punctuation">;</span>
-#<span class="token keyword">if</span> TOS_CFG_OBJECT_VERIFY_EN <span class="token operator">&gt;</span> 0u
-    <span class="token function">knl_object_init</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>task<span class="token operator">-</span><span class="token operator">&gt;</span>knl_obj<span class="token punctuation">,</span> KNL_OBJ_TYPE_TASK<span class="token punctuation">)</span><span class="token punctuation">;</span>
+#<span class="token keyword">if</span> TOS_CFG_OBJECT_VERIFY_EN <span class="token operator">></span> 0u
+    <span class="token function">knl_object_init</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>task<span class="token operator">-</span><span class="token operator">></span>knl_obj<span class="token punctuation">,</span> KNL_OBJ_TYPE_TASK<span class="token punctuation">)</span><span class="token punctuation">;</span>
 #endif
 
-    task<span class="token operator">-</span><span class="token operator">&gt;</span>sp        <span class="token operator">=</span> <span class="token function">cpu_task_stk_init</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token keyword">void</span> <span class="token operator">*</span><span class="token punctuation">)</span>entry<span class="token punctuation">,</span> arg<span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token keyword">void</span> <span class="token operator">*</span><span class="token punctuation">)</span>task_exit<span class="token punctuation">,</span> stk_base<span class="token punctuation">,</span> stk_size<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    task<span class="token operator">-</span><span class="token operator">&gt;</span>entry     <span class="token operator">=</span> entry<span class="token punctuation">;</span>
-    task<span class="token operator">-</span><span class="token operator">&gt;</span>arg       <span class="token operator">=</span> arg<span class="token punctuation">;</span>
-    task<span class="token operator">-</span><span class="token operator">&gt;</span>name      <span class="token operator">=</span> name<span class="token punctuation">;</span>
-    task<span class="token operator">-</span><span class="token operator">&gt;</span>prio      <span class="token operator">=</span> prio<span class="token punctuation">;</span>
-    task<span class="token operator">-</span><span class="token operator">&gt;</span>stk_base  <span class="token operator">=</span> stk_base<span class="token punctuation">;</span>
-    task<span class="token operator">-</span><span class="token operator">&gt;</span>stk_size  <span class="token operator">=</span> stk_size<span class="token punctuation">;</span>
+    task<span class="token operator">-</span><span class="token operator">></span>sp        <span class="token operator">=</span> <span class="token function">cpu_task_stk_init</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token keyword">void</span> <span class="token operator">*</span><span class="token punctuation">)</span>entry<span class="token punctuation">,</span> arg<span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token keyword">void</span> <span class="token operator">*</span><span class="token punctuation">)</span>task_exit<span class="token punctuation">,</span> stk_base<span class="token punctuation">,</span> stk_size<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    task<span class="token operator">-</span><span class="token operator">></span>entry     <span class="token operator">=</span> entry<span class="token punctuation">;</span>
+    task<span class="token operator">-</span><span class="token operator">></span>arg       <span class="token operator">=</span> arg<span class="token punctuation">;</span>
+    task<span class="token operator">-</span><span class="token operator">></span>name      <span class="token operator">=</span> name<span class="token punctuation">;</span>
+    task<span class="token operator">-</span><span class="token operator">></span>prio      <span class="token operator">=</span> prio<span class="token punctuation">;</span>
+    task<span class="token operator">-</span><span class="token operator">></span>stk_base  <span class="token operator">=</span> stk_base<span class="token punctuation">;</span>
+    task<span class="token operator">-</span><span class="token operator">></span>stk_size  <span class="token operator">=</span> stk_size<span class="token punctuation">;</span>
 
-#<span class="token keyword">if</span> TOS_CFG_ROUND_ROBIN_EN <span class="token operator">&gt;</span> 0u
-    task<span class="token operator">-</span><span class="token operator">&gt;</span>timeslice_reload <span class="token operator">=</span> timeslice<span class="token punctuation">;</span>
+#<span class="token keyword">if</span> TOS_CFG_ROUND_ROBIN_EN <span class="token operator">></span> 0u
+    task<span class="token operator">-</span><span class="token operator">></span>timeslice_reload <span class="token operator">=</span> timeslice<span class="token punctuation">;</span>
 
     <span class="token keyword">if</span> <span class="token punctuation">(</span>timeslice <span class="token operator">==</span> <span class="token punctuation">(</span>k_timeslice_t<span class="token punctuation">)</span>0u<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        task<span class="token operator">-</span><span class="token operator">&gt;</span>timeslice <span class="token operator">=</span> k_robin_default_timeslice<span class="token punctuation">;</span>
+        task<span class="token operator">-</span><span class="token operator">></span>timeslice <span class="token operator">=</span> k_robin_default_timeslice<span class="token punctuation">;</span>
     <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
-        task<span class="token operator">-</span><span class="token operator">&gt;</span>timeslice <span class="token operator">=</span> timeslice<span class="token punctuation">;</span>
+        task<span class="token operator">-</span><span class="token operator">></span>timeslice <span class="token operator">=</span> timeslice<span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
 #endif
 
@@ -821,8 +821,8 @@ typedef struct readyqueue_st <span class="token punctuation">{</span>
         task <span class="token operator">=</span> k_curr_task<span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
 
-#<span class="token keyword">if</span> TOS_CFG_OBJECT_VERIFY_EN <span class="token operator">&gt;</span> 0u
-    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token function">knl_object_verify</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>task<span class="token operator">-</span><span class="token operator">&gt;</span>knl_obj<span class="token punctuation">,</span> KNL_OBJ_TYPE_TASK<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+#<span class="token keyword">if</span> TOS_CFG_OBJECT_VERIFY_EN <span class="token operator">></span> 0u
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token function">knl_object_verify</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>task<span class="token operator">-</span><span class="token operator">></span>knl_obj<span class="token punctuation">,</span> KNL_OBJ_TYPE_TASK<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
         <span class="token keyword">return</span> K_ERR_OBJ_INVALID<span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
 #endif
@@ -837,9 +837,9 @@ typedef struct readyqueue_st <span class="token punctuation">{</span>
 
     <span class="token function">TOS_CPU_INT_DISABLE</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-#<span class="token keyword">if</span> TOS_CFG_MUTEX_EN <span class="token operator">&gt;</span> 0u
+#<span class="token keyword">if</span> TOS_CFG_MUTEX_EN <span class="token operator">></span> 0u
     <span class="token comment" spellcheck="true">// when we die, wakeup all the people in this land.</span>
-    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token function">tos_list_empty</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>task<span class="token operator">-</span><span class="token operator">&gt;</span>mutex_own_list<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token function">tos_list_empty</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>task<span class="token operator">-</span><span class="token operator">></span>mutex_own_list<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
         <span class="token function">task_mutex_release</span><span class="token punctuation">(</span>task<span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
 #endif
@@ -1628,7 +1628,7 @@ typedef struct readyqueue_st <span class="token punctuation">{</span>
 
             
                 &nbsp;<i class="fa fa-area-chart"></i>&nbsp;站点总字数:&nbsp;
-                <span class="white-color">114.7k </span>
+                <span class="white-color">115.1k </span>
 
             
 

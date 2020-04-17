@@ -693,7 +693,7 @@ uint32_t <span class="token function">HAL_GetTick</span><span class="token punct
     <span class="token keyword">if</span><span class="token punctuation">(</span>tnow <span class="token operator">!=</span> told<span class="token punctuation">)</span>
     <span class="token punctuation">{</span> 
         <span class="token comment" spellcheck="true">/* 32位计数器是递增计数器 */</span>    
-      <span class="token keyword">if</span><span class="token punctuation">(</span>tnow <span class="token operator">&gt;</span> told<span class="token punctuation">)</span>
+      <span class="token keyword">if</span><span class="token punctuation">(</span>tnow <span class="token operator">></span> told<span class="token punctuation">)</span>
       <span class="token punctuation">{</span>
         tcnt <span class="token operator">+</span><span class="token operator">=</span> tnow <span class="token operator">-</span> told<span class="token punctuation">;</span>  
       <span class="token punctuation">}</span>
@@ -706,7 +706,7 @@ uint32_t <span class="token function">HAL_GetTick</span><span class="token punct
       told <span class="token operator">=</span> tnow<span class="token punctuation">;</span>
 
       <span class="token comment" spellcheck="true">/*时间超过/等于要延迟的时间,则退出 */</span>
-      <span class="token keyword">if</span><span class="token punctuation">(</span>tcnt <span class="token operator">&gt;=</span> ticks<span class="token punctuation">)</span><span class="token keyword">break</span><span class="token punctuation">;</span>
+      <span class="token keyword">if</span><span class="token punctuation">(</span>tcnt <span class="token operator">>=</span> ticks<span class="token punctuation">)</span><span class="token keyword">break</span><span class="token punctuation">;</span>
     <span class="token punctuation">}</span>  
   <span class="token punctuation">}</span>
 <span class="token punctuation">}</span>
@@ -1477,7 +1477,7 @@ HAL_StatusTypeDef <span class="token function">HAL_InitTick</span><span class="t
 
             
                 &nbsp;<i class="fa fa-area-chart"></i>&nbsp;站点总字数:&nbsp;
-                <span class="white-color">114.7k </span>
+                <span class="white-color">115.1k </span>
 
             
 

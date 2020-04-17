@@ -6,16 +6,11 @@
 
 <head><meta name="generator" content="Hexo 3.9.0">
     <meta charset="utf-8">
-    <meta name="keywords" content="【ROS入门-2】带你看ROS文件系统及其工具, IoT RTOS linux Python jiejie Dora">
+    <meta name="keywords" content="【网络编程】libuv学习超详细教程1, IoT RTOS linux Python jiejie Dora">
     <meta name="baidu-site-verification" content="TRUUhavuHV">
     <meta name="google-site-verification" content="v-saR33QlUQmwVrLI7AQd08em9BtdazPy5jvPouEYHg">
-    <meta name="description" content="前言ROS的架构经过设计并划分成了三部分， 每一部分都代表一个层级的概念：
-
-文件系统级（Filesystem level）
-
-主要有ROS的内部构成、 文件夹结构， 以及工作所需的核心文件。
-
-计算图级（Computation Graph">
+    <meta name="description" content="libuv简介libuv 是一个高性能的，事件驱动的I/O，并且支持多平台的网络库，比如Node.js、Luvit、Julia、pyuv等大型的软件都有使用它进行开发，这足以看出它的性能优越性。
+其实高性能的网络库在github有非常多，比">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -23,7 +18,7 @@
     <meta name="format-detection" content="telephone=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>【ROS入门-2】带你看ROS文件系统及其工具 | 杰杰的博客</title>
+    <title>【网络编程】libuv学习超详细教程1 | 杰杰的博客</title>
     <link rel="icon" type="image/x-icon, image/vnd.microsoft.icon" href="/medias/logo/favicon.ico">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/font-awesome.min.css">
@@ -370,13 +365,13 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/9.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/7.jpg')">
     <div class="container">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
                     <div class="description center-align post-title">
-                        【ROS入门-2】带你看ROS文件系统及其工具
+                        【网络编程】libuv学习超详细教程1
                     </div>
                 </div>
             </div>
@@ -488,12 +483,16 @@
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/ROS/" target="_blank">
-                                <span class="chip bg-color">ROS</span>
+                            <a href="/tags/libuv/" target="_blank">
+                                <span class="chip bg-color">libuv</span>
                             </a>
                         
-                            <a href="/tags/机器人操作系统/" target="_blank">
-                                <span class="chip bg-color">机器人操作系统</span>
+                            <a href="/tags/网络/" target="_blank">
+                                <span class="chip bg-color">网络</span>
+                            </a>
+                        
+                            <a href="/tags/Linux/" target="_blank">
+                                <span class="chip bg-color">Linux</span>
                             </a>
                         
                     </div>
@@ -504,8 +503,8 @@
                     <div class="post-cate">
                         <i class="fa fa-bookmark fa-fw icon-category"></i>
                         
-                            <a href="/categories/ROS/" class="post-category" target="_blank">
-                                ROS
+                            <a href="/categories/网络/" class="post-category" target="_blank">
+                                网络
                             </a>
                         
                     </div>
@@ -516,7 +515,7 @@
             <div class="post-info">
                 <div class="post-date info-break-policy">
                     <i class="fa fa-calendar-minus-o fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2020-04-05
+                    2020-04-17
                 </div>
 
                 <div class="post-author info-break-policy">
@@ -530,14 +529,14 @@
                     
                     <div class="info-break-policy">
                         <i class="fa fa-file-word-o fa-fw"></i>文章字数:&nbsp;&nbsp;
-                        921
+                        1.1k
                     </div>
                     
 
                     
                     <div class="info-break-policy">
                         <i class="fa fa-clock-o fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                        3 分
+                        4 分
                     </div>
                     
                 
@@ -554,68 +553,107 @@
         <hr class="clearfix">
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>ROS的架构经过设计并划分成了三部分， 每一部分都代表一个层级的概念：</p>
-<ul>
-<li>文件系统级（Filesystem level）</li>
-</ul>
-<p>主要有ROS的内部构成、 文件夹结构， 以及工作所需的核心文件。</p>
-<ul>
-<li>计算图级（Computation Graph level）</li>
-</ul>
-<p>主要是进程和系统之间的通信，包括建立系统、 处理各类进程、 与多台计算机通信等。</p>
-<ul>
-<li>社区级（Community level）</li>
-</ul>
-<p>主要是在开发人员之间共享知识、 算法和代码，塑造了ROS强大的开源社区。</p>
-<h1 id="ROS系列文章"><a href="#ROS系列文章" class="headerlink" title="ROS系列文章"></a>ROS系列文章</h1><ul>
-<li><p><a href="https://jiedev.com/ros-1/">【ROS入门-1】手把手教你在Ubuntu18.04安装ROS Melodic</a></p>
-</li>
-<li><p><a href="https://jiedev.com/ros-2/">【ROS入门-2】带你看ROS文件系统及其工具</a></p>
-</li>
-<li><p><a href="https://jiedev.com/ros-3/">【ROS入门-3】嘴对嘴讲解ROS的核心概念——节点与节点管理器</a></p>
-</li>
-<li><p><a href="https://jiedev.com/ros-4/">【ROS入门-4】嘴对嘴讲解ROS的核心概念——ROS话题通信机制</a></p>
-</li>
-<li><p><a href="https://jiedev.com/ros-5/">【ROS入门-5】深入了解ROS话题通信机制的过程</a></p>
-</li>
-</ul>
-<h1 id="本章的准备工作"><a href="#本章的准备工作" class="headerlink" title="本章的准备工作"></a>本章的准备工作</h1><p>本文章中我们将会用到<code>ros-tutorials</code>程序包，要先用apt命令去安装：</p>
-<pre class="line-numbers language-bash"><code class="language-bash"><span class="token function">sudo</span> <span class="token function">apt-get</span> <span class="token function">install</span> -y ros-<span class="token operator">&lt;</span>distro<span class="token operator">></span>-ros-tutorials<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-<p>将 <code>&lt;distro&gt;</code>替换成你所安装的版本（比如 kinetic、melodic 等）。</p>
-<p>从我们上一篇文章安装的是<code>melodic</code>版本，那么命令就是：</p>
-<pre class="line-numbers language-bash"><code class="language-bash"><span class="token function">sudo</span> <span class="token function">apt-get</span> <span class="token function">install</span> -y ros-melodic-ros-tutorials<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-<h1 id="ROS文件系统的概念"><a href="#ROS文件系统的概念" class="headerlink" title="ROS文件系统的概念"></a>ROS文件系统的概念</h1><p>ROS文件系统可以将项目构建过程集中化， 同时提供很好的灵活性和工具来分散之间的依赖性。</p>
-<h2 id="Packages"><a href="#Packages" class="headerlink" title="Packages"></a>Packages</h2><p>功能包，也可以被称之为软件包，是ROS应用程序代码的组织单元，每个功能包都可以包含程序库、可执行文件、脚本或者其它手动创建的东西。</p>
-<h2 id="Manifest"><a href="#Manifest" class="headerlink" title="Manifest"></a>Manifest</h2><p>清单，它包含了关于<code>Packages</code>的维护者、许可协议、依赖关系以及编译标志等的信息，由一个名为<code>package.xml</code>的文件管理。</p>
-<h2 id="Metapackage"><a href="#Metapackage" class="headerlink" title="Metapackage"></a>Metapackage</h2><p>元功能包：多个具有某些功能的包组织在一起，称为元功能包。</p>
-<h2 id="Metapackage-Manifest"><a href="#Metapackage-Manifest" class="headerlink" title="Metapackage Manifest"></a>Metapackage Manifest</h2><p>元功能包清单：由一个名字为<code>package.xml</code>的文件管理，类似普通功能包但有一个XML格式的导出标记。 </p>
-<h1 id="文件系统工具"><a href="#文件系统工具" class="headerlink" title="文件系统工具"></a>文件系统工具</h1><p>由于ROS中大量代码分散在众多的packages和Metapackage之中，linux本身的命令工具ls和cd已不能满足检索要求，因此ROS提供了一套自己的命令工具来完成与这些命令相似的工作。</p>
-<h2 id="rospack"><a href="#rospack" class="headerlink" title="rospack"></a>rospack</h2><p><code>rospack</code>允许用户获取功能包的有关信息，比如我们找一个<code>roscpp</code>功能包所在的位置，可以通过以下命令：</p>
-<pre class="line-numbers language-bash"><code class="language-bash">➜  ~ rospack <span class="token function">find</span> roscpp
+                <h1 id="libuv简介"><a href="#libuv简介" class="headerlink" title="libuv简介"></a>libuv简介</h1><p><a href="https://github.com/libuv/libuv" target="_blank" rel="noopener">libuv</a> 是一个高性能的，事件驱动的I/O，并且支持多平台的网络库，比如Node.js、Luvit、Julia、pyuv等大型的软件都有使用它进行开发，这足以看出它的性能优越性。</p>
+<p>其实高性能的网络库在github有非常多，比如libevent、libev、libhv等库，libevent、libev、libuv都是c语言实现的异步事件库、libhv是国内开发者使用C++实现的异步事件库，但是我还是选择了libuv，因为它足够强大，并且支持多平台，编程还非常方便简洁。</p>
+<p>也可以看看下图的简单对比，主要是对比github上的star与fork（当前时间是 2020-4-17 星期五）：</p>
+<p><img src="./images/loading.png" data-original="http://qiniu.jiejie01.top/libuv001.png" alt="libuv001"></p>
+<h1 id="下载libuv"><a href="#下载libuv" class="headerlink" title="下载libuv"></a>下载libuv</h1><p>在linux系统下，可以通过git去拉取libuv的源码并且使用。</p>
+<h2 id="安装必要的依赖"><a href="#安装必要的依赖" class="headerlink" title="安装必要的依赖"></a>安装必要的依赖</h2><blockquote>
+<p>ps:如果你系统中有就不用去安装了。</p>
+</blockquote>
+<pre class="line-numbers language-bash"><code class="language-bash"><span class="token function">sudo</span> <span class="token function">apt-get</span> -y <span class="token function">install</span> <span class="token function">git</span> automake libtool<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<h2 id="拉取libuv源码"><a href="#拉取libuv源码" class="headerlink" title="拉取libuv源码"></a>拉取libuv源码</h2><p>打开libuv的github仓库：<a href="https://github.com/libuv/libuv" target="_blank" rel="noopener">https://github.com/libuv/libuv</a> ，了解一下相关的说明信息，然后可以拉取下来：</p>
+<p><img src="./images/loading.png" data-original="http://qiniu.jiejie01.top/libuv002.png" alt="libuv002"></p>
+<pre class="line-numbers language-bash"><code class="language-bash"><span class="token function">git</span> clone https://github.com/libuv/libuv.git<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>如果觉得太慢，可以从gitee下载：</p>
+<pre class="line-numbers language-bash"><code class="language-bash"><span class="token function">git</span> clone https://gitee.com/jiejieTop/libuv.git<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>切换到<code>v1.36.0</code>版本分支，目前这个版本的分支是最新的。</p>
+<pre class="line-numbers language-bash"><code class="language-bash"><span class="token function">git</span> checkout v1.36.0<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>当然你要是留意看的话，里面还有<strong>227</strong>个 <a href="https://github.com/libuv/libuv/releases" target="_blank" rel="noopener">release</a> 版本，你也可以通过wget或者浏览器去下载它们，它们的格式有zip、tar.gz等压缩格式，目前最新发布的release版本是<code>v1.36.0</code>。</p>
+<p><img src="./images/loading.png" data-original="http://qiniu.jiejie01.top/libuv003.png" alt="libuv003"></p>
+<h1 id="编译使用"><a href="#编译使用" class="headerlink" title="编译使用"></a>编译使用</h1><p>其实如果单纯使用libuv的话，是非常简单的，直接在系统安装即可，但是我想编译一些其他的功能，比如libuv的一些说明文档、man手册等，那么就自己下载源码编译，首先进入libuv目录下，可以看到当前的分支是默认的分支——<code>v1.x</code>，这其实是开发版本，最近这两天都有开发的，反正我们用就对了：</p>
+<pre class="line-numbers language-bash"><code class="language-bash">➜  libuv git:<span class="token punctuation">(</span>v1.x<span class="token punctuation">)</span> <span class="token function">ls</span>                                   
+AUTHORS         configure.ac     include       m4              src
+autogen.sh      CONTRIBUTING.md  libuv.pc.in   MAINTAINERS.md  SUPPORTED_PLATFORMS.md
+ChangeLog       docs             LICENSE       Makefile.am     <span class="token function">test</span>
+CMakeLists.txt  img              LICENSE-docs  README.md       tools<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>用autotools工具自动配置：</p>
+<pre class="line-numbers language-bash"><code class="language-bash">./autogen.sh 
+./configure<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p>然后编译并安装：</p>
+<pre class="line-numbers language-bash"><code class="language-bash"><span class="token function">make</span>
+<span class="token function">sudo</span> <span class="token function">make</span> <span class="token function">install</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<blockquote>
+<p>ps:还有个检查的命令：make check，不过我在运行的过程中报错了，测试不通过，暂时别管他吧。。。</p>
+</blockquote>
+<h1 id="验证编译安装是否完成"><a href="#验证编译安装是否完成" class="headerlink" title="验证编译安装是否完成"></a>验证编译安装是否完成</h1><p>在安装完成后，你可以看到在<code>/usr/local/lib/</code>目录下有libuv的静态库、动态库等内容：</p>
+<pre class="line-numbers language-bash"><code class="language-bash"><span class="token function">ls</span> /usr/local/lib/
+libuv.a  libuv.la  libuv.so  libuv.so.1  libuv.so.1.0.0<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p>在<code>/usr/local/include/</code>目录下也有一个uv文件夹、还有一个uv.h头文件。</p>
+<pre class="line-numbers language-bash"><code class="language-bash"><span class="token function">ls</span> /usr/local/include/          
+uv  uv.h<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<h1 id="简单实用"><a href="#简单实用" class="headerlink" title="简单实用"></a>简单实用</h1><p>随便写个代码，打印一下安装的libuv库的版本：</p>
+<pre class="line-numbers language-c"><code class="language-c"><span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">&lt;stdio.h></span></span>
+<span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">&lt;stdlib.h></span></span>
+<span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">&lt;uv.h></span></span>
 
-/opt/ros/melodic/share/roscpp<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
-<p><code>rospack</code>的用法是：</p>
-<pre class="line-numbers language-bash"><code class="language-bash">rospack <span class="token function">find</span> <span class="token punctuation">[</span>功能包名称<span class="token punctuation">]</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-<p><img src="./images/loading.png" data-original="http://qiniu.jiejie01.top/ros006.png" alt="ros006"></p>
-<h2 id="roscd"><a href="#roscd" class="headerlink" title="roscd"></a>roscd</h2><p><code>roscd</code>是<code>rosbash</code>命令集中的一部分，它允许你直接切换（cd）工作目录到某个软件包或者软件包集当中。</p>
-<p><code>roscd</code>的用法是：</p>
-<pre class="line-numbers language-bash"><code class="language-bash">roscd <span class="token punctuation">[</span>功能包名称<span class="token punctuation">[</span>/子目录<span class="token punctuation">]</span><span class="token punctuation">]</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-<p>比如切换到<code>roscpp</code>目录下：</p>
-<pre class="line-numbers language-bash"><code class="language-bash">roscd roscpp<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-<p>比如切换到<code>roscpp</code>的子目录<code>msg</code>下：</p>
-<pre class="line-numbers language-bash"><code class="language-bash">roscd roscpp/msg<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-<p><img src="./images/loading.png" data-original="http://qiniu.jiejie01.top/ros007.png" alt="ros007"></p>
-<h2 id="rosls"><a href="#rosls" class="headerlink" title="rosls"></a>rosls</h2><p>这个命令更linux下的ls很像，但它允许你在任何位置列出某个功能包的当前目录或者其子目录的内容，而不需要在绝对路径执行ls。</p>
-<p><code>rosls</code>的用法是：</p>
-<pre class="line-numbers language-bash"><code class="language-bash">rosls <span class="token punctuation">[</span>功能包名称<span class="token punctuation">[</span>/子目录<span class="token punctuation">]</span><span class="token punctuation">]</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-<p>比如列出<code>roscpp</code>目录下的内容：</p>
-<pre class="line-numbers language-bash"><code class="language-bash">rosls roscpp<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-<p>比如列出<code>roscpp</code>的子目录<code>msg</code>下的内容：</p>
-<pre class="line-numbers language-bash"><code class="language-bash">rosls roscpp/msg<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-<p><img src="./images/loading.png" data-original="http://qiniu.jiejie01.top/ros008.png" alt="ros008"></p>
-<p><strong>同时它们都支持<code>Tab补全</code>，非常方便</strong></p>
-<h1 id="参考："><a href="#参考：" class="headerlink" title="参考："></a>参考：</h1><p><a href="http://wiki.ros.org/cn/ROS/Tutorials/NavigatingTheFilesystem" target="_blank" rel="noopener">ROS官方wiki</a></p>
-<p><a href="https://joveh-h.blog.csdn.net/article/details/90412882" target="_blank" rel="noopener">ROS笔记（5） ROS架构</a></p>
+<span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span> 
+<span class="token punctuation">{</span>
+    <span class="token keyword">char</span> <span class="token operator">*</span>version<span class="token punctuation">;</span>
+
+    version <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token keyword">char</span><span class="token operator">*</span><span class="token punctuation">)</span> <span class="token function">uv_version_string</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"libuv version is %s\n"</span><span class="token punctuation">,</span> version<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>编写Makefile，指定编译的规则并且编译它，需要注意的是需要指定链接libuv库<code>-luv</code>，这是动态链接的方式：</p>
+<pre class="line-numbers language-Makefile"><code class="language-Makefile">CC=gcc
+SRC = $(wildcard *.c */*.c)
+OBJS = $(patsubst %.c, %.o, $(SRC))
+DEP_FILES := $(patsubst %, .%.d,$(OBJS))
+DEP_FILES := $(wildcard $(DEP_FILES))
+FLAG = -g -Werror -I. -Iinclude -lpthread -luv
+TARGET = targets
+
+$(TARGET):$(OBJS)
+    $(CC) -o $@ $^ $(FLAG)
+
+ifneq ($(DEP_FILES),)
+include $(DEP_FILES)
+endif
+
+%.o:%.c
+    $(CC) -o $@ -c $(FLAG) $< -g -MD -MF .$@.d
+
+clean:
+    rm -rf $(TARGET) $(OBJS)
+
+distclean:
+    rm -rf $(DEP_FILES)
+
+.PHONY:clean<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>当编译完成后，可以看到产生的可执行文件，可以使用ldd命令去查看它的依赖，可以看到它依赖系统的<code>/usr/local/lib/libuv.so.1</code>：</p>
+<pre class="line-numbers language-bash"><code class="language-bash">➜  001 <span class="token function">make</span>
+gcc -o demo.o -c -g -Werror -I. -Iinclude -lpthread -luv demo.c -g -MD -MF .demo.o.d
+gcc -o targets demo.o -g -Werror -I. -Iinclude -lpthread -luv
+
+➜  001 <span class="token function">ls</span>
+demo.c  demo.o  Makefile  targets
+
+➜  001 ldd targets 
+        linux-vdso.so.1 <span class="token punctuation">(</span>0x00007fffa5bc6000<span class="token punctuation">)</span>
+        libuv.so.1 <span class="token operator">=</span><span class="token operator">></span> /usr/local/lib/libuv.so.1 <span class="token punctuation">(</span>0x00007f8346e7b000<span class="token punctuation">)</span>
+        libc.so.6 <span class="token operator">=</span><span class="token operator">></span> /lib/x86_64-linux-gnu/libc.so.6 <span class="token punctuation">(</span>0x00007f8346a8a000<span class="token punctuation">)</span>
+        librt.so.1 <span class="token operator">=</span><span class="token operator">></span> /lib/x86_64-linux-gnu/librt.so.1 <span class="token punctuation">(</span>0x00007f8346882000<span class="token punctuation">)</span>
+        libpthread.so.0 <span class="token operator">=</span><span class="token operator">></span> /lib/x86_64-linux-gnu/libpthread.so.0 <span class="token punctuation">(</span>0x00007f8346663000<span class="token punctuation">)</span>
+        libdl.so.2 <span class="token operator">=</span><span class="token operator">></span> /lib/x86_64-linux-gnu/libdl.so.2 <span class="token punctuation">(</span>0x00007f834645f000<span class="token punctuation">)</span>
+        /lib64/ld-linux-x86-64.so.2 <span class="token punctuation">(</span>0x00007f83472ac000<span class="token punctuation">)</span>
+➜  001 <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>运行：</p>
+<pre class="line-numbers language-bash"><code class="language-bash">./targets 
+
+libuv version is 1.36.0<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
 <script>
         document.querySelectorAll('.github-emoji')
           .forEach(el => {
@@ -784,7 +822,7 @@
                     </span>
                     <a href="https://jiedev.com" class="b-link-green">杰杰的博客</a>
                     <i class="fa fa-angle-right fa-lg fa-fw text-color"></i>
-                    <a href="/ros-2/" class="b-link-green">【ROS入门-2】带你看ROS文件系统及其工具</a>
+                    <a href="/libuv-1/" class="b-link-green">【网络编程】libuv学习超详细教程1</a>
                 </p>
             </div>
 
@@ -1065,54 +1103,57 @@
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fa fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="fa fa-dot-circle-o"></i>&nbsp;本篇
+            </div>
             <div class="card">
-                <a href="/ros-3/">
+                <a href="/libuv-1/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/1.jpg" class="responsive-img" alt="【ROS入门-3】嘴对嘴讲解ROS的核心概念——节点与节点管理器">
+                        <img src="/medias/featureimages/7.jpg" class="responsive-img" alt="【网络编程】libuv学习超详细教程1">
                         
-                        <span class="card-title">【ROS入门-3】嘴对嘴讲解ROS的核心概念——节点与节点管理器</span>
+                        <span class="card-title">【网络编程】libuv学习超详细教程1</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            前言我要给大家来介绍一下ROS当中一些核心的概念，帮助大家去在后面的ROS学习当中更快地吸收这些概念。
-ROS系列文章
-【ROS入门-1】手把手教你在Ubuntu18.04安装ROS Melodic
-
-【ROS入门-2】带你看ROS文件系统
+                            libuv简介libuv 是一个高性能的，事件驱动的I/O，并且支持多平台的网络库，比如Node.js、Luvit、Julia、pyuv等大型的软件都有使用它进行开发，这足以看出它的性能优越性。
+其实高性能的网络库在github有非常多，比
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="fa fa-clock-o fa-fw icon-date"></i>2020-04-05
-                        </span>
+                            <span class="publish-date">
+                                <i class="fa fa-clock-o fa-fw icon-date"></i>2020-04-17
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fa fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/ROS/" class="post-category" target="_blank">
-                                    ROS
+                            <a href="/categories/网络/" class="post-category" target="_blank">
+                                    网络
                                 </a>
                             
                             
                         </span>
                     </div>
                 </div>
+
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/ROS/" target="_blank">
-                        <span class="chip bg-color">ROS</span>
+                    <a href="/tags/libuv/" target="_blank">
+                        <span class="chip bg-color">libuv</span>
                     </a>
                     
-                    <a href="/tags/机器人操作系统/" target="_blank">
-                        <span class="chip bg-color">机器人操作系统</span>
+                    <a href="/tags/网络/" target="_blank">
+                        <span class="chip bg-color">网络</span>
+                    </a>
+                    
+                    <a href="/tags/Linux/" target="_blank">
+                        <span class="chip bg-color">Linux</span>
                     </a>
                     
                 </div>
@@ -1126,31 +1167,30 @@ ROS系列文章
                 下一篇&nbsp;<i class="fa fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/ros-1/">
+                <a href="/ros-7/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/2.jpg" class="responsive-img" alt="【ROS入门-1】手把手教你在Ubuntu18.04安装ROS Melodic">
+                        <img src="/medias/featureimages/8.jpg" class="responsive-img" alt="【ROS入门-7】ROS自定义消息">
                         
-                        <span class="card-title">【ROS入门-1】手把手教你在Ubuntu18.04安装ROS Melodic</span>
+                        <span class="card-title">【ROS入门-7】ROS自定义消息</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            引言先来一张ROS的美照：
-
+                            引言这篇文章讲解我们自己按需定义消息。
 ROS系列文章
 【ROS入门-1】手把手教你在Ubuntu18.04安装ROS Melodic
 
 【ROS入门-2】带你看ROS文件系统及其工具
 
-【ROS入门-3】嘴对嘴讲解ROS的核心概念——节点与节点管理
+【ROS入门-3】嘴对嘴讲解ROS的核心概念——节点
                         
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="fa fa-clock-o fa-fw icon-date"></i>2020-04-04
+                                <i class="fa fa-clock-o fa-fw icon-date"></i>2020-04-10
                             </span>
                         <span class="publish-author">
                             
@@ -1320,6 +1360,13 @@ ROS系列文章
 
 </main>
 
+
+<script src="https://cdn.bootcss.com/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script>
+    MathJax.Hub.Config({
+        tex2jax: {inlineMath: [['$', '$'], ['\(', '\)']]}
+    });
+</script>
 
     <!-- jiejie 杰杰  modify 2019.08.15-->
 
