@@ -6,15 +6,12 @@
 
 <head><meta name="generator" content="Hexo 3.9.0">
     <meta charset="utf-8">
-    <meta name="keywords" content="STM32之串口DMA接收不定长数据, IoT RTOS linux Python jiejie Dora">
+    <meta name="keywords" content="【libuv高效编程】libuv学习超详细教程2——libuv框架初窥, IoT RTOS linux Python jiejie Dora">
     <meta name="baidu-site-verification" content="TRUUhavuHV">
     <meta name="google-site-verification" content="v-saR33QlUQmwVrLI7AQd08em9BtdazPy5jvPouEYHg">
-    <meta name="description" content="STM32之串口DMA接收不定长数据引言在使用stm32或者其他单片机的时候，会经常使用到串口通讯，那么如何有效地接收数据呢？假如这段数据是不定长的有如何高效接收呢？
+    <meta name="description" content="libuv框架从官方的文档可以找到一个设计框架的图片：libuv/docs/src/static/architecture.png
 
-同学A：数据来了就会进入串口中断，在中断中读取数据就行了！
-
-
-中断就">
+从这张图片可以看出libuv的设计框架（从上往下看，从左往右分成网络IO与文件IO等操作），从网络I/O看">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -22,7 +19,7 @@
     <meta name="format-detection" content="telephone=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>STM32之串口DMA接收不定长数据 | 杰杰的博客</title>
+    <title>【libuv高效编程】libuv学习超详细教程2——libuv框架初窥 | 杰杰的博客</title>
     <link rel="icon" type="image/x-icon, image/vnd.microsoft.icon" href="/medias/logo/favicon.ico">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/font-awesome.min.css">
@@ -369,13 +366,13 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/8.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/7.jpg')">
     <div class="container">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
                     <div class="description center-align post-title">
-                        STM32之串口DMA接收不定长数据
+                        【libuv高效编程】libuv学习超详细教程2——libuv框架初窥
                     </div>
                 </div>
             </div>
@@ -487,16 +484,16 @@
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/Cortex-M/" target="_blank">
-                                <span class="chip bg-color">Cortex-M</span>
+                            <a href="/tags/libuv/" target="_blank">
+                                <span class="chip bg-color">libuv</span>
                             </a>
                         
-                            <a href="/tags/STM32/" target="_blank">
-                                <span class="chip bg-color">STM32</span>
+                            <a href="/tags/网络/" target="_blank">
+                                <span class="chip bg-color">网络</span>
                             </a>
                         
-                            <a href="/tags/DMA/" target="_blank">
-                                <span class="chip bg-color">DMA</span>
+                            <a href="/tags/Linux/" target="_blank">
+                                <span class="chip bg-color">Linux</span>
                             </a>
                         
                     </div>
@@ -507,8 +504,8 @@
                     <div class="post-cate">
                         <i class="fa fa-bookmark fa-fw icon-category"></i>
                         
-                            <a href="/categories/STM32/" class="post-category" target="_blank">
-                                STM32
+                            <a href="/categories/网络/" class="post-category" target="_blank">
+                                网络
                             </a>
                         
                     </div>
@@ -519,7 +516,7 @@
             <div class="post-info">
                 <div class="post-date info-break-policy">
                     <i class="fa fa-calendar-minus-o fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2019-10-05
+                    2020-04-18
                 </div>
 
                 <div class="post-author info-break-policy">
@@ -533,14 +530,14 @@
                     
                     <div class="info-break-policy">
                         <i class="fa fa-file-word-o fa-fw"></i>文章字数:&nbsp;&nbsp;
-                        3.3k
+                        2.3k
                     </div>
                     
 
                     
                     <div class="info-break-policy">
                         <i class="fa fa-clock-o fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                        12 分
+                        8 分
                     </div>
                     
                 
@@ -557,259 +554,63 @@
         <hr class="clearfix">
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h1 id="STM32之串口DMA接收不定长数据"><a href="#STM32之串口DMA接收不定长数据" class="headerlink" title="STM32之串口DMA接收不定长数据"></a>STM32之串口DMA接收不定长数据</h1><h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>在使用stm32或者其他单片机的时候，会经常使用到串口通讯，那么如何有效地接收数据呢？假如这段数据是不定长的有如何高效接收呢？</p>
-<blockquote>
-<p>同学A：数据来了就会进入串口中断，在中断中读取数据就行了！</p>
-</blockquote>
-<blockquote>
-<p><strong>中断就是打断程序正常运行，怎么能保证高效呢？经常把主程序打断，主程序还要不要运行了？</strong></p>
-</blockquote>
-<blockquote>
-<p>同学B：串口可以配置成用DMA的方式接收数据，等接收完毕就可以去读取了！</p>
-</blockquote>
-<blockquote>
-<p><strong>这个同学是对的，我们可以使用DMA去接收数据，不过DMA需要定长才能产生接收中断,如何接收不定长的数据呢？</strong></p>
-</blockquote>
-<h2 id="DMA简介"><a href="#DMA简介" class="headerlink" title="DMA简介"></a>DMA简介</h2><blockquote>
-<p>题外话：其实，上面的问题是很有必要思考一下的，不断思考，才能进步。</p>
-</blockquote>
-<h3 id="什么是DMA"><a href="#什么是DMA" class="headerlink" title="什么是DMA"></a>什么是DMA</h3><p><strong>DMA</strong>：全称Direct Memory Access，即直接存储器访问</p>
-<p>DMA 传输将数据从一个地址空间复制到另外一个地址空间。CPU只需初始化DMA即可，传输动作本身是由 DMA 控制器来实现和完成。典型的例子就是移动一个外部内存的区块到芯片内部更快的内存区。这样的操作并没有让处理器参与处理，CPU可以干其他事情，当DMA传输完成的时候产生一个中断，告诉CPU我已经完成了，然后CPU知道了就可以去处理数据了，这样子提高了CPU的利用率，因为CPU是大脑，主要做数据运算的工作，而不是去搬运数据。DMA 传输对于高效能嵌入式系统算法和网络是很重要的。</p>
-<h3 id="在STM32的DMA资源"><a href="#在STM32的DMA资源" class="headerlink" title="在STM32的DMA资源"></a>在STM32的DMA资源</h3><p><strong>STM32F1系列</strong>的MCU有两个DMA控制器（DMA2只存在于大容量产品中），DMA1有7个通道，DMA2有5个通道，每个通道专门用来管理来自于一个或者多个外设对存储器的访问请求。还有一个仲裁器来协调各个DMA请求的优先权。</p>
-<p><img src="./images/loading.png" data-original="http://qiniu.jiejie01.top/f1-dam.png" alt="f1-dam"></p>
-<p><img src="./images/loading.png" data-original="http://qiniu.jiejie01.top/f1-dam2.png" alt="f1-dam2"></p>
-<p><strong>而STM32F4/F7/H7系列</strong>的MCU有两个DMA控制器总共有16个数据流（每个DMA控制器8个），每一个DMA控制器都用于管理一个或多个外设的存储器访问请求。每个数据流总共可以有多达8个通道（或称请求）。每个通道都有一个仲裁器，用于处理 DMA 请求间的优先级。<br><img src="./images/loading.png" data-original="http://qiniu.jiejie01.top/f4-dam.png" alt="f4-dam"></p>
-<p><img src="./images/loading.png" data-original="http://qiniu.jiejie01.top/f4-dam2.png" alt="f4-dam2"></p>
-<h3 id="DMA接收数据"><a href="#DMA接收数据" class="headerlink" title="DMA接收数据"></a>DMA接收数据</h3><p>DMA在接收数据的时候，串口接收DMA在初始化的时候就处于开启状态，一直等待数据的到来，在软件上无需做任何事情，只要在初始化配置的时候设置好配置就可以了。等到接收到数据的时候，告诉CPU去处理即可。</p>
-<h3 id="判断数据接收完成"><a href="#判断数据接收完成" class="headerlink" title="判断数据接收完成"></a>判断数据接收完成</h3><blockquote>
-<p>那么问题来了，怎么知道数据是否接收完成呢？</p>
-</blockquote>
-<p>其实，有很多方法：</p>
-<ul>
-<li>对于定长的数据，只需要判断一下数据的接收个数，就知道是否接收完成，这个很简单，暂不讨论。</li>
-<li>对于不定长的数据，其实也有好几种方法，麻烦的我肯定不会介绍，有兴趣做复杂工作的同学可以在网上看看别人怎么做，下面这种方法是最简单的，充分利用了stm32的串口资源，效率也是非常之高。</li>
-</ul>
-<p><strong>DMA+串口空闲中断</strong></p>
-<p>这两个资源配合，简直就是天衣无缝啊，无论接收什么不定长的数据，管你数据有多少，来一个我就收一个，就像广东人吃“山竹”，来一个吃一个~（最近风好大，我好怕）。</p>
-<p>可能很多人在学习stm32的时候，都不知道idle是啥东西，先看看stm32串口的状态寄存器：</p>
-<p><img src="./images/loading.png" data-original="http://qiniu.jiejie01.top/idle.png" alt="idle"></p>
-<p><img src="./images/loading.png" data-original="http://qiniu.jiejie01.top/idle1.png" alt="idle1"></p>
-<p>当我们检测到触发了串口总线空闲中断的时候，我们就知道这一波数据传输完成了，然后我们就能得到这些数据，去进行处理即可。这种方法是最简单的，根本不需要我们做多的处理，只需要配置好，串口就等着数据的到来，dma也是处于工作状态的，来一个数据就自动搬运一个数据。</p>
-<h3 id="接收完数据时处理"><a href="#接收完数据时处理" class="headerlink" title="接收完数据时处理"></a>接收完数据时处理</h3><p>串口接收完数据是要处理的，那么处理的步骤是怎么样呢？</p>
-<ul>
-<li>暂时关闭串口接收DMA通道，有两个原因：1.防止后面又有数据接收到，产生干扰，因为此时的数据还未处理。2.DMA需要重新配置。</li>
-<li>清DMA标志位。</li>
-<li>从DMA寄存器中获取接收到的数据字节数（可有可无）。</li>
-<li>重新设置DMA下次要接收的数据字节数，注意，数据传输数量范围为0至65535。这个寄存器只能在通道不工作(DMA_CCRx的EN=0)时写入。通道开启后该寄存器变为只读，指示剩余的待传输字节数目。寄存器内容在每次DMA传输后递减。数据传输结束后，寄存器的内容或者变为0；或者当该通道配置为自动重加载模式时，寄存器的内容将被自动重新加载为之前配置时的数值。当寄存器的内容为0时，无论通道是否开启，都不会发生任何数据传输。</li>
-<li>给出信号量，发送接收到新数据标志，供前台程序查询。</li>
-<li>开启DMA通道，等待下一次的数据接收，注意，对DMA的相关寄存器配置写入，如重置DMA接收数据长度，必须要在关闭DMA的条件进行，否则操作无效。</li>
-</ul>
-<p><strong>注意事项</strong></p>
-<p>STM32的IDLE的中断在串口无数据接收的情况下，是不会一直产生的，产生的条件是这样的，当清除IDLE标志位后，必须有接收到第一个数据后，才开始触发，一断接收的数据断流，没有接收到数据，即产生IDLE中断。如果中断发送数据帧的速率很快，MCU来不及处理此次接收到的数据，中断又发来数据的话，这里不能开启，否则数据会被覆盖。有两种方式解决：</p>
+                <h1 id="libuv框架"><a href="#libuv框架" class="headerlink" title="libuv框架"></a>libuv框架</h1><p>从官方的文档可以找到一个设计框架的图片：<code>libuv/docs/src/static/architecture.png</code></p>
+<p><img src="./images/loading.png" data-original="http://qiniu.jiejie01.top/libuv004.png" alt="libuv004"></p>
+<p>从这张图片可以看出libuv的设计框架（从上往下看，从左往右分成网络IO与文件IO等操作），从网络I/O看，在linux（unix）平台它可以通过网络的底层epoll作为异步的I/O处理，在OSX上可以使用kqueue等，它的中间有一层抽象层uv__io_t；而在Windows平台可以通过IOCP作为异步的处理；对应文件I/O操作，它不像网络I/O，libuv没有特定平台的异步IO原语（primitives）可以依赖，所以libuv是在线程池中执行阻塞（同步）IO来实现异步的操作。</p>
+<h1 id="同步I-O"><a href="#同步I-O" class="headerlink" title="同步I/O"></a>同步I/O</h1><p>在操作系统中，程序运行的空间分为内核空间和用户空间，用户空间所有对io操作的代码（如文件的读写、socket的收发等）都会通过系统调用进入内核空间完成实际的操作。</p>
+<p>而且我们都知道CPU的速度远远快于硬盘、网络等I/O。在一个线程中，CPU执行代码的速度极快，然而，一旦遇到I/O操作，如读写文件、发送网络数据时，就需要等待 I/O 操作完成，才能继续进行下一步操作，这种情况称为同步 I/O。</p>
+<p>在某个应用程序运行时，假设需要读写某个文件，此时就发生了 I/O 操作，在I/O操作的过程中，系统会将当前线程挂起，而其他需要CPU执行的代码就无法被当前线程执行了，这就是同步I/O操作，因为一个IO操作就阻塞了当前线程，导致其他代码无法执行，所以我们可以使用<strong>多线程或者多进程</strong>来并发执行代码，当某个线程/进程被挂起后，不会影响其他线程或进程。</p>
+<p>多线程和多进程虽然解决了这种并发的问题，但是系统不能无上限地增加线程/进程。由于系统切换线程/进程的开销也很大，所以，一旦线程/进程数量过多，CPU的时间就花在线程/进程切换上了，真正运行代码的时间就少了，这样子的结果也导致系统性能严重下降。</p>
+<p>多线程和多进程只是解决这一问题的一种方法，另一种解决I/O问题的方法是异步I/O。</p>
+<h1 id="异步I-O"><a href="#异步I-O" class="headerlink" title="异步I/O"></a>异步I/O</h1><p>当程序需要对I/O进行操作时，它只发出I/O操作的指令，并不等待I/O操作的结果，然后就去执行其他代码了。一段时间后，当I/O返回结果时，再通知CPU进行处理。这样子用户空间中的程序不需要等待内核空间中的 I/O 完成实际操作，就可执行其他任务，提高CPU的利用率。</p>
+<p><strong>简单来说就是，用户不需要等待内核完成实际对io的读写操作就直接返回了。</strong></p>
+<p>大家可以思考一下，如何去实现异步I/O模型，思考明白了，就表示对libuv框架有一定了解了，或者说看完这篇文章后，你能知道为什么libuv是这样子设计的，那就可以了。</p>
+<h1 id="Handles-和-Requests"><a href="#Handles-和-Requests" class="headerlink" title="Handles 和 Requests"></a>Handles 和 Requests</h1><p>Handles就是句柄，Requests是请求，句柄代表着一个可用的资源（或者说是一个对象），比如一个TCP连接，在整个TCP连接的生命周期中，句柄都是可用的，当断开连接后，句柄也应该随之释放。而请求则表示一个操作的开始，比如TCP请求建立连接、TCP请求读取数据、发送数据等，这个请求是期望得到应答的，当产生应答的时候，请求就完成了。还有很重要的一点是：这些请求是可以在句柄上操作的，比如在某个TCP连接中请求发送数据、读取数据；当然也有不在句柄上的请求。</p>
+<h1 id="事件循环"><a href="#事件循环" class="headerlink" title="事件循环"></a>事件循环</h1><p>事件循环是libuv的核心部分，它的主要职责是对 I/O 进行轮询，然后基于不同的事件源调度它们的回调，它是libuv中建立所有I/O操作的内容，所有网络I/O工作在<strong>非阻塞</strong>套接字上，这些循环<strong>依赖平台</strong>上的最佳机制进行轮询，比如<strong>在linux平台上使用epoll，在OSX上使用kqueue，在Windows上使用IOCP等机制</strong>，当这些网络I/O有数据到达的时候，libuv将通过回调函数去执行相应的操作，比如读取数据、写入数据等。</p>
+<p>对于文件I/O的操作，由于平台并未对文件I/O提供轮询机制，libuv通过线程池的方式阻塞他们，每个I/O将对应产生一个线程，并在线程中进行阻塞，当有数据可操作的时候解除阻塞，进而进行回调处理，因此libuv将维护一个线程池，线程池中可能创建了多个线程并阻塞它们。</p>
+<p>接下来放一张官方的图片吧，它在<code>libuv/docs/src/static/loop_iteration.png</code>路径下:</p>
+<p><img src="./images/loading.png" data-original="http://qiniu.jiejie01.top/libuv005.png" alt="libuv005"></p>
+<p>这张图很明确的表示了libuv中<strong>所有I/O</strong>的事件循环处理的过程，其实就是<code>uv_run()</code>函数执行的过程，它内部是一个while循环。</p>
 <ol>
-<li><p>在重新开启接收DMA通道之前，将Rx_Buf缓冲区里面的数据复制到另外一个数组中，然后再开启DMA，然后马上处理复制出来的数据。</p>
+<li><p>首先判断循环是否是处于活动状态，它主要是通过当前是否存在处于alive活动状态的句柄，如果句柄都没有了，那循环也就没有意义了，如果不存在则直接退出。</p>
 </li>
-<li><p>建立双缓冲，重新配置DMA_MemoryBaseAddr的缓冲区地址，那么下次接收到的数据就会保存到新的缓冲区中，不至于被覆盖。</p>
+<li><p>开始倒计时，主要是维护所有句柄中的定时器，当某个句柄超时了，就会告知应用层已经超时了，就退出去或者重新加入循环中。</p>
+</li>
+<li><p>调用待处理的回调函数，如果有待处理的回调函数，则去处理它，如果没有就接着往下运行。</p>
+</li>
+<li><p>运行空闲句柄，反正它这个线程都默认会有空闲句柄的，这个空闲句柄会在每次循环中被执行。</p>
+</li>
+<li><p>运行准备句柄回调处理，这个名字有点奇怪，我是跟着官方手册来学习的，也不知道怎么去翻译它，简单来说就是在某个I/O要阻塞前，有需要的话就去运行一下他的回调函数，举个例子吧，比如我要从某个文件读取数据，如果我在读取数据进入阻塞状态之前想打印一个信息，那么就可以通过这个准备句柄的回调函数去处理这个打印信息。</p>
+</li>
+<li><p>计算轮询超时，在阻塞I/O之前，循环会计算阻塞的时间，并将这个I/O进入阻塞状态（如果可以的话，阻塞超时为0则表示不阻塞），这些是计算超时的规则：</p>
 </li>
 </ol>
-<h3 id="程序实现"><a href="#程序实现" class="headerlink" title="程序实现"></a>程序实现</h3><p>实验效果：<br>当外部给单片机发送数 据的时候，假设这帧数据长度是1000个字节，那么在单片机接收到一个字节的时候并不会产生串口中断，只是DMA在背后默默地把数据搬运到你指定的缓冲区里面。当整帧数据发送完毕之后串口才会产生一次中断，此时可以利用<code>DMA_GetCurrDataCounter()</code>函数计算出本次的数据接受长度，从而进行数据处理。</p>
-<p><strong>串口的配置</strong><br>很简单，基本与使用串口的时候一致，只不过一般我们是打开接收缓冲区非空中断，而现在是打开空闲中断——<code>USART_ITConfig(DEBUG_USARTx, USART_IT_IDLE, ENABLE);</code>。</p>
-<pre class="line-numbers language-c"><code class="language-c"><span class="token comment" spellcheck="true">/**
-  * @brief  USART GPIO 配置,工作参数配置
-  * @param  无
-  * @retval 无
-  */</span>
-<span class="token keyword">void</span> <span class="token function">USART_Config</span><span class="token punctuation">(</span><span class="token keyword">void</span><span class="token punctuation">)</span>
-<span class="token punctuation">{</span>
-    GPIO_InitTypeDef GPIO_InitStructure<span class="token punctuation">;</span>
-    USART_InitTypeDef USART_InitStructure<span class="token punctuation">;</span>
-
-    <span class="token comment" spellcheck="true">// 打开串口GPIO的时钟</span>
-    <span class="token function">DEBUG_USART_GPIO_APBxClkCmd</span><span class="token punctuation">(</span>DEBUG_USART_GPIO_CLK<span class="token punctuation">,</span> ENABLE<span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-    <span class="token comment" spellcheck="true">// 打开串口外设的时钟</span>
-    <span class="token function">DEBUG_USART_APBxClkCmd</span><span class="token punctuation">(</span>DEBUG_USART_CLK<span class="token punctuation">,</span> ENABLE<span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-    <span class="token comment" spellcheck="true">// 将USART Tx的GPIO配置为推挽复用模式</span>
-    GPIO_InitStructure<span class="token punctuation">.</span>GPIO_Pin <span class="token operator">=</span> DEBUG_USART_TX_GPIO_PIN<span class="token punctuation">;</span>
-    GPIO_InitStructure<span class="token punctuation">.</span>GPIO_Mode <span class="token operator">=</span> GPIO_Mode_AF_PP<span class="token punctuation">;</span>
-    GPIO_InitStructure<span class="token punctuation">.</span>GPIO_Speed <span class="token operator">=</span> GPIO_Speed_50MHz<span class="token punctuation">;</span>
-    <span class="token function">GPIO_Init</span><span class="token punctuation">(</span>DEBUG_USART_TX_GPIO_PORT<span class="token punctuation">,</span> <span class="token operator">&amp;</span>GPIO_InitStructure<span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-  <span class="token comment" spellcheck="true">// 将USART Rx的GPIO配置为浮空输入模式</span>
-    GPIO_InitStructure<span class="token punctuation">.</span>GPIO_Pin <span class="token operator">=</span> DEBUG_USART_RX_GPIO_PIN<span class="token punctuation">;</span>
-    GPIO_InitStructure<span class="token punctuation">.</span>GPIO_Mode <span class="token operator">=</span> GPIO_Mode_IN_FLOATING<span class="token punctuation">;</span>
-    <span class="token function">GPIO_Init</span><span class="token punctuation">(</span>DEBUG_USART_RX_GPIO_PORT<span class="token punctuation">,</span> <span class="token operator">&amp;</span>GPIO_InitStructure<span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-    <span class="token comment" spellcheck="true">// 配置串口的工作参数</span>
-    <span class="token comment" spellcheck="true">// 配置波特率</span>
-    USART_InitStructure<span class="token punctuation">.</span>USART_BaudRate <span class="token operator">=</span> DEBUG_USART_BAUDRATE<span class="token punctuation">;</span>
-    <span class="token comment" spellcheck="true">// 配置 针数据字长</span>
-    USART_InitStructure<span class="token punctuation">.</span>USART_WordLength <span class="token operator">=</span> USART_WordLength_8b<span class="token punctuation">;</span>
-    <span class="token comment" spellcheck="true">// 配置停止位</span>
-    USART_InitStructure<span class="token punctuation">.</span>USART_StopBits <span class="token operator">=</span> USART_StopBits_1<span class="token punctuation">;</span>
-    <span class="token comment" spellcheck="true">// 配置校验位</span>
-    USART_InitStructure<span class="token punctuation">.</span>USART_Parity <span class="token operator">=</span> USART_Parity_No <span class="token punctuation">;</span>
-    <span class="token comment" spellcheck="true">// 配置硬件流控制</span>
-    USART_InitStructure<span class="token punctuation">.</span>USART_HardwareFlowControl <span class="token operator">=</span> 
-    USART_HardwareFlowControl_None<span class="token punctuation">;</span>
-    <span class="token comment" spellcheck="true">// 配置工作模式，收发一起</span>
-    USART_InitStructure<span class="token punctuation">.</span>USART_Mode <span class="token operator">=</span> USART_Mode_Rx <span class="token operator">|</span> USART_Mode_Tx<span class="token punctuation">;</span>
-    <span class="token comment" spellcheck="true">// 完成串口的初始化配置</span>
-    <span class="token function">USART_Init</span><span class="token punctuation">(</span>DEBUG_USARTx<span class="token punctuation">,</span> <span class="token operator">&amp;</span>USART_InitStructure<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token comment" spellcheck="true">// 串口中断优先级配置</span>
-    <span class="token function">NVIC_Configuration</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-<span class="token macro property">#<span class="token directive keyword">if</span> USE_USART_DMA_RX </span>
-    <span class="token comment" spellcheck="true">// 开启 串口空闲IDEL 中断</span>
-    <span class="token function">USART_ITConfig</span><span class="token punctuation">(</span>DEBUG_USARTx<span class="token punctuation">,</span> USART_IT_IDLE<span class="token punctuation">,</span> ENABLE<span class="token punctuation">)</span><span class="token punctuation">;</span>  
-  <span class="token comment" spellcheck="true">// 开启串口DMA接收</span>
-    <span class="token function">USART_DMACmd</span><span class="token punctuation">(</span>DEBUG_USARTx<span class="token punctuation">,</span> USART_DMAReq_Rx<span class="token punctuation">,</span> ENABLE<span class="token punctuation">)</span><span class="token punctuation">;</span> 
-    <span class="token comment" spellcheck="true">/* 使能串口DMA */</span>
-    <span class="token function">USARTx_DMA_Rx_Config</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token macro property">#<span class="token directive keyword">else</span></span>
-    <span class="token comment" spellcheck="true">// 使能串口接收中断</span>
-    <span class="token function">USART_ITConfig</span><span class="token punctuation">(</span>DEBUG_USARTx<span class="token punctuation">,</span> USART_IT_RXNE<span class="token punctuation">,</span> ENABLE<span class="token punctuation">)</span><span class="token punctuation">;</span>    
-<span class="token macro property">#<span class="token directive keyword">endif</span></span>
-
-<span class="token macro property">#<span class="token directive keyword">if</span> USE_USART_DMA_TX </span>
-    <span class="token comment" spellcheck="true">// 开启串口DMA发送</span>
-<span class="token comment" spellcheck="true">//    USART_DMACmd(DEBUG_USARTx, USART_DMAReq_Tx, ENABLE); </span>
-    <span class="token function">USARTx_DMA_Tx_Config</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token macro property">#<span class="token directive keyword">endif</span></span>
-
-    <span class="token comment" spellcheck="true">// 使能串口</span>
-    <span class="token function">USART_Cmd</span><span class="token punctuation">(</span>DEBUG_USARTx<span class="token punctuation">,</span> ENABLE<span class="token punctuation">)</span><span class="token punctuation">;</span>        
-<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<p><strong>串口DMA配置</strong></p>
-<p>把DMA配置完成，就可以直接打开DMA了，让它处于工作状态，当有数据的时候就能直接搬运了。</p>
-<pre class="line-numbers language-c"><code class="language-c"><span class="token macro property">#<span class="token directive keyword">if</span> USE_USART_DMA_RX </span>
-
-<span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">USARTx_DMA_Rx_Config</span><span class="token punctuation">(</span><span class="token keyword">void</span><span class="token punctuation">)</span>
-<span class="token punctuation">{</span>
-    DMA_InitTypeDef DMA_InitStructure<span class="token punctuation">;</span>
-
-    <span class="token comment" spellcheck="true">// 开启DMA时钟</span>
-    <span class="token function">RCC_AHBPeriphClockCmd</span><span class="token punctuation">(</span>RCC_AHBPeriph_DMA1<span class="token punctuation">,</span> ENABLE<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token comment" spellcheck="true">// 设置DMA源地址：串口数据寄存器地址*/</span>
-    DMA_InitStructure<span class="token punctuation">.</span>DMA_PeripheralBaseAddr <span class="token operator">=</span> <span class="token punctuation">(</span>uint32_t<span class="token punctuation">)</span>USART_DR_ADDRESS<span class="token punctuation">;</span>
-    <span class="token comment" spellcheck="true">// 内存地址(要传输的变量的指针)</span>
-    DMA_InitStructure<span class="token punctuation">.</span>DMA_MemoryBaseAddr <span class="token operator">=</span> <span class="token punctuation">(</span>uint32_t<span class="token punctuation">)</span>Usart_Rx_Buf<span class="token punctuation">;</span>
-    <span class="token comment" spellcheck="true">// 方向：从内存到外设    </span>
-    DMA_InitStructure<span class="token punctuation">.</span>DMA_DIR <span class="token operator">=</span> DMA_DIR_PeripheralSRC<span class="token punctuation">;</span>
-    <span class="token comment" spellcheck="true">// 传输大小    </span>
-    DMA_InitStructure<span class="token punctuation">.</span>DMA_BufferSize <span class="token operator">=</span> USART_RX_BUFF_SIZE<span class="token punctuation">;</span>
-    <span class="token comment" spellcheck="true">// 外设地址不增        </span>
-    DMA_InitStructure<span class="token punctuation">.</span>DMA_PeripheralInc <span class="token operator">=</span> DMA_PeripheralInc_Disable<span class="token punctuation">;</span>
-    <span class="token comment" spellcheck="true">// 内存地址自增</span>
-    DMA_InitStructure<span class="token punctuation">.</span>DMA_MemoryInc <span class="token operator">=</span> DMA_MemoryInc_Enable<span class="token punctuation">;</span>
-    <span class="token comment" spellcheck="true">// 外设数据单位    </span>
-    DMA_InitStructure<span class="token punctuation">.</span>DMA_PeripheralDataSize <span class="token operator">=</span> 
-    DMA_PeripheralDataSize_Byte<span class="token punctuation">;</span>
-    <span class="token comment" spellcheck="true">// 内存数据单位</span>
-    DMA_InitStructure<span class="token punctuation">.</span>DMA_MemoryDataSize <span class="token operator">=</span> DMA_MemoryDataSize_Byte<span class="token punctuation">;</span>     
-    <span class="token comment" spellcheck="true">// DMA模式，一次或者循环模式</span>
-    <span class="token comment" spellcheck="true">//DMA_InitStructure.DMA_Mode = DMA_Mode_Normal ;</span>
-    DMA_InitStructure<span class="token punctuation">.</span>DMA_Mode <span class="token operator">=</span> DMA_Mode_Circular<span class="token punctuation">;</span>    
-    <span class="token comment" spellcheck="true">// 优先级：中    </span>
-    DMA_InitStructure<span class="token punctuation">.</span>DMA_Priority <span class="token operator">=</span> DMA_Priority_VeryHigh<span class="token punctuation">;</span> 
-    <span class="token comment" spellcheck="true">// 禁止内存到内存的传输</span>
-    DMA_InitStructure<span class="token punctuation">.</span>DMA_M2M <span class="token operator">=</span> DMA_M2M_Disable<span class="token punctuation">;</span>
-    <span class="token comment" spellcheck="true">// 配置DMA通道           </span>
-    <span class="token function">DMA_Init</span><span class="token punctuation">(</span>USART_RX_DMA_CHANNEL<span class="token punctuation">,</span> <span class="token operator">&amp;</span>DMA_InitStructure<span class="token punctuation">)</span><span class="token punctuation">;</span>        
-    <span class="token comment" spellcheck="true">// 清除DMA所有标志</span>
-    <span class="token function">DMA_ClearFlag</span><span class="token punctuation">(</span>DMA1_FLAG_TC5<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token function">DMA_ITConfig</span><span class="token punctuation">(</span>USART_RX_DMA_CHANNEL<span class="token punctuation">,</span> DMA_IT_TE<span class="token punctuation">,</span> ENABLE<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token comment" spellcheck="true">// 使能DMA</span>
-    <span class="token function">DMA_Cmd</span> <span class="token punctuation">(</span>USART_RX_DMA_CHANNEL<span class="token punctuation">,</span>ENABLE<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-<span class="token macro property">#<span class="token directive keyword">endif</span></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<p><strong>接收完数据处理</strong></p>
-<p>因为接收完数据之后，会产生一个idle中断，也就是空闲中断，那么我们就可以在中断服务函数中知道已经接收完了，就可以处理数据了，但是中断服务函数的上下文环境是中断，所以，尽量是快进快出，一般在中断中将一些标志置位，供前台查询。在中断中先判断我们的产生在中断的类型是不是idle中断，如果是则进行下一步，否则就无需理会。</p>
-<pre class="line-numbers language-c"><code class="language-c"><span class="token comment" spellcheck="true">/**
-  ******************************************************************
-  * @brief   串口中断服务函数
-  * @author  jiejie
-  * @version V1.0
-  * @date    2018-xx-xx
-  ******************************************************************
-  */</span> 
-<span class="token keyword">void</span> <span class="token function">DEBUG_USART_IRQHandler</span><span class="token punctuation">(</span><span class="token keyword">void</span><span class="token punctuation">)</span>
-<span class="token punctuation">{</span>
-<span class="token macro property">#<span class="token directive keyword">if</span> USE_USART_DMA_RX</span>
-    <span class="token comment" spellcheck="true">/* 使用串口DMA */</span>
-    <span class="token keyword">if</span><span class="token punctuation">(</span><span class="token function">USART_GetITStatus</span><span class="token punctuation">(</span>DEBUG_USARTx<span class="token punctuation">,</span>USART_IT_IDLE<span class="token punctuation">)</span><span class="token operator">!=</span>RESET<span class="token punctuation">)</span>
-    <span class="token punctuation">{</span>        
-        <span class="token comment" spellcheck="true">/* 接收数据 */</span>
-        <span class="token function">Receive_DataPack</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token comment" spellcheck="true">// 清除空闲中断标志位</span>
-        <span class="token function">USART_ReceiveData</span><span class="token punctuation">(</span> DEBUG_USARTx <span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>    
-<span class="token macro property">#<span class="token directive keyword">else</span></span>
-  <span class="token comment" spellcheck="true">/* 接收中断 */</span>
-    <span class="token keyword">if</span><span class="token punctuation">(</span><span class="token function">USART_GetITStatus</span><span class="token punctuation">(</span>DEBUG_USARTx<span class="token punctuation">,</span>USART_IT_RXNE<span class="token punctuation">)</span><span class="token operator">!=</span>RESET<span class="token punctuation">)</span>
-    <span class="token punctuation">{</span>        
-    <span class="token function">Receive_DataPack</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-<span class="token macro property">#<span class="token directive keyword">endif</span></span>
-<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<p><strong>Receive_DataPack()</strong></p>
-<p>这个才是真正的接收数据处理函数，为什么我要将这个函数单独封装起来呢？因为这个函数其实是很重要的，因为我的代码兼容普通串口接收与空闲中断，不一样的接收类型其处理也不一样，所以直接封装起来更好，在源码中通过宏定义实现选择接收的方式！更考虑了兼容操作系统的，可能我会在系统中使用dma+空闲中断，所以，供前台查询的信号量就有可能不一样，可能需要修改，我就把它封装起来了。不过无所谓，都是一样的。</p>
-<pre class="line-numbers language-c"><code class="language-c"><span class="token comment" spellcheck="true">/************************************************************
-  * @brief   Uart_DMA_Rx_Data
-  * @param   NULL
-  * @return  NULL
-  * @author  jiejie
-  * @github  https://github.com/jiejieTop
-  * @date    2018-xx-xx
-  * @version v1.0
-  * @note    使用串口 DMA 接收时调用的函数
-  ***********************************************************/</span>
-<span class="token macro property">#<span class="token directive keyword">if</span> USE_USART_DMA_RX</span>
-<span class="token keyword">void</span> <span class="token function">Receive_DataPack</span><span class="token punctuation">(</span><span class="token keyword">void</span><span class="token punctuation">)</span>
-<span class="token punctuation">{</span>
-    <span class="token comment" spellcheck="true">/* 接收的数据长度 */</span>
-    uint32_t buff_length<span class="token punctuation">;</span>
-
-    <span class="token comment" spellcheck="true">/* 关闭DMA ，防止干扰 */</span>
-    <span class="token function">DMA_Cmd</span><span class="token punctuation">(</span>USART_RX_DMA_CHANNEL<span class="token punctuation">,</span> DISABLE<span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment" spellcheck="true">/* 暂时关闭dma，数据尚未处理 */</span> 
-
-    <span class="token comment" spellcheck="true">/* 清DMA标志位 */</span>
-    <span class="token function">DMA_ClearFlag</span><span class="token punctuation">(</span> DMA1_FLAG_TC5 <span class="token punctuation">)</span><span class="token punctuation">;</span>  
-
-    <span class="token comment" spellcheck="true">/* 获取接收到的数据长度 单位为字节*/</span>
-    buff_length <span class="token operator">=</span> USART_RX_BUFF_SIZE <span class="token operator">-</span> <span class="token function">DMA_GetCurrDataCounter</span><span class="token punctuation">(</span>USART_RX_DMA_CHANNEL<span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-    <span class="token comment" spellcheck="true">/* 获取数据长度 */</span>
-    Usart_Rx_Sta <span class="token operator">=</span> buff_length<span class="token punctuation">;</span>
-
-    <span class="token function">PRINT_DEBUG</span><span class="token punctuation">(</span><span class="token string">"buff_length = %d\n "</span><span class="token punctuation">,</span>buff_length<span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-    <span class="token comment" spellcheck="true">/* 重新赋值计数值，必须大于等于最大可能接收到的数据帧数目 */</span>
-    USART_RX_DMA_CHANNEL<span class="token operator">-></span>CNDTR <span class="token operator">=</span> USART_RX_BUFF_SIZE<span class="token punctuation">;</span>    
-
-    <span class="token comment" spellcheck="true">/* 此处应该在处理完数据再打开，如在 DataPack_Process() 打开*/</span>
-    <span class="token function">DMA_Cmd</span><span class="token punctuation">(</span>USART_RX_DMA_CHANNEL<span class="token punctuation">,</span> ENABLE<span class="token punctuation">)</span><span class="token punctuation">;</span>      
-
-    <span class="token comment" spellcheck="true">/* (OS)给出信号 ，发送接收到新数据标志，供前台程序查询 */</span>
-
-    <span class="token comment" spellcheck="true">/* 标记接收完成，在 DataPack_Handle 处理*/</span>
-    Usart_Rx_Sta <span class="token operator">|</span><span class="token operator">=</span> <span class="token number">0xC000</span><span class="token punctuation">;</span>
-
-    <span class="token comment" spellcheck="true">/* 
-    DMA 开启，等待数据。注意，如果中断发送数据帧的速率很快，MCU来不及处理此次接收到的数据，
-    中断又发来数据的话，这里不能开启，否则数据会被覆盖。有2种方式解决：
-
-    1. 在重新开启接收DMA通道之前，将Rx_Buf缓冲区里面的数据复制到另外一个数组中，
-    然后再开启DMA，然后马上处理复制出来的数据。
-
-    2. 建立双缓冲，重新配置DMA_MemoryBaseAddr的缓冲区地址，那么下次接收到的数据就会
-    保存到新的缓冲区中，不至于被覆盖。
-    */</span>
-<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<p>f1使用dma是非常简单的，我在f4用dma的时候也遇到一些问题，最后看手册解决了，打算下一篇文章就写一下调试过程，没有什么是debug不能解决的，如果有，那就两次。今天台风天气，连着舍友的WiFi更新的文章~中国电信还是强，台风天气信号一点都不虚，我的移动卡一动不动-_-.</p>
-<h1 id="喜欢就关注我吧！"><a href="#喜欢就关注我吧！" class="headerlink" title="喜欢就关注我吧！"></a>喜欢就关注我吧！</h1><p><img src="./images/loading.png" data-original="http://qiniu.jiejie01.top/gzh.jpg" alt="欢迎关注我公众号"></p>
-<p>相关代码可以在公众号后台回复获取。</p>
+<ul>
+<li><p>如果使用该<code>UV_RUN_NOWAIT</code>模式运行循环，则超时为0。</p>
+</li>
+<li><p>如果要停止循环（uv_stop()被调用），则超时为0。</p>
+</li>
+<li><p>如果没有活动的句柄或请求，则超时为0。</p>
+</li>
+<li><p>如果有任何空闲的句柄处于活动状态，则超时为0。</p>
+</li>
+<li><p>如果有任何要关闭的句柄，则超时为0。</p>
+</li>
+<li><p>如果以上情况均不匹配，则采用最接近的定时器超时，或者如果没有活动的定时器，则为无穷大。</p>
+</li>
+</ul>
+<blockquote>
+<p>重要知识点说明： I/O 循环作为事件循环迭代的一部分，事件循环将会被阻塞在 I/O 循环上（例如：linux 上的 <code>epoll_pwait()</code> 调用），直到该套接字有 I/O 事件发生时唤醒这个线程，调用关联的回调函数，然后便可以在 handles 上进行读、写或其他想要进行的操作 requests。这也直接避免了时间循环一直工作导致占用 CPU 的问题。</p>
+</blockquote>
+<ol start="7">
+<li><p>检查句柄的回调，其实当程序能执行到这一步，就表明I/O已经退出阻塞状态了，那么有可能是可读/写数据，也有可能超时了，此时libuv将在这里检查句柄的回调，如果有可读可写的操作就调用他们对应的回调，当超时了就调用超时的处理。</p>
+</li>
+<li><p>如果通过调用uv_close()函数关闭了句柄，则会调用close将这个I/O关闭。</p>
+</li>
+<li><p>在超时后更新下一次的循环时间，前提是通过<code>UV_RUN_DEFAULT</code>模式去运行这个循环，关于运行的模式在后续会讲解到，目前有3中模式，<code>UV_RUN_NOWAIT、UV_RUN_ONCE、UV_RUN_DEFAULT</code>。</p>
+</li>
+</ol>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p><a href="http://docs.libuv.org/en/v1.x/design.html#handles-and-requests" target="_blank" rel="noopener">libuv官方文档</a></p>
 <script>
         document.querySelectorAll('.github-emoji')
           .forEach(el => {
@@ -978,7 +779,7 @@
                     </span>
                     <a href="https://jiedev.com" class="b-link-green">杰杰的博客</a>
                     <i class="fa fa-angle-right fa-lg fa-fw text-color"></i>
-                    <a href="/dma/" class="b-link-green">STM32之串口DMA接收不定长数据</a>
+                    <a href="/libuv-2/" class="b-link-green">【libuv高效编程】libuv学习超详细教程2——libuv框架初窥</a>
                 </p>
             </div>
 
@@ -1259,56 +1060,58 @@
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fa fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="fa fa-dot-circle-o"></i>&nbsp;本篇
+            </div>
             <div class="card">
-                <a href="/fifo/">
+                <a href="/libuv-2/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/4.jpg" class="responsive-img" alt="STM32进阶之串口环形缓冲区实现">
+                        <img src="/medias/featureimages/7.jpg" class="responsive-img" alt="【libuv高效编程】libuv学习超详细教程2——libuv框架初窥">
                         
-                        <span class="card-title">STM32进阶之串口环形缓冲区实现</span>
+                        <span class="card-title">【libuv高效编程】libuv学习超详细教程2——libuv框架初窥</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            队列的概念在此之前，我们来回顾一下队列的基本概念：
-队列 (Queue)：是一种先进先出(First In First Out ,简称 FIFO)的线性表，只允许在一端插入（入队），在另一端进行删除（出队）。
-队列的特点类似售票排队窗口，先
+                            libuv框架从官方的文档可以找到一个设计框架的图片：libuv/docs/src/static/architecture.png
+
+从这张图片可以看出libuv的设计框架（从上往下看，从左往右分成网络IO与文件IO等操作），从网络I/O看
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="fa fa-clock-o fa-fw icon-date"></i>2019-10-05
-                        </span>
+                            <span class="publish-date">
+                                <i class="fa fa-clock-o fa-fw icon-date"></i>2020-04-18
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fa fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/STM32/" class="post-category" target="_blank">
-                                    STM32
+                            <a href="/categories/网络/" class="post-category" target="_blank">
+                                    网络
                                 </a>
                             
                             
                         </span>
                     </div>
                 </div>
+
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/Cortex-M/" target="_blank">
-                        <span class="chip bg-color">Cortex-M</span>
+                    <a href="/tags/libuv/" target="_blank">
+                        <span class="chip bg-color">libuv</span>
                     </a>
                     
-                    <a href="/tags/STM32/" target="_blank">
-                        <span class="chip bg-color">STM32</span>
+                    <a href="/tags/网络/" target="_blank">
+                        <span class="chip bg-color">网络</span>
                     </a>
                     
-                    <a href="/tags/fifo/" target="_blank">
-                        <span class="chip bg-color">fifo</span>
+                    <a href="/tags/Linux/" target="_blank">
+                        <span class="chip bg-color">Linux</span>
                     </a>
                     
                 </div>
@@ -1322,31 +1125,32 @@
                 下一篇&nbsp;<i class="fa fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/button/">
+                <a href="/libuv-1/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/12.jpg" class="responsive-img" alt="纯C语言写的按键驱动，将按键逻辑与按键处理事件分离~">
+                        <img src="/medias/featureimages/3.jpg" class="responsive-img" alt="【libuv高效编程】libuv学习超详细教程1——libuv的编译与安装">
                         
-                        <span class="card-title">纯C语言写的按键驱动，将按键逻辑与按键处理事件分离~</span>
+                        <span class="card-title">【libuv高效编程】libuv学习超详细教程1——libuv的编译与安装</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            ButtonDrive自己写的一个按键驱动，支持单双击、连按、长按；采用回调处理按键事件（自定义消抖时间），使用只需3步，创建按键，按键事件与回调处理函数链接映射，周期检查按键。源码地址：https://github.com/jiejieT
+                            libuv简介libuv 是一个高性能的，事件驱动的I/O，并且支持多平台的网络库，比如Node.js、Luvit、Julia、pyuv等大型的软件都有使用它进行开发，这足以看出它的性能优越性。
+其实高性能的网络库在github有非常多，比
                         
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="fa fa-clock-o fa-fw icon-date"></i>2019-10-05
+                                <i class="fa fa-clock-o fa-fw icon-date"></i>2020-04-17
                             </span>
                         <span class="publish-author">
                             
                             <i class="fa fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/框架/" class="post-category" target="_blank">
-                                    框架
+                            <a href="/categories/网络/" class="post-category" target="_blank">
+                                    网络
                                 </a>
                             
                             
@@ -1356,20 +1160,16 @@
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/STM32/" target="_blank">
-                        <span class="chip bg-color">STM32</span>
+                    <a href="/tags/libuv/" target="_blank">
+                        <span class="chip bg-color">libuv</span>
                     </a>
                     
-                    <a href="/tags/框架/" target="_blank">
-                        <span class="chip bg-color">框架</span>
+                    <a href="/tags/网络/" target="_blank">
+                        <span class="chip bg-color">网络</span>
                     </a>
                     
-                    <a href="/tags/ButtonDrive/" target="_blank">
-                        <span class="chip bg-color">ButtonDrive</span>
-                    </a>
-                    
-                    <a href="/tags/开源项目/" target="_blank">
-                        <span class="chip bg-color">开源项目</span>
+                    <a href="/tags/Linux/" target="_blank">
+                        <span class="chip bg-color">Linux</span>
                     </a>
                     
                 </div>
@@ -1517,6 +1317,13 @@
 
 </main>
 
+
+<script src="https://cdn.bootcss.com/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script>
+    MathJax.Hub.Config({
+        tex2jax: {inlineMath: [['$', '$'], ['\(', '\)']]}
+    });
+</script>
 
     <!-- jiejie 杰杰  modify 2019.08.15-->
 
