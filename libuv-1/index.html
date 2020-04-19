@@ -9,8 +9,12 @@
     <meta name="keywords" content="【libuv高效编程】libuv学习超详细教程1——libuv的编译与安装, IoT RTOS linux Python jiejie Dora">
     <meta name="baidu-site-verification" content="TRUUhavuHV">
     <meta name="google-site-verification" content="v-saR33QlUQmwVrLI7AQd08em9BtdazPy5jvPouEYHg">
-    <meta name="description" content="libuv简介libuv 是一个高性能的，事件驱动的I/O，并且支持多平台的网络库，比如Node.js、Luvit、Julia、pyuv等大型的软件都有使用它进行开发，这足以看出它的性能优越性。
-其实高性能的网络库在github有非常多，比">
+    <meta name="description" content="libuv系列文章
+【libuv高效编程】libuv学习超详细教程1——libuv的编译与安装
+
+【libuv高效编程】libuv学习超详细教程2——libuv框架初窥
+
+【libuv高效编程】libuv学习超详细教程3——libuv事件循">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -553,7 +557,15 @@
         <hr class="clearfix">
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h1 id="libuv简介"><a href="#libuv简介" class="headerlink" title="libuv简介"></a>libuv简介</h1><p><a href="https://github.com/libuv/libuv" target="_blank" rel="noopener">libuv</a> 是一个高性能的，事件驱动的I/O，并且支持多平台的网络库，比如Node.js、Luvit、Julia、pyuv等大型的软件都有使用它进行开发，这足以看出它的性能优越性。</p>
+                <h1 id="libuv系列文章"><a href="#libuv系列文章" class="headerlink" title="libuv系列文章"></a>libuv系列文章</h1><ul>
+<li><p><a href="https://jiedev.com/libuv-1/">【libuv高效编程】libuv学习超详细教程1——libuv的编译与安装</a></p>
+</li>
+<li><p><a href="https://jiedev.com/libuv-2/">【libuv高效编程】libuv学习超详细教程2——libuv框架初窥</a></p>
+</li>
+<li><p><a href="https://jiedev.com/libuv-3/">【libuv高效编程】libuv学习超详细教程3——libuv事件循环</a></p>
+</li>
+</ul>
+<h1 id="libuv简介"><a href="#libuv简介" class="headerlink" title="libuv简介"></a>libuv简介</h1><p><a href="https://github.com/libuv/libuv" target="_blank" rel="noopener">libuv</a> 是一个高性能的，事件驱动的I/O，并且支持多平台的网络库，比如Node.js、Luvit、Julia、pyuv等大型的软件都有使用它进行开发，这足以看出它的性能优越性。</p>
 <p>其实高性能的网络库在github有非常多，比如libevent、libev、libhv等库，libevent、libev、libuv都是c语言实现的异步事件库、libhv是国内开发者使用C++实现的异步事件库，但是我还是选择了libuv，因为它足够强大，并且支持多平台，编程还非常方便简洁。</p>
 <p>也可以看看下图的简单对比，主要是对比github上的star与fork（当前时间是 2020-4-17 星期五）：</p>
 <p><img src="./images/loading.png" data-original="http://qiniu.jiejie01.top/libuv001.png" alt="libuv001"></p>
@@ -1107,21 +1119,24 @@ libuv version is 1.36.0<span aria-hidden="true" class="line-numbers-rows"><span>
             <div class="article-badge left-badge text-color">
                 <i class="fa fa-chevron-left"></i>&nbsp;上一篇</div>
             <div class="card">
-                <a href="/libuv-2/">
+                <a href="/libuv-3/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/7.jpg" class="responsive-img" alt="【libuv高效编程】libuv学习超详细教程2——libuv框架初窥">
+                        <img src="/medias/featureimages/0.jpg" class="responsive-img" alt="【libuv高效编程】libuv学习超详细教程3——libuv事件循环">
                         
-                        <span class="card-title">【libuv高效编程】libuv学习超详细教程2——libuv框架初窥</span>
+                        <span class="card-title">【libuv高效编程】libuv学习超详细教程3——libuv事件循环</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            libuv框架从官方的文档可以找到一个设计框架的图片：libuv/docs/src/static/architecture.png
+                            libuv系列文章
+【libuv高效编程】libuv学习超详细教程1——libuv的编译与安装
 
-从这张图片可以看出libuv的设计框架（从上往下看，从左往右分成网络IO与文件IO等操作），从网络I/O看
+【libuv高效编程】libuv学习超详细教程2——libuv框架初窥
+
+【libuv高效编程】libuv学习超详细教程3——libuv事件循
                         
                     </div>
                     <div class="publish-info">
@@ -1378,7 +1393,7 @@ ROS系列文章
 
             
                 &nbsp;<i class="fa fa-area-chart"></i>&nbsp;站点总字数:&nbsp;
-                <span class="white-color">117.4k </span>
+                <span class="white-color">119.7k </span>
 
             
 
@@ -1530,6 +1545,6 @@ $(function () {
         <script async src="/libs/others/busuanzi.pure.mini.js"></script>
     
     
-<script>!function(e){var r=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function t(){for(var c=0;c<r.length;c++)t=r[c],void 0,0<=(n=t.getBoundingClientRect()).top&&0<=n.left&&n.top<=(e.innerHeight||document.documentElement.clientHeight)&&function(){var t,n,e,i,o=r[c];t=o,n=function(){r=r.filter(function(t){return o!==t})},e=new Image,i=t.getAttribute("data-original"),e.onload=function(){t.src=i,n&&n()},e.src=i}();var t,n}t(),e.addEventListener("scroll",function(){!function(t,n){clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(n)},500)}(t,e)})}(this);</script><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"log":false,"model":{"jsonPath":"/live2dw/assets/wanko.model.json"},"display":{"position":"left","width":150,"height":200},"mobile":{"show":false},"react":{"opacity":0.7}});</script></body>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"log":false,"model":{"jsonPath":"/live2dw/assets/wanko.model.json"},"display":{"position":"left","width":150,"height":200},"mobile":{"show":false},"react":{"opacity":0.7}});</script><script>!function(e){var r=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function t(){for(var c=0;c<r.length;c++)t=r[c],void 0,0<=(n=t.getBoundingClientRect()).top&&0<=n.left&&n.top<=(e.innerHeight||document.documentElement.clientHeight)&&function(){var t,n,e,i,o=r[c];t=o,n=function(){r=r.filter(function(t){return o!==t})},e=new Image,i=t.getAttribute("data-original"),e.onload=function(){t.src=i,n&&n()},e.src=i}();var t,n}t(),e.addEventListener("scroll",function(){!function(t,n){clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(n)},500)}(t,e)})}(this);</script></body>
 
 </html>
