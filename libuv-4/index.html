@@ -6,12 +6,15 @@
 
 <head><meta name="generator" content="Hexo 3.9.0">
     <meta charset="utf-8">
-    <meta name="keywords" content="一种Cortex-M内核中的精确延时方法, IoT RTOS linux Python jiejie Dora">
+    <meta name="keywords" content="【libuv高效编程】libuv学习超详细教程4——idle handle解读, IoT RTOS linux Python jiejie Dora">
     <meta name="baidu-site-verification" content="TRUUhavuHV">
     <meta name="google-site-verification" content="v-saR33QlUQmwVrLI7AQd08em9BtdazPy5jvPouEYHg">
-    <meta name="description" content="本文介绍一种Cortex-M内核中的精确延时方法前言为什么要学习这种延时的方法？
+    <meta name="description" content="libuv系列文章
+【libuv高效编程】libuv学习超详细教程1——libuv的编译与安装
 
-很多时候我们跑操作系统，就一般会占用一个硬件定时器——SysTick，而我们一般操作系统的时钟节拍一般是设置100-1000HZ，也就是1ms——10ms产">
+【libuv高效编程】libuv学习超详细教程2——libuv框架初窥
+
+【libuv高效编程】libuv学习超详细教程3——libuv事件循">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -19,7 +22,7 @@
     <meta name="format-detection" content="telephone=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>一种Cortex-M内核中的精确延时方法 | 杰杰的博客</title>
+    <title>【libuv高效编程】libuv学习超详细教程4——idle handle解读 | 杰杰的博客</title>
     <link rel="icon" type="image/x-icon, image/vnd.microsoft.icon" href="/medias/logo/favicon.ico">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/font-awesome.min.css">
@@ -366,13 +369,13 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/4.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/5.jpg')">
     <div class="container">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
                     <div class="description center-align post-title">
-                        一种Cortex-M内核中的精确延时方法
+                        【libuv高效编程】libuv学习超详细教程4——idle handle解读
                     </div>
                 </div>
             </div>
@@ -482,33 +485,12 @@
             <div class="row tag-cate">
                 <div class="col s7">
                     
-                    <div class="article-tag">
-                        
-                            <a href="/tags/STM32/" target="_blank">
-                                <span class="chip bg-color">STM32</span>
-                            </a>
-                        
-                            <a href="/tags/Cortex-M/" target="_blank">
-                                <span class="chip bg-color">Cortex-M</span>
-                            </a>
-                        
-                            <a href="/tags/DWT/" target="_blank">
-                                <span class="chip bg-color">DWT</span>
-                            </a>
-                        
-                    </div>
+                          <div class="article-tag">
+                            <span class="chip bg-color">无标签</span>
+                          </div>
                     
                 </div>
                 <div class="col s5 right-align">
-                    
-                    <div class="post-cate">
-                        <i class="fa fa-bookmark fa-fw icon-category"></i>
-                        
-                            <a href="/categories/STM32/" class="post-category" target="_blank">
-                                STM32
-                            </a>
-                        
-                    </div>
                     
                 </div>
             </div>
@@ -516,7 +498,7 @@
             <div class="post-info">
                 <div class="post-date info-break-policy">
                     <i class="fa fa-calendar-minus-o fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2019-10-07
+                    2020-04-21
                 </div>
 
                 <div class="post-author info-break-policy">
@@ -530,14 +512,14 @@
                     
                     <div class="info-break-policy">
                         <i class="fa fa-file-word-o fa-fw"></i>文章字数:&nbsp;&nbsp;
-                        2.2k
+                        1.3k
                     </div>
                     
 
                     
                     <div class="info-break-policy">
                         <i class="fa fa-clock-o fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                        8 分
+                        5 分
                     </div>
                     
                 
@@ -554,208 +536,210 @@
         <hr class="clearfix">
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h3 id="本文介绍一种Cortex-M内核中的精确延时方法"><a href="#本文介绍一种Cortex-M内核中的精确延时方法" class="headerlink" title="本文介绍一种Cortex-M内核中的精确延时方法"></a>本文介绍一种Cortex-M内核中的精确延时方法</h3><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>为什么要学习这种延时的方法？</p>
-<ol>
-<li>很多时候我们跑操作系统，就一般会占用一个硬件定时器——SysTick，而我们一般操作系统的时钟节拍一般是设置100-1000HZ，也就是1ms——10ms产生一次中断。很多裸机教程使用延时函数又是基于SysTick的，这样一来又难免产生冲突。</li>
-<li>很多人会说，不是还有定时器吗，定时器的计时是超级精确的。这点我不否认，但是假设，如果一个系统，总是进入定时器中断（10us一次/1us一次/0.5us一次），那整个系统就会经常被打断，线程的进行就没办法很好运行啊。此外还消耗一个硬件定时器资源，一个硬件定时器可能做其他事情呢！</li>
-<li>对应ST HAL库的修改，其实杰杰个人觉得吧，ST的东西什么都好，就是出的HAL库太恶心了，没办法，而HAL库中有一个HAL_Delay()，他也是采用SysTick延时的，在移植操作系统的时候，会有诸多不便，不过好在，HAL_Delay()是一个弱定义的，我们可以重写这个函数的实现，那么，采用内核延时当然是最好的办法啦（个人是这么觉得的）当然你有能力完全用for循环写个简单的延时还是可以的。</li>
-<li>可能我说的话没啥权威，那我就引用Cortex-M3权威指南中的一句话——“DWT 中有剩余的计数器，它们典型地用于程序代码的“性能速写”（profiling）。通过编程它们，就可以让它们在计数器溢出时发出事件（以跟踪数据包的形式）。最典型地，就是使用 CYCCNT寄存器来测量执行某个任务所花的周期数，这也可以用作时间基准相关的目的（操作系统中统计 CPU使用率可以用到它）。”<h2 id="Cortex-M中的DWT"><a href="#Cortex-M中的DWT" class="headerlink" title="Cortex-M中的DWT"></a>Cortex-M中的DWT</h2>在Cortex-M里面有一个外设叫DWT(Data Watchpoint and Trace)，是用于系统调试及跟踪，<br><img src="./images/loading.png" data-original="https://img-blog.csdnimg.cn/20181110191659860.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2ppZWppZW1jdQ==,size_16,color_FFFFFF,t_70" alt="">它有一个32位的寄存器叫CYCCNT，它是一个向上的计数器，记录的是内核时钟运行的个数，内核时钟跳动一次，该计数器就加1，精度非常高，决定内核的频率是多少，如果是F103系列，内核时钟是72M，那精度就是1/72M = 14ns，而程序的运行时间都是微秒级别的，所以14ns的精度是远远够的。最长能记录的时间为：60s=2的32次方/72000000(假设内核频率为72M，内核跳一次的时间大概为1/72M=14ns)，而如果是H7这种400M主频的芯片，那它的计时精度高达2.5ns（1/400000000 = 2.5），而如果是 i.MX RT1052这种比较牛逼的处理器，最长能记录的时间为： 8.13s=2的32次方/528000000 (假设内核频率为528M，内核跳一次的时间大概为1/528M=1.9ns) 。当CYCCNT溢出之后，会清0重新开始向上计数。<br><img src="./images/loading.png" data-original="https://img-blog.csdnimg.cn/20181110193428964.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2ppZWppZW1jdQ==,size_16,color_FFFFFF,t_70" alt=""></li>
-</ol>
-<blockquote>
-<p>m3、m4、m7杰杰实测可用（m0不可用）。<br>精度：1/内核频率(s)。</p>
-</blockquote>
-<p>要实现延时的功能，总共涉及到三个寄存器：DEMCR 、DWT_CTRL、DWT_CYCCNT，分别用于开启DWT功能、开启CYCCNT及获得系统时钟计数值。</p>
-<h4 id="DEMCR"><a href="#DEMCR" class="headerlink" title="DEMCR"></a>DEMCR</h4><p> 想要使能DWT外设，需要由另外的内核调试寄存器DEMCR的位24控制，写1使能（划重点啦，要考试！！）。<br> DEMCR的地址是<strong>0xE000 EDFC</strong><br><img src="./images/loading.png" data-original="https://img-blog.csdnimg.cn/20181110192323371.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2ppZWppZW1jdQ==,size_16,color_FFFFFF,t_70" alt=""><br><img src="./images/loading.png" data-original="https://img-blog.csdnimg.cn/20181110201757887.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2ppZWppZW1jdQ==,size_16,color_FFFFFF,t_70" alt=""></p>
-<h4 id="关于DWT-CYCCNT"><a href="#关于DWT-CYCCNT" class="headerlink" title="关于DWT_CYCCNT"></a>关于DWT_CYCCNT</h4><p>使能DWT_CYCCNT寄存器之前，先清0。<br>让我们看看DWT_CYCCNT的基地址，从ARM-Cortex-M手册中可以看到其基地址是<strong>0xE000 1004</strong>，复位默认值是0，而且它的类型是可读可写的，我们往<strong>0xE000 1004</strong>这个地址写0就将DWT_CYCCNT清0了。<br><img src="./images/loading.png" data-original="https://img-blog.csdnimg.cn/20181110195939728.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2ppZWppZW1jdQ==,size_16,color_FFFFFF,t_70" alt=""></p>
-<h4 id="关于CYCCNTENA"><a href="#关于CYCCNTENA" class="headerlink" title="关于CYCCNTENA"></a>关于CYCCNTENA</h4><p>CYCCNTENA Enable the CYCCNT counter. If not enabled, the counter does not count and no event is<br>generated for PS sampling or CYCCNTENA. In normal use, the debugger must initialize<br>the CYCCNT counter to 0.<br>它是DWT控制寄存器的第一位，写1使能，则启用CYCCNT计数器，否则CYCCNT计数器将不会工作。<br><img src="./images/loading.png" data-original="https://img-blog.csdnimg.cn/20181110200343311.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2ppZWppZW1jdQ==,size_16,color_FFFFFF,t_70" alt=""></p>
-<h3 id="综上所述"><a href="#综上所述" class="headerlink" title="综上所述"></a>综上所述</h3><p><strong>想要使用DWT的CYCCNT步骤：</strong></p>
-<blockquote>
-<ol>
-<li>先使能DWT外设，这个由另外内核调试寄存器DEMCR的位24控制，写1使能</li>
-<li>使能CYCCNT寄存器之前，先清0。</li>
-<li>使能CYCCNT寄存器，这个由DWT的CYCCNTENA 控制，也就是DWT控制寄存器的位0控制，写1使能</li>
-</ol>
-</blockquote>
-<h3 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h3><pre class="line-numbers language-js"><code class="language-js"><span class="token comment" spellcheck="true">/**
-  ******************************************************************
-  * @file    core_delay.c
-  * @author  fire
-  * @version V1.0
-  * @date    2018-xx-xx
-  * @brief   使用内核寄存器精确延时
-  ******************************************************************
-  * @attention
-  *
-  * 实验平台:野火 STM32开发板  
-  * 论坛    :http://www.firebbs.cn
-  * 淘宝    :https://fire-stm32.taobao.com
-  *
-  ******************************************************************
-  */</span>
+                <h1 id="libuv系列文章"><a href="#libuv系列文章" class="headerlink" title="libuv系列文章"></a>libuv系列文章</h1><ul>
+<li><p><a href="https://jiedev.com/libuv-1/">【libuv高效编程】libuv学习超详细教程1——libuv的编译与安装</a></p>
+</li>
+<li><p><a href="https://jiedev.com/libuv-2/">【libuv高效编程】libuv学习超详细教程2——libuv框架初窥</a></p>
+</li>
+<li><p><a href="https://jiedev.com/libuv-3/">【libuv高效编程】libuv学习超详细教程3——libuv事件循环</a></p>
+</li>
+<li><p><a href="https://jiedev.com/libuv-4/">【libuv高效编程】libuv学习超详细教程4——idle handle解读</a></p>
+</li>
+</ul>
+<h1 id="idle-handle"><a href="#idle-handle" class="headerlink" title="idle handle"></a>idle handle</h1><p>idle handle可以被译为空闲句柄，如果程序中启动了idle handle后，那么它在每次事件循环的时候都会被执行一遍。</p>
+<p>回顾一下libuv的事件循环过程，它有一个<code>uv__run_idle()</code>函数会被执行，就是在事件循环迭代的过程中处理idle handle。</p>
+<h2 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a>数据类型</h2><p><code>uv_idle_t</code> 是idle handle的数据类型，通过它可以定义一个 idle handle 的实例。</p>
+<pre class="line-numbers language-c"><code class="language-c"><span class="token keyword">typedef</span> <span class="token keyword">struct</span> uv_idle_s uv_idle_t<span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<h2 id="idle-handle的回调函数"><a href="#idle-handle的回调函数" class="headerlink" title="idle handle的回调函数"></a>idle handle的回调函数</h2><pre class="line-numbers language-c"><code class="language-c"><span class="token keyword">typedef</span> <span class="token keyword">void</span> <span class="token punctuation">(</span><span class="token operator">*</span>uv_idle_cb<span class="token punctuation">)</span><span class="token punctuation">(</span>uv_idle_t<span class="token operator">*</span> handle<span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>如果 idle handle 的实例想要执行回调函数，则需要传递一个<code>uv_idle_cb</code>类型的回调函数到<code>uv_idle_start()</code>函数中。</p>
+<h2 id="API"><a href="#API" class="headerlink" title="API"></a>API</h2><ul>
+<li>初始化句柄。</li>
+</ul>
+<pre class="line-numbers language-c"><code class="language-c"><span class="token keyword">int</span> <span class="token function">uv_idle_init</span><span class="token punctuation">(</span>uv_loop_t<span class="token operator">*</span> loop<span class="token punctuation">,</span> uv_idle_t<span class="token operator">*</span> idle<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<ul>
+<li>以给定的回调函数开始句柄。</li>
+</ul>
+<pre class="line-numbers language-c"><code class="language-c"><span class="token keyword">int</span> <span class="token function">uv_idle_start</span><span class="token punctuation">(</span>uv_idle_t<span class="token operator">*</span> idle<span class="token punctuation">,</span> uv_idle_cb cb<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<ul>
+<li>停止句柄，回调函数将不会再被调用。</li>
+</ul>
+<pre class="line-numbers language-c"><code class="language-c"><span class="token keyword">int</span> <span class="token function">uv_idle_stop</span><span class="token punctuation">(</span>uv_idle_t<span class="token operator">*</span> idle<span class="token punctuation">)</span>
+```c
 
-#include <span class="token string">"./delay/core_delay.h"</span>   
+<span class="token macro property"># example</span>
 
-<span class="token comment" spellcheck="true">/*
-**********************************************************************
-*         时间戳相关寄存器定义
-**********************************************************************
-*/</span>
-<span class="token comment" spellcheck="true">/*
- 在Cortex-M里面有一个外设叫DWT(Data Watchpoint and Trace)，
- 该外设有一个32位的寄存器叫CYCCNT，它是一个向上的计数器，
- 记录的是内核时钟运行的个数，最长能记录的时间为：
- 10.74s=2的32次方/400000000
- (假设内核频率为400M，内核跳一次的时间大概为1/400M=2.5ns)
- 当CYCCNT溢出之后，会清0重新开始向上计数。
- 使能CYCCNT计数的操作步骤：
- 1、先使能DWT外设，这个由另外内核调试寄存器DEMCR的位24控制，写1使能
- 2、使能CYCCNT寄存器之前，先清0
- 3、使能CYCCNT寄存器，这个由DWT_CTRL(代码上宏定义为DWT_CR)的位0控制，写1使能
- */</span>
+说了那么多，首先方个idle handle的例子吧，通过例子去讲解idle handle相关的知识。
 
+```c
+<span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">&lt;stdio.h></span></span>
+<span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">&lt;stdlib.h></span></span>
+<span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">&lt;uv.h></span></span>
 
-#define  DWT_CR      <span class="token operator">*</span><span class="token punctuation">(</span>__IO uint32_t <span class="token operator">*</span><span class="token punctuation">)</span><span class="token number">0xE0001000</span>
-#define  DWT_CYCCNT  <span class="token operator">*</span><span class="token punctuation">(</span>__IO uint32_t <span class="token operator">*</span><span class="token punctuation">)</span><span class="token number">0xE0001004</span>
-#define  DEM_CR      <span class="token operator">*</span><span class="token punctuation">(</span>__IO uint32_t <span class="token operator">*</span><span class="token punctuation">)</span><span class="token number">0xE000EDFC</span>
+int64_t num <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
 
-
-#define  DEM_CR_TRCENA                   <span class="token punctuation">(</span><span class="token number">1</span> <span class="token operator">&lt;</span><span class="token operator">&lt;</span> <span class="token number">24</span><span class="token punctuation">)</span>
-#define  DWT_CR_CYCCNTENA                <span class="token punctuation">(</span><span class="token number">1</span> <span class="token operator">&lt;</span><span class="token operator">&lt;</span>  <span class="token number">0</span><span class="token punctuation">)</span>
-
-
-<span class="token comment" spellcheck="true">/**
-  * @brief  初始化时间戳
-  * @param  无
-  * @retval 无
-  * @note   使用延时函数前，必须调用本函数
-  */</span>
-HAL_StatusTypeDef <span class="token function">HAL_InitTick</span><span class="token punctuation">(</span>uint32_t TickPriority<span class="token punctuation">)</span>
+<span class="token keyword">void</span> <span class="token function">my_idle_cb</span><span class="token punctuation">(</span>uv_idle_t<span class="token operator">*</span> handle<span class="token punctuation">)</span>
 <span class="token punctuation">{</span>
-    <span class="token comment" spellcheck="true">/* 使能DWT外设 */</span>
-    DEM_CR <span class="token operator">|</span><span class="token operator">=</span> <span class="token punctuation">(</span>uint32_t<span class="token punctuation">)</span>DEM_CR_TRCENA<span class="token punctuation">;</span>                
-
-    <span class="token comment" spellcheck="true">/* DWT CYCCNT寄存器计数清0 */</span>
-    DWT_CYCCNT <span class="token operator">=</span> <span class="token punctuation">(</span>uint32_t<span class="token punctuation">)</span>0u<span class="token punctuation">;</span>
-
-    <span class="token comment" spellcheck="true">/* 使能Cortex-M DWT CYCCNT寄存器 */</span>
-    DWT_CR <span class="token operator">|</span><span class="token operator">=</span> <span class="token punctuation">(</span>uint32_t<span class="token punctuation">)</span>DWT_CR_CYCCNTENA<span class="token punctuation">;</span>
-
-    <span class="token keyword">return</span> HAL_OK<span class="token punctuation">;</span>
+    num<span class="token operator">++</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>num <span class="token operator">>=</span> <span class="token number">10e6</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"idle stop, num = %ld\n"</span><span class="token punctuation">,</span> num<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token function">uv_idle_stop</span><span class="token punctuation">(</span>handle<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
 <span class="token punctuation">}</span>
 
-<span class="token comment" spellcheck="true">/**
-  * @brief  读取当前时间戳
-  * @param  无
-  * @retval 当前时间戳，即DWT_CYCCNT寄存器的值
-  */</span>
-uint32_t <span class="token function">CPU_TS_TmrRd</span><span class="token punctuation">(</span><span class="token keyword">void</span><span class="token punctuation">)</span>
-<span class="token punctuation">{</span>        
-  <span class="token keyword">return</span> <span class="token punctuation">(</span><span class="token punctuation">(</span>uint32_t<span class="token punctuation">)</span>DWT_CYCCNT<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-
-<span class="token comment" spellcheck="true">/**
-  * @brief  读取当前时间戳
-  * @param  无
-  * @retval 当前时间戳，即DWT_CYCCNT寄存器的值
-  */</span>
-uint32_t <span class="token function">HAL_GetTick</span><span class="token punctuation">(</span><span class="token keyword">void</span><span class="token punctuation">)</span>
-<span class="token punctuation">{</span>        
-  <span class="token keyword">return</span> <span class="token punctuation">(</span><span class="token punctuation">(</span>uint32_t<span class="token punctuation">)</span>DWT_CYCCNT<span class="token operator">/</span>SysClockFreq<span class="token operator">*</span><span class="token number">1000</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-
-
-<span class="token comment" spellcheck="true">/**
-  * @brief  采用CPU的内部计数实现精确延时，32位计数器
-  * @param  us : 延迟长度，单位1 us
-  * @retval 无
-  * @note   使用本函数前必须先调用CPU_TS_TmrInit函数使能计数器，
-            或使能宏CPU_TS_INIT_IN_DELAY_FUNCTION
-            最大延时值为8秒，即8*1000*1000
-  */</span>
-<span class="token keyword">void</span> <span class="token function">CPU_TS_Tmr_Delay_US</span><span class="token punctuation">(</span>uint32_t us<span class="token punctuation">)</span>
+<span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span> 
 <span class="token punctuation">{</span>
-  uint32_t ticks<span class="token punctuation">;</span>
-  uint32_t told<span class="token punctuation">,</span>tnow<span class="token punctuation">,</span>tcnt<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">;</span>
+    uv_idle_t idler<span class="token punctuation">;</span>
 
-  <span class="token comment" spellcheck="true">/* 在函数内部初始化时间戳寄存器， */</span>  
-#<span class="token keyword">if</span> <span class="token punctuation">(</span>CPU_TS_INIT_IN_DELAY_FUNCTION<span class="token punctuation">)</span>  
-  <span class="token comment" spellcheck="true">/* 初始化时间戳并清零 */</span>
-  <span class="token function">HAL_InitTick</span><span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-#endif
+    <span class="token function">uv_idle_init</span><span class="token punctuation">(</span><span class="token function">uv_default_loop</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token operator">&amp;</span>idler<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-  ticks <span class="token operator">=</span> us <span class="token operator">*</span> <span class="token punctuation">(</span><span class="token function">GET_CPU_ClkFreq</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">/</span> <span class="token number">1000000</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment" spellcheck="true">/* 需要的节拍数 */</span>      
-  tcnt <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
-  told <span class="token operator">=</span> <span class="token punctuation">(</span>uint32_t<span class="token punctuation">)</span><span class="token function">CPU_TS_TmrRd</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>         <span class="token comment" spellcheck="true">/* 刚进入时的计数器值 */</span>
+    <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"idle start, num = %ld\n"</span><span class="token punctuation">,</span> num<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">uv_idle_start</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>idler<span class="token punctuation">,</span> my_idle_cb<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-  <span class="token keyword">while</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span>
-  <span class="token punctuation">{</span>
-    tnow <span class="token operator">=</span> <span class="token punctuation">(</span>uint32_t<span class="token punctuation">)</span><span class="token function">CPU_TS_TmrRd</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  
-    <span class="token keyword">if</span><span class="token punctuation">(</span>tnow <span class="token operator">!=</span> told<span class="token punctuation">)</span>
-    <span class="token punctuation">{</span> 
-        <span class="token comment" spellcheck="true">/* 32位计数器是递增计数器 */</span>    
-      <span class="token keyword">if</span><span class="token punctuation">(</span>tnow <span class="token operator">></span> told<span class="token punctuation">)</span>
-      <span class="token punctuation">{</span>
-        tcnt <span class="token operator">+</span><span class="token operator">=</span> tnow <span class="token operator">-</span> told<span class="token punctuation">;</span>  
-      <span class="token punctuation">}</span>
-      <span class="token comment" spellcheck="true">/* 重新装载 */</span>
-      <span class="token keyword">else</span> 
-      <span class="token punctuation">{</span>
-        tcnt <span class="token operator">+</span><span class="token operator">=</span> UINT32_MAX <span class="token operator">-</span> told <span class="token operator">+</span> tnow<span class="token punctuation">;</span> 
-      <span class="token punctuation">}</span> 
+    <span class="token function">uv_run</span><span class="token punctuation">(</span><span class="token function">uv_default_loop</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> UV_RUN_DEFAULT<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-      told <span class="token operator">=</span> tnow<span class="token punctuation">;</span>
+    <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>main函数的处理过程：</p>
+<ul>
+<li>定义idler实例。</li>
+<li>初始化idler实例。</li>
+<li>启动idler实例，并传入对应的回调函数<code>my_idle_cb</code>。</li>
+<li>启动事件循环。</li>
+<li>在结束后退出。</li>
+</ul>
+<p>my_idle_cb回调函数的处理：</p>
+<ul>
+<li>在每次调用回调函数的时候，对全局变量计数。</li>
+<li>在计数值达到<code>10e6</code>后，停止idle handle。</li>
+</ul>
+<h1 id="uv-idle-init"><a href="#uv-idle-init" class="headerlink" title="uv_idle_init()"></a>uv_idle_init()</h1><p>其实你如果直接全局搜索uv_idle_init这个函数的话，是找不到它的，因为libuv做了很骚的操作，将idle、prepare以及check相关的函数都通过C语言的<code>##</code>连接符统一用宏定义了，并且在编译器预处理的时候产生对应的函数代码，具体源码如下：</p>
+<p><code>src\unix\loop-watcher.c文件内容</code></p>
+<pre class="line-numbers language-c"><code class="language-c"><span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">"uv.h"</span></span>
+<span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">"internal.h"</span></span>
 
-      <span class="token comment" spellcheck="true">/*时间超过/等于要延迟的时间,则退出 */</span>
-      <span class="token keyword">if</span><span class="token punctuation">(</span>tcnt <span class="token operator">>=</span> ticks<span class="token punctuation">)</span><span class="token keyword">break</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>  
-  <span class="token punctuation">}</span>
+<span class="token macro property">#<span class="token directive keyword">define</span> UV_LOOP_WATCHER_DEFINE(name, type)                                    \
+  int uv_##name##_init(uv_loop_t* loop, uv_##name##_t* handle) {              \
+    uv__handle_init(loop, (uv_handle_t*)handle, UV_##type);                   \
+    handle->name##_cb = NULL;                                                 \
+    return 0;                                                                 \
+  }                                                                           \
+                                                                              \
+  int uv_##name##_start(uv_##name##_t* handle, uv_##name##_cb cb) {           \
+    if (uv__is_active(handle)) return 0;                                      \
+    if (cb == NULL) return UV_EINVAL;                                         \
+    QUEUE_INSERT_HEAD(&amp;handle->loop->name##_handles, &amp;handle->queue);         \
+    handle->name##_cb = cb;                                                   \
+    uv__handle_start(handle);                                                 \
+    return 0;                                                                 \
+  }                                                                           \
+                                                                              \
+  int uv_##name##_stop(uv_##name##_t* handle) {                               \
+    if (!uv__is_active(handle)) return 0;                                     \
+    QUEUE_REMOVE(&amp;handle->queue);                                             \
+    uv__handle_stop(handle);                                                  \
+    return 0;                                                                 \
+  }                                                                           \
+                                                                              \
+  void uv__run_##name(uv_loop_t* loop) {                                      \
+    uv_##name##_t* h;                                                         \
+    QUEUE queue;                                                              \
+    QUEUE* q;                                                                 \
+    QUEUE_MOVE(&amp;loop->name##_handles, &amp;queue);                                \
+    while (!QUEUE_EMPTY(&amp;queue)) {                                            \
+      q = QUEUE_HEAD(&amp;queue);                                                 \
+      h = QUEUE_DATA(q, uv_##name##_t, queue);                                \
+      QUEUE_REMOVE(q);                                                        \
+      QUEUE_INSERT_TAIL(&amp;loop->name##_handles, q);                            \
+      h->name##_cb(h);                                                        \
+    }                                                                         \
+  }                                                                           \
+                                                                              \
+  void uv__##name##_close(uv_##name##_t* handle) {                            \
+    uv_##name##_stop(handle);                                                 \
+  }</span>
+
+<span class="token function">UV_LOOP_WATCHER_DEFINE</span><span class="token punctuation">(</span>prepare<span class="token punctuation">,</span> PREPARE<span class="token punctuation">)</span>
+<span class="token function">UV_LOOP_WATCHER_DEFINE</span><span class="token punctuation">(</span>check<span class="token punctuation">,</span> CHECK<span class="token punctuation">)</span>
+<span class="token function">UV_LOOP_WATCHER_DEFINE</span><span class="token punctuation">(</span>idle<span class="token punctuation">,</span> IDLE<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>它利用宏定义，在预处理阶段拓展成三个不同类型，但是处理逻辑一样的代码。有三种类型，分别是prepare，check，idle。</p>
+<p>如果你将代码中的<code>##name</code>或者<code>name##</code>或者<code>##name##</code>替换为<code>idle</code>，<code>##type</code>替换为<code>IDLE</code>，就可以得到以下的代码：</p>
+<ul>
+<li>这就是编译器预处理生成的idle handle相关的代码：</li>
+</ul>
+<pre class="line-numbers language-c"><code class="language-c"><span class="token keyword">int</span> <span class="token function">uv_idle_init</span><span class="token punctuation">(</span>uv_loop_t<span class="token operator">*</span> loop<span class="token punctuation">,</span> uv_idle_t<span class="token operator">*</span> handle<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment" spellcheck="true">/* 初始化handle的类型，所属loop，设置UV_HANDLE_REF标志，并且把handle插入loop->handle_queue队列的队尾 */</span>
+    <span class="token function">uv__handle_init</span><span class="token punctuation">(</span>loop<span class="token punctuation">,</span> <span class="token punctuation">(</span>uv_handle_t<span class="token operator">*</span><span class="token punctuation">)</span>handle<span class="token punctuation">,</span> UV_IDLE<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    handle<span class="token operator">-></span>idle_cb <span class="token operator">=</span> <span class="token constant">NULL</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span>
 
-<span class="token comment" spellcheck="true">/*********************************************END OF FILE**********************/</span>
-<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<pre class="line-numbers language-js"><code class="language-js">#ifndef __CORE_DELAY_H
-#define __CORE_DELAY_H
+<span class="token keyword">int</span> <span class="token function">uv_idle_start</span><span class="token punctuation">(</span>uv_idle_t<span class="token operator">*</span> handle<span class="token punctuation">,</span> uv_idle_cb cb<span class="token punctuation">)</span> <span class="token punctuation">{</span> 
+    <span class="token comment" spellcheck="true">/* 如果已经执行过start函数则直接返回 */</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token function">uv__is_active</span><span class="token punctuation">(</span>handle<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
 
-#include <span class="token string">"stm32h7xx.h"</span>
+    <span class="token comment" spellcheck="true">/* 回调函数不允许为空 */</span> 
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>cb <span class="token operator">==</span> <span class="token constant">NULL</span><span class="token punctuation">)</span> <span class="token keyword">return</span> UV_EINVAL<span class="token punctuation">;</span> 
 
-<span class="token comment" spellcheck="true">/* 获取内核时钟频率 */</span>
-#define <span class="token function">GET_CPU_ClkFreq</span><span class="token punctuation">(</span><span class="token punctuation">)</span>       <span class="token function">HAL_RCC_GetSysClockFreq</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
-#define SysClockFreq            <span class="token punctuation">(</span><span class="token number">218000000</span><span class="token punctuation">)</span>
-<span class="token comment" spellcheck="true">/* 为方便使用，在延时函数内部调用CPU_TS_TmrInit函数初始化时间戳寄存器，
-   这样每次调用函数都会初始化一遍。
-   把本宏值设置为0，然后在main函数刚运行时调用CPU_TS_TmrInit可避免每次都初始化 */</span>  
+    <span class="token comment" spellcheck="true">/* 把handle插入loop中idle_handles队列，loop有prepare，idle和check三个队列 */</span>
+    <span class="token function">QUEUE_INSERT_HEAD</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>handle<span class="token operator">-></span>loop<span class="token operator">-></span>idle_handles<span class="token punctuation">,</span> <span class="token operator">&amp;</span>handle<span class="token operator">-></span>queue<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-#define CPU_TS_INIT_IN_DELAY_FUNCTION   <span class="token number">0</span>  
+    <span class="token comment" spellcheck="true">/* 指定回调函数，在事件循环迭代的时候被执行 */</span>
+    handle<span class="token operator">-></span>idle_cb <span class="token operator">=</span> cb<span class="token punctuation">;</span> 
 
+    <span class="token comment" spellcheck="true">/* 启动idle handle，设置UV_HANDLE_ACTIVE标记并且将loop中的handle的active计数加一，
+       init的时候只是把handle挂载到loop，start的时候handle才处于激活态 */</span>
+    <span class="token function">uv__handle_start</span><span class="token punctuation">(</span>handle<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
 
-<span class="token comment" spellcheck="true">/*******************************************************************************
- * 函数声明
- ******************************************************************************/</span>
-uint32_t <span class="token function">CPU_TS_TmrRd</span><span class="token punctuation">(</span><span class="token keyword">void</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-HAL_StatusTypeDef <span class="token function">HAL_InitTick</span><span class="token punctuation">(</span>uint32_t TickPriority<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">int</span> <span class="token function">uv_idle_stop</span><span class="token punctuation">(</span>uv_idle_t<span class="token operator">*</span> handle<span class="token punctuation">)</span> <span class="token punctuation">{</span> 
+    <span class="token comment" spellcheck="true">/* 如果idle handle没有被启动则直接返回 */</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token function">uv__is_active</span><span class="token punctuation">(</span>handle<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
 
-<span class="token comment" spellcheck="true">//使用以下函数前必须先调用CPU_TS_TmrInit函数使能计数器，或使能宏CPU_TS_INIT_IN_DELAY_FUNCTION</span>
-<span class="token comment" spellcheck="true">//最大延时值为8秒</span>
-<span class="token keyword">void</span> <span class="token function">CPU_TS_Tmr_Delay_US</span><span class="token punctuation">(</span>uint32_t us<span class="token punctuation">)</span><span class="token punctuation">;</span>
-#define <span class="token function">HAL_Delay</span><span class="token punctuation">(</span>ms<span class="token punctuation">)</span>     <span class="token function">CPU_TS_Tmr_Delay_US</span><span class="token punctuation">(</span>ms<span class="token operator">*</span><span class="token number">1000</span><span class="token punctuation">)</span>
-#define <span class="token function">CPU_TS_Tmr_Delay_S</span><span class="token punctuation">(</span>s<span class="token punctuation">)</span>       <span class="token function">CPU_TS_Tmr_Delay_MS</span><span class="token punctuation">(</span>s<span class="token operator">*</span><span class="token number">1000</span><span class="token punctuation">)</span>
+    <span class="token comment" spellcheck="true">/* 把handle从loop中相应的队列移除，但是还挂载到handle_queue中 */</span>
+    <span class="token function">QUEUE_REMOVE</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>handle<span class="token operator">-></span>queue<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
+    <span class="token comment" spellcheck="true">/* 清除UV_HANDLE_ACTIVE标记并且减去loop中handle的active计数 */</span>
+    <span class="token function">uv__handle_stop</span><span class="token punctuation">(</span>handle<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
 
-#endif <span class="token comment" spellcheck="true">/* __CORE_DELAY_H */</span>
-<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<h4 id="注意事项："><a href="#注意事项：" class="headerlink" title="注意事项："></a>注意事项：</h4><p>使用者如果不是在HAL库中使用，注释掉：</p>
-<pre class="line-numbers language-js"><code class="language-js">uint32_t <span class="token function">HAL_GetTick</span><span class="token punctuation">(</span><span class="token keyword">void</span><span class="token punctuation">)</span>
-<span class="token punctuation">{</span>        
-  <span class="token keyword">return</span> <span class="token punctuation">(</span><span class="token punctuation">(</span>uint32_t<span class="token punctuation">)</span>DWT_CYCCNT<span class="token operator">/</span>SysClockFreq<span class="token operator">*</span><span class="token number">1000</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
-<p>同时建议重新命名<code>HAL_InitTick()</code>函数。</p>
-<p>按照自己的平台重写以下宏定义：</p>
-<pre class="line-numbers language-js"><code class="language-js"><span class="token comment" spellcheck="true">/* 获取内核时钟频率 */</span>
-#define <span class="token function">GET_CPU_ClkFreq</span><span class="token punctuation">(</span><span class="token punctuation">)</span>       <span class="token function">HAL_RCC_GetSysClockFreq</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
-#define SysClockFreq            <span class="token punctuation">(</span><span class="token number">218000000</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
-<h3 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h3><p>其实在ucos-iii 源码中，有一个功能是测量关中断时间的功能，就是使用STM32的时间戳，即记录程序运行的某个时刻，如果记录下程序前后的两个时刻点，即可以算出这段程序的运行时间。<br>但是有关内核寄存器的描述的资料非常少，还好找到一个（arm手册），里面有这些内核寄存器的详细描述，其中时间戳相关的寄存器在第10章和11章有详细的描述。关于资料想看的可以后台找我拿。</p>
-<h1 id="喜欢就关注我吧！"><a href="#喜欢就关注我吧！" class="headerlink" title="喜欢就关注我吧！"></a>喜欢就关注我吧！</h1><p><img src="./images/loading.png" data-original="http://qiniu.jiejie01.top/gzh.jpg" alt="欢迎关注我公众号"></p>
-<p>相关代码可以在公众号后台回复 “ <strong>DWT</strong> ”获取。</p>
+<span class="token comment" spellcheck="true">/* 在每一轮循环中执行该函数，具体见uv_run */</span>
+<span class="token keyword">void</span> <span class="token function">uv__run_idle</span><span class="token punctuation">(</span>uv_loop_t<span class="token operator">*</span> loop<span class="token punctuation">)</span> <span class="token punctuation">{</span> 
+    uv_idle_t<span class="token operator">*</span> h<span class="token punctuation">;</span>
+    QUEUE queue<span class="token punctuation">;</span>
+    QUEUE<span class="token operator">*</span> q<span class="token punctuation">;</span>
+
+    <span class="token comment" spellcheck="true">/* 把loop的idle_handles队列中所有节点摘下来挂载到queue变量 */</span>
+    <span class="token function">QUEUE_MOVE</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>loop<span class="token operator">-></span>idle_handles<span class="token punctuation">,</span> <span class="token operator">&amp;</span>queue<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token comment" spellcheck="true">/* while循环遍历队列，执行每个节点里面的函数 */</span>
+    <span class="token keyword">while</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token function">QUEUE_EMPTY</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>queue<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+
+        <span class="token comment" spellcheck="true">/* 取下当前待处理的节点 */</span>
+        q <span class="token operator">=</span> <span class="token function">QUEUE_HEAD</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>queue<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        <span class="token comment" spellcheck="true">/* 取得该节点对应的整个结构体的基地址 */</span>
+        h <span class="token operator">=</span> <span class="token function">QUEUE_DATA</span><span class="token punctuation">(</span>q<span class="token punctuation">,</span> uv_idle_t<span class="token punctuation">,</span> queue<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        <span class="token comment" spellcheck="true">/* 把该节点移出当前队列 */</span>
+        <span class="token function">QUEUE_REMOVE</span><span class="token punctuation">(</span>q<span class="token punctuation">)</span><span class="token punctuation">;</span> 
+
+        <span class="token comment" spellcheck="true">/* 重新插入loop->idle_handles队列 */</span>
+        <span class="token function">QUEUE_INSERT_TAIL</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>loop<span class="token operator">-></span>idle_handles<span class="token punctuation">,</span> q<span class="token punctuation">)</span><span class="token punctuation">;</span> 
+
+        <span class="token comment" spellcheck="true">/* 执行对应的回调函数 */</span>
+        h<span class="token operator">-></span><span class="token function">idle_cb</span><span class="token punctuation">(</span>h<span class="token punctuation">)</span><span class="token punctuation">;</span> 
+    <span class="token punctuation">}</span> 
+<span class="token punctuation">}</span>
+
+<span class="token comment" spellcheck="true">/* 关闭这个idle handle */</span>
+<span class="token keyword">void</span> <span class="token function">uv__idle_close</span><span class="token punctuation">(</span>uv_idle_t<span class="token operator">*</span> handle<span class="token punctuation">)</span> <span class="token punctuation">{</span> 
+    <span class="token function">uv_idle_stop</span><span class="token punctuation">(</span>handle<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p><a href="http://docs.libuv.org/en/v1.x/idle.html" target="_blank" rel="noopener">libuv官方文档</a></p>
+<h1 id="例程代码获取"><a href="#例程代码获取" class="headerlink" title="例程代码获取"></a>例程代码获取</h1><p><a href="https://github.com/jiejieTop/libuv-learning-code" target="_blank" rel="noopener">libuv-learning-code</a></p>
 <script>
         document.querySelectorAll('.github-emoji')
           .forEach(el => {
@@ -924,7 +908,7 @@ HAL_StatusTypeDef <span class="token function">HAL_InitTick</span><span class="t
                     </span>
                     <a href="https://jiedev.com" class="b-link-green">杰杰的博客</a>
                     <i class="fa fa-angle-right fa-lg fa-fw text-color"></i>
-                    <a href="/dwt/" class="b-link-green">一种Cortex-M内核中的精确延时方法</a>
+                    <a href="/libuv-4/" class="b-link-green">【libuv高效编程】libuv学习超详细教程4——idle handle解读</a>
                 </p>
             </div>
 
@@ -1205,65 +1189,41 @@ HAL_StatusTypeDef <span class="token function">HAL_InitTick</span><span class="t
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fa fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="fa fa-dot-circle-o"></i>&nbsp;本篇
+            </div>
             <div class="card">
-                <a href="/tencentos-tiny-1/">
+                <a href="/libuv-4/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/8.jpg" class="responsive-img" alt="【TencentOS tiny】又有一个操作系统开源">
+                        <img src="/medias/featureimages/5.jpg" class="responsive-img" alt="【libuv高效编程】libuv学习超详细教程4——idle handle解读">
                         
-                        <span class="card-title">【TencentOS tiny】又有一个操作系统开源</span>
+                        <span class="card-title">【libuv高效编程】libuv学习超详细教程4——idle handle解读</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            新闻2019年9月18日，腾讯宣布将开源 自主研发的轻量级物联网实时操作系统TencentOS tiny。相比市场上其它系统，腾讯TencentOS tiny在资源占用、设备成本、功耗管理以及安全稳定等层面极具竞争力。该系统的开源可大幅降低
+                            libuv系列文章
+【libuv高效编程】libuv学习超详细教程1——libuv的编译与安装
+
+【libuv高效编程】libuv学习超详细教程2——libuv框架初窥
+
+【libuv高效编程】libuv学习超详细教程3——libuv事件循
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="fa fa-clock-o fa-fw icon-date"></i>2019-10-12
-                        </span>
+                            <span class="publish-date">
+                                <i class="fa fa-clock-o fa-fw icon-date"></i>2020-04-21
+                            </span>
                         <span class="publish-author">
-                            
-                            <i class="fa fa-bookmark fa-fw icon-category"></i>
-                            
-                            <a href="/categories/操作系统/" class="post-category" target="_blank">
-                                    操作系统
-                                </a>
-                            
-                            <a href="/categories/操作系统/TencentOS-tiny/" class="post-category" target="_blank">
-                                    TencentOS tiny
-                                </a>
-                            
                             
                         </span>
                     </div>
                 </div>
-                
-                <div class="card-action article-tags">
-                    
-                    <a href="/tags/TencentOS-tiny/" target="_blank">
-                        <span class="chip bg-color">TencentOS tiny</span>
-                    </a>
-                    
-                    <a href="/tags/RTOS/" target="_blank">
-                        <span class="chip bg-color">RTOS</span>
-                    </a>
-                    
-                    <a href="/tags/操作系统/" target="_blank">
-                        <span class="chip bg-color">操作系统</span>
-                    </a>
-                    
-                    <a href="/tags/物联网/" target="_blank">
-                        <span class="chip bg-color">物联网</span>
-                    </a>
-                    
-                </div>
+
                 
             </div>
         </div>
@@ -1274,31 +1234,36 @@ HAL_StatusTypeDef <span class="token function">HAL_InitTick</span><span class="t
                 下一篇&nbsp;<i class="fa fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/kfifo/">
+                <a href="/libuv-3/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/15.jpg" class="responsive-img" alt="基于Linux的kfifo移植到STM32（支持os的互斥访问）">
+                        <img src="/medias/featureimages/0.jpg" class="responsive-img" alt="【libuv高效编程】libuv学习超详细教程3——libuv事件循环">
                         
-                        <span class="card-title">基于Linux的kfifo移植到STM32（支持os的互斥访问）</span>
+                        <span class="card-title">【libuv高效编程】libuv学习超详细教程3——libuv事件循环</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            基于Linux的kfifo移植到STM32（支持os的互斥访问）关于kfifokfifo是内核里面的一个First In First Out数据结构，它采用环形循环队列的数据结构来实现；它提供一个无边界的字节流服务，最重要的一点是，它使用并
+                            libuv系列文章
+【libuv高效编程】libuv学习超详细教程1——libuv的编译与安装
+
+【libuv高效编程】libuv学习超详细教程2——libuv框架初窥
+
+【libuv高效编程】libuv学习超详细教程3——libuv事件循
                         
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="fa fa-clock-o fa-fw icon-date"></i>2019-10-06
+                                <i class="fa fa-clock-o fa-fw icon-date"></i>2020-04-19
                             </span>
                         <span class="publish-author">
                             
                             <i class="fa fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/STM32/" class="post-category" target="_blank">
-                                    STM32
+                            <a href="/categories/网络/" class="post-category" target="_blank">
+                                    网络
                                 </a>
                             
                             
@@ -1308,16 +1273,16 @@ HAL_StatusTypeDef <span class="token function">HAL_InitTick</span><span class="t
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/STM32/" target="_blank">
-                        <span class="chip bg-color">STM32</span>
+                    <a href="/tags/libuv/" target="_blank">
+                        <span class="chip bg-color">libuv</span>
                     </a>
                     
-                    <a href="/tags/Cortex-M/" target="_blank">
-                        <span class="chip bg-color">Cortex-M</span>
+                    <a href="/tags/网络/" target="_blank">
+                        <span class="chip bg-color">网络</span>
                     </a>
                     
-                    <a href="/tags/kfifo/" target="_blank">
-                        <span class="chip bg-color">kfifo</span>
+                    <a href="/tags/Linux/" target="_blank">
+                        <span class="chip bg-color">Linux</span>
                     </a>
                     
                 </div>
@@ -1465,6 +1430,13 @@ HAL_StatusTypeDef <span class="token function">HAL_InitTick</span><span class="t
 
 </main>
 
+
+<script src="https://cdn.bootcss.com/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script>
+    MathJax.Hub.Config({
+        tex2jax: {inlineMath: [['$', '$'], ['\(', '\)']]}
+    });
+</script>
 
     <!-- jiejie 杰杰  modify 2019.08.15-->
 

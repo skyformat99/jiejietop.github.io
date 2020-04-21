@@ -2,6 +2,20 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://jiedev.com/libuv-3/</loc>
+    
+    <lastmod>2020-04-21T14:59:50.645Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://jiedev.com/libuv-4/</loc>
+    
+    <lastmod>2020-04-21T14:59:36.174Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://jiedev.com/libuv-1/</loc>
     
     <lastmod>2020-04-19T13:20:37.984Z</lastmod>
@@ -12,13 +26,6 @@
     <loc>https://jiedev.com/libuv-2/</loc>
     
     <lastmod>2020-04-19T13:20:33.758Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://jiedev.com/libuv-3/</loc>
-    
-    <lastmod>2020-04-19T13:20:27.767Z</lastmod>
     
   </url>
   
@@ -135,13 +142,6 @@
   </url>
   
   <url>
-    <loc>https://jiedev.com/archives/index.html</loc>
-    
-    <lastmod>2019-12-03T12:22:29.833Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>https://jiedev.com/about/index.html</loc>
     
     <lastmod>2019-12-03T12:22:29.833Z</lastmod>
@@ -149,9 +149,9 @@
   </url>
   
   <url>
-    <loc>https://jiedev.com/tcpip-2/</loc>
+    <loc>https://jiedev.com/archives/index.html</loc>
     
-    <lastmod>2019-12-03T12:22:29.832Z</lastmod>
+    <lastmod>2019-12-03T12:22:29.833Z</lastmod>
     
   </url>
   
@@ -163,9 +163,9 @@
   </url>
   
   <url>
-    <loc>https://jiedev.com/openmv-2/</loc>
+    <loc>https://jiedev.com/tcpip-2/</loc>
     
-    <lastmod>2019-12-03T12:22:29.831Z</lastmod>
+    <lastmod>2019-12-03T12:22:29.832Z</lastmod>
     
   </url>
   
@@ -184,14 +184,14 @@
   </url>
   
   <url>
-    <loc>https://jiedev.com/freertos-9/</loc>
+    <loc>https://jiedev.com/openmv-2/</loc>
     
-    <lastmod>2019-12-03T12:22:29.830Z</lastmod>
+    <lastmod>2019-12-03T12:22:29.831Z</lastmod>
     
   </url>
   
   <url>
-    <loc>https://jiedev.com/kfifo/</loc>
+    <loc>https://jiedev.com/freertos-9/</loc>
     
     <lastmod>2019-12-03T12:22:29.830Z</lastmod>
     
@@ -205,6 +205,13 @@
   </url>
   
   <url>
+    <loc>https://jiedev.com/kfifo/</loc>
+    
+    <lastmod>2019-12-03T12:22:29.830Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://jiedev.com/freertos-8/</loc>
     
     <lastmod>2019-12-03T12:22:29.829Z</lastmod>
@@ -212,7 +219,7 @@
   </url>
   
   <url>
-    <loc>https://jiedev.com/freertos-7/</loc>
+    <loc>https://jiedev.com/freertos-5/</loc>
     
     <lastmod>2019-12-03T12:22:29.828Z</lastmod>
     
@@ -226,16 +233,9 @@
   </url>
   
   <url>
-    <loc>https://jiedev.com/freertos-5/</loc>
+    <loc>https://jiedev.com/freertos-7/</loc>
     
     <lastmod>2019-12-03T12:22:29.828Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://jiedev.com/freertos-3/</loc>
-    
-    <lastmod>2019-12-03T12:22:29.827Z</lastmod>
     
   </url>
   
@@ -247,14 +247,21 @@
   </url>
   
   <url>
-    <loc>https://jiedev.com/freertos-2/</loc>
+    <loc>https://jiedev.com/freertos-3/</loc>
+    
+    <lastmod>2019-12-03T12:22:29.827Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://jiedev.com/freertos-1/</loc>
     
     <lastmod>2019-12-03T12:22:29.826Z</lastmod>
     
   </url>
   
   <url>
-    <loc>https://jiedev.com/freertos-1/</loc>
+    <loc>https://jiedev.com/freertos-2/</loc>
     
     <lastmod>2019-12-03T12:22:29.826Z</lastmod>
     
@@ -268,14 +275,14 @@
   </url>
   
   <url>
-    <loc>https://jiedev.com/fifo/</loc>
+    <loc>https://jiedev.com/dwt/</loc>
     
     <lastmod>2019-12-03T12:22:29.825Z</lastmod>
     
   </url>
   
   <url>
-    <loc>https://jiedev.com/dwt/</loc>
+    <loc>https://jiedev.com/fifo/</loc>
     
     <lastmod>2019-12-03T12:22:29.825Z</lastmod>
     
@@ -296,14 +303,14 @@
   </url>
   
   <url>
-    <loc>https://jiedev.com/button/</loc>
+    <loc>https://jiedev.com/tencentos-tiny-9/</loc>
     
     <lastmod>2019-12-03T12:22:29.823Z</lastmod>
     
   </url>
   
   <url>
-    <loc>https://jiedev.com/tencentos-tiny-9/</loc>
+    <loc>https://jiedev.com/button/</loc>
     
     <lastmod>2019-12-03T12:22:29.823Z</lastmod>
     
@@ -345,14 +352,14 @@
   </url>
   
   <url>
-    <loc>https://jiedev.com/tencentos-tiny-2/</loc>
+    <loc>https://jiedev.com/tencentos-tiny-10/</loc>
     
     <lastmod>2019-12-03T12:22:29.819Z</lastmod>
     
   </url>
   
   <url>
-    <loc>https://jiedev.com/tencentos-tiny-10/</loc>
+    <loc>https://jiedev.com/tencentos-tiny-2/</loc>
     
     <lastmod>2019-12-03T12:22:29.819Z</lastmod>
     
@@ -366,14 +373,14 @@
   </url>
   
   <url>
-    <loc>https://jiedev.com/404.html</loc>
+    <loc>https://jiedev.com/AV/index.html</loc>
     
     <lastmod>2019-12-03T12:22:29.816Z</lastmod>
     
   </url>
   
   <url>
-    <loc>https://jiedev.com/AV/index.html</loc>
+    <loc>https://jiedev.com/404.html</loc>
     
     <lastmod>2019-12-03T12:22:29.816Z</lastmod>
     
