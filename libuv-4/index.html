@@ -566,6 +566,12 @@
 </li>
 <li><p><a href="https://jiedev.com/libuv-4/">【libuv高效编程】libuv学习超详细教程4——idle handle解读</a></p>
 </li>
+<li><p><a href="https://jiedev.com/libuv-5/">【libuv高效编程】libuv学习超详细教程5——prepare handle解读</a></p>
+</li>
+<li><p><a href="https://jiedev.com/libuv-6/">【libuv高效编程】libuv学习超详细教程6——check handle解读</a></p>
+</li>
+<li><p><a href="https://jiedev.com/libuv-7/">【libuv高效编程】libuv学习超详细教程7——libuv线程解读</a></p>
+</li>
 </ul>
 <h1 id="idle-handle"><a href="#idle-handle" class="headerlink" title="idle handle"></a>idle handle</h1><p>idle handle可以被译为空闲句柄，如果程序中启动了idle handle后，那么它在每次事件循环的时候都会被执行一遍。</p>
 <p>回顾一下libuv的事件循环过程，它有一个<code>uv__run_idle()</code>函数会被执行，就是在事件循环迭代的过程中处理idle handle。</p>
@@ -1210,12 +1216,11 @@ int64_t num <span class="token operator">=</span> <span class="token number">0</
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fa fa-dot-circle-o"></i>&nbsp;本篇
-            </div>
+                <i class="fa fa-chevron-left"></i>&nbsp;上一篇</div>
             <div class="card">
-                <a href="/libuv-4/">
+                <a href="/libuv-5/">
                     <div class="card-image">
                         
                         
@@ -1236,9 +1241,9 @@ int64_t num <span class="token operator">=</span> <span class="token number">0</
                         
                     </div>
                     <div class="publish-info">
-                            <span class="publish-date">
-                                <i class="fa fa-clock-o fa-fw icon-date"></i>2020-04-21
-                            </span>
+                        <span class="publish-date">
+                            <i class="fa fa-clock-o fa-fw icon-date"></i>2020-04-21
+                        </span>
                         <span class="publish-author">
                             
                             <i class="fa fa-bookmark fa-fw icon-category"></i>
@@ -1251,7 +1256,6 @@ int64_t num <span class="token operator">=</span> <span class="token number">0</
                         </span>
                     </div>
                 </div>
-
                 
                 <div class="card-action article-tags">
                     
@@ -1493,7 +1497,7 @@ int64_t num <span class="token operator">=</span> <span class="token number">0</
 
             
                 &nbsp;<i class="fa fa-area-chart"></i>&nbsp;站点总字数:&nbsp;
-                <span class="white-color">121k </span>
+                <span class="white-color">127k </span>
 
             
 
@@ -1645,6 +1649,6 @@ $(function () {
         <script async src="/libs/others/busuanzi.pure.mini.js"></script>
     
     
-<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"log":false,"model":{"jsonPath":"/live2dw/assets/wanko.model.json"},"display":{"position":"left","width":150,"height":200},"mobile":{"show":false},"react":{"opacity":0.7}});</script><script>!function(e){var r=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function t(){for(var c=0;c<r.length;c++)t=r[c],void 0,0<=(n=t.getBoundingClientRect()).top&&0<=n.left&&n.top<=(e.innerHeight||document.documentElement.clientHeight)&&function(){var t,n,e,i,o=r[c];t=o,n=function(){r=r.filter(function(t){return o!==t})},e=new Image,i=t.getAttribute("data-original"),e.onload=function(){t.src=i,n&&n()},e.src=i}();var t,n}t(),e.addEventListener("scroll",function(){!function(t,n){clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(n)},500)}(t,e)})}(this);</script></body>
+<script>!function(e){var r=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function t(){for(var c=0;c<r.length;c++)t=r[c],void 0,0<=(n=t.getBoundingClientRect()).top&&0<=n.left&&n.top<=(e.innerHeight||document.documentElement.clientHeight)&&function(){var t,n,e,i,o=r[c];t=o,n=function(){r=r.filter(function(t){return o!==t})},e=new Image,i=t.getAttribute("data-original"),e.onload=function(){t.src=i,n&&n()},e.src=i}();var t,n}t(),e.addEventListener("scroll",function(){!function(t,n){clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(n)},500)}(t,e)})}(this);</script><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"log":false,"model":{"jsonPath":"/live2dw/assets/wanko.model.json"},"display":{"position":"left","width":150,"height":200},"mobile":{"show":false},"react":{"opacity":0.7}});</script></body>
 
 </html>

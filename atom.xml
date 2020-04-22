@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://jiedev.com/"/>
-  <updated>2020-04-21T15:20:33.616Z</updated>
+  <updated>2020-04-22T12:00:33.307Z</updated>
   <id>https://jiedev.com/</id>
   
   <author>
@@ -18,10 +18,103 @@
   
   <entry>
     <title>【libuv高效编程】libuv学习超详细教程4——idle handle解读</title>
+    <link href="https://jiedev.com/libuv-7/"/>
+    <id>https://jiedev.com/libuv-7/</id>
+    <published>2020-04-21T07:16:07.000Z</published>
+    <updated>2020-04-22T12:00:33.307Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h1 id=&quot;libuv系列文章&quot;&gt;&lt;a href=&quot;#libuv系列文章&quot; class=&quot;headerlink&quot; title=&quot;libuv系列文章&quot;&gt;&lt;/a&gt;libuv系列文章&lt;/h1&gt;&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;&lt;a
+        
+      
+    
+    </summary>
+    
+      <category term="网络" scheme="https://jiedev.com/categories/%E7%BD%91%E7%BB%9C/"/>
+    
+    
+      <category term="libuv" scheme="https://jiedev.com/tags/libuv/"/>
+    
+      <category term="网络" scheme="https://jiedev.com/tags/%E7%BD%91%E7%BB%9C/"/>
+    
+      <category term="Linux" scheme="https://jiedev.com/tags/Linux/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>【libuv高效编程】libuv学习超详细教程4——idle handle解读</title>
+    <link href="https://jiedev.com/libuv-6/"/>
+    <id>https://jiedev.com/libuv-6/</id>
+    <published>2020-04-21T07:15:07.000Z</published>
+    <updated>2020-04-22T12:00:28.018Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h1 id=&quot;libuv系列文章&quot;&gt;&lt;a href=&quot;#libuv系列文章&quot; class=&quot;headerlink&quot; title=&quot;libuv系列文章&quot;&gt;&lt;/a&gt;libuv系列文章&lt;/h1&gt;&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;&lt;a
+        
+      
+    
+    </summary>
+    
+      <category term="网络" scheme="https://jiedev.com/categories/%E7%BD%91%E7%BB%9C/"/>
+    
+    
+      <category term="libuv" scheme="https://jiedev.com/tags/libuv/"/>
+    
+      <category term="网络" scheme="https://jiedev.com/tags/%E7%BD%91%E7%BB%9C/"/>
+    
+      <category term="Linux" scheme="https://jiedev.com/tags/Linux/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>【libuv高效编程】libuv学习超详细教程4——idle handle解读</title>
+    <link href="https://jiedev.com/libuv-5/"/>
+    <id>https://jiedev.com/libuv-5/</id>
+    <published>2020-04-21T07:14:07.000Z</published>
+    <updated>2020-04-22T12:00:22.927Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h1 id=&quot;libuv系列文章&quot;&gt;&lt;a href=&quot;#libuv系列文章&quot; class=&quot;headerlink&quot; title=&quot;libuv系列文章&quot;&gt;&lt;/a&gt;libuv系列文章&lt;/h1&gt;&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;&lt;a
+        
+      
+    
+    </summary>
+    
+      <category term="网络" scheme="https://jiedev.com/categories/%E7%BD%91%E7%BB%9C/"/>
+    
+    
+      <category term="libuv" scheme="https://jiedev.com/tags/libuv/"/>
+    
+      <category term="网络" scheme="https://jiedev.com/tags/%E7%BD%91%E7%BB%9C/"/>
+    
+      <category term="Linux" scheme="https://jiedev.com/tags/Linux/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>【libuv高效编程】libuv学习超详细教程4——idle handle解读</title>
     <link href="https://jiedev.com/libuv-4/"/>
     <id>https://jiedev.com/libuv-4/</id>
     <published>2020-04-21T07:13:07.000Z</published>
-    <updated>2020-04-21T15:20:33.616Z</updated>
+    <updated>2020-04-22T11:58:50.384Z</updated>
     
     <summary type="html">
     
@@ -52,7 +145,7 @@
     <link href="https://jiedev.com/libuv-3/"/>
     <id>https://jiedev.com/libuv-3/</id>
     <published>2020-04-19T07:13:07.000Z</published>
-    <updated>2020-04-21T14:59:50.645Z</updated>
+    <updated>2020-04-22T11:58:53.118Z</updated>
     
     <summary type="html">
     
@@ -83,7 +176,7 @@
     <link href="https://jiedev.com/libuv-2/"/>
     <id>https://jiedev.com/libuv-2/</id>
     <published>2020-04-18T07:13:07.000Z</published>
-    <updated>2020-04-19T13:20:33.758Z</updated>
+    <updated>2020-04-22T11:58:56.382Z</updated>
     
     <summary type="html">
     
@@ -114,7 +207,7 @@
     <link href="https://jiedev.com/libuv-1/"/>
     <id>https://jiedev.com/libuv-1/</id>
     <published>2020-04-17T07:13:07.000Z</published>
-    <updated>2020-04-19T13:20:37.984Z</updated>
+    <updated>2020-04-22T11:58:59.914Z</updated>
     
     <summary type="html">
     
@@ -450,36 +543,6 @@
   </entry>
   
   <entry>
-    <title>ARP协议原理</title>
-    <link href="https://jiedev.com/tcpip-3/"/>
-    <id>https://jiedev.com/tcpip-3/</id>
-    <published>2019-10-15T14:56:12.000Z</published>
-    <updated>2019-12-03T12:22:29.832Z</updated>
-    
-    <summary type="html">
-    
-      
-      
-        
-        
-          &lt;h1 id=&quot;引言&quot;&gt;&lt;a href=&quot;#引言&quot; class=&quot;headerlink&quot; title=&quot;引言&quot;&gt;&lt;/a&gt;引言&lt;/h1&gt;&lt;p&gt;从前一篇文章中，我们知道计算机中会维护一个ARP缓存表，这个表记录着IP地址与MAC地址的映射关系，我们可以通过在电脑的控制台通过arp
-        
-      
-    
-    </summary>
-    
-      <category term="TCP/IP" scheme="https://jiedev.com/categories/TCP-IP/"/>
-    
-    
-      <category term="网络" scheme="https://jiedev.com/tags/%E7%BD%91%E7%BB%9C/"/>
-    
-      <category term="TCP/IP" scheme="https://jiedev.com/tags/TCP-IP/"/>
-    
-      <category term="LwIP" scheme="https://jiedev.com/tags/LwIP/"/>
-    
-  </entry>
-  
-  <entry>
     <title>网络底层知识</title>
     <link href="https://jiedev.com/tcpip-2/"/>
     <id>https://jiedev.com/tcpip-2/</id>
@@ -510,11 +573,11 @@
   </entry>
   
   <entry>
-    <title>TCP/IP协议栈扫盲班</title>
-    <link href="https://jiedev.com/tcpip-1/"/>
-    <id>https://jiedev.com/tcpip-1/</id>
-    <published>2019-10-15T14:54:12.000Z</published>
-    <updated>2019-12-03T12:22:29.831Z</updated>
+    <title>ARP协议原理</title>
+    <link href="https://jiedev.com/tcpip-3/"/>
+    <id>https://jiedev.com/tcpip-3/</id>
+    <published>2019-10-15T14:56:12.000Z</published>
+    <updated>2019-12-03T12:22:29.832Z</updated>
     
     <summary type="html">
     
@@ -522,7 +585,7 @@
       
         
         
-          &lt;h1 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot;
+          &lt;h1 id=&quot;引言&quot;&gt;&lt;a href=&quot;#引言&quot; class=&quot;headerlink&quot; title=&quot;引言&quot;&gt;&lt;/a&gt;引言&lt;/h1&gt;&lt;p&gt;从前一篇文章中，我们知道计算机中会维护一个ARP缓存表，这个表记录着IP地址与MAC地址的映射关系，我们可以通过在电脑的控制台通过arp
         
       
     
@@ -536,74 +599,6 @@
       <category term="TCP/IP" scheme="https://jiedev.com/tags/TCP-IP/"/>
     
       <category term="LwIP" scheme="https://jiedev.com/tags/LwIP/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>【TencentOS  tiny】深度源码分析（8）——软件定时器</title>
-    <link href="https://jiedev.com/tencentos-tiny-10/"/>
-    <id>https://jiedev.com/tencentos-tiny-10/</id>
-    <published>2019-10-12T15:19:54.000Z</published>
-    <updated>2019-12-03T12:22:29.819Z</updated>
-    
-    <summary type="html">
-    
-      
-      
-        
-        
-          &lt;h1 id=&quot;软件定时器的基本概念&quot;&gt;&lt;a href=&quot;#软件定时器的基本概念&quot; class=&quot;headerlink&quot; title=&quot;软件定时器的基本概念&quot;&gt;&lt;/a&gt;软件定时器的基本概念&lt;/h1&gt;&lt;p&gt;TencentOS tiny
-        
-      
-    
-    </summary>
-    
-      <category term="操作系统" scheme="https://jiedev.com/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
-    
-      <category term="TencentOS tiny" scheme="https://jiedev.com/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/TencentOS-tiny/"/>
-    
-    
-      <category term="TencentOS tiny" scheme="https://jiedev.com/tags/TencentOS-tiny/"/>
-    
-      <category term="RTOS" scheme="https://jiedev.com/tags/RTOS/"/>
-    
-      <category term="操作系统" scheme="https://jiedev.com/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
-    
-      <category term="物联网" scheme="https://jiedev.com/tags/%E7%89%A9%E8%81%94%E7%BD%91/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>【TencentOS  tiny】深度源码分析（7）——事件</title>
-    <link href="https://jiedev.com/tencentos-tiny-9/"/>
-    <id>https://jiedev.com/tencentos-tiny-9/</id>
-    <published>2019-10-12T15:18:54.000Z</published>
-    <updated>2019-12-03T12:22:29.823Z</updated>
-    
-    <summary type="html">
-    
-      
-      
-        
-        
-          &lt;h1 id=&quot;引言&quot;&gt;&lt;a href=&quot;#引言&quot; class=&quot;headerlink&quot;
-        
-      
-    
-    </summary>
-    
-      <category term="操作系统" scheme="https://jiedev.com/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
-    
-      <category term="TencentOS tiny" scheme="https://jiedev.com/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/TencentOS-tiny/"/>
-    
-    
-      <category term="TencentOS tiny" scheme="https://jiedev.com/tags/TencentOS-tiny/"/>
-    
-      <category term="RTOS" scheme="https://jiedev.com/tags/RTOS/"/>
-    
-      <category term="操作系统" scheme="https://jiedev.com/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
-    
-      <category term="物联网" scheme="https://jiedev.com/tags/%E7%89%A9%E8%81%94%E7%BD%91/"/>
     
   </entry>
   
