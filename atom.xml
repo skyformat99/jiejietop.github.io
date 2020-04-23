@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://jiedev.com/"/>
-  <updated>2020-04-22T12:00:33.307Z</updated>
+  <updated>2020-04-23T13:42:53.158Z</updated>
   <id>https://jiedev.com/</id>
   
   <author>
@@ -17,11 +17,42 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>【libuv高效编程】libuv学习超详细教程4——idle handle解读</title>
+    <title>【libuv高效编程】libuv学习超详细教程8—— signal 信号句柄解读</title>
+    <link href="https://jiedev.com/libuv-8/"/>
+    <id>https://jiedev.com/libuv-8/</id>
+    <published>2020-04-22T07:16:07.000Z</published>
+    <updated>2020-04-23T13:42:53.158Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h1 id=&quot;libuv系列文章&quot;&gt;&lt;a href=&quot;#libuv系列文章&quot; class=&quot;headerlink&quot; title=&quot;libuv系列文章&quot;&gt;&lt;/a&gt;libuv系列文章&lt;/h1&gt;&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;&lt;a
+        
+      
+    
+    </summary>
+    
+      <category term="网络" scheme="https://jiedev.com/categories/%E7%BD%91%E7%BB%9C/"/>
+    
+    
+      <category term="libuv" scheme="https://jiedev.com/tags/libuv/"/>
+    
+      <category term="网络" scheme="https://jiedev.com/tags/%E7%BD%91%E7%BB%9C/"/>
+    
+      <category term="Linux" scheme="https://jiedev.com/tags/Linux/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>【libuv高效编程】libuv学习超详细教程7——libuv线程解读</title>
     <link href="https://jiedev.com/libuv-7/"/>
     <id>https://jiedev.com/libuv-7/</id>
     <published>2020-04-21T07:16:07.000Z</published>
-    <updated>2020-04-22T12:00:33.307Z</updated>
+    <updated>2020-04-23T12:24:02.397Z</updated>
     
     <summary type="html">
     
@@ -48,11 +79,11 @@
   </entry>
   
   <entry>
-    <title>【libuv高效编程】libuv学习超详细教程4——idle handle解读</title>
+    <title>【libuv高效编程】libuv学习超详细教程6——check handle解读</title>
     <link href="https://jiedev.com/libuv-6/"/>
     <id>https://jiedev.com/libuv-6/</id>
     <published>2020-04-21T07:15:07.000Z</published>
-    <updated>2020-04-22T12:00:28.018Z</updated>
+    <updated>2020-04-23T12:24:11.508Z</updated>
     
     <summary type="html">
     
@@ -79,11 +110,11 @@
   </entry>
   
   <entry>
-    <title>【libuv高效编程】libuv学习超详细教程4——idle handle解读</title>
+    <title>【libuv高效编程】libuv学习超详细教程5——prepare handle解读</title>
     <link href="https://jiedev.com/libuv-5/"/>
     <id>https://jiedev.com/libuv-5/</id>
     <published>2020-04-21T07:14:07.000Z</published>
-    <updated>2020-04-22T12:00:22.927Z</updated>
+    <updated>2020-04-23T12:24:24.783Z</updated>
     
     <summary type="html">
     
@@ -539,36 +570,6 @@
     
     
       <category term="cmake" scheme="https://jiedev.com/tags/cmake/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>网络底层知识</title>
-    <link href="https://jiedev.com/tcpip-2/"/>
-    <id>https://jiedev.com/tcpip-2/</id>
-    <published>2019-10-15T14:56:12.000Z</published>
-    <updated>2019-12-03T12:22:29.832Z</updated>
-    
-    <summary type="html">
-    
-      
-      
-        
-        
-          &lt;h1 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot;
-        
-      
-    
-    </summary>
-    
-      <category term="TCP/IP" scheme="https://jiedev.com/categories/TCP-IP/"/>
-    
-    
-      <category term="网络" scheme="https://jiedev.com/tags/%E7%BD%91%E7%BB%9C/"/>
-    
-      <category term="TCP/IP" scheme="https://jiedev.com/tags/TCP-IP/"/>
-    
-      <category term="LwIP" scheme="https://jiedev.com/tags/LwIP/"/>
     
   </entry>
   
