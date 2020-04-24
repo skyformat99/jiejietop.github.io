@@ -572,10 +572,12 @@
 </li>
 <li><p><a href="https://jiedev.com/libuv-7/">【libuv高效编程】libuv学习超详细教程7——libuv thread 线程句柄解读</a></p>
 </li>
-<li><p><a href="https://jiedev.com/libuv-7/">【libuv高效编程】libuv学习超详细教程8——libuv signal 信号句柄解读</a></p>
+<li><p><a href="https://jiedev.com/libuv-8/">【libuv高效编程】libuv学习超详细教程8——libuv signal 信号句柄解读</a></p>
 </li>
+<li><p><a href="https://jiedev.com/libuv-9/">【libuv高效编程】libuv学习超详细教程9——libuv async异步句柄解读</a></p>
+<h1 id="linux信号"><a href="#linux信号" class="headerlink" title="linux信号"></a>linux信号</h1></li>
 </ul>
-<h1 id="linux信号"><a href="#linux信号" class="headerlink" title="linux信号"></a>linux信号</h1><p>信号（signal），又称为软中断信号，用于通知进程发生了异步事件，它是Linux系统响应某些条件而产生的一个事件，它是在软件层次上对中断机制的一种模拟，是一种异步通信方式，在原理上，一个进程收到一个信号与处理器收到一个中断请求可以说是一样的。</p>
+<p>信号（signal），又称为软中断信号，用于通知进程发生了异步事件，它是Linux系统响应某些条件而产生的一个事件，它是在软件层次上对中断机制的一种模拟，是一种异步通信方式，在原理上，一个进程收到一个信号与处理器收到一个中断请求可以说是一样的。</p>
 <p>信号是进程间通信机制中唯一的异步通信机制，一个进程不必通过任何操作来等待信号的到达，事实上，进程也不知道信号到底什么时候到达。正如我们所了解的中断服务函数一样，在中断发生的时候，就会进入中断服务函数中去处理，同样的，当进程接收到一个信号的时候，也会相应地采取一些行动。我们可以使用术语”生成（raise）”表示一个信号的产生，使用术语”捕获（catch）”表示进程接收到一个信号。</p>
 <p>在Linux系统中，信号可能是由于系统中某些错误而产生，也可以是某个进程主动生成的一个信号。由于某些错误条件而生成的信号：如内存段冲突、浮点处理器错误或非法指令等，它们由shell和终端处理器生成并且引起中断。由进程主动生成的信号可以作为在进程间传递通知或修改行为的一种方式，它可以明确地由一个进程发送给另一个进程，当进程捕获了这个信号就会按照程序进行相应并且去处理它。无论何种情况，它们的编程接口都是相同的，信号可以被生成、捕获、响应或忽略。进程之间可以互相发送信号，内核也可以因为内部事件而给进程发送信号，通知进程发生了某个事件。</p>
 <h1 id="Linux信号种类与描述"><a href="#Linux信号种类与描述" class="headerlink" title="Linux信号种类与描述"></a>Linux信号种类与描述</h1><table>
@@ -1630,18 +1632,17 @@
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fa fa-dot-circle-o"></i>&nbsp;本篇
-            </div>
+                <i class="fa fa-chevron-left"></i>&nbsp;上一篇</div>
             <div class="card">
-                <a href="/libuv-8/">
+                <a href="/libuv-9/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/0.jpg" class="responsive-img" alt="【libuv高效编程】libuv学习超详细教程8—— signal 信号句柄解读">
+                        <img src="/medias/featureimages/0.jpg" class="responsive-img" alt="【libuv高效编程】libuv学习超详细教程9——libuv async异步句柄解读">
                         
-                        <span class="card-title">【libuv高效编程】libuv学习超详细教程8—— signal 信号句柄解读</span>
+                        <span class="card-title">【libuv高效编程】libuv学习超详细教程9——libuv async异步句柄解读</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -1656,9 +1657,9 @@
                         
                     </div>
                     <div class="publish-info">
-                            <span class="publish-date">
-                                <i class="fa fa-clock-o fa-fw icon-date"></i>2020-04-22
-                            </span>
+                        <span class="publish-date">
+                            <i class="fa fa-clock-o fa-fw icon-date"></i>2020-04-23
+                        </span>
                         <span class="publish-author">
                             
                             <i class="fa fa-bookmark fa-fw icon-category"></i>
@@ -1671,7 +1672,6 @@
                         </span>
                     </div>
                 </div>
-
                 
                 <div class="card-action article-tags">
                     
@@ -1913,7 +1913,7 @@
 
             
                 &nbsp;<i class="fa fa-area-chart"></i>&nbsp;站点总字数:&nbsp;
-                <span class="white-color">132.7k </span>
+                <span class="white-color">134.9k </span>
 
             
 
@@ -2065,6 +2065,6 @@ $(function () {
         <script async src="/libs/others/busuanzi.pure.mini.js"></script>
     
     
-<script>!function(e){var r=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function t(){for(var c=0;c<r.length;c++)t=r[c],void 0,0<=(n=t.getBoundingClientRect()).top&&0<=n.left&&n.top<=(e.innerHeight||document.documentElement.clientHeight)&&function(){var t,n,e,i,o=r[c];t=o,n=function(){r=r.filter(function(t){return o!==t})},e=new Image,i=t.getAttribute("data-original"),e.onload=function(){t.src=i,n&&n()},e.src=i}();var t,n}t(),e.addEventListener("scroll",function(){!function(t,n){clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(n)},500)}(t,e)})}(this);</script><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"log":false,"model":{"jsonPath":"/live2dw/assets/wanko.model.json"},"display":{"position":"left","width":150,"height":200},"mobile":{"show":false},"react":{"opacity":0.7}});</script></body>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"log":false,"model":{"jsonPath":"/live2dw/assets/wanko.model.json"},"display":{"position":"left","width":150,"height":200},"mobile":{"show":false},"react":{"opacity":0.7}});</script><script>!function(e){var r=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function t(){for(var c=0;c<r.length;c++)t=r[c],void 0,0<=(n=t.getBoundingClientRect()).top&&0<=n.left&&n.top<=(e.innerHeight||document.documentElement.clientHeight)&&function(){var t,n,e,i,o=r[c];t=o,n=function(){r=r.filter(function(t){return o!==t})},e=new Image,i=t.getAttribute("data-original"),e.onload=function(){t.src=i,n&&n()},e.src=i}();var t,n}t(),e.addEventListener("scroll",function(){!function(t,n){clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(n)},500)}(t,e)})}(this);</script></body>
 
 </html>

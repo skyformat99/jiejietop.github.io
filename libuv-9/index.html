@@ -6,7 +6,7 @@
 
 <head><meta name="generator" content="Hexo 3.9.0">
     <meta charset="utf-8">
-    <meta name="keywords" content="【libuv高效编程】libuv学习超详细教程1——libuv的编译与安装, IoT RTOS linux Python jiejie Dora">
+    <meta name="keywords" content="【libuv高效编程】libuv学习超详细教程9——libuv async异步句柄解读, IoT RTOS linux Python jiejie Dora">
     <meta name="baidu-site-verification" content="TRUUhavuHV">
     <meta name="google-site-verification" content="v-saR33QlUQmwVrLI7AQd08em9BtdazPy5jvPouEYHg">
     <meta name="description" content="libuv系列文章
@@ -22,7 +22,7 @@
     <meta name="format-detection" content="telephone=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>【libuv高效编程】libuv学习超详细教程1——libuv的编译与安装 | 杰杰的博客</title>
+    <title>【libuv高效编程】libuv学习超详细教程9——libuv async异步句柄解读 | 杰杰的博客</title>
     <link rel="icon" type="image/x-icon, image/vnd.microsoft.icon" href="/medias/logo/favicon.ico">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/font-awesome.min.css">
@@ -369,13 +369,13 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/3.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/0.jpg')">
     <div class="container">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
                     <div class="description center-align post-title">
-                        【libuv高效编程】libuv学习超详细教程1——libuv的编译与安装
+                        【libuv高效编程】libuv学习超详细教程9——libuv async异步句柄解读
                     </div>
                 </div>
             </div>
@@ -519,7 +519,7 @@
             <div class="post-info">
                 <div class="post-date info-break-policy">
                     <i class="fa fa-calendar-minus-o fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2020-04-17
+                    2020-04-23
                 </div>
 
                 <div class="post-author info-break-policy">
@@ -533,14 +533,14 @@
                     
                     <div class="info-break-policy">
                         <i class="fa fa-file-word-o fa-fw"></i>文章字数:&nbsp;&nbsp;
-                        1.2k
+                        1.9k
                     </div>
                     
 
                     
                     <div class="info-break-policy">
                         <i class="fa fa-clock-o fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                        5 分
+                        8 分
                     </div>
                     
                 
@@ -577,107 +577,242 @@
 <li><p><a href="https://jiedev.com/libuv-9/">【libuv高效编程】libuv学习超详细教程9——libuv async异步句柄解读</a></p>
 </li>
 </ul>
-<h1 id="libuv简介"><a href="#libuv简介" class="headerlink" title="libuv简介"></a>libuv简介</h1><p><a href="https://github.com/libuv/libuv" target="_blank" rel="noopener">libuv</a> 是一个高性能的，事件驱动的I/O，并且支持多平台的网络库，比如Node.js、Luvit、Julia、pyuv等大型的软件都有使用它进行开发，这足以看出它的性能优越性。</p>
-<p>其实高性能的网络库在github有非常多，比如libevent、libev、libhv等库，libevent、libev、libuv都是c语言实现的异步事件库、libhv是国内开发者使用C++实现的异步事件库，但是我还是选择了libuv，因为它足够强大，并且支持多平台，编程还非常方便简洁。</p>
-<p>也可以看看下图的简单对比，主要是对比github上的star与fork（当前时间是 2020-4-17 星期五）：</p>
-<p><img src="./images/loading.png" data-original="http://qiniu.jiejie01.top/libuv001.png" alt="libuv001"></p>
-<h1 id="下载libuv"><a href="#下载libuv" class="headerlink" title="下载libuv"></a>下载libuv</h1><p>在linux系统下，可以通过git去拉取libuv的源码并且使用。</p>
-<h2 id="安装必要的依赖"><a href="#安装必要的依赖" class="headerlink" title="安装必要的依赖"></a>安装必要的依赖</h2><blockquote>
-<p>ps:如果你系统中有就不用去安装了。</p>
-</blockquote>
-<pre class="line-numbers language-bash"><code class="language-bash"><span class="token function">sudo</span> <span class="token function">apt-get</span> -y <span class="token function">install</span> <span class="token function">git</span> automake libtool<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-<h2 id="拉取libuv源码"><a href="#拉取libuv源码" class="headerlink" title="拉取libuv源码"></a>拉取libuv源码</h2><p>打开libuv的github仓库：<a href="https://github.com/libuv/libuv" target="_blank" rel="noopener">https://github.com/libuv/libuv</a> ，了解一下相关的说明信息，然后可以拉取下来：</p>
-<p><img src="./images/loading.png" data-original="http://qiniu.jiejie01.top/libuv002.png" alt="libuv002"></p>
-<pre class="line-numbers language-bash"><code class="language-bash"><span class="token function">git</span> clone https://github.com/libuv/libuv.git<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-<p>如果觉得太慢，可以从gitee下载：</p>
-<pre class="line-numbers language-bash"><code class="language-bash"><span class="token function">git</span> clone https://gitee.com/jiejieTop/libuv.git<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-<p>切换到<code>v1.36.0</code>版本分支，目前这个版本的分支是最新的。</p>
-<pre class="line-numbers language-bash"><code class="language-bash"><span class="token function">git</span> checkout v1.36.0<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-<p>当然你要是留意看的话，里面还有<strong>227</strong>个 <a href="https://github.com/libuv/libuv/releases" target="_blank" rel="noopener">release</a> 版本，你也可以通过wget或者浏览器去下载它们，它们的格式有zip、tar.gz等压缩格式，目前最新发布的release版本是<code>v1.36.0</code>。</p>
-<p><img src="./images/loading.png" data-original="http://qiniu.jiejie01.top/libuv003.png" alt="libuv003"></p>
-<h1 id="编译使用"><a href="#编译使用" class="headerlink" title="编译使用"></a>编译使用</h1><p>其实如果单纯使用libuv的话，是非常简单的，直接在系统安装即可，但是我想编译一些其他的功能，比如libuv的一些说明文档、man手册等，那么就自己下载源码编译，首先进入libuv目录下，可以看到当前的分支是默认的分支——<code>v1.x</code>，这其实是开发版本，最近这两天都有开发的，反正我们用就对了：</p>
-<pre class="line-numbers language-bash"><code class="language-bash">➜  libuv git:<span class="token punctuation">(</span>v1.x<span class="token punctuation">)</span> <span class="token function">ls</span>                                   
-AUTHORS         configure.ac     include       m4              src
-autogen.sh      CONTRIBUTING.md  libuv.pc.in   MAINTAINERS.md  SUPPORTED_PLATFORMS.md
-ChangeLog       docs             LICENSE       Makefile.am     <span class="token function">test</span>
-CMakeLists.txt  img              LICENSE-docs  README.md       tools<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<p>用autotools工具自动配置：</p>
-<pre class="line-numbers language-bash"><code class="language-bash">./autogen.sh 
-./configure<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
-<p>然后编译并安装：</p>
-<pre class="line-numbers language-bash"><code class="language-bash"><span class="token function">make</span>
-<span class="token function">sudo</span> <span class="token function">make</span> <span class="token function">install</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
-<blockquote>
-<p>ps:还有个检查的命令：make check，不过我在运行的过程中报错了，测试不通过，暂时别管他吧。。。</p>
-</blockquote>
-<h1 id="验证编译安装是否完成"><a href="#验证编译安装是否完成" class="headerlink" title="验证编译安装是否完成"></a>验证编译安装是否完成</h1><p>在安装完成后，你可以看到在<code>/usr/local/lib/</code>目录下有libuv的静态库、动态库等内容：</p>
-<pre class="line-numbers language-bash"><code class="language-bash"><span class="token function">ls</span> /usr/local/lib/
-libuv.a  libuv.la  libuv.so  libuv.so.1  libuv.so.1.0.0<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
-<p>在<code>/usr/local/include/</code>目录下也有一个uv文件夹、还有一个uv.h头文件。</p>
-<pre class="line-numbers language-bash"><code class="language-bash"><span class="token function">ls</span> /usr/local/include/          
-uv  uv.h<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
-<h1 id="简单实用"><a href="#简单实用" class="headerlink" title="简单实用"></a>简单实用</h1><p>随便写个代码，打印一下安装的libuv库的版本：</p>
+<h1 id="async-handle"><a href="#async-handle" class="headerlink" title="async handle"></a>async handle</h1><p>async handle可译为异步句柄，它主要是用于提供异步唤醒的功能，比如在用户线程中唤醒主事件循环线程，并且触发对应的回调函数。</p>
+<p>从事件循环线程的处理过程可知，它在io循环时会进入阻塞状态，而阻塞的具体时间则通过计算得到，那么在某些情况下，我们想要唤醒事件循环线程，就可以通过ansyc去操作，比如当线程池的线程处理完事件后，执行的结果是需要交给事件循环线程的，这时就需要用到唤醒事件循环线程，当然方法也是很简单，调用一下uv_async_send()函数通知事件循环线程即可。libuv线程池中的线程就是利用这个机制和主事件循环线程通讯。</p>
+<h1 id="数据结构"><a href="#数据结构" class="headerlink" title="数据结构"></a>数据结构</h1><p>通过 uv_async_t 可以定义一个async handle的实例。</p>
+<pre class="line-numbers language-c"><code class="language-c"><span class="token keyword">typedef</span> <span class="token keyword">struct</span> uv_async_s uv_async_t<span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>uv_async_t是属于handle的子类，并且还包含了一个UV_ASYNC_PRIVATE_FIELDS数据类型，里面包括它的回调函数async_cb、队列、以及一个pending成员变量。</p>
+<p>结构比较简单，async_cb 保存回调函数指针，queue 作为队列节点插入 loop-&gt;async_handles，pending 字段的作用主要是用于保护操作，在唤醒的时候使用，初始化为 0, 在调用唤醒函数的时候会被设置为 1，为什么要这样子做呢，因为async handle是异步句柄，这可能不止一个线程会尝试唤醒事件循环，这一个async handle不能同时被多个线程操作，因此需要进行原子保护，当它为1的时候表示有其他线程在操作这个async handle。</p>
+<pre class="line-numbers language-c"><code class="language-c"><span class="token keyword">struct</span> uv_async_s <span class="token punctuation">{</span>
+  UV_HANDLE_FIELDS
+  UV_ASYNC_PRIVATE_FIELDS
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+
+<span class="token macro property">#<span class="token directive keyword">define</span> UV_ASYNC_PRIVATE_FIELDS                                               \
+  uv_async_cb async_cb;                                                       \
+  void* queue[2];                                                             \
+  int pending;                                                                </span>\<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>uv_async_cb回调函数:</p>
+<pre class="line-numbers language-c"><code class="language-c"><span class="token keyword">typedef</span> <span class="token keyword">void</span> <span class="token punctuation">(</span><span class="token operator">*</span>uv_async_cb<span class="token punctuation">)</span><span class="token punctuation">(</span>uv_async_t<span class="token operator">*</span> handle<span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<h1 id="API"><a href="#API" class="headerlink" title="API"></a>API</h1><p>async handle相关的API非常简单，就一个初始化uv_async_init()，还有一个异步通知的函数uv_async_send()</p>
+<h2 id="uv-async-init"><a href="#uv-async-init" class="headerlink" title="uv_async_init()"></a>uv_async_init()</h2><p>函数原型：</p>
+<pre class="line-numbers language-c"><code class="language-c">UV_EXTERN <span class="token keyword">int</span> <span class="token function">uv_async_init</span><span class="token punctuation">(</span>uv_loop_t<span class="token operator">*</span><span class="token punctuation">,</span>
+                            uv_async_t<span class="token operator">*</span> async<span class="token punctuation">,</span>
+                            uv_async_cb async_cb<span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p>参数：</p>
+<ul>
+<li>uv_loop_t：传入了事件循环的句柄。</li>
+<li>async：指定初始化的async handle。</li>
+<li>async_cb：指定async handle的回调函数。</li>
+</ul>
+<p>uv_async_init()初始化函数不同于其他handle的初始化函数，因为它会立即将async handle设置为活跃状态，所以 async handle 没有 start 相关的函数。</p>
+<p>其实深入看uv__async_start()源码你就会发现，它实际上也是通过pipe管道进行唤醒的，因为主线程的io循环其实是在观察是否有可读写的io，libuv将管道等都抽象为io观察者了，在io循环中观察管道的读取端，当有数据到来则唤醒，越是深入了解libuv，你就会发现其实就是各个线程、进程间的通信，一种异步的通信，只不过libuv处理的很好，抽象了很多数据结构，并且衍生出了很多子类。</p>
+<pre class="line-numbers language-c"><code class="language-c"><span class="token keyword">int</span> <span class="token function">uv_async_init</span><span class="token punctuation">(</span>uv_loop_t<span class="token operator">*</span> loop<span class="token punctuation">,</span> uv_async_t<span class="token operator">*</span> handle<span class="token punctuation">,</span> uv_async_cb async_cb<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">int</span> err<span class="token punctuation">;</span>
+
+  <span class="token comment" spellcheck="true">/* 其实这个函数的内部主要做了以下操作：创建一个管道，并且将管道注册到loop->async_io_watcher，并且start */</span>
+  err <span class="token operator">=</span> <span class="token function">uv__async_start</span><span class="token punctuation">(</span>loop<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>err<span class="token punctuation">)</span>
+    <span class="token keyword">return</span> err<span class="token punctuation">;</span>
+
+  <span class="token comment" spellcheck="true">/* 设置UV_HANDLE_REF标记，并且将async handle 插入loop->handle_queue */</span>
+  <span class="token function">uv__handle_init</span><span class="token punctuation">(</span>loop<span class="token punctuation">,</span> <span class="token punctuation">(</span>uv_handle_t<span class="token operator">*</span><span class="token punctuation">)</span>handle<span class="token punctuation">,</span> UV_ASYNC<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token comment" spellcheck="true">/* 注册回调函数、将 pending 字段初始化为0 */</span>
+  handle<span class="token operator">-></span>async_cb <span class="token operator">=</span> async_cb<span class="token punctuation">;</span>
+  handle<span class="token operator">-></span>pending <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+
+  <span class="token comment" spellcheck="true">/* queue 作为队列节点插入 loop->async_handles */</span>
+  <span class="token function">QUEUE_INSERT_TAIL</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>loop<span class="token operator">-></span>async_handles<span class="token punctuation">,</span> <span class="token operator">&amp;</span>handle<span class="token operator">-></span>queue<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token function">uv__handle_start</span><span class="token punctuation">(</span>handle<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">static</span> <span class="token keyword">int</span> <span class="token function">uv__async_start</span><span class="token punctuation">(</span>uv_loop_t<span class="token operator">*</span> loop<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">int</span> pipefd<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+  <span class="token keyword">int</span> err<span class="token punctuation">;</span>
+
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>loop<span class="token operator">-></span>async_io_watcher<span class="token punctuation">.</span>fd <span class="token operator">!=</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span>
+    <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
+
+<span class="token comment" spellcheck="true">/* 创建管道 */</span>
+<span class="token macro property">#<span class="token directive keyword">ifdef</span> __linux__</span>
+  err <span class="token operator">=</span> <span class="token function">eventfd</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> EFD_CLOEXEC <span class="token operator">|</span> EFD_NONBLOCK<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>err <span class="token operator">&lt;</span> <span class="token number">0</span><span class="token punctuation">)</span>
+    <span class="token keyword">return</span> <span class="token function">UV__ERR</span><span class="token punctuation">(</span>errno<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  pipefd<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">=</span> err<span class="token punctuation">;</span>
+  pipefd<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">;</span>
+<span class="token macro property">#<span class="token directive keyword">else</span></span>
+  err <span class="token operator">=</span> <span class="token function">uv__make_pipe</span><span class="token punctuation">(</span>pipefd<span class="token punctuation">,</span> UV__F_NONBLOCK<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>err <span class="token operator">&lt;</span> <span class="token number">0</span><span class="token punctuation">)</span>
+    <span class="token keyword">return</span> err<span class="token punctuation">;</span>
+<span class="token macro property">#<span class="token directive keyword">endif</span></span>
+
+  <span class="token comment" spellcheck="true">/* 初始化并启动了 loop->async_io_watcher */</span>
+  <span class="token function">uv__io_init</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>loop<span class="token operator">-></span>async_io_watcher<span class="token punctuation">,</span> uv__async_io<span class="token punctuation">,</span> pipefd<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token function">uv__io_start</span><span class="token punctuation">(</span>loop<span class="token punctuation">,</span> <span class="token operator">&amp;</span>loop<span class="token operator">-></span>async_io_watcher<span class="token punctuation">,</span> POLLIN<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  loop<span class="token operator">-></span>async_wfd <span class="token operator">=</span> pipefd<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+
+  <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="uv-async-send"><a href="#uv-async-send" class="headerlink" title="uv_async_send()"></a>uv_async_send()</h2><p>函数原型：</p>
+<pre class="line-numbers language-c"><code class="language-c"><span class="token keyword">int</span> <span class="token function">uv_async_send</span><span class="token punctuation">(</span>uv_async_t<span class="token operator">*</span> handle<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>参数：</p>
+<ul>
+<li>handle：要唤醒指定的async handle。</li>
+</ul>
+<p>uv_async_send()函数发送消息唤醒事件循环线程并触发回调函数调用，其实我们不难想象出来，它的唤醒就是将消息写入管道中，让io观察者发现管道有数据从而唤醒事件循环线程，并随之处理这个async handle。</p>
+<p>其实真正的唤醒操作是uv__async_send()函数，它往管道中写入消息就行了。</p>
+<pre class="line-numbers language-c"><code class="language-c"><span class="token keyword">int</span> <span class="token function">uv_async_send</span><span class="token punctuation">(</span>uv_async_t<span class="token operator">*</span> handle<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+
+  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token function">ACCESS_ONCE</span><span class="token punctuation">(</span><span class="token keyword">int</span><span class="token punctuation">,</span> handle<span class="token operator">-></span>pending<span class="token punctuation">)</span> <span class="token operator">!=</span> <span class="token number">0</span><span class="token punctuation">)</span>
+    <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
+
+  <span class="token comment" spellcheck="true">/* 将handle->pending设置为1，表示此时有线程在操作这个async handle */</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token function">cmpxchgi</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>handle<span class="token operator">-></span>pending<span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token operator">!=</span> <span class="token number">0</span><span class="token punctuation">)</span>
+    <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
+
+  <span class="token comment" spellcheck="true">/* 唤醒事件循环线程 */</span>
+  <span class="token function">uv__async_send</span><span class="token punctuation">(</span>handle<span class="token operator">-></span>loop<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token comment" spellcheck="true">/* 操作完成 */</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token function">cmpxchgi</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>handle<span class="token operator">-></span>pending<span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span> <span class="token operator">!=</span> <span class="token number">1</span><span class="token punctuation">)</span>
+    <span class="token function">abort</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">uv__async_send</span><span class="token punctuation">(</span>uv_loop_t<span class="token operator">*</span> loop<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">const</span> <span class="token keyword">void</span><span class="token operator">*</span> buf<span class="token punctuation">;</span>
+  ssize_t len<span class="token punctuation">;</span>
+  <span class="token keyword">int</span> fd<span class="token punctuation">;</span>
+  <span class="token keyword">int</span> r<span class="token punctuation">;</span>
+
+  buf <span class="token operator">=</span> <span class="token string">""</span><span class="token punctuation">;</span>
+  len <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span>
+  fd <span class="token operator">=</span> loop<span class="token operator">-></span>async_wfd<span class="token punctuation">;</span>
+
+<span class="token macro property">#<span class="token directive keyword">if</span> defined(__linux__)</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>fd <span class="token operator">==</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">static</span> <span class="token keyword">const</span> uint64_t val <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span>
+    buf <span class="token operator">=</span> <span class="token operator">&amp;</span>val<span class="token punctuation">;</span>
+    len <span class="token operator">=</span> <span class="token keyword">sizeof</span><span class="token punctuation">(</span>val<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    fd <span class="token operator">=</span> loop<span class="token operator">-></span>async_io_watcher<span class="token punctuation">.</span>fd<span class="token punctuation">;</span>  <span class="token comment" spellcheck="true">/* eventfd */</span>
+  <span class="token punctuation">}</span>
+<span class="token macro property">#<span class="token directive keyword">endif</span></span>
+
+  <span class="token keyword">do</span>
+    r <span class="token operator">=</span> <span class="token function">write</span><span class="token punctuation">(</span>fd<span class="token punctuation">,</span> buf<span class="token punctuation">,</span> len<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">while</span> <span class="token punctuation">(</span>r <span class="token operator">==</span> <span class="token operator">-</span><span class="token number">1</span> <span class="token operator">&amp;&amp;</span> errno <span class="token operator">==</span> EINTR<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>r <span class="token operator">==</span> len<span class="token punctuation">)</span>
+    <span class="token keyword">return</span><span class="token punctuation">;</span>
+
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>r <span class="token operator">==</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>errno <span class="token operator">==</span> EAGAIN <span class="token operator">||</span> errno <span class="token operator">==</span> EWOULDBLOCK<span class="token punctuation">)</span>
+      <span class="token keyword">return</span><span class="token punctuation">;</span>
+
+  <span class="token function">abort</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h1 id="async的处理过程"><a href="#async的处理过程" class="headerlink" title="async的处理过程"></a>async的处理过程</h1><p>前面所介绍的都是初始化与通知的方式，那么在事件循环中怎么去处理async handle呢？</p>
+<p>我们注意到<code>uv_async_init()</code>函数可能多次被调用，初始化多个async handle，但是 loop-&gt;async_io_watcher 只有一个，那么问题来了，那么多个async handle都共用一个io观察者（假设loop是一个），那么在 loop-&gt;async_io_watcher 上有 I/O 事件时，并不知道是哪个 async handle 发送的，因此我们要知道async handle是如何处理这些的。</p>
+<p>我们也知道从uv__io_init()函数中已经注册了一个uv__async_io()函数用于处理loop-&gt;async_io_watcher 的 I/O 事件，那么我们就看uv__async_io()函数的处理过程即可：</p>
+<pre class="line-numbers language-js"><code class="language-js"><span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">uv__async_io</span><span class="token punctuation">(</span>uv_loop_t<span class="token operator">*</span> loop<span class="token punctuation">,</span> uv__io_t<span class="token operator">*</span> w<span class="token punctuation">,</span> unsigned int events<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  char buf<span class="token punctuation">[</span><span class="token number">1024</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+  ssize_t r<span class="token punctuation">;</span>
+  QUEUE queue<span class="token punctuation">;</span>
+  QUEUE<span class="token operator">*</span> q<span class="token punctuation">;</span>
+  uv_async_t<span class="token operator">*</span> h<span class="token punctuation">;</span>
+
+  <span class="token function">assert</span><span class="token punctuation">(</span>w <span class="token operator">==</span> <span class="token operator">&amp;</span>loop<span class="token operator">-</span><span class="token operator">></span>async_io_watcher<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token punctuation">;</span><span class="token punctuation">;</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+
+    <span class="token comment" spellcheck="true">/* 不断的读取 w->fd 上的数据到 buf 中直到为空，buf 中的数据无实际用途 */</span>
+    r <span class="token operator">=</span> <span class="token function">read</span><span class="token punctuation">(</span>w<span class="token operator">-</span><span class="token operator">></span>fd<span class="token punctuation">,</span> buf<span class="token punctuation">,</span> <span class="token function">sizeof</span><span class="token punctuation">(</span>buf<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>r <span class="token operator">==</span> <span class="token function">sizeof</span><span class="token punctuation">(</span>buf<span class="token punctuation">)</span><span class="token punctuation">)</span>
+      <span class="token keyword">continue</span><span class="token punctuation">;</span>
+
+    <span class="token comment" spellcheck="true">/* 读取到数据跳出循环 */</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>r <span class="token operator">!=</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span>
+      <span class="token keyword">break</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>errno <span class="token operator">==</span> EAGAIN <span class="token operator">||</span> errno <span class="token operator">==</span> EWOULDBLOCK<span class="token punctuation">)</span>
+      <span class="token keyword">break</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>errno <span class="token operator">==</span> EINTR<span class="token punctuation">)</span>
+      <span class="token keyword">continue</span><span class="token punctuation">;</span>
+
+    <span class="token function">abort</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token function">QUEUE_MOVE</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>loop<span class="token operator">-</span><span class="token operator">></span>async_handles<span class="token punctuation">,</span> <span class="token operator">&amp;</span>queue<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token comment" spellcheck="true">/* 遍历队列 */</span>
+  <span class="token keyword">while</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token function">QUEUE_EMPTY</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>queue<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    q <span class="token operator">=</span> <span class="token function">QUEUE_HEAD</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>queue<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token comment" spellcheck="true">/* 获取async handle */</span>
+    h <span class="token operator">=</span> <span class="token function">QUEUE_DATA</span><span class="token punctuation">(</span>q<span class="token punctuation">,</span> uv_async_t<span class="token punctuation">,</span> queue<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token function">QUEUE_REMOVE</span><span class="token punctuation">(</span>q<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token comment" spellcheck="true">/* 重新插入队列 */</span>
+    <span class="token function">QUEUE_INSERT_TAIL</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>loop<span class="token operator">-</span><span class="token operator">></span>async_handles<span class="token punctuation">,</span> q<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token number">0</span> <span class="token operator">==</span> <span class="token function">uv__async_spin</span><span class="token punctuation">(</span>h<span class="token punctuation">)</span><span class="token punctuation">)</span>
+      <span class="token keyword">continue</span><span class="token punctuation">;</span>  <span class="token comment" spellcheck="true">/* Not pending. */</span>
+
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>h<span class="token operator">-</span><span class="token operator">></span>async_cb <span class="token operator">==</span> NULL<span class="token punctuation">)</span>
+      <span class="token keyword">continue</span><span class="token punctuation">;</span>
+
+    <span class="token comment" spellcheck="true">/* 调用async 的回调函数 */</span>
+    h<span class="token operator">-</span><span class="token operator">></span><span class="token function">async_cb</span><span class="token punctuation">(</span>h<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h1 id="example"><a href="#example" class="headerlink" title="example"></a>example</h1><p>接着来一个例子吧，都是非常简单的，创建1个线程，在事件循环中等待async handle。</p>
 <pre class="line-numbers language-c"><code class="language-c"><span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">&lt;stdio.h></span></span>
-<span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">&lt;stdlib.h></span></span>
+<span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">&lt;unistd.h></span></span>
+
 <span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">&lt;uv.h></span></span>
+
+<span class="token keyword">void</span> <span class="token function">wake_entry</span><span class="token punctuation">(</span><span class="token keyword">void</span> <span class="token operator">*</span>arg<span class="token punctuation">)</span> 
+<span class="token punctuation">{</span>
+    <span class="token function">sleep</span><span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"wake_entry running, wake async!\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token function">uv_async_send</span><span class="token punctuation">(</span><span class="token punctuation">(</span>uv_async_t<span class="token operator">*</span><span class="token punctuation">)</span>arg<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token function">uv_stop</span><span class="token punctuation">(</span><span class="token function">uv_default_loop</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">void</span> <span class="token function">my_async_cb</span><span class="token punctuation">(</span>uv_async_t<span class="token operator">*</span> handle<span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"my async running!\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
 
 <span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span> 
 <span class="token punctuation">{</span>
-    <span class="token keyword">char</span> <span class="token operator">*</span>version<span class="token punctuation">;</span>
+    uv_thread_t wake<span class="token punctuation">;</span>
+    uv_async_t async<span class="token punctuation">;</span>
 
-    version <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token keyword">char</span><span class="token operator">*</span><span class="token punctuation">)</span> <span class="token function">uv_version_string</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">uv_async_init</span><span class="token punctuation">(</span><span class="token function">uv_default_loop</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token operator">&amp;</span>async<span class="token punctuation">,</span> my_async_cb<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-    <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"libuv version is %s\n"</span><span class="token punctuation">,</span> version<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">uv_thread_create</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>wake<span class="token punctuation">,</span> wake_entry<span class="token punctuation">,</span> <span class="token operator">&amp;</span>async<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token function">uv_run</span><span class="token punctuation">(</span><span class="token function">uv_default_loop</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> UV_RUN_DEFAULT<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token function">uv_thread_join</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>wake<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
     <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<p>编写Makefile，指定编译的规则并且编译它，需要注意的是需要指定链接libuv库<code>-luv</code>，这是动态链接的方式：</p>
-<pre class="line-numbers language-Makefile"><code class="language-Makefile">CC=gcc
-SRC = $(wildcard *.c */*.c)
-OBJS = $(patsubst %.c, %.o, $(SRC))
-DEP_FILES := $(patsubst %, .%.d,$(OBJS))
-DEP_FILES := $(wildcard $(DEP_FILES))
-FLAG = -g -Werror -I. -Iinclude -lpthread -luv
-TARGET = targets
-
-$(TARGET):$(OBJS)
-    $(CC) -o $@ $^ $(FLAG)
-
-ifneq ($(DEP_FILES),)
-include $(DEP_FILES)
-endif
-
-%.o:%.c
-    $(CC) -o $@ -c $(FLAG) $< -g -MD -MF .$@.d
-
-clean:
-    rm -rf $(TARGET) $(OBJS)
-
-distclean:
-    rm -rf $(DEP_FILES)
-
-.PHONY:clean<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<p>当编译完成后，可以看到产生的可执行文件，可以使用ldd命令去查看它的依赖，可以看到它依赖系统的<code>/usr/local/lib/libuv.so.1</code>：</p>
-<pre class="line-numbers language-bash"><code class="language-bash">➜  001 <span class="token function">make</span>
-gcc -o demo.o -c -g -Werror -I. -Iinclude -lpthread -luv demo.c -g -MD -MF .demo.o.d
-gcc -o targets demo.o -g -Werror -I. -Iinclude -lpthread -luv
-
-➜  001 <span class="token function">ls</span>
-demo.c  demo.o  Makefile  targets
-
-➜  001 ldd targets 
-        linux-vdso.so.1 <span class="token punctuation">(</span>0x00007fffa5bc6000<span class="token punctuation">)</span>
-        libuv.so.1 <span class="token operator">=</span><span class="token operator">></span> /usr/local/lib/libuv.so.1 <span class="token punctuation">(</span>0x00007f8346e7b000<span class="token punctuation">)</span>
-        libc.so.6 <span class="token operator">=</span><span class="token operator">></span> /lib/x86_64-linux-gnu/libc.so.6 <span class="token punctuation">(</span>0x00007f8346a8a000<span class="token punctuation">)</span>
-        librt.so.1 <span class="token operator">=</span><span class="token operator">></span> /lib/x86_64-linux-gnu/librt.so.1 <span class="token punctuation">(</span>0x00007f8346882000<span class="token punctuation">)</span>
-        libpthread.so.0 <span class="token operator">=</span><span class="token operator">></span> /lib/x86_64-linux-gnu/libpthread.so.0 <span class="token punctuation">(</span>0x00007f8346663000<span class="token punctuation">)</span>
-        libdl.so.2 <span class="token operator">=</span><span class="token operator">></span> /lib/x86_64-linux-gnu/libdl.so.2 <span class="token punctuation">(</span>0x00007f834645f000<span class="token punctuation">)</span>
-        /lib64/ld-linux-x86-64.so.2 <span class="token punctuation">(</span>0x00007f83472ac000<span class="token punctuation">)</span>
-➜  001 <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<p>运行：</p>
-<pre class="line-numbers language-bash"><code class="language-bash">./targets 
-
-libuv version is 1.36.0<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p><a href="https://libuv-docs-chinese.readthedocs.io/zh/latest/async.html" target="_blank" rel="noopener">libuv官方文档</a></p>
+<h1 id="例程代码获取"><a href="#例程代码获取" class="headerlink" title="例程代码获取"></a>例程代码获取</h1><p><a href="https://github.com/jiejieTop/libuv-learning-code" target="_blank" rel="noopener">libuv-learning-code</a></p>
 <script>
         document.querySelectorAll('.github-emoji')
           .forEach(el => {
@@ -846,7 +981,7 @@ libuv version is 1.36.0<span aria-hidden="true" class="line-numbers-rows"><span>
                     </span>
                     <a href="https://jiedev.com" class="b-link-green">杰杰的博客</a>
                     <i class="fa fa-angle-right fa-lg fa-fw text-color"></i>
-                    <a href="/libuv-1/" class="b-link-green">【libuv高效编程】libuv学习超详细教程1——libuv的编译与安装</a>
+                    <a href="/libuv-9/" class="b-link-green">【libuv高效编程】libuv学习超详细教程9——libuv async异步句柄解读</a>
                 </p>
             </div>
 
@@ -1127,17 +1262,18 @@ libuv version is 1.36.0<span aria-hidden="true" class="line-numbers-rows"><span>
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fa fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="fa fa-dot-circle-o"></i>&nbsp;本篇
+            </div>
             <div class="card">
-                <a href="/libuv-2/">
+                <a href="/libuv-9/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/7.jpg" class="responsive-img" alt="【libuv高效编程】libuv学习超详细教程2——libuv框架初窥">
+                        <img src="/medias/featureimages/0.jpg" class="responsive-img" alt="【libuv高效编程】libuv学习超详细教程9——libuv async异步句柄解读">
                         
-                        <span class="card-title">【libuv高效编程】libuv学习超详细教程2——libuv框架初窥</span>
+                        <span class="card-title">【libuv高效编程】libuv学习超详细教程9——libuv async异步句柄解读</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -1152,9 +1288,9 @@ libuv version is 1.36.0<span aria-hidden="true" class="line-numbers-rows"><span>
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="fa fa-clock-o fa-fw icon-date"></i>2020-04-18
-                        </span>
+                            <span class="publish-date">
+                                <i class="fa fa-clock-o fa-fw icon-date"></i>2020-04-23
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fa fa-bookmark fa-fw icon-category"></i>
@@ -1167,6 +1303,7 @@ libuv version is 1.36.0<span aria-hidden="true" class="line-numbers-rows"><span>
                         </span>
                     </div>
                 </div>
+
                 
                 <div class="card-action article-tags">
                     
@@ -1193,37 +1330,36 @@ libuv version is 1.36.0<span aria-hidden="true" class="line-numbers-rows"><span>
                 下一篇&nbsp;<i class="fa fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/ros-7/">
+                <a href="/libuv-8/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/8.jpg" class="responsive-img" alt="【ROS入门-7】ROS自定义消息">
+                        <img src="/medias/featureimages/0.jpg" class="responsive-img" alt="【libuv高效编程】libuv学习超详细教程8—— signal 信号句柄解读">
                         
-                        <span class="card-title">【ROS入门-7】ROS自定义消息</span>
+                        <span class="card-title">【libuv高效编程】libuv学习超详细教程8—— signal 信号句柄解读</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            引言这篇文章讲解我们自己按需定义消息。
-ROS系列文章
-【ROS入门-1】手把手教你在Ubuntu18.04安装ROS Melodic
+                            libuv系列文章
+【libuv高效编程】libuv学习超详细教程1——libuv的编译与安装
 
-【ROS入门-2】带你看ROS文件系统及其工具
+【libuv高效编程】libuv学习超详细教程2——libuv框架初窥
 
-【ROS入门-3】嘴对嘴讲解ROS的核心概念——节点
+【libuv高效编程】libuv学习超详细教程3——libuv事件循
                         
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="fa fa-clock-o fa-fw icon-date"></i>2020-04-10
+                                <i class="fa fa-clock-o fa-fw icon-date"></i>2020-04-22
                             </span>
                         <span class="publish-author">
                             
                             <i class="fa fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/ROS/" class="post-category" target="_blank">
-                                    ROS
+                            <a href="/categories/网络/" class="post-category" target="_blank">
+                                    网络
                                 </a>
                             
                             
@@ -1233,12 +1369,16 @@ ROS系列文章
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/ROS/" target="_blank">
-                        <span class="chip bg-color">ROS</span>
+                    <a href="/tags/libuv/" target="_blank">
+                        <span class="chip bg-color">libuv</span>
                     </a>
                     
-                    <a href="/tags/机器人操作系统/" target="_blank">
-                        <span class="chip bg-color">机器人操作系统</span>
+                    <a href="/tags/网络/" target="_blank">
+                        <span class="chip bg-color">网络</span>
+                    </a>
+                    
+                    <a href="/tags/Linux/" target="_blank">
+                        <span class="chip bg-color">Linux</span>
                     </a>
                     
                 </div>
