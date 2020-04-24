@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://jiedev.com/"/>
-  <updated>2020-04-24T11:41:26.847Z</updated>
+  <updated>2020-04-24T16:00:56.197Z</updated>
   <id>https://jiedev.com/</id>
   
   <author>
@@ -20,8 +20,8 @@
     <title>【libuv高效编程】libuv学习超详细教程9——libuv async异步句柄解读</title>
     <link href="https://jiedev.com/libuv-9/"/>
     <id>https://jiedev.com/libuv-9/</id>
-    <published>2020-04-23T07:16:07.000Z</published>
-    <updated>2020-04-24T11:41:26.847Z</updated>
+    <published>2020-04-23T11:16:05.000Z</published>
+    <updated>2020-04-24T16:00:56.197Z</updated>
     
     <summary type="html">
     
@@ -51,8 +51,8 @@
     <title>【libuv高效编程】libuv学习超详细教程8—— signal 信号句柄解读</title>
     <link href="https://jiedev.com/libuv-8/"/>
     <id>https://jiedev.com/libuv-8/</id>
-    <published>2020-04-22T07:16:07.000Z</published>
-    <updated>2020-04-24T11:41:37.930Z</updated>
+    <published>2020-04-22T11:16:01.000Z</published>
+    <updated>2020-04-24T16:02:38.417Z</updated>
     
     <summary type="html">
     
@@ -82,8 +82,8 @@
     <title>【libuv高效编程】libuv学习超详细教程7——libuv线程解读</title>
     <link href="https://jiedev.com/libuv-7/"/>
     <id>https://jiedev.com/libuv-7/</id>
-    <published>2020-04-21T07:16:07.000Z</published>
-    <updated>2020-04-24T11:41:45.592Z</updated>
+    <published>2020-04-21T08:18:17.000Z</published>
+    <updated>2020-04-24T16:02:44.495Z</updated>
     
     <summary type="html">
     
@@ -113,8 +113,8 @@
     <title>【libuv高效编程】libuv学习超详细教程6——check handle解读</title>
     <link href="https://jiedev.com/libuv-6/"/>
     <id>https://jiedev.com/libuv-6/</id>
-    <published>2020-04-21T07:15:07.000Z</published>
-    <updated>2020-04-24T11:41:50.688Z</updated>
+    <published>2020-04-20T08:15:08.000Z</published>
+    <updated>2020-04-24T16:02:49.555Z</updated>
     
     <summary type="html">
     
@@ -144,8 +144,8 @@
     <title>【libuv高效编程】libuv学习超详细教程5——prepare handle解读</title>
     <link href="https://jiedev.com/libuv-5/"/>
     <id>https://jiedev.com/libuv-5/</id>
-    <published>2020-04-21T07:14:07.000Z</published>
-    <updated>2020-04-24T11:41:58.863Z</updated>
+    <published>2020-04-19T07:14:27.000Z</published>
+    <updated>2020-04-24T16:02:57.212Z</updated>
     
     <summary type="html">
     
@@ -175,8 +175,8 @@
     <title>【libuv高效编程】libuv学习超详细教程4——idle handle解读</title>
     <link href="https://jiedev.com/libuv-4/"/>
     <id>https://jiedev.com/libuv-4/</id>
-    <published>2020-04-21T07:13:07.000Z</published>
-    <updated>2020-04-24T11:42:04.932Z</updated>
+    <published>2020-04-18T07:13:17.000Z</published>
+    <updated>2020-04-24T16:03:02.596Z</updated>
     
     <summary type="html">
     
@@ -206,8 +206,8 @@
     <title>【libuv高效编程】libuv学习超详细教程3——libuv事件循环</title>
     <link href="https://jiedev.com/libuv-3/"/>
     <id>https://jiedev.com/libuv-3/</id>
-    <published>2020-04-19T07:13:07.000Z</published>
-    <updated>2020-04-24T11:42:13.278Z</updated>
+    <published>2020-04-17T07:13:13.000Z</published>
+    <updated>2020-04-24T16:03:09.622Z</updated>
     
     <summary type="html">
     
@@ -237,8 +237,8 @@
     <title>【libuv高效编程】libuv学习超详细教程2——libuv框架初窥</title>
     <link href="https://jiedev.com/libuv-2/"/>
     <id>https://jiedev.com/libuv-2/</id>
-    <published>2020-04-18T07:13:07.000Z</published>
-    <updated>2020-04-24T11:42:19.213Z</updated>
+    <published>2020-04-16T07:13:05.000Z</published>
+    <updated>2020-04-24T16:03:14.451Z</updated>
     
     <summary type="html">
     
@@ -268,8 +268,8 @@
     <title>【libuv高效编程】libuv学习超详细教程1——libuv的编译与安装</title>
     <link href="https://jiedev.com/libuv-1/"/>
     <id>https://jiedev.com/libuv-1/</id>
-    <published>2020-04-17T07:13:07.000Z</published>
-    <updated>2020-04-24T11:42:25.446Z</updated>
+    <published>2020-04-15T07:13:07.000Z</published>
+    <updated>2020-04-24T16:03:19.435Z</updated>
     
     <summary type="html">
     
