@@ -1,0 +1,1968 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+<!-- jiejie 杰杰  modify 2019.08.15-->
+
+
+
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="utf-8">
+    <meta name="keywords" content="【libuv高效编程】libuv学习超详细教程10 —— libuv stream 流句柄解读, IoT RTOS linux Python jiejie Dora">
+    <meta name="baidu-site-verification" content="TRUUhavuHV">
+    <meta name="google-site-verification" content="v-saR33QlUQmwVrLI7AQd08em9BtdazPy5jvPouEYHg">
+    <meta name="description" content="libuv系列文章
+【libuv高效编程】libuv学习超详细教程1——libuv的编译与安装
+
+【libuv高效编程】libuv学习超详细教程2——libuv框架初窥
+
+【libuv高效编程】libuv学习超详细教程3——libuv事件循">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="renderer" content="webkit|ie-stand|ie-comp">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>【libuv高效编程】libuv学习超详细教程10 —— libuv stream 流句柄解读 | 杰杰的博客</title>
+    <link rel="icon" type="image/x-icon, image/vnd.microsoft.icon" href="/medias/logo/favicon.ico">
+
+    <link rel="stylesheet" type="text/css" href="/libs/awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="/libs/materialize/materialize.min.css">
+    <link rel="stylesheet" type="text/css" href="/libs/aos/aos.css">
+    <link rel="stylesheet" type="text/css" href="/libs/animate/animate.min.css">
+    <link rel="stylesheet" type="text/css" href="/libs/lightGallery/css/lightgallery.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/matery.css">
+    <link rel="stylesheet" type="text/css" href="/css/my.css">
+
+    <meta name="360-site-verification" content="d280ce782ae1e8d546343da41182687d">
+
+    <style type="text/css">
+        
+            
+            code[class*="language-"],
+            pre[class*="language-"] {
+                white-space: pre !important;
+            }
+
+        
+    </style>
+
+    <script src="/libs/jquery/jquery-2.2.0.min.js"></script>
+    <script src="https://sdk.jinrishici.com/v2/browser/jinrishici.js" charset="utf-8"></script>
+    
+    <script>
+        var _hmt = _hmt || [];
+        (function () {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?46e79e71af0709a5b9106bf20cecc493";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+
+    <script>
+        (function(){
+        var src = "https://jspassport.ssl.qhimg.com/11.0.1.js?d182b3f28525f2db83acfaaf6e696dba";
+        document.write('<script src="' + src + '" id="sozz"><\/script>');
+        })();
+    </script>
+
+    
+    
+        <script>
+            (function(){
+                var bp = document.createElement('script');
+                var curProtocol = window.location.protocol.split(':')[0];
+                if (curProtocol === 'https') {
+                    bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+                }
+                else {
+                    bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+                }
+                var s = document.getElementsByTagName("script")[0];
+                s.parentNode.insertBefore(bp, s);
+            })();
+        </script>
+    
+
+<link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
+
+<body>
+
+    <header class="navbar-fixed">
+    <nav id="headNav" class="bg-color nav-transparent">
+        <div id="navContainer" class="nav-wrapper container">
+            <div class="brand-logo">
+                <a href="/" class="waves-effect waves-light">
+                    
+                    <img src="/medias/logo/logo.ico" class="logo-img" alt="LOGO">
+                    
+                    <span class="logo-span">杰杰的博客</span>
+                </a>
+            </div>
+            <!-- jiejie 杰杰  modify 2019.08.15-->
+
+
+
+<a href="#" data-target="mobile-nav" class="sidenav-trigger button-collapse"><i class="fa fa-navicon"></i></a>
+<ul class="right">
+    
+    <li class="hide-on-med-and-down">
+        <a href="/" class="waves-effect waves-light">
+            
+            <i class="fa fa-home"></i>
+            
+            <span>首页</span>
+        </a>
+    </li>
+    
+    <li class="hide-on-med-and-down">
+        <a href="/tags" class="waves-effect waves-light">
+            
+            <i class="fa fa-tags"></i>
+            
+            <span>标签</span>
+        </a>
+    </li>
+    
+    <li class="hide-on-med-and-down">
+        <a href="/categories" class="waves-effect waves-light">
+            
+            <i class="fa fa-bookmark"></i>
+            
+            <span>分类</span>
+        </a>
+    </li>
+    
+    <li class="hide-on-med-and-down">
+        <a href="/archives" class="waves-effect waves-light">
+            
+            <i class="fa fa-archive"></i>
+            
+            <span>归档</span>
+        </a>
+    </li>
+    
+    <li class="hide-on-med-and-down">
+        <a href="/AV" class="waves-effect waves-light">
+            
+            <i class="fa fa-music"></i>
+            
+            <span>娱乐</span>
+        </a>
+    </li>
+    
+    <li class="hide-on-med-and-down">
+        <a href="/about" class="waves-effect waves-light">
+            
+            <i class="fa fa-user-circle-o"></i>
+            
+            <span>关于我</span>
+        </a>
+    </li>
+    
+    <li class="hide-on-med-and-down">
+        <a href="/contact" class="waves-effect waves-light">
+            
+            <i class="fa fa-envelope"></i>
+            
+            <span>留言板</span>
+        </a>
+    </li>
+    
+    <li class="hide-on-med-and-down">
+        <a href="/friends" class="waves-effect waves-light">
+            
+            <i class="fa fa-address-book"></i>
+            
+            <span>友情链接</span>
+        </a>
+    </li>
+    
+    <li>
+        <a href="#searchModal" class="modal-trigger waves-effect waves-light">
+            <i id="searchIcon" class="fa fa-search" title="搜索"></i>
+        </a>
+    </li>
+</ul>
+
+<!-- jiejie 杰杰  modify 2019.08.15-->
+
+<div id="mobile-nav" class="side-nav sidenav">
+
+    <div class="mobile-head bg-color">
+        
+        <img src="/medias/logo/logo.ico" class="logo-img circle responsive-img">
+        <!-- jiejie 杰杰  modify 2019.08.15-->
+        <div class="logo-name">杰杰的博客</div>
+        <div class="logo-desc">
+            
+            物联网 | linux | 操作系统
+            
+        </div>
+    </div>
+
+    
+
+    <ul class="menu-list mobile-menu-list">
+        
+        <li>
+            <a href="/" class="waves-effect waves-light">
+                
+                <i class="fa fa-fw fa-home"></i>
+                
+                首页
+            </a>
+        </li>
+        
+        <li>
+            <a href="/tags" class="waves-effect waves-light">
+                
+                <i class="fa fa-fw fa-tags"></i>
+                
+                标签
+            </a>
+        </li>
+        
+        <li>
+            <a href="/categories" class="waves-effect waves-light">
+                
+                <i class="fa fa-fw fa-bookmark"></i>
+                
+                分类
+            </a>
+        </li>
+        
+        <li>
+            <a href="/archives" class="waves-effect waves-light">
+                
+                <i class="fa fa-fw fa-archive"></i>
+                
+                归档
+            </a>
+        </li>
+        
+        <li>
+            <a href="/AV" class="waves-effect waves-light">
+                
+                <i class="fa fa-fw fa-music"></i>
+                
+                娱乐
+            </a>
+        </li>
+        
+        <li>
+            <a href="/about" class="waves-effect waves-light">
+                
+                <i class="fa fa-fw fa-user-circle-o"></i>
+                
+                关于我
+            </a>
+        </li>
+        
+        <li>
+            <a href="/contact" class="waves-effect waves-light">
+                
+                <i class="fa fa-fw fa-envelope"></i>
+                
+                留言板
+            </a>
+        </li>
+        
+        <li>
+            <a href="/friends" class="waves-effect waves-light">
+                
+                <i class="fa fa-fw fa-address-book"></i>
+                
+                友情链接
+            </a>
+        </li>
+        
+        
+        <li><div class="divider"></div></li>
+        <li>
+            <a href="https://github.com/jiejietop" class="waves-effect waves-light" target="_blank">
+                <i class="fa fa-github-square fa-fw"></i>Fork Me
+            </a>
+        </li>
+        
+    </ul>
+</div>
+
+        </div>
+
+        
+            <style>
+    .nav-transparent .github-corner {
+        display: none !important;
+    }
+
+    .github-corner {
+        position: absolute;
+        z-index: 10;
+        top: 0;
+        right: 0;
+        border: 0;
+        transform: scale(1.1);
+    }
+
+    .github-corner svg {
+        color: #0f9d58;
+        fill: #fff;
+        height: 64px;
+        width: 64px;
+    }
+
+    .github-corner:hover .octo-arm {
+        animation: a 0.56s ease-in-out;
+    }
+
+    .github-corner .octo-arm {
+        animation: none;
+    }
+
+    @keyframes a {
+        0%,
+        to {
+            transform: rotate(0);
+        }
+        20%,
+        60% {
+            transform: rotate(-25deg);
+        }
+        40%,
+        80% {
+            transform: rotate(10deg);
+        }
+    }
+</style>
+
+<a href="https://github.com/jiejietop" class="github-corner tooltipped hide-on-med-and-down" target="_blank"
+   data-tooltip="Fork Me" data-position="left" data-delay="50">
+    <svg viewBox="0 0 250 250" aria-hidden="true">
+        <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path>
+        <path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2"
+              fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path>
+        <path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z"
+              fill="currentColor" class="octo-body"></path>
+    </svg>
+</a>
+        
+    </nav>
+
+</header>
+
+    
+<script src="/libs/cryptojs/crypto-js.min.js"></script>
+<script>
+    (function() {
+        let pwd = '';
+        if (pwd && pwd.length > 0) {
+            if (pwd !== CryptoJS.SHA256(prompt('请输入访问本文章的密码')).toString(CryptoJS.enc.Hex)) {
+                alert('密码错误，将返回主页！');
+                location.href = '/';
+            }
+        }
+    })();
+</script>
+
+
+
+
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/2.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col s12 m12 l12">
+                <div class="brand">
+                    <div class="description center-align post-title">
+                        【libuv高效编程】libuv学习超详细教程10 —— libuv stream 流句柄解读
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<main class="post-container content">
+
+    
+    <link rel="stylesheet" href="/libs/tocbot/tocbot.css">
+<style>
+    #articleContent h1::before,
+    #articleContent h2::before,
+    #articleContent h3::before,
+    #articleContent h4::before,
+    #articleContent h5::before,
+    #articleContent h6::before {
+        display: block;
+        content: " ";
+        height: 100px;
+        margin-top: -100px;
+        visibility: hidden;
+    }
+
+    #articleContent :focus {
+        outline: none;
+    }
+
+    .toc-fixed {
+        position: fixed;
+        top: 64px;
+    }
+
+    .toc-widget {
+        padding-left: 20px;
+    }
+
+    .toc-widget .toc-title {
+        margin: 35px 0 15px 0;
+        padding-left: 17px;
+        font-size: 1.5rem;
+        font-weight: bold;
+        line-height: 1.5rem;
+    }
+
+    .toc-widget ol {
+        padding: 0;
+        list-style: none;
+    }
+
+    #toc-content ol {
+        padding-left: 10px;
+    }
+
+    #toc-content ol li {
+        padding-left: 10px;
+    }
+
+    #toc-content .toc-link:hover {
+        color: #42b983;
+        font-weight: 700;
+        text-decoration: underline;
+    }
+
+    #toc-content .toc-link::before {
+        background-color: transparent;
+        max-height: 25px;
+    }
+
+    #toc-content .is-active-link {
+        color: #42b983;
+    }
+
+    #toc-content .is-active-link::before {
+        background-color: #42b983;
+    }
+
+    #floating-toc-btn {
+        position: fixed;
+        right: 20px;
+        bottom: 76px;
+        padding-top: 15px;
+        margin-bottom: 0;
+        z-index: 998;
+    }
+
+    #floating-toc-btn .btn-floating {
+        width: 48px;
+        height: 48px;
+    }
+
+    #floating-toc-btn .btn-floating i {
+        line-height: 48px;
+        font-size: 1.4rem;
+    }
+</style>
+<div class="row">
+    <div id="main-content" class="col s12 m12 l9">
+        <!-- jiejie 杰杰  modify 2019.08.15-->
+<!-- 文章内容详情 -->
+<div id="artDetail">
+    <div class="card">
+        <div class="card-content article-info">
+            <div class="row tag-cate">
+                <div class="col s7">
+                    
+                    <div class="article-tag">
+                        
+                            <a href="/tags/libuv/" target="_blank">
+                                <span class="chip bg-color">libuv</span>
+                            </a>
+                        
+                            <a href="/tags/网络/" target="_blank">
+                                <span class="chip bg-color">网络</span>
+                            </a>
+                        
+                            <a href="/tags/Linux/" target="_blank">
+                                <span class="chip bg-color">Linux</span>
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+                <div class="col s5 right-align">
+                    
+                    <div class="post-cate">
+                        <i class="fa fa-bookmark fa-fw icon-category"></i>
+                        
+                            <a href="/categories/网络/" class="post-category" target="_blank">
+                                网络
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+            
+            <div class="post-info">
+                <div class="post-date info-break-policy">
+                    <i class="fa fa-calendar-minus-o fa-fw"></i>发布日期:&nbsp;&nbsp;
+                    2020-04-24
+                </div>
+
+                <div class="post-author info-break-policy">
+                    <i class="fa fa-user-o fa-fw"></i>作者:&nbsp;&nbsp;
+                    
+                        杰杰
+                    
+                </div>
+
+                
+                    
+                    <div class="info-break-policy">
+                        <i class="fa fa-file-word-o fa-fw"></i>文章字数:&nbsp;&nbsp;
+                        3.3k
+                    </div>
+                    
+
+                    
+                    <div class="info-break-policy">
+                        <i class="fa fa-clock-o fa-fw"></i>阅读时长:&nbsp;&nbsp;
+                        14 分
+                    </div>
+                    
+                
+                
+                
+                        <span id="busuanzi_container_site_pv" style='display:none'></span>
+                        <i class="fa fa-eye fa-fw"></i>阅读次数:&nbsp;&nbsp;
+                        <span id="busuanzi_value_page_pv" ></span>
+    
+                
+
+            </div>
+        </div>
+        <hr class="clearfix">
+        <div class="card-content article-card-content">
+            <div id="articleContent">
+                <h1 id="libuv系列文章"><a href="#libuv系列文章" class="headerlink" title="libuv系列文章"></a>libuv系列文章</h1><ul>
+<li><p><a href="https://jiedev.com/libuv-1/">【libuv高效编程】libuv学习超详细教程1——libuv的编译与安装</a></p>
+</li>
+<li><p><a href="https://jiedev.com/libuv-2/">【libuv高效编程】libuv学习超详细教程2——libuv框架初窥</a></p>
+</li>
+<li><p><a href="https://jiedev.com/libuv-3/">【libuv高效编程】libuv学习超详细教程3——libuv事件循环</a></p>
+</li>
+<li><p><a href="https://jiedev.com/libuv-4/">【libuv高效编程】libuv学习超详细教程4——libuv idle 空闲句柄解读</a></p>
+</li>
+<li><p><a href="https://jiedev.com/libuv-5/">【libuv高效编程】libuv学习超详细教程5——libuv prepare 准备句柄解读</a></p>
+</li>
+<li><p><a href="https://jiedev.com/libuv-6/">【libuv高效编程】libuv学习超详细教程6——libuv check 检查句柄解读</a></p>
+</li>
+<li><p><a href="https://jiedev.com/libuv-7/">【libuv高效编程】libuv学习超详细教程7——libuv thread 线程句柄解读</a></p>
+</li>
+<li><p><a href="https://jiedev.com/libuv-8/">【libuv高效编程】libuv学习超详细教程8——libuv signal 信号句柄解读</a></p>
+</li>
+<li><p><a href="https://jiedev.com/libuv-9/">【libuv高效编程】libuv学习超详细教程9——libuv async异步句柄解读</a></p>
+</li>
+<li><p><a href="https://jiedev.com/libuv-10/">【libuv高效编程】libuv学习超详细教程10 —— libuv stream 流句柄解读</a></p>
+</li>
+</ul>
+<h1 id="stream-handle"><a href="#stream-handle" class="headerlink" title="stream handle"></a>stream handle</h1><p><code>stream handle</code>可以被译为流句柄，它在 <code>libuv</code> 中是一个抽象的数据类型，为 <code>libuv</code> 提供了全双工的通信方式，可以说它只是一个父类，通过它派生出 <code>uv_tcp_t、uv_pipe_t、uv_tty_t</code> 这 3 个子类，在这些<code>handle</code>中，都使用了<code>stream handle</code> 的成员变量及处理方法。</p>
+<h1 id="数据结构"><a href="#数据结构" class="headerlink" title="数据结构"></a>数据结构</h1><p>通过 uv_stream_t 可以定义一个 <code>stream handle</code>的实例。</p>
+<pre class="line-numbers language-c"><code class="language-c"><span class="token keyword">typedef</span> <span class="token keyword">struct</span> uv_stream_s uv_stream_t<span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<pre class="line-numbers language-c"><code class="language-c"><span class="token keyword">struct</span> uv_stream_s <span class="token punctuation">{</span>
+  UV_HANDLE_FIELDS
+  UV_STREAM_FIELDS
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+<span class="token macro property">#<span class="token directive keyword">define</span> UV_STREAM_FIELDS                                                      \
+  </span><span class="token comment" spellcheck="true">/* 等待写的字节数 */</span>                                                        \
+  size_t write_queue_size<span class="token punctuation">;</span>                                                    \
+  <span class="token comment" spellcheck="true">/* 分配内存的函数 */</span>                                                        \
+  uv_alloc_cb alloc_cb<span class="token punctuation">;</span>                                                       \
+  <span class="token comment" spellcheck="true">/* 读取完成时候执行的回调函数 */</span>                                            \
+  uv_read_cb read_cb<span class="token punctuation">;</span>                                                         \
+  <span class="token comment" spellcheck="true">/* private */</span>                                                               \
+  UV_STREAM_PRIVATE_FIELDS<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>其实 <code>stream handle</code> 是属于<code>handle</code>的子类，因此它的数据结构中包含了handle的成员变量，还包含它自身的一个成员变量 <code>UV_STREAM_FIELDS</code> ，它分为公有字段与私有字段，公有字段只有 <code>write_queue_size、 alloc_cb 、 read_cb</code>，私有字段就是 <code>UV_STREAM_PRIVATE_FIELDS</code> ，它是分为<code>Windows</code>平台与<code>linux</code>平台的，此处以linux为例。</p>
+<pre class="line-numbers language-c"><code class="language-c"><span class="token macro property">#<span class="token directive keyword">define</span> UV_STREAM_PRIVATE_FIELDS                                              \
+  uv_connect_t *connect_req;                                                  \
+  uv_shutdown_t *shutdown_req;                                                \
+  uv__io_t io_watcher;                                                        \
+  void* write_queue[2];                                                       \
+  void* write_completed_queue[2];                                             \
+  uv_connection_cb connection_cb;                                             \
+  int delayed_error;                                                          \
+  int accepted_fd;                                                            \
+  void* queued_fds;                                                           \
+  UV_STREAM_PRIVATE_PLATFORM_FIELDS                                           </span>\<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<ul>
+<li><p>connect_req：其实 <code>uv_connect_t</code> 是一个请求，从前面的文章我们也知道，在<code>libuv</code>存在 <code>handle</code> 与 <code>request</code>，很明显<code>connect_req</code>就是一个请求，它的作用就是请求建立连接，比如类似建立tcp连接。</p>
+</li>
+<li><p>shutdown_req：<code>uv_shutdown_t</code>也是一个请求，它的作用与<code>uv_connect_t</code>刚好相反，关闭一个连接。</p>
+</li>
+<li><p>io_watcher：抽象出来的<code>io观察者</code>。</p>
+</li>
+<li><p>write_queue：写数据队列。</p>
+</li>
+<li><p>write_completed_queue：完成的写数据队列。</p>
+</li>
+<li><p>connection_cb：有新连接时的回调函数。</p>
+</li>
+<li><p>delayed_error：延时的错误代码。</p>
+</li>
+<li><p>accepted_fd：接受连接的描述符 <code>fd</code>。</p>
+</li>
+<li><p>queued_fds：<code>fd</code> 队列，可能有多个<code>fd</code>在排队。</p>
+</li>
+<li><p>UV_STREAM_PRIVATE_PLATFORM_FIELDS：目前为空。</p>
+</li>
+</ul>
+<p>其实现在不太了解无所谓，就先看下去，我在写文章的时候其实也没有完全理解透彻。</p>
+<p>总结一下它的框架示意图，如下：</p>
+<p><img src="./images/loading.png" data-original="http://qiniu.jiejie01.top/libuv007.png" alt="libuv007"></p>
+<h1 id="内部API"><a href="#内部API" class="headerlink" title="内部API"></a>内部API</h1><p><code>stream handle</code>其实并未提供用户的<code>API</code>接口，但提供了内部的<code>API</code>接口，供子类使用，比如在创建一个<code>tcp</code>的时候，就会通过<code>uv__stream_init()</code>函数去初始化一个 <code>stream handle</code>，又比如在读写流操作的时候肯定是通过<code>stream handle</code>去操作的，因此它又需要实现内部的读写操作接口，相关的函数如下:</p>
+<pre class="line-numbers language-c"><code class="language-c"><span class="token keyword">void</span> <span class="token function">uv__stream_init</span><span class="token punctuation">(</span>uv_loop_t<span class="token operator">*</span> loop<span class="token punctuation">,</span>
+                     uv_stream_t<span class="token operator">*</span> stream<span class="token punctuation">,</span>
+                     uv_handle_type type<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">uv__stream_connect</span><span class="token punctuation">(</span>uv_stream_t<span class="token operator">*</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">uv__write</span><span class="token punctuation">(</span>uv_stream_t<span class="token operator">*</span> stream<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">uv__read</span><span class="token punctuation">(</span>uv_stream_t<span class="token operator">*</span> stream<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">uv__stream_io</span><span class="token punctuation">(</span>uv_loop_t<span class="token operator">*</span> loop<span class="token punctuation">,</span> uv__io_t<span class="token operator">*</span> w<span class="token punctuation">,</span> <span class="token keyword">unsigned</span> <span class="token keyword">int</span> events<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">uv__write_callbacks</span><span class="token punctuation">(</span>uv_stream_t<span class="token operator">*</span> stream<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">static</span> size_t <span class="token function">uv__write_req_size</span><span class="token punctuation">(</span>uv_write_t<span class="token operator">*</span> req<span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="uv-stream-init"><a href="#uv-stream-init" class="headerlink" title="uv__stream_init()"></a>uv__stream_init()</h2><p>初始化一个<code>stream handle</code>，设置</p>
+<p>函数原型：</p>
+<pre class="line-numbers language-c"><code class="language-c"><span class="token keyword">void</span> <span class="token function">uv__stream_init</span><span class="token punctuation">(</span>uv_loop_t<span class="token operator">*</span> loop<span class="token punctuation">,</span>
+                     uv_stream_t<span class="token operator">*</span> stream<span class="token punctuation">,</span>
+                     uv_handle_type type<span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p>参数：</p>
+<ul>
+<li>loop：传入了事件循环的句柄。</li>
+<li>stream：指定初始化的<code>stream handle</code>。</li>
+<li>type：指定<code>stream handle</code>的类型，注意看它的类型参数是<code>handle</code>类型的，而<code>handle</code>类型有很多，但是对与这个<code>stream handle</code>来说可选的值基本上只有<code>UV_TCP、UV_TTY、UV_PIPE</code>。</li>
+</ul>
+<p>源码的实现：</p>
+<pre class="line-numbers language-c"><code class="language-c"><span class="token keyword">void</span> <span class="token function">uv__stream_init</span><span class="token punctuation">(</span>uv_loop_t<span class="token operator">*</span> loop<span class="token punctuation">,</span>
+                     uv_stream_t<span class="token operator">*</span> stream<span class="token punctuation">,</span>
+                     uv_handle_type type<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">int</span> err<span class="token punctuation">;</span>
+
+  <span class="token function">uv__handle_init</span><span class="token punctuation">(</span>loop<span class="token punctuation">,</span> <span class="token punctuation">(</span>uv_handle_t<span class="token operator">*</span><span class="token punctuation">)</span>stream<span class="token punctuation">,</span> type<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  stream<span class="token operator">-></span>read_cb <span class="token operator">=</span> <span class="token constant">NULL</span><span class="token punctuation">;</span>
+  stream<span class="token operator">-></span>alloc_cb <span class="token operator">=</span> <span class="token constant">NULL</span><span class="token punctuation">;</span>
+  stream<span class="token operator">-></span>close_cb <span class="token operator">=</span> <span class="token constant">NULL</span><span class="token punctuation">;</span>
+  stream<span class="token operator">-></span>connection_cb <span class="token operator">=</span> <span class="token constant">NULL</span><span class="token punctuation">;</span>
+  stream<span class="token operator">-></span>connect_req <span class="token operator">=</span> <span class="token constant">NULL</span><span class="token punctuation">;</span>
+  stream<span class="token operator">-></span>shutdown_req <span class="token operator">=</span> <span class="token constant">NULL</span><span class="token punctuation">;</span>
+  stream<span class="token operator">-></span>accepted_fd <span class="token operator">=</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">;</span>
+  stream<span class="token operator">-></span>queued_fds <span class="token operator">=</span> <span class="token constant">NULL</span><span class="token punctuation">;</span>
+  stream<span class="token operator">-></span>delayed_error <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+  <span class="token function">QUEUE_INIT</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>stream<span class="token operator">-></span>write_queue<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token function">QUEUE_INIT</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>stream<span class="token operator">-></span>write_completed_queue<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  stream<span class="token operator">-></span>write_queue_size <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>loop<span class="token operator">-></span>emfile_fd <span class="token operator">==</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    err <span class="token operator">=</span> <span class="token function">uv__open_cloexec</span><span class="token punctuation">(</span><span class="token string">"/dev/null"</span><span class="token punctuation">,</span> O_RDONLY<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>err <span class="token operator">&lt;</span> <span class="token number">0</span><span class="token punctuation">)</span>
+        <span class="token comment" spellcheck="true">/* In the rare case that "/dev/null" isn't mounted open "/"
+         * instead.
+         */</span>
+        err <span class="token operator">=</span> <span class="token function">uv__open_cloexec</span><span class="token punctuation">(</span><span class="token string">"/"</span><span class="token punctuation">,</span> O_RDONLY<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>err <span class="token operator">>=</span> <span class="token number">0</span><span class="token punctuation">)</span>
+      loop<span class="token operator">-></span>emfile_fd <span class="token operator">=</span> err<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+<span class="token macro property">#<span class="token directive keyword">if</span> defined(__APPLE__)</span>
+  stream<span class="token operator">-></span>select <span class="token operator">=</span> <span class="token constant">NULL</span><span class="token punctuation">;</span>
+<span class="token macro property">#<span class="token directive keyword">endif</span> </span><span class="token comment" spellcheck="true">/* defined(__APPLE_) */</span>
+
+  <span class="token function">uv__io_init</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>stream<span class="token operator">-></span>io_watcher<span class="token punctuation">,</span> uv__stream_io<span class="token punctuation">,</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>说说处理的逻辑：</p>
+<ol>
+<li><p>调用<code>uv__handle_init()</code>函数将<code>stream handle</code>初始化，主要设置<code>loop</code>、<code>类型</code>、以及<code>UV_HANDLE_REF</code>标记。</p>
+</li>
+<li><p>初始化<code>stream handle</code>中的成员变量。</p>
+</li>
+<li><p>初始化<code>write_queue</code>与<code>write_completed_queue</code>队列，可能有人有疑问了，为啥要写队列还要 写完成 两个队列，因为啊libuv是为了实现异步，写操作为了实现异步非阻塞，你不能直接写，你得通过写队列去操作，它会首先将数据丢到队列中，下层 io 观察者触发可写事件时才去写入，当写完了就告诉你。</p>
+</li>
+<li><p>最后调用uv__io_init()函数去初始化<code>io观察者</code>，并设置<code>stream</code>的回调处理函数<code>uv__stream_io()</code>，这个处理回调函数后续慢慢讲解吧，先来看看<code>stream handle</code> 的读写操作。</p>
+</li>
+</ol>
+<h2 id="uv-read"><a href="#uv-read" class="headerlink" title="uv__read()"></a>uv__read()</h2><p>当<code>io观察者</code>发现<code>stream handle</code>有可读事件时，<code>uv__read()</code>函数会被调用，其实是被<code>uv__stream_io()</code>函数调用，因为<code>io观察者</code>发现了底层有数据可读。所以该函数是用于从底层读取数据，这也是<code>stream handle</code>的读取操作。</p>
+<p>uv__read()函数是通过 read() 函数从底层文件描述符读取数据，读取的数据写入由 <code>stream-&gt;alloc_cb</code> 分配到内存块中，并在完成读取后由 <code>stream-&gt;read_cb</code> 回调函数传递到用户。因为数据已经由底层准备好，直接读取即可，效率非常高，是不需要等待的。而当底层没有数据的情况时，read() 系统调用也会阻塞，而是直接返回，因为文件描述符工作在非阻塞模式下，即使底层还没有数据，它也不会阻塞的，而真正阻塞的地方是在io循环中。</p>
+<p>简单看看函数源码吧：</p>
+<pre class="line-numbers language-c"><code class="language-c"><span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">uv__read</span><span class="token punctuation">(</span>uv_stream_t<span class="token operator">*</span> stream<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  uv_buf_t buf<span class="token punctuation">;</span>
+  ssize_t nread<span class="token punctuation">;</span>
+  <span class="token keyword">struct</span> msghdr msg<span class="token punctuation">;</span>
+  <span class="token keyword">char</span> cmsg_space<span class="token punctuation">[</span><span class="token function">CMSG_SPACE</span><span class="token punctuation">(</span>UV__CMSG_FD_SIZE<span class="token punctuation">)</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+  <span class="token keyword">int</span> count<span class="token punctuation">;</span>
+  <span class="token keyword">int</span> err<span class="token punctuation">;</span>
+  <span class="token keyword">int</span> is_ipc<span class="token punctuation">;</span>
+
+  stream<span class="token operator">-></span>flags <span class="token operator">&amp;</span><span class="token operator">=</span> <span class="token operator">~</span>UV_HANDLE_READ_PARTIAL<span class="token punctuation">;</span>
+
+  <span class="token comment" spellcheck="true">/* Prevent loop starvation when the data comes in as fast as (or faster than)
+   * we can read it. XXX Need to rearm fd if we switch to edge-triggered I/O.
+   */</span>
+  count <span class="token operator">=</span> <span class="token number">32</span><span class="token punctuation">;</span>
+
+  <span class="token comment" spellcheck="true">/* 看看是不是管道，IPC通讯机制 */</span>
+  is_ipc <span class="token operator">=</span> stream<span class="token operator">-></span>type <span class="token operator">==</span> UV_NAMED_PIPE <span class="token operator">&amp;&amp;</span> <span class="token punctuation">(</span><span class="token punctuation">(</span>uv_pipe_t<span class="token operator">*</span><span class="token punctuation">)</span> stream<span class="token punctuation">)</span><span class="token operator">-></span>ipc<span class="token punctuation">;</span>
+
+  <span class="token comment" spellcheck="true">/* XXX: Maybe instead of having UV_HANDLE_READING we just test if
+   * tcp->read_cb is NULL or not?
+   */</span>
+  <span class="token keyword">while</span> <span class="token punctuation">(</span>stream<span class="token operator">-></span>read_cb
+      <span class="token operator">&amp;&amp;</span> <span class="token punctuation">(</span>stream<span class="token operator">-></span>flags <span class="token operator">&amp;</span> UV_HANDLE_READING<span class="token punctuation">)</span>
+      <span class="token operator">&amp;&amp;</span> <span class="token punctuation">(</span>count<span class="token operator">--</span> <span class="token operator">></span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token function">assert</span><span class="token punctuation">(</span>stream<span class="token operator">-></span>alloc_cb <span class="token operator">!=</span> <span class="token constant">NULL</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    buf <span class="token operator">=</span> <span class="token function">uv_buf_init</span><span class="token punctuation">(</span><span class="token constant">NULL</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token comment" spellcheck="true">/* 分配内存 */</span>
+    stream<span class="token operator">-></span><span class="token function">alloc_cb</span><span class="token punctuation">(</span><span class="token punctuation">(</span>uv_handle_t<span class="token operator">*</span><span class="token punctuation">)</span>stream<span class="token punctuation">,</span> <span class="token number">64</span> <span class="token operator">*</span> <span class="token number">1024</span><span class="token punctuation">,</span> <span class="token operator">&amp;</span>buf<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>buf<span class="token punctuation">.</span>base <span class="token operator">==</span> <span class="token constant">NULL</span> <span class="token operator">||</span> buf<span class="token punctuation">.</span>len <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+
+      <span class="token comment" spellcheck="true">/* 如果内存分配失败或者buffer的长度是0则无法读取 */</span>
+      stream<span class="token operator">-></span><span class="token function">read_cb</span><span class="token punctuation">(</span>stream<span class="token punctuation">,</span> UV_ENOBUFS<span class="token punctuation">,</span> <span class="token operator">&amp;</span>buf<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token keyword">return</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token comment" spellcheck="true">/* 断言，保证有内存空间与stream handle的文件描述符是存在的 */</span>
+    <span class="token function">assert</span><span class="token punctuation">(</span>buf<span class="token punctuation">.</span>base <span class="token operator">!=</span> <span class="token constant">NULL</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">assert</span><span class="token punctuation">(</span><span class="token function">uv__stream_fd</span><span class="token punctuation">(</span>stream<span class="token punctuation">)</span> <span class="token operator">>=</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token comment" spellcheck="true">/* 如果不是pipe */</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>is_ipc<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">do</span> <span class="token punctuation">{</span>
+        <span class="token comment" spellcheck="true">/* 通过read()去读取底层数据 */</span>
+        nread <span class="token operator">=</span> <span class="token function">read</span><span class="token punctuation">(</span><span class="token function">uv__stream_fd</span><span class="token punctuation">(</span>stream<span class="token punctuation">)</span><span class="token punctuation">,</span> buf<span class="token punctuation">.</span>base<span class="token punctuation">,</span> buf<span class="token punctuation">.</span>len<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span>
+      <span class="token comment" spellcheck="true">/* 直到读取完毕 */</span>
+      <span class="token keyword">while</span> <span class="token punctuation">(</span>nread <span class="token operator">&lt;</span> <span class="token number">0</span> <span class="token operator">&amp;&amp;</span> errno <span class="token operator">==</span> EINTR<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+      <span class="token comment" spellcheck="true">/* ipc 需要使用 recvmsg() 函数去读取 */</span>
+      msg<span class="token punctuation">.</span>msg_flags <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+      msg<span class="token punctuation">.</span>msg_iov <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token keyword">struct</span> iovec<span class="token operator">*</span><span class="token punctuation">)</span> <span class="token operator">&amp;</span>buf<span class="token punctuation">;</span>
+      msg<span class="token punctuation">.</span>msg_iovlen <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span>
+      msg<span class="token punctuation">.</span>msg_name <span class="token operator">=</span> <span class="token constant">NULL</span><span class="token punctuation">;</span>
+      msg<span class="token punctuation">.</span>msg_namelen <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+      <span class="token comment" spellcheck="true">/* Set up to receive a descriptor even if one isn't in the message */</span>
+      msg<span class="token punctuation">.</span>msg_controllen <span class="token operator">=</span> <span class="token keyword">sizeof</span><span class="token punctuation">(</span>cmsg_space<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      msg<span class="token punctuation">.</span>msg_control <span class="token operator">=</span> cmsg_space<span class="token punctuation">;</span>
+
+      <span class="token keyword">do</span> <span class="token punctuation">{</span>
+        <span class="token comment" spellcheck="true">/* 读取ipc机制的数据 */</span>
+        nread <span class="token operator">=</span> <span class="token function">uv__recvmsg</span><span class="token punctuation">(</span><span class="token function">uv__stream_fd</span><span class="token punctuation">(</span>stream<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token operator">&amp;</span>msg<span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span>
+      <span class="token keyword">while</span> <span class="token punctuation">(</span>nread <span class="token operator">&lt;</span> <span class="token number">0</span> <span class="token operator">&amp;&amp;</span> errno <span class="token operator">==</span> EINTR<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token comment" spellcheck="true">/* 读取数据错误 */</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>nread <span class="token operator">&lt;</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token comment" spellcheck="true">/* Error */</span>
+      <span class="token keyword">if</span> <span class="token punctuation">(</span>errno <span class="token operator">==</span> EAGAIN <span class="token operator">||</span> errno <span class="token operator">==</span> EWOULDBLOCK<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+
+        <span class="token comment" spellcheck="true">/* 开始下一次的等待. */</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>stream<span class="token operator">-></span>flags <span class="token operator">&amp;</span> UV_HANDLE_READING<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+
+          <span class="token comment" spellcheck="true">/* 重新设置io观察者活跃 */</span>
+          <span class="token function">uv__io_start</span><span class="token punctuation">(</span>stream<span class="token operator">-></span>loop<span class="token punctuation">,</span> <span class="token operator">&amp;</span>stream<span class="token operator">-></span>io_watcher<span class="token punctuation">,</span> POLLIN<span class="token punctuation">)</span><span class="token punctuation">;</span>
+          <span class="token function">uv__stream_osx_interrupt_select</span><span class="token punctuation">(</span>stream<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+        stream<span class="token operator">-></span><span class="token function">read_cb</span><span class="token punctuation">(</span>stream<span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token operator">&amp;</span>buf<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token macro property">#<span class="token directive keyword">if</span> defined(__CYGWIN__) || defined(__MSYS__)</span>
+      <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token keyword">if</span> <span class="token punctuation">(</span>errno <span class="token operator">==</span> ECONNRESET <span class="token operator">&amp;&amp;</span> stream<span class="token operator">-></span>type <span class="token operator">==</span> UV_NAMED_PIPE<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token function">uv__stream_eof</span><span class="token punctuation">(</span>stream<span class="token punctuation">,</span> <span class="token operator">&amp;</span>buf<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">return</span><span class="token punctuation">;</span>
+<span class="token macro property">#<span class="token directive keyword">endif</span></span>
+      <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+        <span class="token comment" spellcheck="true">/* 错误，用户应该调用uv_close()关闭 */</span>
+        stream<span class="token operator">-></span><span class="token function">read_cb</span><span class="token punctuation">(</span>stream<span class="token punctuation">,</span> <span class="token function">UV__ERR</span><span class="token punctuation">(</span>errno<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token operator">&amp;</span>buf<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>stream<span class="token operator">-></span>flags <span class="token operator">&amp;</span> UV_HANDLE_READING<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+          stream<span class="token operator">-></span>flags <span class="token operator">&amp;</span><span class="token operator">=</span> <span class="token operator">~</span>UV_HANDLE_READING<span class="token punctuation">;</span>
+          <span class="token function">uv__io_stop</span><span class="token punctuation">(</span>stream<span class="token operator">-></span>loop<span class="token punctuation">,</span> <span class="token operator">&amp;</span>stream<span class="token operator">-></span>io_watcher<span class="token punctuation">,</span> POLLIN<span class="token punctuation">)</span><span class="token punctuation">;</span>
+          <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token function">uv__io_active</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>stream<span class="token operator">-></span>io_watcher<span class="token punctuation">,</span> POLLOUT<span class="token punctuation">)</span><span class="token punctuation">)</span>
+            <span class="token function">uv__handle_stop</span><span class="token punctuation">(</span>stream<span class="token punctuation">)</span><span class="token punctuation">;</span>
+          <span class="token function">uv__stream_osx_interrupt_select</span><span class="token punctuation">(</span>stream<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+      <span class="token punctuation">}</span>
+      <span class="token keyword">return</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token keyword">if</span> <span class="token punctuation">(</span>nread <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token function">uv__stream_eof</span><span class="token punctuation">(</span>stream<span class="token punctuation">,</span> <span class="token operator">&amp;</span>buf<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token keyword">return</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+      <span class="token comment" spellcheck="true">/* 成功读取到数据 */</span>
+      ssize_t buflen <span class="token operator">=</span> buf<span class="token punctuation">.</span>len<span class="token punctuation">;</span>
+
+      <span class="token comment" spellcheck="true">/* ipc就这样子读取 */</span>
+      <span class="token keyword">if</span> <span class="token punctuation">(</span>is_ipc<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        err <span class="token operator">=</span> <span class="token function">uv__stream_recv_cmsg</span><span class="token punctuation">(</span>stream<span class="token punctuation">,</span> <span class="token operator">&amp;</span>msg<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>err <span class="token operator">!=</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+          stream<span class="token operator">-></span><span class="token function">read_cb</span><span class="token punctuation">(</span>stream<span class="token punctuation">,</span> err<span class="token punctuation">,</span> <span class="token operator">&amp;</span>buf<span class="token punctuation">)</span><span class="token punctuation">;</span>
+          <span class="token keyword">return</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+      <span class="token punctuation">}</span>
+
+<span class="token macro property">#<span class="token directive keyword">if</span> defined(__MVS__)</span>
+      <span class="token keyword">if</span> <span class="token punctuation">(</span>is_ipc <span class="token operator">&amp;&amp;</span> msg<span class="token punctuation">.</span>msg_controllen <span class="token operator">></span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        uv_buf_t blankbuf<span class="token punctuation">;</span>
+        <span class="token keyword">int</span> nread<span class="token punctuation">;</span>
+        <span class="token keyword">struct</span> iovec <span class="token operator">*</span>old<span class="token punctuation">;</span>
+
+        blankbuf<span class="token punctuation">.</span>base <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+        blankbuf<span class="token punctuation">.</span>len <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+        old <span class="token operator">=</span> msg<span class="token punctuation">.</span>msg_iov<span class="token punctuation">;</span>
+        msg<span class="token punctuation">.</span>msg_iov <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token keyword">struct</span> iovec<span class="token operator">*</span><span class="token punctuation">)</span> <span class="token operator">&amp;</span>blankbuf<span class="token punctuation">;</span>
+        nread <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+        <span class="token keyword">do</span> <span class="token punctuation">{</span>
+          nread <span class="token operator">=</span> <span class="token function">uv__recvmsg</span><span class="token punctuation">(</span><span class="token function">uv__stream_fd</span><span class="token punctuation">(</span>stream<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token operator">&amp;</span>msg<span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+          err <span class="token operator">=</span> <span class="token function">uv__stream_recv_cmsg</span><span class="token punctuation">(</span>stream<span class="token punctuation">,</span> <span class="token operator">&amp;</span>msg<span class="token punctuation">)</span><span class="token punctuation">;</span>
+          <span class="token keyword">if</span> <span class="token punctuation">(</span>err <span class="token operator">!=</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            stream<span class="token operator">-></span><span class="token function">read_cb</span><span class="token punctuation">(</span>stream<span class="token punctuation">,</span> err<span class="token punctuation">,</span> <span class="token operator">&amp;</span>buf<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            msg<span class="token punctuation">.</span>msg_iov <span class="token operator">=</span> old<span class="token punctuation">;</span>
+            <span class="token keyword">return</span><span class="token punctuation">;</span>
+          <span class="token punctuation">}</span>
+        <span class="token punctuation">}</span> <span class="token keyword">while</span> <span class="token punctuation">(</span>nread <span class="token operator">==</span> <span class="token number">0</span> <span class="token operator">&amp;&amp;</span> msg<span class="token punctuation">.</span>msg_controllen <span class="token operator">></span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        msg<span class="token punctuation">.</span>msg_iov <span class="token operator">=</span> old<span class="token punctuation">;</span>
+      <span class="token punctuation">}</span>
+<span class="token macro property">#<span class="token directive keyword">endif</span></span>
+
+      <span class="token comment" spellcheck="true">/* 通过回调函数告诉应用层读取完成 */</span>
+      stream<span class="token operator">-></span><span class="token function">read_cb</span><span class="token punctuation">(</span>stream<span class="token punctuation">,</span> nread<span class="token punctuation">,</span> <span class="token operator">&amp;</span>buf<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+      <span class="token comment" spellcheck="true">/* 如果没有填满缓冲区，则返回没有更多数据可读取。 */</span>
+      <span class="token keyword">if</span> <span class="token punctuation">(</span>nread <span class="token operator">&lt;</span> buflen<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        stream<span class="token operator">-></span>flags <span class="token operator">|</span><span class="token operator">=</span> UV_HANDLE_READ_PARTIAL<span class="token punctuation">;</span>
+        <span class="token keyword">return</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="uv-write"><a href="#uv-write" class="headerlink" title="uv__write()"></a>uv__write()</h2><p>同理地，当 <code>io 观察者</code>发现要写入数据的时候，它也会去将数据写入到底层，函数 <code>uv__write()</code> 会被调用，那什么时候才是可写呢，回顾 <code>stream handle</code> 的成员变量，它有两个队列，当 <code>stream-&gt;write_queue</code> 队列存在数据时，表示可以写入，如果队列为空则表示没有数据可以写。</p>
+<p>libuv的异步处理都是差不多的，都是通过<code>io观察者</code>去发现是否有可读可写，写数据的过程大致如下：用户将数据丢到写队列中就直接返回了，<code>io观察者</code>发现队列有数据，<code>stream handle</code> 的处理 <code>uv__stream_io()</code>函数被调用，开始写入操作，这个写入的操作是依赖系统的函数接口的，比如<code>write()</code>等，等写完了就通知用户即可。</p>
+<p>源码的实现:</p>
+<pre class="line-numbers language-c"><code class="language-c"><span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">uv__write</span><span class="token punctuation">(</span>uv_stream_t<span class="token operator">*</span> stream<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">struct</span> iovec<span class="token operator">*</span> iov<span class="token punctuation">;</span>
+  QUEUE<span class="token operator">*</span> q<span class="token punctuation">;</span>
+  uv_write_t<span class="token operator">*</span> req<span class="token punctuation">;</span>
+  <span class="token keyword">int</span> iovmax<span class="token punctuation">;</span>
+  <span class="token keyword">int</span> iovcnt<span class="token punctuation">;</span>
+  ssize_t n<span class="token punctuation">;</span>
+  <span class="token keyword">int</span> err<span class="token punctuation">;</span>
+
+start<span class="token punctuation">:</span>
+
+  <span class="token comment" spellcheck="true">/* 健壮性的处理，断言，确保存在stream handle的fd、队列存在等 */</span>
+  <span class="token function">assert</span><span class="token punctuation">(</span><span class="token function">uv__stream_fd</span><span class="token punctuation">(</span>stream<span class="token punctuation">)</span> <span class="token operator">>=</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token function">QUEUE_EMPTY</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>stream<span class="token operator">-></span>write_queue<span class="token punctuation">)</span><span class="token punctuation">)</span>
+    <span class="token keyword">return</span><span class="token punctuation">;</span>
+
+  q <span class="token operator">=</span> <span class="token function">QUEUE_HEAD</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>stream<span class="token operator">-></span>write_queue<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  req <span class="token operator">=</span> <span class="token function">QUEUE_DATA</span><span class="token punctuation">(</span>q<span class="token punctuation">,</span> uv_write_t<span class="token punctuation">,</span> queue<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token function">assert</span><span class="token punctuation">(</span>req<span class="token operator">-></span>handle <span class="token operator">==</span> stream<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token comment" spellcheck="true">/* 转换为iovec。我们必须拥有自己的uv_buf_t而不是iovec，因为Windows的WSABUF不是iovec。 */</span>
+  <span class="token function">assert</span><span class="token punctuation">(</span><span class="token keyword">sizeof</span><span class="token punctuation">(</span>uv_buf_t<span class="token punctuation">)</span> <span class="token operator">==</span> <span class="token keyword">sizeof</span><span class="token punctuation">(</span><span class="token keyword">struct</span> iovec<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  iov <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token keyword">struct</span> iovec<span class="token operator">*</span><span class="token punctuation">)</span> <span class="token operator">&amp;</span><span class="token punctuation">(</span>req<span class="token operator">-></span>bufs<span class="token punctuation">[</span>req<span class="token operator">-></span>write_index<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  iovcnt <span class="token operator">=</span> req<span class="token operator">-></span>nbufs <span class="token operator">-</span> req<span class="token operator">-></span>write_index<span class="token punctuation">;</span>
+
+  iovmax <span class="token operator">=</span> <span class="token function">uv__getiovmax</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token comment" spellcheck="true">/* 限制iov计数以避免来自writev()的EINVAL */</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>iovcnt <span class="token operator">></span> iovmax<span class="token punctuation">)</span>
+    iovcnt <span class="token operator">=</span> iovmax<span class="token punctuation">;</span>
+
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>req<span class="token operator">-></span>send_handle<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">int</span> fd_to_send<span class="token punctuation">;</span>
+    <span class="token keyword">struct</span> msghdr msg<span class="token punctuation">;</span>
+    <span class="token keyword">struct</span> cmsghdr <span class="token operator">*</span>cmsg<span class="token punctuation">;</span>
+    <span class="token keyword">union</span> <span class="token punctuation">{</span>
+      <span class="token keyword">char</span> data<span class="token punctuation">[</span><span class="token number">64</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+      <span class="token keyword">struct</span> cmsghdr alias<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span> scratch<span class="token punctuation">;</span>
+
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token function">uv__is_closing</span><span class="token punctuation">(</span>req<span class="token operator">-></span>send_handle<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      err <span class="token operator">=</span> UV_EBADF<span class="token punctuation">;</span>
+      <span class="token keyword">goto</span> error<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    fd_to_send <span class="token operator">=</span> <span class="token function">uv__handle_fd</span><span class="token punctuation">(</span><span class="token punctuation">(</span>uv_handle_t<span class="token operator">*</span><span class="token punctuation">)</span> req<span class="token operator">-></span>send_handle<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token function">memset</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>scratch<span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token keyword">sizeof</span><span class="token punctuation">(</span>scratch<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token function">assert</span><span class="token punctuation">(</span>fd_to_send <span class="token operator">>=</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    msg<span class="token punctuation">.</span>msg_name <span class="token operator">=</span> <span class="token constant">NULL</span><span class="token punctuation">;</span>
+    msg<span class="token punctuation">.</span>msg_namelen <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+    msg<span class="token punctuation">.</span>msg_iov <span class="token operator">=</span> iov<span class="token punctuation">;</span>
+    msg<span class="token punctuation">.</span>msg_iovlen <span class="token operator">=</span> iovcnt<span class="token punctuation">;</span>
+    msg<span class="token punctuation">.</span>msg_flags <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+
+    msg<span class="token punctuation">.</span>msg_control <span class="token operator">=</span> <span class="token operator">&amp;</span>scratch<span class="token punctuation">.</span>alias<span class="token punctuation">;</span>
+    msg<span class="token punctuation">.</span>msg_controllen <span class="token operator">=</span> <span class="token function">CMSG_SPACE</span><span class="token punctuation">(</span><span class="token keyword">sizeof</span><span class="token punctuation">(</span>fd_to_send<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    cmsg <span class="token operator">=</span> <span class="token function">CMSG_FIRSTHDR</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>msg<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    cmsg<span class="token operator">-></span>cmsg_level <span class="token operator">=</span> SOL_SOCKET<span class="token punctuation">;</span>
+    cmsg<span class="token operator">-></span>cmsg_type <span class="token operator">=</span> SCM_RIGHTS<span class="token punctuation">;</span>
+    cmsg<span class="token operator">-></span>cmsg_len <span class="token operator">=</span> <span class="token function">CMSG_LEN</span><span class="token punctuation">(</span><span class="token keyword">sizeof</span><span class="token punctuation">(</span>fd_to_send<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token comment" spellcheck="true">/* silence aliasing warning */</span>
+    <span class="token punctuation">{</span>
+      <span class="token keyword">void</span><span class="token operator">*</span> pv <span class="token operator">=</span> <span class="token function">CMSG_DATA</span><span class="token punctuation">(</span>cmsg<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token keyword">int</span><span class="token operator">*</span> pi <span class="token operator">=</span> pv<span class="token punctuation">;</span>
+      <span class="token operator">*</span>pi <span class="token operator">=</span> fd_to_send<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">do</span>
+      n <span class="token operator">=</span> <span class="token function">sendmsg</span><span class="token punctuation">(</span><span class="token function">uv__stream_fd</span><span class="token punctuation">(</span>stream<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token operator">&amp;</span>msg<span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">while</span> <span class="token punctuation">(</span>n <span class="token operator">==</span> <span class="token operator">-</span><span class="token number">1</span> <span class="token operator">&amp;&amp;</span> <span class="token function">RETRY_ON_WRITE_ERROR</span><span class="token punctuation">(</span>errno<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token comment" spellcheck="true">/* Ensure the handle isn't sent again in case this is a partial write. */</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>n <span class="token operator">>=</span> <span class="token number">0</span><span class="token punctuation">)</span>
+      req<span class="token operator">-></span>send_handle <span class="token operator">=</span> <span class="token constant">NULL</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+    <span class="token keyword">do</span>
+      <span class="token comment" spellcheck="true">/* 写操作 */</span>
+      n <span class="token operator">=</span> <span class="token function">uv__writev</span><span class="token punctuation">(</span><span class="token function">uv__stream_fd</span><span class="token punctuation">(</span>stream<span class="token punctuation">)</span><span class="token punctuation">,</span> iov<span class="token punctuation">,</span> iovcnt<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">while</span> <span class="token punctuation">(</span>n <span class="token operator">==</span> <span class="token operator">-</span><span class="token number">1</span> <span class="token operator">&amp;&amp;</span> <span class="token function">RETRY_ON_WRITE_ERROR</span><span class="token punctuation">(</span>errno<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>n <span class="token operator">==</span> <span class="token operator">-</span><span class="token number">1</span> <span class="token operator">&amp;&amp;</span> <span class="token operator">!</span><span class="token function">IS_TRANSIENT_WRITE_ERROR</span><span class="token punctuation">(</span>errno<span class="token punctuation">,</span> req<span class="token operator">-></span>send_handle<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    err <span class="token operator">=</span> <span class="token function">UV__ERR</span><span class="token punctuation">(</span>errno<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">goto</span> error<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>n <span class="token operator">>=</span> <span class="token number">0</span> <span class="token operator">&amp;&amp;</span> <span class="token function">uv__write_req_update</span><span class="token punctuation">(</span>stream<span class="token punctuation">,</span> req<span class="token punctuation">,</span> n<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token function">uv__write_req_finish</span><span class="token punctuation">(</span>req<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span><span class="token punctuation">;</span>  <span class="token comment" spellcheck="true">/* TODO(bnoordhuis) Start trying to write the next request. */</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token comment" spellcheck="true">/* If this is a blocking stream, try again. */</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>stream<span class="token operator">-></span>flags <span class="token operator">&amp;</span> UV_HANDLE_BLOCKING_WRITES<span class="token punctuation">)</span>
+    <span class="token keyword">goto</span> start<span class="token punctuation">;</span>
+
+  <span class="token comment" spellcheck="true">/* 重新启动io观察者. */</span>
+  <span class="token function">uv__io_start</span><span class="token punctuation">(</span>stream<span class="token operator">-></span>loop<span class="token punctuation">,</span> <span class="token operator">&amp;</span>stream<span class="token operator">-></span>io_watcher<span class="token punctuation">,</span> POLLOUT<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token comment" spellcheck="true">/* Notify select() thread about state change */</span>
+  <span class="token function">uv__stream_osx_interrupt_select</span><span class="token punctuation">(</span>stream<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token keyword">return</span><span class="token punctuation">;</span>
+
+error<span class="token punctuation">:</span>
+  req<span class="token operator">-></span>error <span class="token operator">=</span> err<span class="token punctuation">;</span>
+  <span class="token function">uv__write_req_finish</span><span class="token punctuation">(</span>req<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token function">uv__io_stop</span><span class="token punctuation">(</span>stream<span class="token operator">-></span>loop<span class="token punctuation">,</span> <span class="token operator">&amp;</span>stream<span class="token operator">-></span>io_watcher<span class="token punctuation">,</span> POLLOUT<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token function">uv__io_active</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>stream<span class="token operator">-></span>io_watcher<span class="token punctuation">,</span> POLLIN<span class="token punctuation">)</span><span class="token punctuation">)</span>
+    <span class="token function">uv__handle_stop</span><span class="token punctuation">(</span>stream<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token function">uv__stream_osx_interrupt_select</span><span class="token punctuation">(</span>stream<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="uv-stream-io"><a href="#uv-stream-io" class="headerlink" title="uv__stream_io()"></a>uv__stream_io()</h2><p><code>uv__stream_io()</code> 函数是 <code>stream handle</code> 的事件处理函数，它在<code>uv__io_init()</code>函数就被注册了，在调用 <code>uv__stream_io()</code> 函数时，传递了事件循环对象、<code>io 观察者</code>对象、事件类型等信息。</p>
+<p>我们来看看<code>stream handle</code>是如何处理可读写事件的：</p>
+<ol>
+<li><p>通过<code>container_of()</code>函数获取 <code>stream handle</code> 的实例，其实是计算出来的。</p>
+</li>
+<li><p>如果 <code>stream-&gt;connect_req</code>存在，说明 该 <code>stream handle</code> 需要进行连接，于是调用 <code>uv__stream_connect()</code> 函数请求建立连接。</p>
+</li>
+<li><p>满足可读取数据的条件，调用<code>uv__read()</code>函数进行数据读取</p>
+</li>
+<li><p>如果满足流结束条件 调用 <code>uv__stream_eof()</code> 进行相关处理。</p>
+</li>
+<li><p>如果满足可写条件，调用 <code>uv__write()</code> 函数去写入数据，当然，数据会被放在 <code>stream-&gt;write_queue</code> 队列中。</p>
+</li>
+<li><p>在写完数据后，调用 <code>uv__write_callbacks()</code> 函数去清除队列的数据，并通知应用层已经写完了。</p>
+</li>
+</ol>
+<pre class="line-numbers language-c"><code class="language-c"><span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">uv__stream_io</span><span class="token punctuation">(</span>uv_loop_t<span class="token operator">*</span> loop<span class="token punctuation">,</span> uv__io_t<span class="token operator">*</span> w<span class="token punctuation">,</span> <span class="token keyword">unsigned</span> <span class="token keyword">int</span> events<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  uv_stream_t<span class="token operator">*</span> stream<span class="token punctuation">;</span>
+
+  <span class="token comment" spellcheck="true">/* 获取 stream handle 的实例 */</span>
+  stream <span class="token operator">=</span> <span class="token function">container_of</span><span class="token punctuation">(</span>w<span class="token punctuation">,</span> uv_stream_t<span class="token punctuation">,</span> io_watcher<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token comment" spellcheck="true">/* 断言，判断是否满足类型 */</span>
+  <span class="token function">assert</span><span class="token punctuation">(</span>stream<span class="token operator">-></span>type <span class="token operator">==</span> UV_TCP <span class="token operator">||</span>
+         stream<span class="token operator">-></span>type <span class="token operator">==</span> UV_NAMED_PIPE <span class="token operator">||</span>
+         stream<span class="token operator">-></span>type <span class="token operator">==</span> UV_TTY<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token function">assert</span><span class="token punctuation">(</span><span class="token operator">!</span><span class="token punctuation">(</span>stream<span class="token operator">-></span>flags <span class="token operator">&amp;</span> UV_HANDLE_CLOSING<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>stream<span class="token operator">-></span>connect_req<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment" spellcheck="true">/* 如果需要建立连接，则请求建立连接 */</span>
+    <span class="token function">uv__stream_connect</span><span class="token punctuation">(</span>stream<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token comment" spellcheck="true">/* 断言 */</span>
+  <span class="token function">assert</span><span class="token punctuation">(</span><span class="token function">uv__stream_fd</span><span class="token punctuation">(</span>stream<span class="token punctuation">)</span> <span class="token operator">>=</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token comment" spellcheck="true">/* 满足读数据条件，进行数据读取 */</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>events <span class="token operator">&amp;</span> <span class="token punctuation">(</span>POLLIN <span class="token operator">|</span> POLLERR <span class="token operator">|</span> POLLHUP<span class="token punctuation">)</span><span class="token punctuation">)</span>
+    <span class="token function">uv__read</span><span class="token punctuation">(</span>stream<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token comment" spellcheck="true">/* read_cb 可能会关闭 stream，此处判断一下是否需要关闭fd */</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token function">uv__stream_fd</span><span class="token punctuation">(</span>stream<span class="token punctuation">)</span> <span class="token operator">==</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span>
+    <span class="token keyword">return</span><span class="token punctuation">;</span>  <span class="token comment" spellcheck="true">/* read_cb closed stream. */</span>
+
+  <span class="token comment" spellcheck="true">/* 如果满足流结束条件 调用 uv__stream_eof() 进行相关处理。 */</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token punctuation">(</span>events <span class="token operator">&amp;</span> POLLHUP<span class="token punctuation">)</span> <span class="token operator">&amp;&amp;</span>
+      <span class="token punctuation">(</span>stream<span class="token operator">-></span>flags <span class="token operator">&amp;</span> UV_HANDLE_READING<span class="token punctuation">)</span> <span class="token operator">&amp;&amp;</span>
+      <span class="token punctuation">(</span>stream<span class="token operator">-></span>flags <span class="token operator">&amp;</span> UV_HANDLE_READ_PARTIAL<span class="token punctuation">)</span> <span class="token operator">&amp;&amp;</span>
+      <span class="token operator">!</span><span class="token punctuation">(</span>stream<span class="token operator">-></span>flags <span class="token operator">&amp;</span> UV_HANDLE_READ_EOF<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    uv_buf_t buf <span class="token operator">=</span> <span class="token punctuation">{</span> <span class="token constant">NULL</span><span class="token punctuation">,</span> <span class="token number">0</span> <span class="token punctuation">}</span><span class="token punctuation">;</span>
+    <span class="token function">uv__stream_eof</span><span class="token punctuation">(</span>stream<span class="token punctuation">,</span> <span class="token operator">&amp;</span>buf<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token function">uv__stream_fd</span><span class="token punctuation">(</span>stream<span class="token punctuation">)</span> <span class="token operator">==</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span>
+    <span class="token keyword">return</span><span class="token punctuation">;</span>  <span class="token comment" spellcheck="true">/* read_cb closed stream. */</span>
+
+  <span class="token comment" spellcheck="true">/* 如果有数据要写入，则调用uv__write()去写数据，写完了调用uv__write_callbacks()函数 */</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>events <span class="token operator">&amp;</span> <span class="token punctuation">(</span>POLLOUT <span class="token operator">|</span> POLLERR <span class="token operator">|</span> POLLHUP<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token function">uv__write</span><span class="token punctuation">(</span>stream<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">uv__write_callbacks</span><span class="token punctuation">(</span>stream<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token comment" spellcheck="true">/* Write queue drained. */</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token function">QUEUE_EMPTY</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>stream<span class="token operator">-></span>write_queue<span class="token punctuation">)</span><span class="token punctuation">)</span>
+      <span class="token function">uv__drain</span><span class="token punctuation">(</span>stream<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="uv-write-callbacks"><a href="#uv-write-callbacks" class="headerlink" title="uv__write_callbacks()"></a>uv__write_callbacks()</h2><p>清理 <code>stream-&gt;write_completed_queue</code> 已完成写请求的队列，清理空间，并调用回调函数。</p>
+<pre class="line-numbers language-c"><code class="language-c"><span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">uv__write_callbacks</span><span class="token punctuation">(</span>uv_stream_t<span class="token operator">*</span> stream<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  uv_write_t<span class="token operator">*</span> req<span class="token punctuation">;</span>
+  QUEUE<span class="token operator">*</span> q<span class="token punctuation">;</span>
+  QUEUE pq<span class="token punctuation">;</span>
+
+  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token function">QUEUE_EMPTY</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>stream<span class="token operator">-></span>write_completed_queue<span class="token punctuation">)</span><span class="token punctuation">)</span>
+    <span class="token keyword">return</span><span class="token punctuation">;</span>
+
+  <span class="token comment" spellcheck="true">/* 从写完成队列获取队列 */</span>
+  <span class="token function">QUEUE_MOVE</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>stream<span class="token operator">-></span>write_completed_queue<span class="token punctuation">,</span> <span class="token operator">&amp;</span>pq<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token comment" spellcheck="true">/* 队列不为空 */</span>
+  <span class="token keyword">while</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token function">QUEUE_EMPTY</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>pq<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment" spellcheck="true">/* 获取队列头部节点 */</span>
+    q <span class="token operator">=</span> <span class="token function">QUEUE_HEAD</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>pq<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    req <span class="token operator">=</span> <span class="token function">QUEUE_DATA</span><span class="token punctuation">(</span>q<span class="token punctuation">,</span> uv_write_t<span class="token punctuation">,</span> queue<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">QUEUE_REMOVE</span><span class="token punctuation">(</span>q<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">uv__req_unregister</span><span class="token punctuation">(</span>stream<span class="token operator">-></span>loop<span class="token punctuation">,</span> req<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token comment" spellcheck="true">/* 清除并释放内存 */</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>req<span class="token operator">-></span>bufs <span class="token operator">!=</span> <span class="token constant">NULL</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      stream<span class="token operator">-></span>write_queue_size <span class="token operator">-</span><span class="token operator">=</span> <span class="token function">uv__write_req_size</span><span class="token punctuation">(</span>req<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token keyword">if</span> <span class="token punctuation">(</span>req<span class="token operator">-></span>bufs <span class="token operator">!=</span> req<span class="token operator">-></span>bufsml<span class="token punctuation">)</span>
+        <span class="token function">uv__free</span><span class="token punctuation">(</span>req<span class="token operator">-></span>bufs<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      req<span class="token operator">-></span>bufs <span class="token operator">=</span> <span class="token constant">NULL</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token comment" spellcheck="true">/* 通知应用层 */</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>req<span class="token operator">-></span>cb<span class="token punctuation">)</span>
+      req<span class="token operator">-></span><span class="token function">cb</span><span class="token punctuation">(</span>req<span class="token punctuation">,</span> req<span class="token operator">-></span>error<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h1 id="外部API"><a href="#外部API" class="headerlink" title="外部API"></a>外部API</h1><p>内容较多，在下一章讲解吧。</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p><a href="https://libuv-docs-chinese.readthedocs.io/zh/latest/stream.html" target="_blank" rel="noopener">libuv官方文档</a></p>
+<h1 id="例程代码获取"><a href="#例程代码获取" class="headerlink" title="例程代码获取"></a>例程代码获取</h1><p><a href="https://github.com/jiejieTop/libuv-learning-code" target="_blank" rel="noopener">libuv-learning-code</a></p>
+<script>
+        document.querySelectorAll('.github-emoji')
+          .forEach(el => {
+            if (!el.dataset.src) { return; }
+            const img = document.createElement('img');
+            img.style = 'display:none !important;';
+            img.src = el.dataset.src;
+            img.addEventListener('error', () => {
+              img.remove();
+              el.style.color = 'inherit';
+              el.style.backgroundImage = 'none';
+              el.style.background = 'none';
+            });
+            img.addEventListener('load', () => {
+              img.remove();
+            });
+            document.body.appendChild(img);
+          });
+      </script>
+            </div>
+            <hr/>
+
+            
+            <style>
+    #reward {
+        margin: 40px 0;
+        text-align: center;
+    }
+
+    #reward .reward-link {
+        font-size: 1.88rem;
+    }
+
+    #reward .btn-floating:hover {
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2), 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    #rewardModal {
+        width: 320px;
+        height: 350px;
+    }
+
+    #rewardModal .reward-title {
+        margin: 15px auto;
+        padding-bottom: 5px;
+    }
+
+    #rewardModal .modal-content {
+        padding: 10px;
+    }
+
+    #rewardModal .close {
+        position: absolute;
+        right: 15px;
+        top: 15px;
+        color: rgba(0, 0, 0, 0.5);
+        font-size: 1.3rem;
+        line-height: 20px;
+        cursor: pointer;
+    }
+
+    #rewardModal .close:hover {
+        color: #ef5350;
+        transform: scale(1.3);
+        -moz-transform:scale(1.3);
+        -webkit-transform:scale(1.3);
+        -o-transform:scale(1.3);
+    }
+
+    #rewardModal .reward-tabs {
+        margin: 0 auto;
+        width: 210px;
+    }
+
+    .reward-tabs .tabs {
+        height: 38px;
+        margin: 10px auto;
+        padding-left: 0;
+    }
+
+    .reward-content ul {
+        padding-left: 0 !important;
+    }
+
+    .reward-tabs .tabs .tab {
+        height: 38px;
+        line-height: 38px;
+    }
+
+    .reward-tabs .tab a {
+        color: #fff;
+        background-color: #ccc;
+    }
+
+    .reward-tabs .tab a:hover {
+        background-color: #ccc;
+        color: #fff;
+    }
+
+    .reward-tabs .wechat-tab .active {
+        color: #fff !important;
+        background-color: #22AB38 !important;
+    }
+
+    .reward-tabs .alipay-tab .active {
+        color: #fff !important;
+        background-color: #019FE8 !important;
+    }
+
+    .reward-tabs .reward-img {
+        width: 210px;
+        height: 210px;
+    }
+</style>
+
+<div id="reward">
+    <a href="#rewardModal" class="reward-link modal-trigger btn-floating btn-large waves-effect waves-light red">赏</a>
+
+    <!-- Modal Structure -->
+    <div id="rewardModal" class="modal">
+        <div class="modal-content">
+            <a class="close modal-close"><i class="fa fa-close"></i></a>
+            <h4 class="reward-title">你的赏识是我前进的动力!</h4>
+            <div class="reward-content">
+                <div class="reward-tabs">
+                    <ul class="tabs row">
+                        <li class="tab col s6 alipay-tab waves-effect waves-light"><a href="#alipay">支付宝</a></li>
+                        <li class="tab col s6 wechat-tab waves-effect waves-light"><a href="#wechat">微 信</a></li>
+                    </ul>
+                    <div id="alipay">
+                        <img src="/medias/reward/alipay.bmp" class="reward-img" alt="支付宝打赏二维码">
+                    </div>
+                    <div id="wechat">
+                        <img src="/medias/reward/wechat.bmp" class="reward-img" alt="微信打赏二维码">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $('.tabs').tabs();
+    });
+</script>
+            
+
+            <link rel="stylesheet" type="text/css" href="/libs/share/css/share.min.css">
+
+<div id="article-share">
+    
+    <div class="social-share" data-disabled="qzone" data-wechat-qrcode-helper="<p>微信里点“发现”->“扫一扫”二维码便可查看分享。</p>"></div>
+    
+</div>
+
+<script src="/libs/share/js/social-share.min.js"></script>
+
+            
+            
+            
+            <div class="reprint1">
+                <p>
+                    <span class="reprint1-tip">
+                        <i class="fa fa-exclamation-circle"></i>&nbsp;&nbsp;转载请注明:
+                    </span>
+                    <a href="https://jiedev.com" class="b-link-green">杰杰的博客</a>
+                    <i class="fa fa-angle-right fa-lg fa-fw text-color"></i>
+                    <a href="/libuv-10/" class="b-link-green">【libuv高效编程】libuv学习超详细教程10 —— libuv stream 流句柄解读</a>
+                </p>
+            </div>
+
+        </div>
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+        <style>
+    .valine-card {
+        margin: 1.5rem auto;
+    }
+
+    .valine-card .card-content {
+        padding: 20px 20px 5px 20px;
+    }
+
+    #vcomments input[type=text],
+    #vcomments input[type=email],
+    #vcomments input[type=url],
+    #vcomments textarea {
+        box-sizing: border-box;
+    }
+
+    #vcomments p {
+        margin: 2px 2px 10px;
+        font-size: 1.05rem;
+        line-height: 1.78rem;
+    }
+
+    #vcomments blockquote p {
+        text-indent: 0.2rem;
+    }
+
+    #vcomments a {
+        padding: 0 2px;
+        color: #42b983;
+        font-weight: 500;
+        text-decoration: underline;
+    }
+
+    #vcomments img {
+        max-width: 100%;
+        height: auto;
+        cursor: pointer;
+    }
+
+    #vcomments ol li {
+        list-style-type: decimal;
+    }
+
+    #vcomments ol,
+    ul {
+        display: block;
+        padding-left: 2em;
+        word-spacing: 0.05rem;
+    }
+
+    #vcomments ul li,
+    ol li {
+        display: list-item;
+        line-height: 1.8rem;
+        font-size: 1rem;
+    }
+
+    #vcomments ul li {
+        list-style-type: disc;
+    }
+
+    #vcomments ul ul li {
+        list-style-type: circle;
+    }
+
+    #vcomments table, th, td {
+        padding: 12px 13px;
+        border: 1px solid #dfe2e5;
+    }
+
+    #vcomments table, th, td {
+        border: 0;
+    }
+
+    table tr:nth-child(2n), thead {
+        background-color: #fafafa;
+    }
+
+    #vcomments table th {
+        background-color: #f2f2f2;
+        min-width: 80px;
+    }
+
+    #vcomments table td {
+        min-width: 80px;
+    }
+
+    #vcomments h1 {
+        font-size: 1.85rem;
+        font-weight: bold;
+        line-height: 2.2rem;
+    }
+
+    #vcomments h2 {
+        font-size: 1.65rem;
+        font-weight: bold;
+        line-height: 1.9rem;
+    }
+
+    #vcomments h3 {
+        font-size: 1.45rem;
+        font-weight: bold;
+        line-height: 1.7rem;
+    }
+
+    #vcomments h4 {
+        font-size: 1.25rem;
+        font-weight: bold;
+        line-height: 1.5rem;
+    }
+
+    #vcomments h5 {
+        font-size: 1.1rem;
+        font-weight: bold;
+        line-height: 1.4rem;
+    }
+
+    #vcomments h6 {
+        font-size: 1rem;
+        line-height: 1.3rem;
+    }
+
+    #vcomments p {
+        font-size: 1rem;
+        line-height: 1.5rem;
+    }
+
+    #vcomments hr {
+        margin: 12px 0;
+        border: 0;
+        border-top: 1px solid #ccc;
+    }
+
+    #vcomments blockquote {
+        margin: 15px 0;
+        border-left: 5px solid #42b983;
+        padding: 1rem 0.8rem 0.3rem 0.8rem;
+        color: #666;
+        background-color: rgba(66, 185, 131, .1);
+    }
+
+    #vcomments pre {
+        font-family: monospace, monospace;
+        padding: 1.2em;
+        margin: .5em 0;
+        background: #272822;
+        overflow: auto;
+        border-radius: 0.3em;
+        tab-size: 4;
+    }
+
+    #vcomments code {
+        font-family: monospace, monospace;
+        padding: 1px 3px;
+        font-size: 0.92rem;
+        color: #e96900;
+        background-color: #f8f8f8;
+        border-radius: 2px;
+    }
+
+    #vcomments pre code {
+        font-family: monospace, monospace;
+        padding: 0;
+        color: #e8eaf6;
+        background-color: #272822;
+    }
+
+    #vcomments pre[class*="language-"] {
+        padding: 1.2em;
+        margin: .5em 0;
+    }
+
+    #vcomments code[class*="language-"],
+    pre[class*="language-"] {
+        color: #e8eaf6;
+    }
+
+    #vcomments [type="checkbox"]:not(:checked), [type="checkbox"]:checked {
+        position: inherit;
+        margin-left: -1.3rem;
+        margin-right: 0.4rem;
+        margin-top: -1px;
+        vertical-align: middle;
+        left: unset;
+        visibility: visible;
+    }
+
+    #vcomments b,
+    strong {
+        font-weight: bold;
+    }
+
+    #vcomments dfn {
+        font-style: italic;
+    }
+
+    #vcomments small {
+        font-size: 85%;
+    }
+
+    #vcomments cite {
+        font-style: normal;
+    }
+
+    #vcomments mark {
+        background-color: #fcf8e3;
+        padding: .2em;
+    }
+
+    #vcomments table, th, td {
+        padding: 12px 13px;
+        border: 1px solid #dfe2e5;
+    }
+
+    table tr:nth-child(2n), thead {
+        background-color: #fafafa;
+    }
+
+    #vcomments table th {
+        background-color: #f2f2f2;
+        min-width: 80px;
+    }
+
+    #vcomments table td {
+        min-width: 80px;
+    }
+
+    #vcomments [type="checkbox"]:not(:checked), [type="checkbox"]:checked {
+        position: inherit;
+        margin-left: -1.3rem;
+        margin-right: 0.4rem;
+        margin-top: -1px;
+        vertical-align: middle;
+        left: unset;
+        visibility: visible;
+    }
+</style>
+
+<div class="card valine-card" data-aos="fade-up">
+    <div id="vcomments" class="card-content"></div>
+</div>
+
+<script src="/libs/valine/av-min.js"></script>
+<script src="/libs/valine/Valine.min.js"></script>
+<script>
+    new Valine({
+        el: '#vcomments',
+        appId: 'P8ggvR4g3idexcAGf4hkEUqQ-gzGzoHsz',
+        appKey: 'GqHPu44hpoDiC8uOjc4JJFSc',
+        notify: 'true' === 'true',
+        verify: 'true' === 'true',
+        visitor: 'true' === 'true',
+        avatar: 'monsterid',
+        pageSize: '10',
+        lang: 'zh-cn',
+        placeholder: '赶紧留下你的评论吧~'
+    });
+</script>
+    
+
+    
+
+<article id="prenext-posts" class="prev-next articles">
+    <div class="row article-row">
+        
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
+            <div class="article-badge left-badge text-color">
+                <i class="fa fa-dot-circle-o"></i>&nbsp;本篇
+            </div>
+            <div class="card">
+                <a href="/libuv-10/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/2.jpg" class="responsive-img" alt="【libuv高效编程】libuv学习超详细教程10 —— libuv stream 流句柄解读">
+                        
+                        <span class="card-title">【libuv高效编程】libuv学习超详细教程10 —— libuv stream 流句柄解读</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            libuv系列文章
+【libuv高效编程】libuv学习超详细教程1——libuv的编译与安装
+
+【libuv高效编程】libuv学习超详细教程2——libuv框架初窥
+
+【libuv高效编程】libuv学习超详细教程3——libuv事件循
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="fa fa-clock-o fa-fw icon-date"></i>2020-04-24
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fa fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/网络/" class="post-category" target="_blank">
+                                    网络
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/libuv/" target="_blank">
+                        <span class="chip bg-color">libuv</span>
+                    </a>
+                    
+                    <a href="/tags/网络/" target="_blank">
+                        <span class="chip bg-color">网络</span>
+                    </a>
+                    
+                    <a href="/tags/Linux/" target="_blank">
+                        <span class="chip bg-color">Linux</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fa fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/libuv-9/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/0.jpg" class="responsive-img" alt="【libuv高效编程】libuv学习超详细教程9——libuv async异步句柄解读">
+                        
+                        <span class="card-title">【libuv高效编程】libuv学习超详细教程9——libuv async异步句柄解读</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            libuv系列文章
+【libuv高效编程】libuv学习超详细教程1——libuv的编译与安装
+
+【libuv高效编程】libuv学习超详细教程2——libuv框架初窥
+
+【libuv高效编程】libuv学习超详细教程3——libuv事件循
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="fa fa-clock-o fa-fw icon-date"></i>2020-04-23
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fa fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/网络/" class="post-category" target="_blank">
+                                    网络
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/libuv/" target="_blank">
+                        <span class="chip bg-color">libuv</span>
+                    </a>
+                    
+                    <a href="/tags/网络/" target="_blank">
+                        <span class="chip bg-color">网络</span>
+                    </a>
+                    
+                    <a href="/tags/Linux/" target="_blank">
+                        <span class="chip bg-color">Linux</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+    </div>
+</article>
+</div>
+
+
+<script>
+    $('#articleContent').on('copy', function (e) {
+        // IE8 or earlier browser is 'undefined'
+        if (typeof window.getSelection === 'undefined') return;
+
+        var selection = window.getSelection();
+        // if the selection is short let's not annoy our users.
+        if (('' + selection).length < Number.parseInt('120')) {
+            return;
+        }
+
+        // create a div outside of the visible area and fill it with the selected text.
+        var bodyElement = document.getElementsByTagName('body')[0];
+        var newdiv = document.createElement('div');
+        newdiv.style.position = 'absolute';
+        newdiv.style.left = '-99999px';
+        bodyElement.appendChild(newdiv);
+        newdiv.appendChild(selection.getRangeAt(0).cloneContents());
+
+        // we need a <pre> tag workaround.
+        // otherwise the text inside "pre" loses all the line breaks!
+        if (selection.getRangeAt(0).commonAncestorContainer.nodeName === 'PRE') {
+            newdiv.innerHTML = "<pre>" + newdiv.innerHTML + "</pre>";
+        }
+
+        var url = document.location.href;
+        newdiv.innerHTML += '<br />'
+            + '来源: 杰杰的博客<br />'
+            + '作者: 杰杰<br />'
+            + '链接: <a href="' + url + '">' + url + '</a><br />'
+            + '本文章著作权归作者所有，任何形式的转载都请注明出处。';
+
+        selection.selectAllChildren(newdiv);
+        window.setTimeout(function () {bodyElement.removeChild(newdiv);}, 200);
+    });
+</script>
+
+
+    </div>
+    <div id="toc-aside" class="expanded col l3 hide-on-med-and-down">
+        <div class="toc-widget">
+            <div class="toc-title"><i class="fa fa-list-alt"></i>&nbsp;&nbsp;目录</div>
+            <div id="toc-content"></div>
+        </div>
+    </div>
+</div>
+
+<!-- TOC 悬浮按钮. -->
+
+<div id="floating-toc-btn" class="hide-on-med-and-down">
+    <a class="btn-floating btn-large bg-color">
+        <i class="fa fa-list"></i>
+    </a>
+</div>
+
+
+<script src="/libs/tocbot/tocbot.min.js"></script>
+<script>
+    $(function () {
+        tocbot.init({
+            tocSelector: '#toc-content',
+            contentSelector: '#articleContent',
+            headingsOffset: -($(window).height() * 0.4 - 45),
+            // headingsOffset: -205,
+            headingSelector: 'h1, h2, h3, h4, h5'
+        });
+
+        // modify the toc link href to support Chinese.
+        let i = 0;
+        let tocHeading = 'toc-heading-';
+        $('#toc-content a').each(function () {
+            $(this).attr('href', '#' + tocHeading + (++i));
+        });
+
+        // modify the heading title id to support Chinese.
+        i = 0;
+        $('#articleContent').children('h1, h2, h3, h4, h5').each(function () {
+            $(this).attr('id', tocHeading + (++i));
+        });
+
+        // Set scroll toc fixed.
+        let tocHeight = parseInt($(window).height() * 0.4 - 64);
+        let $tocWidget = $('.toc-widget');
+        $(window).scroll(function () {
+            let scroll = $(window).scrollTop();
+            /* add post toc fixed. */
+            if (scroll > tocHeight) {
+                $tocWidget.addClass('toc-fixed');
+            } else {
+                $tocWidget.removeClass('toc-fixed');
+            }
+        });
+
+        
+        /* 修复文章卡片 div 的宽度. */
+        let fixPostCardWidth = function (srcId, targetId) {
+            let srcDiv = $('#' + srcId);
+            if (srcDiv.length === 0) {
+                return;
+            }
+
+            let w = srcDiv.width();
+            if (w >= 450) {
+                w = w + 21;
+            } else if (w >= 350 && w < 450) {
+                w = w + 18;
+            } else if (w >= 300 && w < 350) {
+                w = w + 16;
+            } else {
+                w = w + 14;
+            }
+            $('#' + targetId).width(w);
+        };
+
+        // 切换TOC目录展开收缩的相关操作.
+        const expandedClass = 'expanded';
+        let $tocAside = $('#toc-aside');
+        let $mainContent = $('#main-content');
+        $('#floating-toc-btn .btn-floating').click(function () {
+            if ($tocAside.hasClass(expandedClass)) {
+                $tocAside.removeClass(expandedClass).slideUp(500);
+                $mainContent.removeClass('l9');
+            } else {
+                $tocAside.addClass(expandedClass).slideDown(500);
+                $mainContent.addClass('l9');
+            }
+            fixPostCardWidth('artDetail', 'prenext-posts');
+        });
+        
+    });
+</script>
+    
+
+</main>
+
+
+<script src="https://cdn.bootcss.com/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script>
+    MathJax.Hub.Config({
+        tex2jax: {inlineMath: [['$', '$'], ['\(', '\)']]}
+    });
+</script>
+
+    <!-- jiejie 杰杰  modify 2019.08.15-->
+
+<footer class="page-footer bg-color">
+    <div class="container row center-align">
+        <div class="col s12 m8 l8 copy-right">
+            &copy; 2020 jiejie. All Rights Reserved.<a href="http://beian.miit.gov.cn"> 粤ICP备19019080号 </a>
+
+            <br>
+
+            
+                &nbsp;<i class="fa fa-area-chart"></i>&nbsp;站点总字数:&nbsp;
+                <span class="white-color">138.3k </span>
+
+            
+
+            <span id="sitetime"></span>
+
+            
+
+            
+                <br>
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'></span>
+                    <i class="fa fa-heart-o"></i>
+                    本站总访问量 <span id="busuanzi_value_site_pv" class="white-color"></span>
+
+                
+
+                
+                    <span id="busuanzi_container_site_uv" style='display:none'></span>
+                    人次,&nbsp;访客数 <span id="busuanzi_value_site_uv" class="white-color"></span> 人.
+                    
+                
+
+            
+
+        </div>
+
+        <div class="col s12 m4 l4 social-link social-statis">
+    <a href="https://github.com/jiejietop" class="tooltipped" target="_blank" data-tooltip="访问我的GitHub" data-position="top" data-delay="50">
+        <i class="fa fa-github"></i>
+    </a>
+
+
+ 
+    <a href="https://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=jiejietop@gmail.com" class="tooltipped" target="_blank" data-tooltip="邮件联系我" data-position="top" data-delay="50">
+        <i class="fa fa-envelope-open"></i>
+    </a>
+
+
+
+
+    <a href="https://zhihu.com/people/jie-jie-33-9" class="tooltipped" target="_blank" data-tooltip="访问我的知乎" data-position="top" data-delay="50">
+        <i class="fa fa-inverse">知</i>
+    </a>
+
+
+
+    <a href="http://wpa.qq.com/msgrd?v=3&uin=1161959934&site=qq&menu=yes" class="tooltipped" target="_blank" data-tooltip="访问我的QQ空间" data-position="top" data-delay="50">
+        <i class="fa fa-qq"></i>
+    </a>
+
+
+
+    <a href="https://weibo.com/6800623694" class="tooltipped" target="_blank" data-tooltip="关注我的微博" data-position="top" data-delay="50">
+        <i class="fa fa-weibo"></i>
+    </a>
+
+
+
+    <a href="/atom.xml" class="tooltipped" target="_blank" data-tooltip="RSS 订阅" data-position="top" data-delay="50">
+        <i class="fa fa-rss"></i>
+    </a>
+</div>
+
+    </div>
+</footer>
+
+<div class="progress-bar"></div>
+
+<script language=javascript>
+    function siteTime() {
+        window.setTimeout("siteTime()", 1000);
+        var seconds = 1000;
+        var minutes = seconds * 60;
+        var hours = minutes * 60;
+        var days = hours * 24;
+        var years = days * 365;
+        var today = new Date();
+        var todayYear = today.getFullYear();
+        var todayMonth = today.getMonth() + 1;
+        var todayDate = today.getDate();
+        var todayHour = today.getHours();
+        var todayMinute = today.getMinutes();
+        var todaySecond = today.getSeconds();
+
+        /* Date.UTC() -- 返回date对象距世界标准时间(UTC)1970年1月1日午夜之间的毫秒数(时间戳)
+        year - 作为date对象的年份，为4位年份值
+        month - 0-11之间的整数，做为date对象的月份
+        day - 1-31之间的整数，做为date对象的天数
+        hours - 0(午夜24点)-23之间的整数，做为date对象的小时数
+        minutes - 0-59之间的整数，做为date对象的分钟数
+        seconds - 0-59之间的整数，做为date对象的秒数
+        microseconds - 0-999之间的整数，做为date对象的毫秒数 */
+
+        var t1 = Date.UTC(2019, 08, 01, 00, 00, 00); //北京时间2019-8-1 00:00:00
+        var t2 = Date.UTC(todayYear, todayMonth, todayDate, todayHour, todayMinute, todaySecond);
+        var diff = t2 - t1;
+        var diffYears = Math.floor(diff / years);
+        var diffDays = Math.floor((diff / days) - diffYears * 365);
+        var diffHours = Math.floor((diff - (diffYears * 365 + diffDays) * days) / hours);
+        var diffMinutes = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours) / minutes);
+        var diffSeconds = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours - diffMinutes * minutes) / seconds);
+        document.getElementById("sitetime").innerHTML = "本站已运行 " + diffYears + " 年 " + diffDays + " 天 " + diffHours + " 小时 " + diffMinutes + " 分钟 " + diffSeconds + " 秒";
+    }/*因为建站时间还没有一年，就将之注释掉了。需要的可以取消*/
+    siteTime();
+</script>
+
+    <!-- 搜索遮罩框 -->
+<div id="searchModal" class="modal">
+    <div class="modal-content">
+        <div class="search-header">
+            <span class="title"><i class="fa fa-search"></i>&nbsp;&nbsp;搜索</span>
+            <input type="search" id="searchInput" name="s" placeholder="请输入搜索的关键字"
+                   class="search-input">
+        </div>
+        <div id="searchResult"></div>
+    </div>
+</div>
+
+<script src="/js/search.js"></script>
+<script type="text/javascript">
+$(function () {
+    searchFunc("/" + "search.xml", 'searchInput', 'searchResult');
+});
+</script>
+    <!-- 回到顶部按钮 -->
+<div id="backTop" class="top-scroll">
+    <a class="btn-floating btn-large waves-effect waves-light" href="#!">
+        <i class="fa fa-angle-up"></i>
+    </a>
+</div>
+
+
+    <script src="/libs/materialize/materialize.min.js"></script>
+    <script src="/libs/masonry/masonry.pkgd.min.js"></script>
+    <script src="/libs/aos/aos.js"></script>
+    <script src="/libs/scrollprogress/scrollProgress.min.js"></script>
+    <script src="/libs/lightGallery/js/lightgallery-all.min.js"></script>
+    <script src="/js/matery.js"></script>
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+
+
+
+    
+        <script src="/libs/others/clicklove.js"></script>
+    
+    
+    
+        <script async src="/libs/others/busuanzi.pure.mini.js"></script>
+    
+    
+<script>!function(e){var r=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function t(){for(var c=0;c<r.length;c++)t=r[c],void 0,0<=(n=t.getBoundingClientRect()).top&&0<=n.left&&n.top<=(e.innerHeight||document.documentElement.clientHeight)&&function(){var t,n,e,i,o=r[c];t=o,n=function(){r=r.filter(function(t){return o!==t})},e=new Image,i=t.getAttribute("data-original"),e.onload=function(){t.src=i,n&&n()},e.src=i}();var t,n}t(),e.addEventListener("scroll",function(){!function(t,n){clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(n)},500)}(t,e)})}(this);</script><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"log":false,"model":{"jsonPath":"/live2dw/assets/wanko.model.json"},"display":{"position":"left","width":150,"height":200},"mobile":{"show":false},"react":{"opacity":0.7}});</script></body>
+
+</html>
