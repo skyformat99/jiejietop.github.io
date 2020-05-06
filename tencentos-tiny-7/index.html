@@ -585,8 +585,8 @@
 <span class="token punctuation">{</span>
     <span class="token function">TOS_PTR_SANITY_CHECK</span><span class="token punctuation">(</span>sem<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-    <span class="token function">pend_object_init</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>sem<span class="token operator">-</span><span class="token operator">></span>pend_obj<span class="token punctuation">,</span> PEND_TYPE_SEM<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    sem<span class="token operator">-</span><span class="token operator">></span>count <span class="token operator">=</span> init_count<span class="token punctuation">;</span>
+    <span class="token function">pend_object_init</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>sem<span class="token operator">-</span><span class="token operator">&gt;</span>pend_obj<span class="token punctuation">,</span> PEND_TYPE_SEM<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    sem<span class="token operator">-</span><span class="token operator">&gt;</span>count <span class="token operator">=</span> init_count<span class="token punctuation">;</span>
 
     <span class="token keyword">return</span> K_ERR_NONE<span class="token punctuation">;</span>
 <span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
@@ -605,19 +605,19 @@
 
     <span class="token function">TOS_PTR_SANITY_CHECK</span><span class="token punctuation">(</span>sem<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-#<span class="token keyword">if</span> TOS_CFG_OBJECT_VERIFY_EN <span class="token operator">></span> 0u
-    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token function">pend_object_verify</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>sem<span class="token operator">-</span><span class="token operator">></span>pend_obj<span class="token punctuation">,</span> PEND_TYPE_SEM<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+#<span class="token keyword">if</span> TOS_CFG_OBJECT_VERIFY_EN <span class="token operator">&gt;</span> 0u
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token function">pend_object_verify</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>sem<span class="token operator">-</span><span class="token operator">&gt;</span>pend_obj<span class="token punctuation">,</span> PEND_TYPE_SEM<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
         <span class="token keyword">return</span> K_ERR_OBJ_INVALID<span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
 #endif
 
     <span class="token function">TOS_CPU_INT_DISABLE</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token function">pend_is_nopending</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>sem<span class="token operator">-</span><span class="token operator">></span>pend_obj<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        <span class="token function">pend_wakeup_all</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>sem<span class="token operator">-</span><span class="token operator">></span>pend_obj<span class="token punctuation">,</span> PEND_STATE_DESTROY<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token function">pend_is_nopending</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>sem<span class="token operator">-</span><span class="token operator">&gt;</span>pend_obj<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token function">pend_wakeup_all</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>sem<span class="token operator">-</span><span class="token operator">&gt;</span>pend_obj<span class="token punctuation">,</span> PEND_STATE_DESTROY<span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
 
-    <span class="token function">pend_object_deinit</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>sem<span class="token operator">-</span><span class="token operator">></span>pend_obj<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">pend_object_deinit</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>sem<span class="token operator">-</span><span class="token operator">&gt;</span>pend_obj<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
     <span class="token function">TOS_CPU_INT_ENABLE</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token function">knl_sched</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -642,16 +642,16 @@
     <span class="token function">TOS_PTR_SANITY_CHECK</span><span class="token punctuation">(</span>sem<span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token function">TOS_IN_IRQ_CHECK</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-#<span class="token keyword">if</span> TOS_CFG_OBJECT_VERIFY_EN <span class="token operator">></span> 0u
-    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token function">pend_object_verify</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>sem<span class="token operator">-</span><span class="token operator">></span>pend_obj<span class="token punctuation">,</span> PEND_TYPE_SEM<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+#<span class="token keyword">if</span> TOS_CFG_OBJECT_VERIFY_EN <span class="token operator">&gt;</span> 0u
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token function">pend_object_verify</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>sem<span class="token operator">-</span><span class="token operator">&gt;</span>pend_obj<span class="token punctuation">,</span> PEND_TYPE_SEM<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
         <span class="token keyword">return</span> K_ERR_OBJ_INVALID<span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
 #endif
 
     <span class="token function">TOS_CPU_INT_DISABLE</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-    <span class="token keyword">if</span> <span class="token punctuation">(</span>sem<span class="token operator">-</span><span class="token operator">></span>count <span class="token operator">></span> <span class="token punctuation">(</span>k_sem_cnt_t<span class="token punctuation">)</span>0u<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        <span class="token operator">--</span>sem<span class="token operator">-</span><span class="token operator">></span>count<span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>sem<span class="token operator">-</span><span class="token operator">&gt;</span>count <span class="token operator">&gt;</span> <span class="token punctuation">(</span>k_sem_cnt_t<span class="token punctuation">)</span>0u<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token operator">--</span>sem<span class="token operator">-</span><span class="token operator">&gt;</span>count<span class="token punctuation">;</span>
         <span class="token function">TOS_CPU_INT_ENABLE</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
         <span class="token keyword">return</span> K_ERR_NONE<span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
@@ -666,12 +666,12 @@
         <span class="token keyword">return</span> K_ERR_PEND_SCHED_LOCKED<span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
 
-    <span class="token function">pend_task_block</span><span class="token punctuation">(</span>k_curr_task<span class="token punctuation">,</span> <span class="token operator">&amp;</span>sem<span class="token operator">-</span><span class="token operator">></span>pend_obj<span class="token punctuation">,</span> timeout<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">pend_task_block</span><span class="token punctuation">(</span>k_curr_task<span class="token punctuation">,</span> <span class="token operator">&amp;</span>sem<span class="token operator">-</span><span class="token operator">&gt;</span>pend_obj<span class="token punctuation">,</span> timeout<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
     <span class="token function">TOS_CPU_INT_ENABLE</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token function">knl_sched</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-    <span class="token keyword">return</span> <span class="token function">pend_state2errno</span><span class="token punctuation">(</span>k_curr_task<span class="token operator">-</span><span class="token operator">></span>pend_state<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> <span class="token function">pend_state2errno</span><span class="token punctuation">(</span>k_curr_task<span class="token operator">-</span><span class="token operator">&gt;</span>pend_state<span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <h1 id="释放信号量"><a href="#释放信号量" class="headerlink" title="释放信号量"></a>释放信号量</h1><p>任务或者中断服务程序都可以释放信号量（post），释放信号量的本质就是将信号量控制块的<code>count</code>成员变量的值<code>加1</code>，表示信号量有效，不过如果有任务在等待这个信号量时，信号量控制块的<code>count</code>成员变量的值是不会改变的，因为要唤醒等待任务，而唤醒等待任务的本质就是等待任务获取到信号量，信号量控制块的<code>count</code>成员变量的值要<code>减1</code>，这一来一回中，信号量控制块的<code>count</code>成员变量的值是不会改变的。</p>
 <p><code>TencentOS tiny</code> 中可以只让等待中的一个任务获取到信号量，也可以让所有等待任务都获取到信号量。分别对应的API是<code>tos_sem_post()</code>与<code>tos_sem_post_all()</code>。顺便提一点，<code>tos_sem_post_all()</code>的设计模式其实是观察者模式，当一个观察的对象改变后，那么所有的观察者都会知道它改变了，具体可以看看《大话设计模式》这本书。</p>
@@ -701,26 +701,26 @@ __STATIC__ k_err_t <span class="token function">sem_do_post</span><span class="t
 <span class="token punctuation">{</span>
     <span class="token function">TOS_CPU_CPSR_ALLOC</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-#<span class="token keyword">if</span> TOS_CFG_OBJECT_VERIFY_EN <span class="token operator">></span> 0u
-    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token function">pend_object_verify</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>sem<span class="token operator">-</span><span class="token operator">></span>pend_obj<span class="token punctuation">,</span> PEND_TYPE_SEM<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+#<span class="token keyword">if</span> TOS_CFG_OBJECT_VERIFY_EN <span class="token operator">&gt;</span> 0u
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token function">pend_object_verify</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>sem<span class="token operator">-</span><span class="token operator">&gt;</span>pend_obj<span class="token punctuation">,</span> PEND_TYPE_SEM<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
         <span class="token keyword">return</span> K_ERR_OBJ_INVALID<span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
 #endif
 
     <span class="token function">TOS_CPU_INT_DISABLE</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-    <span class="token keyword">if</span> <span class="token punctuation">(</span>sem<span class="token operator">-</span><span class="token operator">></span>count <span class="token operator">==</span> <span class="token punctuation">(</span>k_sem_cnt_t<span class="token punctuation">)</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>sem<span class="token operator">-</span><span class="token operator">&gt;</span>count <span class="token operator">==</span> <span class="token punctuation">(</span>k_sem_cnt_t<span class="token punctuation">)</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
         <span class="token function">TOS_CPU_INT_ENABLE</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
         <span class="token keyword">return</span> K_ERR_SEM_OVERFLOW<span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
 
-    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token function">pend_is_nopending</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>sem<span class="token operator">-</span><span class="token operator">></span>pend_obj<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        <span class="token operator">++</span>sem<span class="token operator">-</span><span class="token operator">></span>count<span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token function">pend_is_nopending</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>sem<span class="token operator">-</span><span class="token operator">&gt;</span>pend_obj<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token operator">++</span>sem<span class="token operator">-</span><span class="token operator">&gt;</span>count<span class="token punctuation">;</span>
         <span class="token function">TOS_CPU_INT_ENABLE</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
         <span class="token keyword">return</span> K_ERR_NONE<span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
 
-    <span class="token function">pend_wakeup</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>sem<span class="token operator">-</span><span class="token operator">></span>pend_obj<span class="token punctuation">,</span> PEND_STATE_POST<span class="token punctuation">,</span> opt<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">pend_wakeup</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>sem<span class="token operator">-</span><span class="token operator">&gt;</span>pend_obj<span class="token punctuation">,</span> PEND_STATE_POST<span class="token punctuation">,</span> opt<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
     <span class="token function">TOS_CPU_INT_ENABLE</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token function">knl_sched</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -728,7 +728,7 @@ __STATIC__ k_err_t <span class="token function">sem_do_post</span><span class="t
     <span class="token keyword">return</span> K_ERR_NONE<span class="token punctuation">;</span>
 <span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>关于为什么判断<code>sem-&gt;count</code>是<code>(k_sem_cnt_t)-1</code>就代表溢出呢？我在C语言中举了个简单的例子：</p>
-<pre class="line-numbers language-js"><code class="language-js">#include <span class="token operator">&lt;</span>stdio<span class="token punctuation">.</span>h<span class="token operator">></span>
+<pre class="line-numbers language-js"><code class="language-js">#include <span class="token operator">&lt;</span>stdio<span class="token punctuation">.</span>h<span class="token operator">&gt;</span>
 
 int <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
 <span class="token punctuation">{</span>
@@ -1484,7 +1484,7 @@ unsigned int a <span class="token operator">=</span> <span class="token operator
 
             
                 &nbsp;<i class="fa fa-area-chart"></i>&nbsp;站点总字数:&nbsp;
-                <span class="white-color">138.3k </span>
+                <span class="white-color">141.2k </span>
 
             
 

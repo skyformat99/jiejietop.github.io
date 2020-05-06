@@ -589,7 +589,7 @@
 
 <span class="token comment" spellcheck="true">//针对不同的编译器调用不同的stdint.h文件</span>
 <span class="token macro property">#<span class="token directive keyword">if</span> defined(__ICCARM__) || defined(__CC_ARM) || defined(__GNUC__)</span>
-    <span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">&lt;stdint.h></span></span>
+    <span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">&lt;stdint.h&gt;</span></span>
     <span class="token keyword">extern</span> uint32_t SystemCoreClock<span class="token punctuation">;</span>
 <span class="token macro property">#<span class="token directive keyword">endif</span></span>
 
@@ -639,7 +639,7 @@
  *      2.重新上电，下载
  *    
  *             1.使用FlyMcu擦除一下芯片，然后进行下载
- *            STMISP -> 清除芯片(z)
+ *            STMISP -&gt; 清除芯片(z)
  */</span>
 <span class="token macro property">#<span class="token directive keyword">define</span> configUSE_TICKLESS_IDLE                                                    0   </span>
 
@@ -1613,7 +1613,7 @@ FreeRTOS 时间管理时间管理包括两个方面：系统节拍以及任务�
 
             
                 &nbsp;<i class="fa fa-area-chart"></i>&nbsp;站点总字数:&nbsp;
-                <span class="white-color">138.3k </span>
+                <span class="white-color">141.2k </span>
 
             
 

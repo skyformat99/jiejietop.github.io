@@ -563,7 +563,7 @@
             <div id="articleContent">
                 <h1 id="消息队列"><a href="#消息队列" class="headerlink" title="消息队列"></a>消息队列</h1><p>在前一篇文章中<a href="https://blog.csdn.net/jiejiemcu/article/details/99687678" target="_blank" rel="noopener">【TencentOS tiny学习】源码分析（3）——队列</a><br>我们描述了TencentOS tiny的队列实现，同时也点出了TencentOS tiny的队列是依赖于消息队列的，那么我们今天来看看消息队列的实现。</p>
 <p>其实消息队列是TencentOS tiny的一个<strong>基础组件</strong>，作为队列的底层。<br>所以在<code>tos_config.h</code>中会用以下宏定义：</p>
-<pre class="line-numbers language-js"><code class="language-js">#<span class="token keyword">if</span> <span class="token punctuation">(</span>TOS_CFG_QUEUE_EN <span class="token operator">></span> 0u<span class="token punctuation">)</span>
+<pre class="line-numbers language-js"><code class="language-js">#<span class="token keyword">if</span> <span class="token punctuation">(</span>TOS_CFG_QUEUE_EN <span class="token operator">&gt;</span> 0u<span class="token punctuation">)</span>
 #define TOS_CFG_MSG_EN     1u
 #<span class="token keyword">else</span>
 #define TOS_CFG_MSG_EN     0u
@@ -581,7 +581,7 @@
 <pre class="line-numbers language-js"><code class="language-js">__API__ k_err_t <span class="token function">tos_knl_init</span><span class="token punctuation">(</span><span class="token keyword">void</span><span class="token punctuation">)</span>
 <span class="token punctuation">{</span>
     ···
-    #<span class="token keyword">if</span> <span class="token punctuation">(</span>TOS_CFG_MSG_EN<span class="token punctuation">)</span> <span class="token operator">></span> <span class="token number">0</span>
+    #<span class="token keyword">if</span> <span class="token punctuation">(</span>TOS_CFG_MSG_EN<span class="token punctuation">)</span> <span class="token operator">&gt;</span> <span class="token number">0</span>
         <span class="token function">msgpool_init</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     #endif
     ···
@@ -591,11 +591,11 @@
 <span class="token punctuation">{</span>
     <span class="token function">TOS_PTR_SANITY_CHECK</span><span class="token punctuation">(</span>msg_queue<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-#<span class="token keyword">if</span> TOS_CFG_OBJECT_VERIFY_EN <span class="token operator">></span> 0u
-    <span class="token function">knl_object_init</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>msg_queue<span class="token operator">-</span><span class="token operator">></span>knl_obj<span class="token punctuation">,</span> KNL_OBJ_TYPE_MSG_QUEUE<span class="token punctuation">)</span><span class="token punctuation">;</span>
+#<span class="token keyword">if</span> TOS_CFG_OBJECT_VERIFY_EN <span class="token operator">&gt;</span> 0u
+    <span class="token function">knl_object_init</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>msg_queue<span class="token operator">-</span><span class="token operator">&gt;</span>knl_obj<span class="token punctuation">,</span> KNL_OBJ_TYPE_MSG_QUEUE<span class="token punctuation">)</span><span class="token punctuation">;</span>
 #endif
 
-    <span class="token function">tos_list_init</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>msg_queue<span class="token operator">-</span><span class="token operator">></span>queue_head<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">tos_list_init</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>msg_queue<span class="token operator">-</span><span class="token operator">&gt;</span>queue_head<span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token keyword">return</span> K_ERR_NONE<span class="token punctuation">;</span>
 <span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <h1 id="消息队列销毁"><a href="#消息队列销毁" class="headerlink" title="消息队列销毁"></a>消息队列销毁</h1><p><code>tos_msg_queue_destroy()</code>函数用于销毁一个消息队列，当消息队列不在使用是可以将其销毁，销毁的本质其实是将消息队列控制块的内容进行清除，首先判断一下消息队列控制块的类型是<code>KNL_OBJ_TYPE_MSG_QUEUE</code>，这个函数只能销毁队列类型的控制块。然后调用<code>tos_msg_queue_flush()</code>函数将队列的消息列表的消息全部“<code>清空</code>”，“清空”的意思是将挂载到队列上的消息释放回消息池（如果消息队列的消息列表存在消息，使用<code>msgpool_free()</code>函数释放消息）。并且通过<code>tos_list_init()</code>函数将消息队列的消息列表进行初始化，<code>knl_object_deinit()</code>函数是为了确保消息队列已经被销毁，此时消息队列控制块的<code>pend_obj</code>成员变量中的<code>type</code> 属性标识为<code>KNL_OBJ_TYPE_NONE</code>。</p>
@@ -606,17 +606,17 @@
 <span class="token punctuation">{</span>
     <span class="token function">TOS_PTR_SANITY_CHECK</span><span class="token punctuation">(</span>msg_queue<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-#<span class="token keyword">if</span> TOS_CFG_OBJECT_VERIFY_EN <span class="token operator">></span> 0u
-    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token function">knl_object_verify</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>msg_queue<span class="token operator">-</span><span class="token operator">></span>knl_obj<span class="token punctuation">,</span> KNL_OBJ_TYPE_MSG_QUEUE<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+#<span class="token keyword">if</span> TOS_CFG_OBJECT_VERIFY_EN <span class="token operator">&gt;</span> 0u
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token function">knl_object_verify</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>msg_queue<span class="token operator">-</span><span class="token operator">&gt;</span>knl_obj<span class="token punctuation">,</span> KNL_OBJ_TYPE_MSG_QUEUE<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
         <span class="token keyword">return</span> K_ERR_OBJ_INVALID<span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
 #endif
 
     <span class="token function">tos_msg_queue_flush</span><span class="token punctuation">(</span>msg_queue<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token function">tos_list_init</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>msg_queue<span class="token operator">-</span><span class="token operator">></span>queue_head<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">tos_list_init</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>msg_queue<span class="token operator">-</span><span class="token operator">&gt;</span>queue_head<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-#<span class="token keyword">if</span> TOS_CFG_OBJECT_VERIFY_EN <span class="token operator">></span> 0u
-    <span class="token function">knl_object_deinit</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>msg_queue<span class="token operator">-</span><span class="token operator">></span>knl_obj<span class="token punctuation">)</span><span class="token punctuation">;</span>
+#<span class="token keyword">if</span> TOS_CFG_OBJECT_VERIFY_EN <span class="token operator">&gt;</span> 0u
+    <span class="token function">knl_object_deinit</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>msg_queue<span class="token operator">-</span><span class="token operator">&gt;</span>knl_obj<span class="token punctuation">)</span><span class="token punctuation">;</span>
 #endif
 
     <span class="token keyword">return</span> K_ERR_NONE<span class="token punctuation">;</span>
@@ -628,7 +628,7 @@
 
     <span class="token function">TOS_CPU_INT_DISABLE</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-    <span class="token function">TOS_LIST_FOR_EACH_SAFE</span><span class="token punctuation">(</span>curr<span class="token punctuation">,</span> next<span class="token punctuation">,</span> <span class="token operator">&amp;</span>msg_queue<span class="token operator">-</span><span class="token operator">></span>queue_head<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token function">TOS_LIST_FOR_EACH_SAFE</span><span class="token punctuation">(</span>curr<span class="token punctuation">,</span> next<span class="token punctuation">,</span> <span class="token operator">&amp;</span>msg_queue<span class="token operator">-</span><span class="token operator">&gt;</span>queue_head<span class="token punctuation">)</span> <span class="token punctuation">{</span>
         <span class="token function">msgpool_free</span><span class="token punctuation">(</span><span class="token function">TOS_LIST_ENTRY</span><span class="token punctuation">(</span>curr<span class="token punctuation">,</span> k_msg_t<span class="token punctuation">,</span> list<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
 
@@ -640,22 +640,22 @@
     <span class="token function">TOS_CPU_CPSR_ALLOC</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     k_msg_t <span class="token operator">*</span>msg<span class="token punctuation">;</span>
 
-#<span class="token keyword">if</span> TOS_CFG_OBJECT_VERIFY_EN <span class="token operator">></span> 0u
-    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token function">knl_object_verify</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>msg_queue<span class="token operator">-</span><span class="token operator">></span>knl_obj<span class="token punctuation">,</span> KNL_OBJ_TYPE_MSG_QUEUE<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+#<span class="token keyword">if</span> TOS_CFG_OBJECT_VERIFY_EN <span class="token operator">&gt;</span> 0u
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token function">knl_object_verify</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>msg_queue<span class="token operator">-</span><span class="token operator">&gt;</span>knl_obj<span class="token punctuation">,</span> KNL_OBJ_TYPE_MSG_QUEUE<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
         <span class="token keyword">return</span> K_ERR_OBJ_INVALID<span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
 #endif
 
     <span class="token function">TOS_CPU_INT_DISABLE</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-    msg <span class="token operator">=</span> <span class="token function">TOS_LIST_FIRST_ENTRY_OR_NULL</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>msg_queue<span class="token operator">-</span><span class="token operator">></span>queue_head<span class="token punctuation">,</span> k_msg_t<span class="token punctuation">,</span> list<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    msg <span class="token operator">=</span> <span class="token function">TOS_LIST_FIRST_ENTRY_OR_NULL</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>msg_queue<span class="token operator">-</span><span class="token operator">&gt;</span>queue_head<span class="token punctuation">,</span> k_msg_t<span class="token punctuation">,</span> list<span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>msg<span class="token punctuation">)</span> <span class="token punctuation">{</span>
         <span class="token function">TOS_CPU_INT_ENABLE</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
         <span class="token keyword">return</span> K_ERR_MSG_QUEUE_EMPTY<span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
 
-    <span class="token operator">*</span>msg_addr <span class="token operator">=</span> msg<span class="token operator">-</span><span class="token operator">></span>msg_addr<span class="token punctuation">;</span>
-    <span class="token operator">*</span>msg_size <span class="token operator">=</span> msg<span class="token operator">-</span><span class="token operator">></span>msg_size<span class="token punctuation">;</span>
+    <span class="token operator">*</span>msg_addr <span class="token operator">=</span> msg<span class="token operator">-</span><span class="token operator">&gt;</span>msg_addr<span class="token punctuation">;</span>
+    <span class="token operator">*</span>msg_size <span class="token operator">=</span> msg<span class="token operator">-</span><span class="token operator">&gt;</span>msg_size<span class="token punctuation">;</span>
     <span class="token function">msgpool_free</span><span class="token punctuation">(</span>msg<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
     <span class="token function">TOS_CPU_INT_ENABLE</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -669,8 +669,8 @@
     <span class="token function">TOS_CPU_CPSR_ALLOC</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     k_msg_t <span class="token operator">*</span>msg<span class="token punctuation">;</span>
 
-#<span class="token keyword">if</span> TOS_CFG_OBJECT_VERIFY_EN <span class="token operator">></span> 0u
-    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token function">knl_object_verify</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>msg_queue<span class="token operator">-</span><span class="token operator">></span>knl_obj<span class="token punctuation">,</span> KNL_OBJ_TYPE_MSG_QUEUE<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+#<span class="token keyword">if</span> TOS_CFG_OBJECT_VERIFY_EN <span class="token operator">&gt;</span> 0u
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token function">knl_object_verify</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>msg_queue<span class="token operator">-</span><span class="token operator">&gt;</span>knl_obj<span class="token punctuation">,</span> KNL_OBJ_TYPE_MSG_QUEUE<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
         <span class="token keyword">return</span> K_ERR_OBJ_INVALID<span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
 #endif
@@ -683,13 +683,13 @@
         <span class="token keyword">return</span> K_ERR_MSG_QUEUE_FULL<span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
 
-    msg<span class="token operator">-</span><span class="token operator">></span>msg_addr <span class="token operator">=</span> msg_addr<span class="token punctuation">;</span>
-    msg<span class="token operator">-</span><span class="token operator">></span>msg_size <span class="token operator">=</span> msg_size<span class="token punctuation">;</span>
+    msg<span class="token operator">-</span><span class="token operator">&gt;</span>msg_addr <span class="token operator">=</span> msg_addr<span class="token punctuation">;</span>
+    msg<span class="token operator">-</span><span class="token operator">&gt;</span>msg_size <span class="token operator">=</span> msg_size<span class="token punctuation">;</span>
 
     <span class="token keyword">if</span> <span class="token punctuation">(</span>opt <span class="token operator">&amp;</span> TOS_OPT_MSG_PUT_LIFO<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        <span class="token function">tos_list_add</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>msg<span class="token operator">-</span><span class="token operator">></span>list<span class="token punctuation">,</span> <span class="token operator">&amp;</span>msg_queue<span class="token operator">-</span><span class="token operator">></span>queue_head<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token function">tos_list_add</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>msg<span class="token operator">-</span><span class="token operator">&gt;</span>list<span class="token punctuation">,</span> <span class="token operator">&amp;</span>msg_queue<span class="token operator">-</span><span class="token operator">&gt;</span>queue_head<span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
-        <span class="token function">tos_list_add_tail</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>msg<span class="token operator">-</span><span class="token operator">></span>list<span class="token punctuation">,</span> <span class="token operator">&amp;</span>msg_queue<span class="token operator">-</span><span class="token operator">></span>queue_head<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token function">tos_list_add_tail</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>msg<span class="token operator">-</span><span class="token operator">&gt;</span>list<span class="token punctuation">,</span> <span class="token operator">&amp;</span>msg_queue<span class="token operator">-</span><span class="token operator">&gt;</span>queue_head<span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
 
     <span class="token function">TOS_CPU_INT_ENABLE</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -1539,7 +1539,7 @@ int <span class="token function">main</span><span class="token punctuation">(</s
 
             
                 &nbsp;<i class="fa fa-area-chart"></i>&nbsp;站点总字数:&nbsp;
-                <span class="white-color">138.3k </span>
+                <span class="white-color">141.2k </span>
 
             
 

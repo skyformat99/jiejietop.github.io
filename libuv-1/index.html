@@ -617,9 +617,9 @@ libuv.a  libuv.la  libuv.so  libuv.so.1  libuv.so.1.0.0<span aria-hidden="true" 
 <pre class="line-numbers language-bash"><code class="language-bash"><span class="token function">ls</span> /usr/local/include/          
 uv  uv.h<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
 <h1 id="简单实用"><a href="#简单实用" class="headerlink" title="简单实用"></a>简单实用</h1><p>随便写个代码，打印一下安装的libuv库的版本：</p>
-<pre class="line-numbers language-c"><code class="language-c"><span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">&lt;stdio.h></span></span>
-<span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">&lt;stdlib.h></span></span>
-<span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">&lt;uv.h></span></span>
+<pre class="line-numbers language-c"><code class="language-c"><span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">&lt;stdio.h&gt;</span></span>
+<span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">&lt;stdlib.h&gt;</span></span>
+<span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">&lt;uv.h&gt;</span></span>
 
 <span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span> 
 <span class="token punctuation">{</span>
@@ -648,7 +648,7 @@ include $(DEP_FILES)
 endif
 
 %.o:%.c
-    $(CC) -o $@ -c $(FLAG) $< -g -MD -MF .$@.d
+    $(CC) -o $@ -c $(FLAG) $&lt; -g -MD -MF .$@.d
 
 clean:
     rm -rf $(TARGET) $(OBJS)
@@ -667,11 +667,11 @@ demo.c  demo.o  Makefile  targets
 
 ➜  001 ldd targets 
         linux-vdso.so.1 <span class="token punctuation">(</span>0x00007fffa5bc6000<span class="token punctuation">)</span>
-        libuv.so.1 <span class="token operator">=</span><span class="token operator">></span> /usr/local/lib/libuv.so.1 <span class="token punctuation">(</span>0x00007f8346e7b000<span class="token punctuation">)</span>
-        libc.so.6 <span class="token operator">=</span><span class="token operator">></span> /lib/x86_64-linux-gnu/libc.so.6 <span class="token punctuation">(</span>0x00007f8346a8a000<span class="token punctuation">)</span>
-        librt.so.1 <span class="token operator">=</span><span class="token operator">></span> /lib/x86_64-linux-gnu/librt.so.1 <span class="token punctuation">(</span>0x00007f8346882000<span class="token punctuation">)</span>
-        libpthread.so.0 <span class="token operator">=</span><span class="token operator">></span> /lib/x86_64-linux-gnu/libpthread.so.0 <span class="token punctuation">(</span>0x00007f8346663000<span class="token punctuation">)</span>
-        libdl.so.2 <span class="token operator">=</span><span class="token operator">></span> /lib/x86_64-linux-gnu/libdl.so.2 <span class="token punctuation">(</span>0x00007f834645f000<span class="token punctuation">)</span>
+        libuv.so.1 <span class="token operator">=</span><span class="token operator">&gt;</span> /usr/local/lib/libuv.so.1 <span class="token punctuation">(</span>0x00007f8346e7b000<span class="token punctuation">)</span>
+        libc.so.6 <span class="token operator">=</span><span class="token operator">&gt;</span> /lib/x86_64-linux-gnu/libc.so.6 <span class="token punctuation">(</span>0x00007f8346a8a000<span class="token punctuation">)</span>
+        librt.so.1 <span class="token operator">=</span><span class="token operator">&gt;</span> /lib/x86_64-linux-gnu/librt.so.1 <span class="token punctuation">(</span>0x00007f8346882000<span class="token punctuation">)</span>
+        libpthread.so.0 <span class="token operator">=</span><span class="token operator">&gt;</span> /lib/x86_64-linux-gnu/libpthread.so.0 <span class="token punctuation">(</span>0x00007f8346663000<span class="token punctuation">)</span>
+        libdl.so.2 <span class="token operator">=</span><span class="token operator">&gt;</span> /lib/x86_64-linux-gnu/libdl.so.2 <span class="token punctuation">(</span>0x00007f834645f000<span class="token punctuation">)</span>
         /lib64/ld-linux-x86-64.so.2 <span class="token punctuation">(</span>0x00007f83472ac000<span class="token punctuation">)</span>
 ➜  001 <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>运行：</p>
@@ -1405,7 +1405,7 @@ ROS系列文章
 
             
                 &nbsp;<i class="fa fa-area-chart"></i>&nbsp;站点总字数:&nbsp;
-                <span class="white-color">138.3k </span>
+                <span class="white-color">141.2k </span>
 
             
 

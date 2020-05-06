@@ -618,7 +618,7 @@ typedef <span class="token keyword">void</span> <span class="token punctuation">
 <p>软件定时器的回调函数是一个函数指针的形式，它支持传入一个<code>void指针</code>类型的数据。</p>
 <h2 id="软件定时器控制块"><a href="#软件定时器控制块" class="headerlink" title="软件定时器控制块"></a>软件定时器控制块</h2><p>每个软件定时器都有对应的软件定时器控制块，每个软件定时器控制块都包含了软件定时器的基本信息，如软件定时器的状态、软件定时器工作模式、软件定时器的周期，剩余时间，以及软件定时器回调函数等信息。</p>
 <pre class="line-numbers language-js"><code class="language-js">typedef struct k_timer_st <span class="token punctuation">{</span>
-#<span class="token keyword">if</span> TOS_CFG_OBJECT_VERIFY_EN <span class="token operator">></span> 0u
+#<span class="token keyword">if</span> TOS_CFG_OBJECT_VERIFY_EN <span class="token operator">&gt;</span> 0u
     knl_obj_t               knl_obj<span class="token punctuation">;</span>    <span class="token comment" spellcheck="true">/**&lt; 仅为了验证,测试当前内核对象是否真的是一个软件定时器 */</span>
 #endif
 
@@ -752,18 +752,18 @@ typedef <span class="token keyword">void</span> <span class="token punctuation">
         <span class="token keyword">return</span> K_ERR_TIMER_PERIOD_FOREVER<span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
 
-#<span class="token keyword">if</span> TOS_CFG_OBJECT_VERIFY_EN <span class="token operator">></span> 0u
-    <span class="token function">knl_object_init</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>tmr<span class="token operator">-</span><span class="token operator">></span>knl_obj<span class="token punctuation">,</span> KNL_OBJ_TYPE_TIMER<span class="token punctuation">)</span><span class="token punctuation">;</span>
+#<span class="token keyword">if</span> TOS_CFG_OBJECT_VERIFY_EN <span class="token operator">&gt;</span> 0u
+    <span class="token function">knl_object_init</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>tmr<span class="token operator">-</span><span class="token operator">&gt;</span>knl_obj<span class="token punctuation">,</span> KNL_OBJ_TYPE_TIMER<span class="token punctuation">)</span><span class="token punctuation">;</span>
 #endif
 
-    tmr<span class="token operator">-</span><span class="token operator">></span>state          <span class="token operator">=</span> TIMER_STATE_STOPPED<span class="token punctuation">;</span>
-    tmr<span class="token operator">-</span><span class="token operator">></span>delay          <span class="token operator">=</span> delay<span class="token punctuation">;</span>
-    tmr<span class="token operator">-</span><span class="token operator">></span>expires        <span class="token operator">=</span> <span class="token punctuation">(</span>k_tick_t<span class="token punctuation">)</span>0u<span class="token punctuation">;</span>
-    tmr<span class="token operator">-</span><span class="token operator">></span>period         <span class="token operator">=</span> period<span class="token punctuation">;</span>
-    tmr<span class="token operator">-</span><span class="token operator">></span>opt            <span class="token operator">=</span> opt<span class="token punctuation">;</span>
-    tmr<span class="token operator">-</span><span class="token operator">></span>cb             <span class="token operator">=</span> callback<span class="token punctuation">;</span>
-    tmr<span class="token operator">-</span><span class="token operator">></span>cb_arg         <span class="token operator">=</span> cb_arg<span class="token punctuation">;</span>
-    <span class="token function">tos_list_init</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>tmr<span class="token operator">-</span><span class="token operator">></span>list<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    tmr<span class="token operator">-</span><span class="token operator">&gt;</span>state          <span class="token operator">=</span> TIMER_STATE_STOPPED<span class="token punctuation">;</span>
+    tmr<span class="token operator">-</span><span class="token operator">&gt;</span>delay          <span class="token operator">=</span> delay<span class="token punctuation">;</span>
+    tmr<span class="token operator">-</span><span class="token operator">&gt;</span>expires        <span class="token operator">=</span> <span class="token punctuation">(</span>k_tick_t<span class="token punctuation">)</span>0u<span class="token punctuation">;</span>
+    tmr<span class="token operator">-</span><span class="token operator">&gt;</span>period         <span class="token operator">=</span> period<span class="token punctuation">;</span>
+    tmr<span class="token operator">-</span><span class="token operator">&gt;</span>opt            <span class="token operator">=</span> opt<span class="token punctuation">;</span>
+    tmr<span class="token operator">-</span><span class="token operator">&gt;</span>cb             <span class="token operator">=</span> callback<span class="token punctuation">;</span>
+    tmr<span class="token operator">-</span><span class="token operator">&gt;</span>cb_arg         <span class="token operator">=</span> cb_arg<span class="token punctuation">;</span>
+    <span class="token function">tos_list_init</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>tmr<span class="token operator">-</span><span class="token operator">&gt;</span>list<span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token keyword">return</span> K_ERR_NONE<span class="token punctuation">;</span>
 <span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <h1 id="销毁软件定时器"><a href="#销毁软件定时器" class="headerlink" title="销毁软件定时器"></a>销毁软件定时器</h1><p>软件定时器销毁函数是根据软件定时器控制块直接销毁的，销毁之后软件定时器的所有信息都会被清除，而且不能再次使用这个软件定时器，如果软件定时器处于运行状态，那么就需要将被销毁的软件定时器停止，然后再进行销毁操作。<br>其过程如下：</p>
@@ -835,30 +835,30 @@ __STATIC__ void timer_takeoff(k_timer_t *tmr)
 <span class="token punctuation">{</span>
     <span class="token function">TOS_PTR_SANITY_CHECK</span><span class="token punctuation">(</span>tmr<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-#<span class="token keyword">if</span> TOS_CFG_OBJECT_VERIFY_EN <span class="token operator">></span> 0u
-    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token function">knl_object_verify</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>tmr<span class="token operator">-</span><span class="token operator">></span>knl_obj<span class="token punctuation">,</span> KNL_OBJ_TYPE_TIMER<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+#<span class="token keyword">if</span> TOS_CFG_OBJECT_VERIFY_EN <span class="token operator">&gt;</span> 0u
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token function">knl_object_verify</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>tmr<span class="token operator">-</span><span class="token operator">&gt;</span>knl_obj<span class="token punctuation">,</span> KNL_OBJ_TYPE_TIMER<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
         <span class="token keyword">return</span> K_ERR_OBJ_INVALID<span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
 #endif
 
-    <span class="token keyword">if</span> <span class="token punctuation">(</span>tmr<span class="token operator">-</span><span class="token operator">></span>state <span class="token operator">==</span> TIMER_STATE_UNUSED<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>tmr<span class="token operator">-</span><span class="token operator">&gt;</span>state <span class="token operator">==</span> TIMER_STATE_UNUSED<span class="token punctuation">)</span> <span class="token punctuation">{</span>
         <span class="token keyword">return</span> K_ERR_TIMER_INACTIVE<span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
 
-    <span class="token keyword">if</span> <span class="token punctuation">(</span>tmr<span class="token operator">-</span><span class="token operator">></span>state <span class="token operator">==</span> TIMER_STATE_RUNNING<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>tmr<span class="token operator">-</span><span class="token operator">&gt;</span>state <span class="token operator">==</span> TIMER_STATE_RUNNING<span class="token punctuation">)</span> <span class="token punctuation">{</span>
         <span class="token function">timer_takeoff</span><span class="token punctuation">(</span>tmr<span class="token punctuation">)</span><span class="token punctuation">;</span>
-        tmr<span class="token operator">-</span><span class="token operator">></span>expires <span class="token operator">=</span> tmr<span class="token operator">-</span><span class="token operator">></span>delay<span class="token punctuation">;</span>
+        tmr<span class="token operator">-</span><span class="token operator">&gt;</span>expires <span class="token operator">=</span> tmr<span class="token operator">-</span><span class="token operator">&gt;</span>delay<span class="token punctuation">;</span>
         <span class="token function">timer_place</span><span class="token punctuation">(</span>tmr<span class="token punctuation">)</span><span class="token punctuation">;</span>
         <span class="token keyword">return</span> K_ERR_NONE<span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
 
-    <span class="token keyword">if</span> <span class="token punctuation">(</span>tmr<span class="token operator">-</span><span class="token operator">></span>state <span class="token operator">==</span> TIMER_STATE_STOPPED <span class="token operator">||</span>
-        tmr<span class="token operator">-</span><span class="token operator">></span>state <span class="token operator">==</span> TIMER_STATE_COMPLETED<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        tmr<span class="token operator">-</span><span class="token operator">></span>state <span class="token operator">=</span> TIMER_STATE_RUNNING<span class="token punctuation">;</span>
-        <span class="token keyword">if</span> <span class="token punctuation">(</span>tmr<span class="token operator">-</span><span class="token operator">></span>delay <span class="token operator">==</span> <span class="token punctuation">(</span>k_tick_t<span class="token punctuation">)</span>0u<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-            tmr<span class="token operator">-</span><span class="token operator">></span>expires <span class="token operator">=</span> tmr<span class="token operator">-</span><span class="token operator">></span>period<span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>tmr<span class="token operator">-</span><span class="token operator">&gt;</span>state <span class="token operator">==</span> TIMER_STATE_STOPPED <span class="token operator">||</span>
+        tmr<span class="token operator">-</span><span class="token operator">&gt;</span>state <span class="token operator">==</span> TIMER_STATE_COMPLETED<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        tmr<span class="token operator">-</span><span class="token operator">&gt;</span>state <span class="token operator">=</span> TIMER_STATE_RUNNING<span class="token punctuation">;</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>tmr<span class="token operator">-</span><span class="token operator">&gt;</span>delay <span class="token operator">==</span> <span class="token punctuation">(</span>k_tick_t<span class="token punctuation">)</span>0u<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            tmr<span class="token operator">-</span><span class="token operator">&gt;</span>expires <span class="token operator">=</span> tmr<span class="token operator">-</span><span class="token operator">&gt;</span>period<span class="token punctuation">;</span>
         <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
-            tmr<span class="token operator">-</span><span class="token operator">></span>expires <span class="token operator">=</span> tmr<span class="token operator">-</span><span class="token operator">></span>delay<span class="token punctuation">;</span>
+            tmr<span class="token operator">-</span><span class="token operator">&gt;</span>expires <span class="token operator">=</span> tmr<span class="token operator">-</span><span class="token operator">&gt;</span>delay<span class="token punctuation">;</span>
         <span class="token punctuation">}</span>
         <span class="token function">timer_place</span><span class="token punctuation">(</span>tmr<span class="token punctuation">)</span><span class="token punctuation">;</span>
         <span class="token keyword">return</span> K_ERR_NONE<span class="token punctuation">;</span>
@@ -897,19 +897,19 @@ __STATIC__ void timer_takeoff(k_timer_t *tmr)
 
     <span class="token function">TOS_CPU_INT_DISABLE</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-    tmr<span class="token operator">-</span><span class="token operator">></span>expires <span class="token operator">+</span><span class="token operator">=</span> k_tick_count<span class="token punctuation">;</span>
+    tmr<span class="token operator">-</span><span class="token operator">&gt;</span>expires <span class="token operator">+</span><span class="token operator">=</span> k_tick_count<span class="token punctuation">;</span>
 
     <span class="token function">TOS_LIST_FOR_EACH</span><span class="token punctuation">(</span>curr<span class="token punctuation">,</span> <span class="token operator">&amp;</span>k_timer_ctl<span class="token punctuation">.</span>list<span class="token punctuation">)</span> <span class="token punctuation">{</span>
         iter <span class="token operator">=</span> <span class="token function">TOS_LIST_ENTRY</span><span class="token punctuation">(</span>curr<span class="token punctuation">,</span> k_timer_t<span class="token punctuation">,</span> list<span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token keyword">if</span> <span class="token punctuation">(</span>tmr<span class="token operator">-</span><span class="token operator">></span>expires <span class="token operator">&lt;</span> iter<span class="token operator">-</span><span class="token operator">></span>expires<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>tmr<span class="token operator">-</span><span class="token operator">&gt;</span>expires <span class="token operator">&lt;</span> iter<span class="token operator">-</span><span class="token operator">&gt;</span>expires<span class="token punctuation">)</span> <span class="token punctuation">{</span>
             <span class="token keyword">break</span><span class="token punctuation">;</span>
         <span class="token punctuation">}</span>
     <span class="token punctuation">}</span>
-    <span class="token function">tos_list_add_tail</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>tmr<span class="token operator">-</span><span class="token operator">></span>list<span class="token punctuation">,</span> curr<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">tos_list_add_tail</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>tmr<span class="token operator">-</span><span class="token operator">&gt;</span>list<span class="token punctuation">,</span> curr<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-    <span class="token keyword">if</span> <span class="token punctuation">(</span>k_timer_ctl<span class="token punctuation">.</span>list<span class="token punctuation">.</span>next <span class="token operator">==</span> <span class="token operator">&amp;</span>tmr<span class="token operator">-</span><span class="token operator">></span>list<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>k_timer_ctl<span class="token punctuation">.</span>list<span class="token punctuation">.</span>next <span class="token operator">==</span> <span class="token operator">&amp;</span>tmr<span class="token operator">-</span><span class="token operator">&gt;</span>list<span class="token punctuation">)</span> <span class="token punctuation">{</span>
         <span class="token comment" spellcheck="true">// we are the first guy now</span>
-        k_timer_ctl<span class="token punctuation">.</span>next_expires <span class="token operator">=</span> tmr<span class="token operator">-</span><span class="token operator">></span>expires<span class="token punctuation">;</span>
+        k_timer_ctl<span class="token punctuation">.</span>next_expires <span class="token operator">=</span> tmr<span class="token operator">-</span><span class="token operator">&gt;</span>expires<span class="token punctuation">;</span>
 
 #<span class="token keyword">if</span> TOS_CFG_TIMER_AS_PROC <span class="token operator">==</span> 0u
         <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token function">task_state_is_sleeping</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>k_timer_task<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
@@ -944,23 +944,23 @@ __STATIC__ void timer_takeoff(k_timer_t *tmr)
 <span class="token punctuation">{</span>
     <span class="token function">TOS_PTR_SANITY_CHECK</span><span class="token punctuation">(</span>tmr<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-#<span class="token keyword">if</span> TOS_CFG_OBJECT_VERIFY_EN <span class="token operator">></span> 0u
-    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token function">knl_object_verify</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>tmr<span class="token operator">-</span><span class="token operator">></span>knl_obj<span class="token punctuation">,</span> KNL_OBJ_TYPE_TIMER<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+#<span class="token keyword">if</span> TOS_CFG_OBJECT_VERIFY_EN <span class="token operator">&gt;</span> 0u
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token function">knl_object_verify</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>tmr<span class="token operator">-</span><span class="token operator">&gt;</span>knl_obj<span class="token punctuation">,</span> KNL_OBJ_TYPE_TIMER<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
         <span class="token keyword">return</span> K_ERR_OBJ_INVALID<span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
 #endif
 
-    <span class="token keyword">if</span> <span class="token punctuation">(</span>tmr<span class="token operator">-</span><span class="token operator">></span>state <span class="token operator">==</span> TIMER_STATE_UNUSED<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>tmr<span class="token operator">-</span><span class="token operator">&gt;</span>state <span class="token operator">==</span> TIMER_STATE_UNUSED<span class="token punctuation">)</span> <span class="token punctuation">{</span>
         <span class="token keyword">return</span> K_ERR_TIMER_INACTIVE<span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
 
-    <span class="token keyword">if</span> <span class="token punctuation">(</span>tmr<span class="token operator">-</span><span class="token operator">></span>state <span class="token operator">==</span> TIMER_STATE_COMPLETED <span class="token operator">||</span>
-        tmr<span class="token operator">-</span><span class="token operator">></span>state <span class="token operator">==</span> TIMER_STATE_STOPPED<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>tmr<span class="token operator">-</span><span class="token operator">&gt;</span>state <span class="token operator">==</span> TIMER_STATE_COMPLETED <span class="token operator">||</span>
+        tmr<span class="token operator">-</span><span class="token operator">&gt;</span>state <span class="token operator">==</span> TIMER_STATE_STOPPED<span class="token punctuation">)</span> <span class="token punctuation">{</span>
         <span class="token keyword">return</span> K_ERR_TIMER_STOPPED<span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
 
-    <span class="token keyword">if</span> <span class="token punctuation">(</span>tmr<span class="token operator">-</span><span class="token operator">></span>state <span class="token operator">==</span> TIMER_STATE_RUNNING<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        tmr<span class="token operator">-</span><span class="token operator">></span>state <span class="token operator">=</span> TIMER_STATE_STOPPED<span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>tmr<span class="token operator">-</span><span class="token operator">&gt;</span>state <span class="token operator">==</span> TIMER_STATE_RUNNING<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        tmr<span class="token operator">-</span><span class="token operator">&gt;</span>state <span class="token operator">=</span> TIMER_STATE_STOPPED<span class="token punctuation">;</span>
         <span class="token function">timer_takeoff</span><span class="token punctuation">(</span>tmr<span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
 
@@ -995,21 +995,21 @@ __STATIC__ void timer_takeoff(k_timer_t *tmr)
 
     <span class="token function">TOS_LIST_FOR_EACH_SAFE</span><span class="token punctuation">(</span>curr<span class="token punctuation">,</span> next<span class="token punctuation">,</span> <span class="token operator">&amp;</span>k_timer_ctl<span class="token punctuation">.</span>list<span class="token punctuation">)</span> <span class="token punctuation">{</span>
         tmr <span class="token operator">=</span> <span class="token function">TOS_LIST_ENTRY</span><span class="token punctuation">(</span>curr<span class="token punctuation">,</span> k_timer_t<span class="token punctuation">,</span> list<span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token keyword">if</span> <span class="token punctuation">(</span>tmr<span class="token operator">-</span><span class="token operator">></span>expires <span class="token operator">></span> k_tick_count<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>tmr<span class="token operator">-</span><span class="token operator">&gt;</span>expires <span class="token operator">&gt;</span> k_tick_count<span class="token punctuation">)</span> <span class="token punctuation">{</span>
             <span class="token keyword">break</span><span class="token punctuation">;</span>
         <span class="token punctuation">}</span>
 
         <span class="token comment" spellcheck="true">// time's up</span>
         <span class="token function">timer_takeoff</span><span class="token punctuation">(</span>tmr<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-        <span class="token keyword">if</span> <span class="token punctuation">(</span>tmr<span class="token operator">-</span><span class="token operator">></span>opt <span class="token operator">==</span> TOS_OPT_TIMER_PERIODIC<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-            tmr<span class="token operator">-</span><span class="token operator">></span>expires <span class="token operator">=</span> tmr<span class="token operator">-</span><span class="token operator">></span>period<span class="token punctuation">;</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>tmr<span class="token operator">-</span><span class="token operator">&gt;</span>opt <span class="token operator">==</span> TOS_OPT_TIMER_PERIODIC<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            tmr<span class="token operator">-</span><span class="token operator">&gt;</span>expires <span class="token operator">=</span> tmr<span class="token operator">-</span><span class="token operator">&gt;</span>period<span class="token punctuation">;</span>
             <span class="token function">timer_place</span><span class="token punctuation">(</span>tmr<span class="token punctuation">)</span><span class="token punctuation">;</span>
         <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
-            tmr<span class="token operator">-</span><span class="token operator">></span>state <span class="token operator">=</span> TIMER_STATE_COMPLETED<span class="token punctuation">;</span>
+            tmr<span class="token operator">-</span><span class="token operator">&gt;</span>state <span class="token operator">=</span> TIMER_STATE_COMPLETED<span class="token punctuation">;</span>
         <span class="token punctuation">}</span>
 
-        <span class="token punctuation">(</span><span class="token operator">*</span>tmr<span class="token operator">-</span><span class="token operator">></span>cb<span class="token punctuation">)</span><span class="token punctuation">(</span>tmr<span class="token operator">-</span><span class="token operator">></span>cb_arg<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">(</span><span class="token operator">*</span>tmr<span class="token operator">-</span><span class="token operator">&gt;</span>cb<span class="token punctuation">)</span><span class="token punctuation">(</span>tmr<span class="token operator">-</span><span class="token operator">&gt;</span>cb_arg<span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
 
     <span class="token function">tos_knl_sched_unlock</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -1023,7 +1023,7 @@ __STATIC__ void timer_takeoff(k_timer_t *tmr)
 </blockquote>
 <pre class="line-numbers language-js"><code class="language-js">__KERNEL__ k_err_t <span class="token function">timer_init</span><span class="token punctuation">(</span><span class="token keyword">void</span><span class="token punctuation">)</span>
 <span class="token punctuation">{</span>
-#<span class="token keyword">if</span> TOS_CFG_TIMER_AS_PROC <span class="token operator">></span> 0u
+#<span class="token keyword">if</span> TOS_CFG_TIMER_AS_PROC <span class="token operator">&gt;</span> 0u
     <span class="token keyword">return</span> K_ERR_NONE<span class="token punctuation">;</span>
 #<span class="token keyword">else</span>
     <span class="token keyword">return</span> <span class="token function">tos_task_create</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>k_timer_task<span class="token punctuation">,</span>
@@ -1071,7 +1071,7 @@ __STATIC__ void timer_takeoff(k_timer_t *tmr)
         next_expires <span class="token operator">=</span> <span class="token function">timer_next_expires_get</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
         <span class="token keyword">if</span> <span class="token punctuation">(</span>next_expires <span class="token operator">==</span> TOS_TIME_FOREVER<span class="token punctuation">)</span> <span class="token punctuation">{</span>
             <span class="token function">tos_task_suspend</span><span class="token punctuation">(</span>K_NULL<span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token keyword">if</span> <span class="token punctuation">(</span>next_expires <span class="token operator">></span> <span class="token punctuation">(</span>k_tick_t<span class="token punctuation">)</span>0u<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token keyword">if</span> <span class="token punctuation">(</span>next_expires <span class="token operator">&gt;</span> <span class="token punctuation">(</span>k_tick_t<span class="token punctuation">)</span>0u<span class="token punctuation">)</span> <span class="token punctuation">{</span>
             <span class="token function">tos_task_delay</span><span class="token punctuation">(</span>next_expires<span class="token punctuation">)</span><span class="token punctuation">;</span>
         <span class="token punctuation">}</span>
 
@@ -1079,21 +1079,21 @@ __STATIC__ void timer_takeoff(k_timer_t *tmr)
 
         <span class="token function">TOS_LIST_FOR_EACH_SAFE</span><span class="token punctuation">(</span>curr<span class="token punctuation">,</span> next<span class="token punctuation">,</span> <span class="token operator">&amp;</span>k_timer_ctl<span class="token punctuation">.</span>list<span class="token punctuation">)</span> <span class="token punctuation">{</span>
             tmr <span class="token operator">=</span> <span class="token function">TOS_LIST_ENTRY</span><span class="token punctuation">(</span>curr<span class="token punctuation">,</span> k_timer_t<span class="token punctuation">,</span> list<span class="token punctuation">)</span><span class="token punctuation">;</span>
-            <span class="token keyword">if</span> <span class="token punctuation">(</span>tmr<span class="token operator">-</span><span class="token operator">></span>expires <span class="token operator">></span> k_tick_count<span class="token punctuation">)</span> <span class="token punctuation">{</span> <span class="token comment" spellcheck="true">// not yet</span>
+            <span class="token keyword">if</span> <span class="token punctuation">(</span>tmr<span class="token operator">-</span><span class="token operator">&gt;</span>expires <span class="token operator">&gt;</span> k_tick_count<span class="token punctuation">)</span> <span class="token punctuation">{</span> <span class="token comment" spellcheck="true">// not yet</span>
                 <span class="token keyword">break</span><span class="token punctuation">;</span>
             <span class="token punctuation">}</span>
 
             <span class="token comment" spellcheck="true">// time's up</span>
             <span class="token function">timer_takeoff</span><span class="token punctuation">(</span>tmr<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-            <span class="token keyword">if</span> <span class="token punctuation">(</span>tmr<span class="token operator">-</span><span class="token operator">></span>opt <span class="token operator">==</span> TOS_OPT_TIMER_PERIODIC<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-                tmr<span class="token operator">-</span><span class="token operator">></span>expires <span class="token operator">=</span> tmr<span class="token operator">-</span><span class="token operator">></span>period<span class="token punctuation">;</span>
+            <span class="token keyword">if</span> <span class="token punctuation">(</span>tmr<span class="token operator">-</span><span class="token operator">&gt;</span>opt <span class="token operator">==</span> TOS_OPT_TIMER_PERIODIC<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                tmr<span class="token operator">-</span><span class="token operator">&gt;</span>expires <span class="token operator">=</span> tmr<span class="token operator">-</span><span class="token operator">&gt;</span>period<span class="token punctuation">;</span>
                 <span class="token function">timer_place</span><span class="token punctuation">(</span>tmr<span class="token punctuation">)</span><span class="token punctuation">;</span>
             <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
-                tmr<span class="token operator">-</span><span class="token operator">></span>state <span class="token operator">=</span> TIMER_STATE_COMPLETED<span class="token punctuation">;</span>
+                tmr<span class="token operator">-</span><span class="token operator">&gt;</span>state <span class="token operator">=</span> TIMER_STATE_COMPLETED<span class="token punctuation">;</span>
             <span class="token punctuation">}</span>
 
-            <span class="token punctuation">(</span><span class="token operator">*</span>tmr<span class="token operator">-</span><span class="token operator">></span>cb<span class="token punctuation">)</span><span class="token punctuation">(</span>tmr<span class="token operator">-</span><span class="token operator">></span>cb_arg<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">(</span><span class="token operator">*</span>tmr<span class="token operator">-</span><span class="token operator">&gt;</span>cb<span class="token punctuation">)</span><span class="token punctuation">(</span>tmr<span class="token operator">-</span><span class="token operator">&gt;</span>cb_arg<span class="token punctuation">)</span><span class="token punctuation">;</span>
         <span class="token punctuation">}</span>
 
         <span class="token function">tos_knl_sched_unlock</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -1845,7 +1845,7 @@ __STATIC__ void timer_takeoff(k_timer_t *tmr)
 
             
                 &nbsp;<i class="fa fa-area-chart"></i>&nbsp;站点总字数:&nbsp;
-                <span class="white-color">138.3k </span>
+                <span class="white-color">141.2k </span>
 
             
 

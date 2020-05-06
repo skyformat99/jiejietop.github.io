@@ -528,7 +528,7 @@
                     
                     <div class="info-break-policy">
                         <i class="fa fa-file-word-o fa-fw"></i>文章字数:&nbsp;&nbsp;
-                        2.7k
+                        2.8k
                     </div>
                     
 
@@ -604,12 +604,12 @@ err_t <span class="token function">Create_RingBuff</span><span class="token punc
         <span class="token function">PRINT_DEBUG</span><span class="token punctuation">(</span><span class="token string">"change ringbuff size is %d!"</span><span class="token punctuation">,</span>size<span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
 
-    rb<span class="token operator">-></span>buffer <span class="token operator">=</span> buffer<span class="token punctuation">;</span>
-    rb<span class="token operator">-></span>size <span class="token operator">=</span> size<span class="token punctuation">;</span>
-    rb<span class="token operator">-></span>in <span class="token operator">=</span> rb<span class="token operator">-></span>out <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+    rb<span class="token operator">-&gt;</span>buffer <span class="token operator">=</span> buffer<span class="token punctuation">;</span>
+    rb<span class="token operator">-&gt;</span>size <span class="token operator">=</span> size<span class="token punctuation">;</span>
+    rb<span class="token operator">-&gt;</span>in <span class="token operator">=</span> rb<span class="token operator">-&gt;</span>out <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
 <span class="token macro property">#<span class="token directive keyword">if</span> USE_MUTEX    </span>
   <span class="token comment" spellcheck="true">/* 创建信号量不成功 */</span>
-  <span class="token keyword">if</span><span class="token punctuation">(</span><span class="token operator">!</span><span class="token function">create_mutex</span><span class="token punctuation">(</span>rb<span class="token operator">-></span>mutex<span class="token punctuation">)</span><span class="token punctuation">)</span>
+  <span class="token keyword">if</span><span class="token punctuation">(</span><span class="token operator">!</span><span class="token function">create_mutex</span><span class="token punctuation">(</span>rb<span class="token operator">-&gt;</span>mutex<span class="token punctuation">)</span><span class="token punctuation">)</span>
   <span class="token punctuation">{</span>
     <span class="token function">PRINT_ERR</span><span class="token punctuation">(</span><span class="token string">"create mutex fail!"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token function">ASSERT</span><span class="token punctuation">(</span>ASSERT_ERR<span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -629,7 +629,7 @@ err_t <span class="token function">Create_RingBuff</span><span class="token punc
   * @version v1.0
   * @note    用于处理数据，使数据长度必须为 2^n
     *                     如果不是，则转换，丢弃多余部分，如
-    *                     roundup_pow_of_two(66) -> 返回 64
+    *                     roundup_pow_of_two(66) -&gt; 返回 64
   ***********************************************************/</span>
 <span class="token keyword">static</span> <span class="token keyword">unsigned</span> <span class="token keyword">long</span> <span class="token function">roundup_pow_of_two</span><span class="token punctuation">(</span><span class="token keyword">unsigned</span> <span class="token keyword">long</span> x<span class="token punctuation">)</span>
 <span class="token punctuation">{</span>
@@ -655,11 +655,11 @@ err_t <span class="token function">Delete_RingBuff</span><span class="token punc
         <span class="token keyword">return</span> ERR_NULL<span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
 
-    rb<span class="token operator">-></span>buffer <span class="token operator">=</span> <span class="token constant">NULL</span><span class="token punctuation">;</span>
-    rb<span class="token operator">-></span>size <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
-    rb<span class="token operator">-></span>in <span class="token operator">=</span> rb<span class="token operator">-></span>out <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+    rb<span class="token operator">-&gt;</span>buffer <span class="token operator">=</span> <span class="token constant">NULL</span><span class="token punctuation">;</span>
+    rb<span class="token operator">-&gt;</span>size <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+    rb<span class="token operator">-&gt;</span>in <span class="token operator">=</span> rb<span class="token operator">-&gt;</span>out <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
 <span class="token macro property">#<span class="token directive keyword">if</span> USE_MUTEX    </span>
-  <span class="token keyword">if</span><span class="token punctuation">(</span><span class="token operator">!</span><span class="token function">deleta_mutex</span><span class="token punctuation">(</span>rb<span class="token operator">-></span>mutex<span class="token punctuation">)</span><span class="token punctuation">)</span>
+  <span class="token keyword">if</span><span class="token punctuation">(</span><span class="token operator">!</span><span class="token function">deleta_mutex</span><span class="token punctuation">(</span>rb<span class="token operator">-&gt;</span>mutex<span class="token punctuation">)</span><span class="token punctuation">)</span>
   <span class="token punctuation">{</span>
     <span class="token function">PRINT_DEBUG</span><span class="token punctuation">(</span><span class="token string">"deleta mutex is fail!"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token keyword">return</span> ERR_NOK<span class="token punctuation">;</span>
@@ -688,7 +688,7 @@ uint32_t <span class="token function">Write_RingBuff</span><span class="token pu
   uint32_t l<span class="token punctuation">;</span>
 <span class="token macro property">#<span class="token directive keyword">if</span> USE_MUTEX</span>
   <span class="token comment" spellcheck="true">/* 请求互斥量，成功才能进行ringbuff的访问 */</span>
-  <span class="token keyword">if</span><span class="token punctuation">(</span><span class="token operator">!</span><span class="token function">request_mutex</span><span class="token punctuation">(</span>rb<span class="token operator">-></span>mutex<span class="token punctuation">)</span><span class="token punctuation">)</span>
+  <span class="token keyword">if</span><span class="token punctuation">(</span><span class="token operator">!</span><span class="token function">request_mutex</span><span class="token punctuation">(</span>rb<span class="token operator">-&gt;</span>mutex<span class="token punctuation">)</span><span class="token punctuation">)</span>
   <span class="token punctuation">{</span>
     <span class="token function">PRINT_DEBUG</span><span class="token punctuation">(</span><span class="token string">"request mutex fail!"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
@@ -696,23 +696,23 @@ uint32_t <span class="token function">Write_RingBuff</span><span class="token pu
   <span class="token keyword">else</span>  <span class="token comment" spellcheck="true">/* 获取互斥量成功 */</span>
   <span class="token punctuation">{</span>
 <span class="token macro property">#<span class="token directive keyword">endif</span></span>
-    len <span class="token operator">=</span> <span class="token function">min</span><span class="token punctuation">(</span>len<span class="token punctuation">,</span> rb<span class="token operator">-></span>size <span class="token operator">-</span> rb<span class="token operator">-></span>in <span class="token operator">+</span> rb<span class="token operator">-></span>out<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    len <span class="token operator">=</span> <span class="token function">min</span><span class="token punctuation">(</span>len<span class="token punctuation">,</span> rb<span class="token operator">-&gt;</span>size <span class="token operator">-</span> rb<span class="token operator">-&gt;</span>in <span class="token operator">+</span> rb<span class="token operator">-&gt;</span>out<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
     <span class="token comment" spellcheck="true">/* 第一部分的拷贝:从环形缓冲区写入数据直至缓冲区最后一个地址 */</span>
-    l <span class="token operator">=</span> <span class="token function">min</span><span class="token punctuation">(</span>len<span class="token punctuation">,</span> rb<span class="token operator">-></span>size <span class="token operator">-</span> <span class="token punctuation">(</span>rb<span class="token operator">-></span>in <span class="token operator">&amp;</span> <span class="token punctuation">(</span>rb<span class="token operator">-></span>size <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token function">memcpy</span><span class="token punctuation">(</span>rb<span class="token operator">-></span>buffer <span class="token operator">+</span> <span class="token punctuation">(</span>rb<span class="token operator">-></span>in <span class="token operator">&amp;</span> <span class="token punctuation">(</span>rb<span class="token operator">-></span>size <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">,</span> wbuff<span class="token punctuation">,</span> l<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    l <span class="token operator">=</span> <span class="token function">min</span><span class="token punctuation">(</span>len<span class="token punctuation">,</span> rb<span class="token operator">-&gt;</span>size <span class="token operator">-</span> <span class="token punctuation">(</span>rb<span class="token operator">-&gt;</span>in <span class="token operator">&amp;</span> <span class="token punctuation">(</span>rb<span class="token operator">-&gt;</span>size <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">memcpy</span><span class="token punctuation">(</span>rb<span class="token operator">-&gt;</span>buffer <span class="token operator">+</span> <span class="token punctuation">(</span>rb<span class="token operator">-&gt;</span>in <span class="token operator">&amp;</span> <span class="token punctuation">(</span>rb<span class="token operator">-&gt;</span>size <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">,</span> wbuff<span class="token punctuation">,</span> l<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
     <span class="token comment" spellcheck="true">/* 如果溢出则在缓冲区头写入剩余的部分
        如果没溢出这句代码相当于无效 */</span>
-    <span class="token function">memcpy</span><span class="token punctuation">(</span>rb<span class="token operator">-></span>buffer<span class="token punctuation">,</span> wbuff <span class="token operator">+</span> l<span class="token punctuation">,</span> len <span class="token operator">-</span> l<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">memcpy</span><span class="token punctuation">(</span>rb<span class="token operator">-&gt;</span>buffer<span class="token punctuation">,</span> wbuff <span class="token operator">+</span> l<span class="token punctuation">,</span> len <span class="token operator">-</span> l<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-    rb<span class="token operator">-></span>in <span class="token operator">+</span><span class="token operator">=</span> len<span class="token punctuation">;</span>
+    rb<span class="token operator">-&gt;</span>in <span class="token operator">+</span><span class="token operator">=</span> len<span class="token punctuation">;</span>
 
     <span class="token function">PRINT_DEBUG</span><span class="token punctuation">(</span><span class="token string">"write ringBuff len is %d!"</span><span class="token punctuation">,</span>len<span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token macro property">#<span class="token directive keyword">if</span> USE_MUTEX</span>
   <span class="token punctuation">}</span>
   <span class="token comment" spellcheck="true">/* 释放互斥量 */</span>
-  <span class="token function">release_mutex</span><span class="token punctuation">(</span>rb<span class="token operator">-></span>mutex<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token function">release_mutex</span><span class="token punctuation">(</span>rb<span class="token operator">-&gt;</span>mutex<span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token macro property">#<span class="token directive keyword">endif</span></span>
   <span class="token keyword">return</span> len<span class="token punctuation">;</span>
 <span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
@@ -737,7 +737,7 @@ uint32_t <span class="token function">Read_RingBuff</span><span class="token pun
   uint32_t l<span class="token punctuation">;</span>
 <span class="token macro property">#<span class="token directive keyword">if</span> USE_MUTEX</span>
   <span class="token comment" spellcheck="true">/* 请求互斥量，成功才能进行ringbuff的访问 */</span>
-  <span class="token keyword">if</span><span class="token punctuation">(</span><span class="token operator">!</span><span class="token function">request_mutex</span><span class="token punctuation">(</span>rb<span class="token operator">-></span>mutex<span class="token punctuation">)</span><span class="token punctuation">)</span>
+  <span class="token keyword">if</span><span class="token punctuation">(</span><span class="token operator">!</span><span class="token function">request_mutex</span><span class="token punctuation">(</span>rb<span class="token operator">-&gt;</span>mutex<span class="token punctuation">)</span><span class="token punctuation">)</span>
   <span class="token punctuation">{</span>
     <span class="token function">PRINT_DEBUG</span><span class="token punctuation">(</span><span class="token string">"request mutex fail!"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
@@ -745,23 +745,23 @@ uint32_t <span class="token function">Read_RingBuff</span><span class="token pun
   <span class="token keyword">else</span>
   <span class="token punctuation">{</span>
 <span class="token macro property">#<span class="token directive keyword">endif</span></span>
-    len <span class="token operator">=</span> <span class="token function">min</span><span class="token punctuation">(</span>len<span class="token punctuation">,</span> rb<span class="token operator">-></span>in <span class="token operator">-</span> rb<span class="token operator">-></span>out<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    len <span class="token operator">=</span> <span class="token function">min</span><span class="token punctuation">(</span>len<span class="token punctuation">,</span> rb<span class="token operator">-&gt;</span>in <span class="token operator">-</span> rb<span class="token operator">-&gt;</span>out<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
     <span class="token comment" spellcheck="true">/* 第一部分的拷贝:从环形缓冲区读取数据直至缓冲区最后一个 */</span>
-    l <span class="token operator">=</span> <span class="token function">min</span><span class="token punctuation">(</span>len<span class="token punctuation">,</span> rb<span class="token operator">-></span>size <span class="token operator">-</span> <span class="token punctuation">(</span>rb<span class="token operator">-></span>out <span class="token operator">&amp;</span> <span class="token punctuation">(</span>rb<span class="token operator">-></span>size <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token function">memcpy</span><span class="token punctuation">(</span>rbuff<span class="token punctuation">,</span> rb<span class="token operator">-></span>buffer <span class="token operator">+</span> <span class="token punctuation">(</span>rb<span class="token operator">-></span>out <span class="token operator">&amp;</span> <span class="token punctuation">(</span>rb<span class="token operator">-></span>size <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">,</span> l<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    l <span class="token operator">=</span> <span class="token function">min</span><span class="token punctuation">(</span>len<span class="token punctuation">,</span> rb<span class="token operator">-&gt;</span>size <span class="token operator">-</span> <span class="token punctuation">(</span>rb<span class="token operator">-&gt;</span>out <span class="token operator">&amp;</span> <span class="token punctuation">(</span>rb<span class="token operator">-&gt;</span>size <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">memcpy</span><span class="token punctuation">(</span>rbuff<span class="token punctuation">,</span> rb<span class="token operator">-&gt;</span>buffer <span class="token operator">+</span> <span class="token punctuation">(</span>rb<span class="token operator">-&gt;</span>out <span class="token operator">&amp;</span> <span class="token punctuation">(</span>rb<span class="token operator">-&gt;</span>size <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">,</span> l<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
     <span class="token comment" spellcheck="true">/* 如果溢出则在缓冲区头读取剩余的部分
        如果没溢出这句代码相当于无效 */</span>
-    <span class="token function">memcpy</span><span class="token punctuation">(</span>rbuff <span class="token operator">+</span> l<span class="token punctuation">,</span> rb<span class="token operator">-></span>buffer<span class="token punctuation">,</span> len <span class="token operator">-</span> l<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">memcpy</span><span class="token punctuation">(</span>rbuff <span class="token operator">+</span> l<span class="token punctuation">,</span> rb<span class="token operator">-&gt;</span>buffer<span class="token punctuation">,</span> len <span class="token operator">-</span> l<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-    rb<span class="token operator">-></span>out <span class="token operator">+</span><span class="token operator">=</span> len<span class="token punctuation">;</span>
+    rb<span class="token operator">-&gt;</span>out <span class="token operator">+</span><span class="token operator">=</span> len<span class="token punctuation">;</span>
 
     <span class="token function">PRINT_DEBUG</span><span class="token punctuation">(</span><span class="token string">"read ringBuff len is %d!"</span><span class="token punctuation">,</span>len<span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token macro property">#<span class="token directive keyword">if</span> USE_MUTEX</span>
   <span class="token punctuation">}</span>
   <span class="token comment" spellcheck="true">/* 释放互斥量 */</span>
-  <span class="token function">release_mutex</span><span class="token punctuation">(</span>rb<span class="token operator">-></span>mutex<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token function">release_mutex</span><span class="token punctuation">(</span>rb<span class="token operator">-&gt;</span>mutex<span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token macro property">#<span class="token directive keyword">endif</span></span>
   <span class="token keyword">return</span> len<span class="token punctuation">;</span>
 <span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
@@ -783,13 +783,13 @@ uint32_t <span class="token function">CanRead_RingBuff</span><span class="token 
         <span class="token function">PRINT_ERR</span><span class="token punctuation">(</span><span class="token string">"ringbuff is null!"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
         <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
-    <span class="token keyword">if</span><span class="token punctuation">(</span>rb<span class="token operator">-></span>in <span class="token operator">==</span> rb<span class="token operator">-></span>out<span class="token punctuation">)</span>
+    <span class="token keyword">if</span><span class="token punctuation">(</span>rb<span class="token operator">-&gt;</span>in <span class="token operator">==</span> rb<span class="token operator">-&gt;</span>out<span class="token punctuation">)</span>
         <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
 
-    <span class="token keyword">if</span><span class="token punctuation">(</span>rb<span class="token operator">-></span>in <span class="token operator">></span> rb<span class="token operator">-></span>out<span class="token punctuation">)</span>
-        <span class="token keyword">return</span> <span class="token punctuation">(</span>rb<span class="token operator">-></span>in <span class="token operator">-</span> rb<span class="token operator">-></span>out<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span><span class="token punctuation">(</span>rb<span class="token operator">-&gt;</span>in <span class="token operator">&gt;</span> rb<span class="token operator">-&gt;</span>out<span class="token punctuation">)</span>
+        <span class="token keyword">return</span> <span class="token punctuation">(</span>rb<span class="token operator">-&gt;</span>in <span class="token operator">-</span> rb<span class="token operator">-&gt;</span>out<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-    <span class="token keyword">return</span> <span class="token punctuation">(</span>rb<span class="token operator">-></span>size <span class="token operator">-</span> <span class="token punctuation">(</span>rb<span class="token operator">-></span>out <span class="token operator">-</span> rb<span class="token operator">-></span>in<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> <span class="token punctuation">(</span>rb<span class="token operator">-&gt;</span>size <span class="token operator">-</span> <span class="token punctuation">(</span>rb<span class="token operator">-&gt;</span>out <span class="token operator">-</span> rb<span class="token operator">-&gt;</span>in<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span>
 
 <span class="token comment" spellcheck="true">/************************************************************
@@ -810,7 +810,7 @@ uint32_t <span class="token function">CanWrite_RingBuff</span><span class="token
         <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
 
-    <span class="token keyword">return</span> <span class="token punctuation">(</span>rb<span class="token operator">-></span>size <span class="token operator">-</span> <span class="token function">CanRead_RingBuff</span><span class="token punctuation">(</span>rb<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> <span class="token punctuation">(</span>rb<span class="token operator">-&gt;</span>size <span class="token operator">-</span> <span class="token function">CanRead_RingBuff</span><span class="token punctuation">(</span>rb<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <h3 id="附带"><a href="#附带" class="headerlink" title="附带"></a>附带</h3><p>这里的代码我是用于测试的，随便写的</p>
 <pre><code>    RingBuff_t ringbuff_handle;
@@ -971,19 +971,19 @@ uint32_t <span class="token function">CanWrite_RingBuff</span><span class="token
 
 
 <span class="token macro property">#<span class="token directive keyword">if</span> PRINT_DEBUG_ENABLE</span>
-<span class="token macro property">#<span class="token directive keyword">define</span> PRINT_DEBUG(fmt, args...)      do{(printf("\n[DEBUG] >> "), printf(fmt, ##args));}while(0)     </span>
+<span class="token macro property">#<span class="token directive keyword">define</span> PRINT_DEBUG(fmt, args...)      do{(printf("\n[DEBUG] &gt;&gt; "), printf(fmt, ##args));}while(0)     </span>
 <span class="token macro property">#<span class="token directive keyword">else</span></span>
 <span class="token macro property">#<span class="token directive keyword">define</span> PRINT_DEBUG(fmt, args...)         </span>
 <span class="token macro property">#<span class="token directive keyword">endif</span></span>
 
 <span class="token macro property">#<span class="token directive keyword">if</span> PRINT_ERR_ENABLE</span>
-<span class="token macro property">#<span class="token directive keyword">define</span> PRINT_ERR(fmt, args...)      do{(printf("\n[ERR] >> "), printf(fmt, ##args));}while(0)     </span>
+<span class="token macro property">#<span class="token directive keyword">define</span> PRINT_ERR(fmt, args...)      do{(printf("\n[ERR] &gt;&gt; "), printf(fmt, ##args));}while(0)     </span>
 <span class="token macro property">#<span class="token directive keyword">else</span></span>
 <span class="token macro property">#<span class="token directive keyword">define</span> PRINT_ERR(fmt, args...)           </span>
 <span class="token macro property">#<span class="token directive keyword">endif</span></span>
 
 <span class="token macro property">#<span class="token directive keyword">if</span> PRINT_INFO_ENABLE</span>
-<span class="token macro property">#<span class="token directive keyword">define</span> PRINT_INFO(fmt, args...)      do{(printf("\n[INFO] >> "), printf(fmt, ##args));}while(0)     </span>
+<span class="token macro property">#<span class="token directive keyword">define</span> PRINT_INFO(fmt, args...)      do{(printf("\n[INFO] &gt;&gt; "), printf(fmt, ##args));}while(0)     </span>
 <span class="token macro property">#<span class="token directive keyword">else</span></span>
 <span class="token macro property">#<span class="token directive keyword">define</span> PRINT_INFO(fmt, args...)           </span>
 <span class="token macro property">#<span class="token directive keyword">endif</span></span>
@@ -992,7 +992,7 @@ uint32_t <span class="token function">CanWrite_RingBuff</span><span class="token
 
 <span class="token comment" spellcheck="true">//针对不同的编译器调用不同的stdint.h文件</span>
 <span class="token macro property">#<span class="token directive keyword">if</span> defined(__ICCARM__) || defined(__CC_ARM) || defined(__GNUC__)</span>
-    <span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">&lt;stdint.h></span></span>
+    <span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">&lt;stdint.h&gt;</span></span>
 <span class="token macro property">#<span class="token directive keyword">endif</span></span>
 
 <span class="token comment" spellcheck="true">/* 断言 Assert */</span>
@@ -1731,7 +1731,7 @@ uint32_t <span class="token function">CanWrite_RingBuff</span><span class="token
 
             
                 &nbsp;<i class="fa fa-area-chart"></i>&nbsp;站点总字数:&nbsp;
-                <span class="white-color">138.3k </span>
+                <span class="white-color">141.2k </span>
 
             
 

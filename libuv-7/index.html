@@ -586,7 +586,7 @@
 <p>注：以上介绍来自维基百科：<a href="https://zh.wikipedia.org/wiki/POSIX" target="_blank" rel="noopener">https://zh.wikipedia.org/wiki/POSIX</a></p>
 </blockquote>
 <p>在Linux系统下的多线程遵循POSIX标准，而其中的一套常用的线程库是 pthread ，它是一套通用的线程库，是由 POSIX 提出的，因此具有很好的可移植性，我们学习多线程编程，就是使用它，必须包含以下头文件：</p>
-<pre class="line-numbers language-c"><code class="language-c"><span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">&lt;pthread.h></span></span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<pre class="line-numbers language-c"><code class="language-c"><span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">&lt;pthread.h&gt;</span></span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <p>除此之外在链接时需要使用库libpthread.a。因为pthread的库不是Linux系统的库，所以在编译时要加上 -lpthread 选项。</p>
 <h2 id="创建线程"><a href="#创建线程" class="headerlink" title="创建线程"></a>创建线程</h2><p><code>pthread_create()</code>函数是用于创建一个线程的，创建线程实际上就是确定调用该线程函数的入口点，在线程创建后，就开始运行相关的线程函数。若线程创建成功，则返回0。若线程创建失败，则返回对应的错误代码。</p>
 <p>函数原型：</p>
@@ -661,7 +661,7 @@
   <span class="token punctuation">}</span> f<span class="token punctuation">;</span>
 
   stack_size <span class="token operator">=</span>
-      params<span class="token operator">-></span>flags <span class="token operator">&amp;</span> UV_THREAD_HAS_STACK_SIZE <span class="token operator">?</span> params<span class="token operator">-></span>stack_size <span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">;</span>
+      params<span class="token operator">-&gt;</span>flags <span class="token operator">&amp;</span> UV_THREAD_HAS_STACK_SIZE <span class="token operator">?</span> params<span class="token operator">-&gt;</span>stack_size <span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">;</span>
 
   attr <span class="token operator">=</span> <span class="token constant">NULL</span><span class="token punctuation">;</span>
   <span class="token keyword">if</span> <span class="token punctuation">(</span>stack_size <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
@@ -676,7 +676,7 @@
 <span class="token macro property">#<span class="token directive keyword">endif</span></span>
   <span class="token punctuation">}</span>
 
-  <span class="token keyword">if</span> <span class="token punctuation">(</span>stack_size <span class="token operator">></span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>stack_size <span class="token operator">&gt;</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
     attr <span class="token operator">=</span> <span class="token operator">&amp;</span>attr_storage<span class="token punctuation">;</span>
 
     <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token function">pthread_attr_init</span><span class="token punctuation">(</span>attr<span class="token punctuation">)</span><span class="token punctuation">)</span>
@@ -714,10 +714,10 @@
 <span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
 <p>当然啦，其实还有很多互斥锁、信号量相关的实现都是差不多的，说白了就是在操作系统之上抽象了一个操作系统模拟层。</p>
 <h1 id="example"><a href="#example" class="headerlink" title="example"></a>example</h1><p>本章的学习是下一章的基础，就简单用一个龟兔赛跑的故事来实现两个线程吧，在例程中创建两个线程句柄，分别为tortoise、hare，他们在长度固定的跑到比赛，假设为10米，乌龟慢一点，3秒跑一米，兔子快一点，1秒跑一米，代码的实现如下：</p>
-<pre class="line-numbers language-c"><code class="language-c"><span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">&lt;stdio.h></span></span>
-<span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">&lt;unistd.h></span></span>
+<pre class="line-numbers language-c"><code class="language-c"><span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">&lt;stdio.h&gt;</span></span>
+<span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">&lt;unistd.h&gt;</span></span>
 
-<span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">&lt;uv.h></span></span>
+<span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">&lt;uv.h&gt;</span></span>
 
 <span class="token keyword">void</span> <span class="token function">hare_entry</span><span class="token punctuation">(</span><span class="token keyword">void</span> <span class="token operator">*</span>arg<span class="token punctuation">)</span> 
 <span class="token punctuation">{</span>
@@ -1508,7 +1508,7 @@ tortoise <span class="token keyword">done</span> running<span class="token opera
 
             
                 &nbsp;<i class="fa fa-area-chart"></i>&nbsp;站点总字数:&nbsp;
-                <span class="white-color">138.3k </span>
+                <span class="white-color">141.2k </span>
 
             
 

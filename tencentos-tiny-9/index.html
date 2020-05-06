@@ -624,8 +624,8 @@
 <span class="token punctuation">{</span>
     <span class="token function">TOS_PTR_SANITY_CHECK</span><span class="token punctuation">(</span>event<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-    <span class="token function">pend_object_init</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>event<span class="token operator">-</span><span class="token operator">></span>pend_obj<span class="token punctuation">,</span> PEND_TYPE_EVENT<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    event<span class="token operator">-</span><span class="token operator">></span>flag <span class="token operator">=</span> init_flag<span class="token punctuation">;</span>
+    <span class="token function">pend_object_init</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>event<span class="token operator">-</span><span class="token operator">&gt;</span>pend_obj<span class="token punctuation">,</span> PEND_TYPE_EVENT<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    event<span class="token operator">-</span><span class="token operator">&gt;</span>flag <span class="token operator">=</span> init_flag<span class="token punctuation">;</span>
     <span class="token keyword">return</span> K_ERR_NONE<span class="token punctuation">;</span>
 <span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <h1 id="销毁事件"><a href="#销毁事件" class="headerlink" title="销毁事件"></a>销毁事件</h1><p>事件销毁函数是根据事件控制块直接销毁的，销毁之后事件的所有信息都会被清除，而且不能再次使用这个事件，当事件被销毁时，其等待列表中存在任务，系统有必要将这些等待这些任务唤醒，并告知任务事件已经被销毁了<code>PEND_STATE_DESTROY</code>。然后产生一次任务调度以切换到最高优先级任务执行。</p>
@@ -644,20 +644,20 @@
 
     <span class="token function">TOS_PTR_SANITY_CHECK</span><span class="token punctuation">(</span>event<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-#<span class="token keyword">if</span> TOS_CFG_OBJECT_VERIFY_EN <span class="token operator">></span> 0u
-    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token function">pend_object_verify</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>event<span class="token operator">-</span><span class="token operator">></span>pend_obj<span class="token punctuation">,</span> PEND_TYPE_EVENT<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+#<span class="token keyword">if</span> TOS_CFG_OBJECT_VERIFY_EN <span class="token operator">&gt;</span> 0u
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token function">pend_object_verify</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>event<span class="token operator">-</span><span class="token operator">&gt;</span>pend_obj<span class="token punctuation">,</span> PEND_TYPE_EVENT<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
         <span class="token keyword">return</span> K_ERR_OBJ_INVALID<span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
 #endif
 
     <span class="token function">TOS_CPU_INT_DISABLE</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token function">pend_is_nopending</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>event<span class="token operator">-</span><span class="token operator">></span>pend_obj<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        <span class="token function">pend_wakeup_all</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>event<span class="token operator">-</span><span class="token operator">></span>pend_obj<span class="token punctuation">,</span> PEND_STATE_DESTROY<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token function">pend_is_nopending</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>event<span class="token operator">-</span><span class="token operator">&gt;</span>pend_obj<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token function">pend_wakeup_all</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>event<span class="token operator">-</span><span class="token operator">&gt;</span>pend_obj<span class="token punctuation">,</span> PEND_STATE_DESTROY<span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
 
-    <span class="token function">pend_object_deinit</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>event<span class="token operator">-</span><span class="token operator">></span>pend_obj<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    event<span class="token operator">-</span><span class="token operator">></span>flag <span class="token operator">=</span> <span class="token punctuation">(</span>k_event_flag_t<span class="token punctuation">)</span>0u<span class="token punctuation">;</span>
+    <span class="token function">pend_object_deinit</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>event<span class="token operator">-</span><span class="token operator">&gt;</span>pend_obj<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    event<span class="token operator">-</span><span class="token operator">&gt;</span>flag <span class="token operator">=</span> <span class="token punctuation">(</span>k_event_flag_t<span class="token punctuation">)</span>0u<span class="token punctuation">;</span>
 
     <span class="token function">TOS_CPU_INT_ENABLE</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token function">knl_sched</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -705,8 +705,8 @@ __API__ k_err_t <span class="token function">tos_event_pend</span><span class="t
     <span class="token function">TOS_PTR_SANITY_CHECK</span><span class="token punctuation">(</span>flag_match<span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token function">TOS_IN_IRQ_CHECK</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-#<span class="token keyword">if</span> TOS_CFG_OBJECT_VERIFY_EN <span class="token operator">></span> 0u
-    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token function">pend_object_verify</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>event<span class="token operator">-</span><span class="token operator">></span>pend_obj<span class="token punctuation">,</span> PEND_TYPE_EVENT<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+#<span class="token keyword">if</span> TOS_CFG_OBJECT_VERIFY_EN <span class="token operator">&gt;</span> 0u
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token function">pend_object_verify</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>event<span class="token operator">-</span><span class="token operator">&gt;</span>pend_obj<span class="token punctuation">,</span> PEND_TYPE_EVENT<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
         <span class="token keyword">return</span> K_ERR_OBJ_INVALID<span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
 #endif
@@ -721,9 +721,9 @@ __API__ k_err_t <span class="token function">tos_event_pend</span><span class="t
 
     <span class="token function">TOS_CPU_INT_DISABLE</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token function">event_is_match</span><span class="token punctuation">(</span>event<span class="token operator">-</span><span class="token operator">></span>flag<span class="token punctuation">,</span> flag_expect<span class="token punctuation">,</span> flag_match<span class="token punctuation">,</span> opt_pend<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token function">event_is_match</span><span class="token punctuation">(</span>event<span class="token operator">-</span><span class="token operator">&gt;</span>flag<span class="token punctuation">,</span> flag_expect<span class="token punctuation">,</span> flag_match<span class="token punctuation">,</span> opt_pend<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
         <span class="token keyword">if</span> <span class="token punctuation">(</span>opt_pend <span class="token operator">&amp;</span> TOS_OPT_EVENT_PEND_CLR<span class="token punctuation">)</span> <span class="token punctuation">{</span> <span class="token comment" spellcheck="true">// destroy the bridge after get across the river</span>
-            event<span class="token operator">-</span><span class="token operator">></span>flag <span class="token operator">=</span> <span class="token punctuation">(</span>k_event_flag_t<span class="token punctuation">)</span>0u<span class="token punctuation">;</span>
+            event<span class="token operator">-</span><span class="token operator">&gt;</span>flag <span class="token operator">=</span> <span class="token punctuation">(</span>k_event_flag_t<span class="token punctuation">)</span>0u<span class="token punctuation">;</span>
         <span class="token punctuation">}</span>
         <span class="token function">TOS_CPU_INT_ENABLE</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
         <span class="token keyword">return</span> K_ERR_NONE<span class="token punctuation">;</span>
@@ -739,20 +739,20 @@ __API__ k_err_t <span class="token function">tos_event_pend</span><span class="t
         <span class="token keyword">return</span> K_ERR_PEND_SCHED_LOCKED<span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
 
-    k_curr_task<span class="token operator">-</span><span class="token operator">></span>flag_expect      <span class="token operator">=</span> flag_expect<span class="token punctuation">;</span>
-    k_curr_task<span class="token operator">-</span><span class="token operator">></span>flag_match       <span class="token operator">=</span> flag_match<span class="token punctuation">;</span>
-    k_curr_task<span class="token operator">-</span><span class="token operator">></span>opt_event_pend   <span class="token operator">=</span> opt_pend<span class="token punctuation">;</span>
+    k_curr_task<span class="token operator">-</span><span class="token operator">&gt;</span>flag_expect      <span class="token operator">=</span> flag_expect<span class="token punctuation">;</span>
+    k_curr_task<span class="token operator">-</span><span class="token operator">&gt;</span>flag_match       <span class="token operator">=</span> flag_match<span class="token punctuation">;</span>
+    k_curr_task<span class="token operator">-</span><span class="token operator">&gt;</span>opt_event_pend   <span class="token operator">=</span> opt_pend<span class="token punctuation">;</span>
 
-    <span class="token function">pend_task_block</span><span class="token punctuation">(</span>k_curr_task<span class="token punctuation">,</span> <span class="token operator">&amp;</span>event<span class="token operator">-</span><span class="token operator">></span>pend_obj<span class="token punctuation">,</span> timeout<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">pend_task_block</span><span class="token punctuation">(</span>k_curr_task<span class="token punctuation">,</span> <span class="token operator">&amp;</span>event<span class="token operator">-</span><span class="token operator">&gt;</span>pend_obj<span class="token punctuation">,</span> timeout<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
     <span class="token function">TOS_CPU_INT_ENABLE</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token function">knl_sched</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-    k_curr_task<span class="token operator">-</span><span class="token operator">></span>flag_expect      <span class="token operator">=</span> <span class="token punctuation">(</span>k_event_flag_t<span class="token punctuation">)</span>0u<span class="token punctuation">;</span>
-    k_curr_task<span class="token operator">-</span><span class="token operator">></span>flag_match       <span class="token operator">=</span> <span class="token punctuation">(</span>k_event_flag_t <span class="token operator">*</span><span class="token punctuation">)</span>K_NULL<span class="token punctuation">;</span>
-    k_curr_task<span class="token operator">-</span><span class="token operator">></span>opt_event_pend   <span class="token operator">=</span> <span class="token punctuation">(</span>k_opt_t<span class="token punctuation">)</span>0u<span class="token punctuation">;</span>
+    k_curr_task<span class="token operator">-</span><span class="token operator">&gt;</span>flag_expect      <span class="token operator">=</span> <span class="token punctuation">(</span>k_event_flag_t<span class="token punctuation">)</span>0u<span class="token punctuation">;</span>
+    k_curr_task<span class="token operator">-</span><span class="token operator">&gt;</span>flag_match       <span class="token operator">=</span> <span class="token punctuation">(</span>k_event_flag_t <span class="token operator">*</span><span class="token punctuation">)</span>K_NULL<span class="token punctuation">;</span>
+    k_curr_task<span class="token operator">-</span><span class="token operator">&gt;</span>opt_event_pend   <span class="token operator">=</span> <span class="token punctuation">(</span>k_opt_t<span class="token punctuation">)</span>0u<span class="token punctuation">;</span>
 
-    <span class="token keyword">return</span> <span class="token function">pend_state2errno</span><span class="token punctuation">(</span>k_curr_task<span class="token operator">-</span><span class="token operator">></span>pend_state<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> <span class="token function">pend_state2errno</span><span class="token punctuation">(</span>k_curr_task<span class="token operator">-</span><span class="token operator">&gt;</span>pend_state<span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <h1 id="发送事件"><a href="#发送事件" class="headerlink" title="发送事件"></a>发送事件</h1><p><code>TencentOS tiny</code> 提供两个函数发送事件，分别是：<code>tos_event_post()</code>与<code>tos_event_post_keep()</code>，两个函数本质上都是调用同一个函数<code>event_do_post()</code>去实现发送事件的操作的，只不过选项是不同而已，使用<code>tos_event_post()</code>函数会覆盖写入指定的事件，可能影响其他已发生的事件，而<code>tos_event_post_keep()</code>函数则可以保持其他事件位不改变的同时发生事件，在实际情况中后者更常用。</p>
 <p>此函数用于将已发生的事件写入事件旗标中指定的位，当对应的位被置1之后，等待事件的任务将可能被恢复，此时需要遍历等待在事件对象上的事件等待列表，判断是否有任务<code>期望的事件</code>与当前<code>事件旗标</code>的值匹配，如果有，则唤醒该任务。</p>
@@ -1534,7 +1534,7 @@ return K_ERR_NONE;</code></pre><p>}</p>
 
             
                 &nbsp;<i class="fa fa-area-chart"></i>&nbsp;站点总字数:&nbsp;
-                <span class="white-color">138.3k </span>
+                <span class="white-color">141.2k </span>
 
             
 

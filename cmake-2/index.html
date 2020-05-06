@@ -593,7 +593,7 @@ cmake <span class="token punctuation">..</span>
 <pre class="line-numbers language-bash"><code class="language-bash">CMakeCache.txt  CMakeFiles  cmake_install.cmake  Makefile  section2<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <p><strong>补充一点，如果你想看到cmake生成的垃圾文件比你源码还多的时候，你就会爱死外部构建这种骚操作了~</strong></p>
 <h1 id="自动查找源码"><a href="#自动查找源码" class="headerlink" title="自动查找源码"></a>自动查找源码</h1><p>不得不说，cmake是个很好的自动化构建工具，既然是自动化，那么很的东西都是自动的，比如查找源码，cmake就提供查找源码的命令：</p>
-<pre class="line-numbers language-js"><code class="language-js"><span class="token function">aux_source_directory</span><span class="token punctuation">(</span><span class="token operator">&lt;</span>dir<span class="token operator">></span> <span class="token operator">&lt;</span>variable<span class="token operator">></span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<pre class="line-numbers language-js"><code class="language-js"><span class="token function">aux_source_directory</span><span class="token punctuation">(</span><span class="token operator">&lt;</span>dir<span class="token operator">&gt;</span> <span class="token operator">&lt;</span>variable<span class="token operator">&gt;</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <p>它的主要作用就是：<strong>查找在某个路径下的所有源文件</strong>，注意，是所有源码文件，当你的目录下有很多个源码文件的时候，他就主动去查找了，哦，当然，它也只会查找源码文件，比如<code>*.c 、 *.cpp 、*.cc</code>啦，反正只要是源码就可以了，但是什么<code>txt  、 *.h</code>文件这些它是不会记录下来的。</p>
 <ul>
 <li><code>dir</code> ： 指定的目录（可以是绝对路径也可以是相对路径）</li>
@@ -612,7 +612,7 @@ cmake <span class="token punctuation">..</span>
 <p>变量的的值始终是<code>string（字符串）</code>类型，变量名字是区分大小写的，一般变量命名还是正常点比较好，别搞太多乱七八糟的特殊符号，只要数字、字母，下划线<code>"_"</code> 、横线<code>"-"</code>就差不多了，变量的作用域也是有全局与局部之分，与C语言、Java都差不多，我也不多说了。我的例程中<code>全局变量是全部大写，局部变量是全小写</code>的，也是比较好区分。</p>
 <p>变量引用的形式为<code>${variable_name}</code>，变量引用被变量的值替换，或者如果变量没有被设置，则由空字符串替换。变量引用可以嵌套，例如<code>${outer_${inner_variable}veriable}</code>；环境变量引用的形式为<code>$ENV{VARIABLE}</code>，并在相同的上下文中作为正常变量引用。</p>
 <h1 id="打印日志"><a href="#打印日志" class="headerlink" title="打印日志"></a>打印日志</h1><p>在<code>CMake</code>构建的时候，你可能不知道某些变量是啥内容，那么就在终端打印出来看看就好了，这根我们写代码中的printf函数差不多，给直接打一串字符串出来瞧瞧….</p>
-<pre class="line-numbers language-js"><code class="language-js"><span class="token function">message</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token operator">&lt;</span>mode<span class="token operator">></span><span class="token punctuation">]</span> <span class="token string">"message to display"</span> <span class="token operator">...</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<pre class="line-numbers language-js"><code class="language-js"><span class="token function">message</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token operator">&lt;</span>mode<span class="token operator">&gt;</span><span class="token punctuation">]</span> <span class="token string">"message to display"</span> <span class="token operator">...</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <p>首先呢，<code>&lt;mode&gt;</code>是指定消息的类型：</p>
 <ul>
 <li><code>(无)</code> = 重要消息；</li>
@@ -628,8 +628,8 @@ cmake <span class="token punctuation">..</span>
 <ul>
 <li>main.c</li>
 </ul>
-<pre class="line-numbers language-c"><code class="language-c"><span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">&lt;stdio.h></span></span>
-<span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">&lt;stdlib.h></span></span>
+<pre class="line-numbers language-c"><code class="language-c"><span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">&lt;stdio.h&gt;</span></span>
+<span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">&lt;stdlib.h&gt;</span></span>
 <span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">"power.h"</span></span>
 
 <span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token keyword">int</span> argc<span class="token punctuation">,</span> <span class="token keyword">char</span> <span class="token operator">*</span>argv<span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
@@ -1403,7 +1403,7 @@ Scanning dependencies of target section3
 
             
                 &nbsp;<i class="fa fa-area-chart"></i>&nbsp;站点总字数:&nbsp;
-                <span class="white-color">138.3k </span>
+                <span class="white-color">141.2k </span>
 
             
 

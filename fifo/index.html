@@ -615,7 +615,7 @@ RingBuff_t ringBuff<span class="token punctuation">;</span><span class="token co
  */</span>
 u8 <span class="token function">Write_RingBuff</span><span class="token punctuation">(</span>u8 data<span class="token punctuation">)</span>
 <span class="token punctuation">{</span>
-   <span class="token keyword">if</span><span class="token punctuation">(</span>ringBuff<span class="token punctuation">.</span>Lenght <span class="token operator">>=</span> RINGBUFF_LEN<span class="token punctuation">)</span> <span class="token comment" spellcheck="true">//判断缓冲区是否已满</span>
+   <span class="token keyword">if</span><span class="token punctuation">(</span>ringBuff<span class="token punctuation">.</span>Lenght <span class="token operator">&gt;=</span> RINGBUFF_LEN<span class="token punctuation">)</span> <span class="token comment" spellcheck="true">//判断缓冲区是否已满</span>
     <span class="token punctuation">{</span>
       <span class="token keyword">return</span> FLASE<span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
@@ -1399,7 +1399,7 @@ u8 <span class="token function">Read_RingBuff</span><span class="token punctuati
 
             
                 &nbsp;<i class="fa fa-area-chart"></i>&nbsp;站点总字数:&nbsp;
-                <span class="white-color">138.3k </span>
+                <span class="white-color">141.2k </span>
 
             
 

@@ -536,7 +536,7 @@
                     
                     <div class="info-break-policy">
                         <i class="fa fa-file-word-o fa-fw"></i>文章字数:&nbsp;&nbsp;
-                        5.3k
+                        5.4k
                     </div>
                     
 
@@ -595,7 +595,7 @@
     k_list_t        owner_list<span class="token punctuation">;</span>
 <span class="token punctuation">}</span> k_mutex_t<span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <pre class="line-numbers language-js"><code class="language-js">typedef struct k_task_st <span class="token punctuation">{</span>
-#<span class="token keyword">if</span> TOS_CFG_MUTEX_EN <span class="token operator">></span> 0u
+#<span class="token keyword">if</span> TOS_CFG_MUTEX_EN <span class="token operator">&gt;</span> 0u
     k_list_t            mutex_own_list<span class="token punctuation">;</span>     <span class="token comment" spellcheck="true">/**&lt; 任务拥有的互斥量 */</span>
     k_prio_t            prio_pending<span class="token punctuation">;</span>       <span class="token comment" spellcheck="true">/*&lt; 在持有互斥锁时修改任务优先级将被记录到这个变量中，在释放持有的互斥锁时再更改 */</span>
 #endif
@@ -610,11 +610,11 @@
 <span class="token punctuation">{</span>
     <span class="token function">TOS_PTR_SANITY_CHECK</span><span class="token punctuation">(</span>mutex<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-    <span class="token function">pend_object_init</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>mutex<span class="token operator">-</span><span class="token operator">></span>pend_obj<span class="token punctuation">,</span> PEND_TYPE_MUTEX<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    mutex<span class="token operator">-</span><span class="token operator">></span>pend_nesting     <span class="token operator">=</span> <span class="token punctuation">(</span>k_nesting_t<span class="token punctuation">)</span>0u<span class="token punctuation">;</span>
-    mutex<span class="token operator">-</span><span class="token operator">></span>owner            <span class="token operator">=</span> K_NULL<span class="token punctuation">;</span>
-    mutex<span class="token operator">-</span><span class="token operator">></span>owner_orig_prio  <span class="token operator">=</span> K_TASK_PRIO_INVALID<span class="token punctuation">;</span>
-    <span class="token function">tos_list_init</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>mutex<span class="token operator">-</span><span class="token operator">></span>owner_list<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">pend_object_init</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>mutex<span class="token operator">-</span><span class="token operator">&gt;</span>pend_obj<span class="token punctuation">,</span> PEND_TYPE_MUTEX<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    mutex<span class="token operator">-</span><span class="token operator">&gt;</span>pend_nesting     <span class="token operator">=</span> <span class="token punctuation">(</span>k_nesting_t<span class="token punctuation">)</span>0u<span class="token punctuation">;</span>
+    mutex<span class="token operator">-</span><span class="token operator">&gt;</span>owner            <span class="token operator">=</span> K_NULL<span class="token punctuation">;</span>
+    mutex<span class="token operator">-</span><span class="token operator">&gt;</span>owner_orig_prio  <span class="token operator">=</span> K_TASK_PRIO_INVALID<span class="token punctuation">;</span>
+    <span class="token function">tos_list_init</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>mutex<span class="token operator">-</span><span class="token operator">&gt;</span>owner_list<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
     <span class="token keyword">return</span> K_ERR_NONE<span class="token punctuation">;</span>
 <span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
@@ -635,22 +635,22 @@
 
     <span class="token function">TOS_PTR_SANITY_CHECK</span><span class="token punctuation">(</span>mutex<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-#<span class="token keyword">if</span> TOS_CFG_OBJECT_VERIFY_EN <span class="token operator">></span> 0u
-    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token function">pend_object_verify</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>mutex<span class="token operator">-</span><span class="token operator">></span>pend_obj<span class="token punctuation">,</span> PEND_TYPE_MUTEX<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+#<span class="token keyword">if</span> TOS_CFG_OBJECT_VERIFY_EN <span class="token operator">&gt;</span> 0u
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token function">pend_object_verify</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>mutex<span class="token operator">-</span><span class="token operator">&gt;</span>pend_obj<span class="token punctuation">,</span> PEND_TYPE_MUTEX<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
         <span class="token keyword">return</span> K_ERR_OBJ_INVALID<span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
 #endif
 
     <span class="token function">TOS_CPU_INT_DISABLE</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token function">pend_is_nopending</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>mutex<span class="token operator">-</span><span class="token operator">></span>pend_obj<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        <span class="token function">pend_wakeup_all</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>mutex<span class="token operator">-</span><span class="token operator">></span>pend_obj<span class="token punctuation">,</span> PEND_STATE_DESTROY<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token function">pend_is_nopending</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>mutex<span class="token operator">-</span><span class="token operator">&gt;</span>pend_obj<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token function">pend_wakeup_all</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>mutex<span class="token operator">-</span><span class="token operator">&gt;</span>pend_obj<span class="token punctuation">,</span> PEND_STATE_DESTROY<span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
 
-    <span class="token function">pend_object_deinit</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>mutex<span class="token operator">-</span><span class="token operator">></span>pend_obj<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    mutex<span class="token operator">-</span><span class="token operator">></span>pend_nesting <span class="token operator">=</span> <span class="token punctuation">(</span>k_nesting_t<span class="token punctuation">)</span>0u<span class="token punctuation">;</span>
+    <span class="token function">pend_object_deinit</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>mutex<span class="token operator">-</span><span class="token operator">&gt;</span>pend_obj<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    mutex<span class="token operator">-</span><span class="token operator">&gt;</span>pend_nesting <span class="token operator">=</span> <span class="token punctuation">(</span>k_nesting_t<span class="token punctuation">)</span>0u<span class="token punctuation">;</span>
 
-    <span class="token keyword">if</span> <span class="token punctuation">(</span>mutex<span class="token operator">-</span><span class="token operator">></span>owner<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>mutex<span class="token operator">-</span><span class="token operator">&gt;</span>owner<span class="token punctuation">)</span> <span class="token punctuation">{</span>
         <span class="token function">mutex_old_owner_release</span><span class="token punctuation">(</span>mutex<span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
 
@@ -680,25 +680,25 @@
     <span class="token function">TOS_PTR_SANITY_CHECK</span><span class="token punctuation">(</span>mutex<span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token function">TOS_IN_IRQ_CHECK</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-#<span class="token keyword">if</span> TOS_CFG_OBJECT_VERIFY_EN <span class="token operator">></span> 0u
-    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token function">pend_object_verify</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>mutex<span class="token operator">-</span><span class="token operator">></span>pend_obj<span class="token punctuation">,</span> PEND_TYPE_MUTEX<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+#<span class="token keyword">if</span> TOS_CFG_OBJECT_VERIFY_EN <span class="token operator">&gt;</span> 0u
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token function">pend_object_verify</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>mutex<span class="token operator">-</span><span class="token operator">&gt;</span>pend_obj<span class="token punctuation">,</span> PEND_TYPE_MUTEX<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
         <span class="token keyword">return</span> K_ERR_OBJ_INVALID<span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
 #endif
 
     <span class="token function">TOS_CPU_INT_DISABLE</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token keyword">if</span> <span class="token punctuation">(</span>mutex<span class="token operator">-</span><span class="token operator">></span>pend_nesting <span class="token operator">==</span> <span class="token punctuation">(</span>k_nesting_t<span class="token punctuation">)</span>0u<span class="token punctuation">)</span> <span class="token punctuation">{</span> <span class="token comment" spellcheck="true">// first come</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>mutex<span class="token operator">-</span><span class="token operator">&gt;</span>pend_nesting <span class="token operator">==</span> <span class="token punctuation">(</span>k_nesting_t<span class="token punctuation">)</span>0u<span class="token punctuation">)</span> <span class="token punctuation">{</span> <span class="token comment" spellcheck="true">// first come</span>
         <span class="token function">mutex_fresh_owner_mark</span><span class="token punctuation">(</span>mutex<span class="token punctuation">,</span> k_curr_task<span class="token punctuation">)</span><span class="token punctuation">;</span>
         <span class="token function">TOS_CPU_INT_ENABLE</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
         <span class="token keyword">return</span> K_ERR_NONE<span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
 
-    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token function">knl_is_self</span><span class="token punctuation">(</span>mutex<span class="token operator">-</span><span class="token operator">></span>owner<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span> <span class="token comment" spellcheck="true">// come again</span>
-        <span class="token keyword">if</span> <span class="token punctuation">(</span>mutex<span class="token operator">-</span><span class="token operator">></span>pend_nesting <span class="token operator">==</span> <span class="token punctuation">(</span>k_nesting_t<span class="token punctuation">)</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token function">knl_is_self</span><span class="token punctuation">(</span>mutex<span class="token operator">-</span><span class="token operator">&gt;</span>owner<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span> <span class="token comment" spellcheck="true">// come again</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>mutex<span class="token operator">-</span><span class="token operator">&gt;</span>pend_nesting <span class="token operator">==</span> <span class="token punctuation">(</span>k_nesting_t<span class="token punctuation">)</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
             <span class="token function">TOS_CPU_INT_ENABLE</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
             <span class="token keyword">return</span> K_ERR_MUTEX_NESTING_OVERFLOW<span class="token punctuation">;</span>
         <span class="token punctuation">}</span>
-        <span class="token operator">++</span>mutex<span class="token operator">-</span><span class="token operator">></span>pend_nesting<span class="token punctuation">;</span>
+        <span class="token operator">++</span>mutex<span class="token operator">-</span><span class="token operator">&gt;</span>pend_nesting<span class="token punctuation">;</span>
         <span class="token function">TOS_CPU_INT_ENABLE</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
         <span class="token keyword">return</span> K_ERR_MUTEX_NESTING<span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
@@ -713,19 +713,19 @@
         <span class="token keyword">return</span> K_ERR_PEND_SCHED_LOCKED<span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
 
-    <span class="token keyword">if</span> <span class="token punctuation">(</span>mutex<span class="token operator">-</span><span class="token operator">></span>owner<span class="token operator">-</span><span class="token operator">></span>prio <span class="token operator">></span> k_curr_task<span class="token operator">-</span><span class="token operator">></span>prio<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>mutex<span class="token operator">-</span><span class="token operator">&gt;</span>owner<span class="token operator">-</span><span class="token operator">&gt;</span>prio <span class="token operator">&gt;</span> k_curr_task<span class="token operator">-</span><span class="token operator">&gt;</span>prio<span class="token punctuation">)</span> <span class="token punctuation">{</span>
         <span class="token comment" spellcheck="true">// PRIORITY INVERSION:</span>
         <span class="token comment" spellcheck="true">// we are declaring a mutex, which's owner has a lower(numerically bigger) priority.</span>
         <span class="token comment" spellcheck="true">// make owner the same priority with us.</span>
-        <span class="token function">tos_task_prio_change</span><span class="token punctuation">(</span>mutex<span class="token operator">-</span><span class="token operator">></span>owner<span class="token punctuation">,</span> k_curr_task<span class="token operator">-</span><span class="token operator">></span>prio<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token function">tos_task_prio_change</span><span class="token punctuation">(</span>mutex<span class="token operator">-</span><span class="token operator">&gt;</span>owner<span class="token punctuation">,</span> k_curr_task<span class="token operator">-</span><span class="token operator">&gt;</span>prio<span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
 
-    <span class="token function">pend_task_block</span><span class="token punctuation">(</span>k_curr_task<span class="token punctuation">,</span> <span class="token operator">&amp;</span>mutex<span class="token operator">-</span><span class="token operator">></span>pend_obj<span class="token punctuation">,</span> timeout<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">pend_task_block</span><span class="token punctuation">(</span>k_curr_task<span class="token punctuation">,</span> <span class="token operator">&amp;</span>mutex<span class="token operator">-</span><span class="token operator">&gt;</span>pend_obj<span class="token punctuation">,</span> timeout<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
     <span class="token function">TOS_CPU_INT_ENABLE</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token function">knl_sched</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-    err <span class="token operator">=</span> <span class="token function">pend_state2errno</span><span class="token punctuation">(</span>k_curr_task<span class="token operator">-</span><span class="token operator">></span>pend_state<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    err <span class="token operator">=</span> <span class="token function">pend_state2errno</span><span class="token punctuation">(</span>k_curr_task<span class="token operator">-</span><span class="token operator">&gt;</span>pend_state<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
     <span class="token keyword">if</span> <span class="token punctuation">(</span>err <span class="token operator">==</span> K_ERR_NONE<span class="token punctuation">)</span> <span class="token punctuation">{</span>
         <span class="token comment" spellcheck="true">// good, we are the owner now.</span>
@@ -746,11 +746,11 @@ __API__ k_err_t <span class="token function">tos_mutex_pend</span><span class="t
 <p><code>mutex_fresh_owner_mark</code>与<code>mutex_new_owner_mark()</code>函数的实现：</p>
 <pre class="line-numbers language-js"><code class="language-js">__STATIC_INLINE__ <span class="token keyword">void</span> <span class="token function">mutex_fresh_owner_mark</span><span class="token punctuation">(</span>k_mutex_t <span class="token operator">*</span>mutex<span class="token punctuation">,</span> k_task_t <span class="token operator">*</span>task<span class="token punctuation">)</span>
 <span class="token punctuation">{</span>
-    mutex<span class="token operator">-</span><span class="token operator">></span>pend_nesting     <span class="token operator">=</span> <span class="token punctuation">(</span>k_nesting_t<span class="token punctuation">)</span>1u<span class="token punctuation">;</span>
-    mutex<span class="token operator">-</span><span class="token operator">></span>owner            <span class="token operator">=</span> task<span class="token punctuation">;</span>
-    mutex<span class="token operator">-</span><span class="token operator">></span>owner_orig_prio  <span class="token operator">=</span> task<span class="token operator">-</span><span class="token operator">></span>prio<span class="token punctuation">;</span>
+    mutex<span class="token operator">-</span><span class="token operator">&gt;</span>pend_nesting     <span class="token operator">=</span> <span class="token punctuation">(</span>k_nesting_t<span class="token punctuation">)</span>1u<span class="token punctuation">;</span>
+    mutex<span class="token operator">-</span><span class="token operator">&gt;</span>owner            <span class="token operator">=</span> task<span class="token punctuation">;</span>
+    mutex<span class="token operator">-</span><span class="token operator">&gt;</span>owner_orig_prio  <span class="token operator">=</span> task<span class="token operator">-</span><span class="token operator">&gt;</span>prio<span class="token punctuation">;</span>
 
-    <span class="token function">tos_list_add</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>mutex<span class="token operator">-</span><span class="token operator">></span>owner_list<span class="token punctuation">,</span> <span class="token operator">&amp;</span>task<span class="token operator">-</span><span class="token operator">></span>mutex_own_list<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">tos_list_add</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>mutex<span class="token operator">-</span><span class="token operator">&gt;</span>owner_list<span class="token punctuation">,</span> <span class="token operator">&amp;</span>task<span class="token operator">-</span><span class="token operator">&gt;</span>mutex_own_list<span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span>
 
 __STATIC_INLINE__ <span class="token keyword">void</span> <span class="token function">mutex_new_owner_mark</span><span class="token punctuation">(</span>k_mutex_t <span class="token operator">*</span>mutex<span class="token punctuation">,</span> k_task_t <span class="token operator">*</span>task<span class="token punctuation">)</span>
@@ -760,8 +760,8 @@ __STATIC_INLINE__ <span class="token keyword">void</span> <span class="token fun
     <span class="token function">mutex_fresh_owner_mark</span><span class="token punctuation">(</span>mutex<span class="token punctuation">,</span> task<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
     <span class="token comment" spellcheck="true">// we own the mutex now, make sure our priority is higher than any one in the pend list.</span>
-    highest_pending_prio <span class="token operator">=</span> <span class="token function">pend_highest_prio_get</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>mutex<span class="token operator">-</span><span class="token operator">></span>pend_obj<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token keyword">if</span> <span class="token punctuation">(</span>task<span class="token operator">-</span><span class="token operator">></span>prio <span class="token operator">></span> highest_pending_prio<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    highest_pending_prio <span class="token operator">=</span> <span class="token function">pend_highest_prio_get</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>mutex<span class="token operator">-</span><span class="token operator">&gt;</span>pend_obj<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>task<span class="token operator">-</span><span class="token operator">&gt;</span>prio <span class="token operator">&gt;</span> highest_pending_prio<span class="token punctuation">)</span> <span class="token punctuation">{</span>
         <span class="token function">tos_task_prio_change</span><span class="token punctuation">(</span>task<span class="token punctuation">,</span> highest_pending_prio<span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
 <span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
@@ -784,37 +784,37 @@ __STATIC_INLINE__ <span class="token keyword">void</span> <span class="token fun
 
     <span class="token function">TOS_PTR_SANITY_CHECK</span><span class="token punctuation">(</span>mutex<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-#<span class="token keyword">if</span> TOS_CFG_OBJECT_VERIFY_EN <span class="token operator">></span> 0u
-    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token function">pend_object_verify</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>mutex<span class="token operator">-</span><span class="token operator">></span>pend_obj<span class="token punctuation">,</span> PEND_TYPE_MUTEX<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+#<span class="token keyword">if</span> TOS_CFG_OBJECT_VERIFY_EN <span class="token operator">&gt;</span> 0u
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token function">pend_object_verify</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>mutex<span class="token operator">-</span><span class="token operator">&gt;</span>pend_obj<span class="token punctuation">,</span> PEND_TYPE_MUTEX<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
         <span class="token keyword">return</span> K_ERR_OBJ_INVALID<span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
 #endif
 
     <span class="token function">TOS_CPU_INT_DISABLE</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token function">knl_is_self</span><span class="token punctuation">(</span>mutex<span class="token operator">-</span><span class="token operator">></span>owner<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token function">knl_is_self</span><span class="token punctuation">(</span>mutex<span class="token operator">-</span><span class="token operator">&gt;</span>owner<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
         <span class="token function">TOS_CPU_INT_ENABLE</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
         <span class="token keyword">return</span> K_ERR_MUTEX_NOT_OWNER<span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
 
-    <span class="token keyword">if</span> <span class="token punctuation">(</span>mutex<span class="token operator">-</span><span class="token operator">></span>pend_nesting <span class="token operator">==</span> <span class="token punctuation">(</span>k_nesting_t<span class="token punctuation">)</span>0u<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>mutex<span class="token operator">-</span><span class="token operator">&gt;</span>pend_nesting <span class="token operator">==</span> <span class="token punctuation">(</span>k_nesting_t<span class="token punctuation">)</span>0u<span class="token punctuation">)</span> <span class="token punctuation">{</span>
         <span class="token function">TOS_CPU_INT_ENABLE</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
         <span class="token keyword">return</span> K_ERR_MUTEX_NESTING_OVERFLOW<span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
 
-    <span class="token operator">--</span>mutex<span class="token operator">-</span><span class="token operator">></span>pend_nesting<span class="token punctuation">;</span>
-    <span class="token keyword">if</span> <span class="token punctuation">(</span>mutex<span class="token operator">-</span><span class="token operator">></span>pend_nesting <span class="token operator">></span> <span class="token punctuation">(</span>k_nesting_t<span class="token punctuation">)</span>0u<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token operator">--</span>mutex<span class="token operator">-</span><span class="token operator">&gt;</span>pend_nesting<span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>mutex<span class="token operator">-</span><span class="token operator">&gt;</span>pend_nesting <span class="token operator">&gt;</span> <span class="token punctuation">(</span>k_nesting_t<span class="token punctuation">)</span>0u<span class="token punctuation">)</span> <span class="token punctuation">{</span>
         <span class="token function">TOS_CPU_INT_ENABLE</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
         <span class="token keyword">return</span> K_ERR_MUTEX_NESTING<span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
 
     <span class="token function">mutex_old_owner_release</span><span class="token punctuation">(</span>mutex<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token function">pend_is_nopending</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>mutex<span class="token operator">-</span><span class="token operator">></span>pend_obj<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token function">pend_is_nopending</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>mutex<span class="token operator">-</span><span class="token operator">&gt;</span>pend_obj<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
         <span class="token function">TOS_CPU_INT_ENABLE</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
         <span class="token keyword">return</span> K_ERR_NONE<span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
 
-    <span class="token function">pend_wakeup_one</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>mutex<span class="token operator">-</span><span class="token operator">></span>pend_obj<span class="token punctuation">,</span> PEND_STATE_POST<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">pend_wakeup_one</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>mutex<span class="token operator">-</span><span class="token operator">&gt;</span>pend_obj<span class="token punctuation">,</span> PEND_STATE_POST<span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token function">TOS_CPU_INT_ENABLE</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token function">knl_sched</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
@@ -825,18 +825,18 @@ __STATIC_INLINE__ <span class="token keyword">void</span> <span class="token fun
 <span class="token punctuation">{</span>
     k_task_t <span class="token operator">*</span>owner<span class="token punctuation">;</span>
 
-    owner <span class="token operator">=</span> mutex<span class="token operator">-</span><span class="token operator">></span>owner<span class="token punctuation">;</span>
+    owner <span class="token operator">=</span> mutex<span class="token operator">-</span><span class="token operator">&gt;</span>owner<span class="token punctuation">;</span>
 
-    <span class="token function">tos_list_del</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>mutex<span class="token operator">-</span><span class="token operator">></span>owner_list<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    mutex<span class="token operator">-</span><span class="token operator">></span>owner <span class="token operator">=</span> K_NULL<span class="token punctuation">;</span>
+    <span class="token function">tos_list_del</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>mutex<span class="token operator">-</span><span class="token operator">&gt;</span>owner_list<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    mutex<span class="token operator">-</span><span class="token operator">&gt;</span>owner <span class="token operator">=</span> K_NULL<span class="token punctuation">;</span>
 
     <span class="token comment" spellcheck="true">// the right time comes! let's do it!</span>
-    <span class="token keyword">if</span> <span class="token punctuation">(</span>owner<span class="token operator">-</span><span class="token operator">></span>prio_pending <span class="token operator">!=</span> K_TASK_PRIO_INVALID<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        <span class="token function">tos_task_prio_change</span><span class="token punctuation">(</span>owner<span class="token punctuation">,</span> owner<span class="token operator">-</span><span class="token operator">></span>prio_pending<span class="token punctuation">)</span><span class="token punctuation">;</span>
-        owner<span class="token operator">-</span><span class="token operator">></span>prio_pending <span class="token operator">=</span> K_TASK_PRIO_INVALID<span class="token punctuation">;</span>
-    <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token keyword">if</span> <span class="token punctuation">(</span>owner<span class="token operator">-</span><span class="token operator">></span>prio <span class="token operator">!=</span> mutex<span class="token operator">-</span><span class="token operator">></span>owner_orig_prio<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        <span class="token function">tos_task_prio_change</span><span class="token punctuation">(</span>owner<span class="token punctuation">,</span> mutex<span class="token operator">-</span><span class="token operator">></span>owner_orig_prio<span class="token punctuation">)</span><span class="token punctuation">;</span>
-        mutex<span class="token operator">-</span><span class="token operator">></span>owner_orig_prio <span class="token operator">=</span> K_TASK_PRIO_INVALID<span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>owner<span class="token operator">-</span><span class="token operator">&gt;</span>prio_pending <span class="token operator">!=</span> K_TASK_PRIO_INVALID<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token function">tos_task_prio_change</span><span class="token punctuation">(</span>owner<span class="token punctuation">,</span> owner<span class="token operator">-</span><span class="token operator">&gt;</span>prio_pending<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        owner<span class="token operator">-</span><span class="token operator">&gt;</span>prio_pending <span class="token operator">=</span> K_TASK_PRIO_INVALID<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token keyword">if</span> <span class="token punctuation">(</span>owner<span class="token operator">-</span><span class="token operator">&gt;</span>prio <span class="token operator">!=</span> mutex<span class="token operator">-</span><span class="token operator">&gt;</span>owner_orig_prio<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token function">tos_task_prio_change</span><span class="token punctuation">(</span>owner<span class="token punctuation">,</span> mutex<span class="token operator">-</span><span class="token operator">&gt;</span>owner_orig_prio<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        mutex<span class="token operator">-</span><span class="token operator">&gt;</span>owner_orig_prio <span class="token operator">=</span> K_TASK_PRIO_INVALID<span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
 <span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <h1 id="喜欢就关注我吧！"><a href="#喜欢就关注我吧！" class="headerlink" title="喜欢就关注我吧！"></a>喜欢就关注我吧！</h1><p><img src="./images/loading.png" data-original="http://qiniu.jiejie01.top/gzh.jpg" alt="欢迎关注我公众号"></p>
@@ -1571,7 +1571,7 @@ __STATIC_INLINE__ <span class="token keyword">void</span> <span class="token fun
 
             
                 &nbsp;<i class="fa fa-area-chart"></i>&nbsp;站点总字数:&nbsp;
-                <span class="white-color">138.3k </span>
+                <span class="white-color">141.2k </span>
 
             
 

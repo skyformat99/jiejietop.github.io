@@ -594,7 +594,7 @@ project <span class="token punctuation">(</span>section1<span class="token punct
 
 0 directories, 2 files<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>非常简单，也就是一个<code>main.c</code>文件与一个<code>CMakeLists.txt</code>文件，内容更是简单，<code>main.c</code>就只是打印个<code>"Hello World!"</code>：</p>
-<pre class="line-numbers language-c"><code class="language-c"><span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">&lt;stdio.h></span></span>
+<pre class="line-numbers language-c"><code class="language-c"><span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">&lt;stdio.h&gt;</span></span>
 
 <span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token keyword">void</span><span class="token punctuation">)</span>
 <span class="token punctuation">{</span>
@@ -652,7 +652,7 @@ project <span class="token punctuation">(</span>section1<span class="token punct
 <ul>
 <li><code>cmake_minimum_required</code>：设置一个工程所需要的最低 <code>CMake</code>版本，如果 <code>CMake</code>的当前版本低于指定的版本，它会停止处理工程文件，并报告错误。</li>
 <li><code>project</code>：为整个工程设置一个工程名。</li>
-<li><code>add_executable</code>：使用给定的源文件，为工程引入一个可执行文件。<pre class="line-numbers language-js"><code class="language-js"><span class="token function">add_executable</span><span class="token punctuation">(</span><span class="token operator">&lt;</span>name<span class="token operator">></span> <span class="token punctuation">[</span>WIN32<span class="token punctuation">]</span> <span class="token punctuation">[</span>MACOSX_BUNDLE<span class="token punctuation">]</span>
+<li><code>add_executable</code>：使用给定的源文件，为工程引入一个可执行文件。<pre class="line-numbers language-js"><code class="language-js"><span class="token function">add_executable</span><span class="token punctuation">(</span><span class="token operator">&lt;</span>name<span class="token operator">&gt;</span> <span class="token punctuation">[</span>WIN32<span class="token punctuation">]</span> <span class="token punctuation">[</span>MACOSX_BUNDLE<span class="token punctuation">]</span>
               <span class="token punctuation">[</span>EXCLUDE_FROM_ALL<span class="token punctuation">]</span>
               source1 <span class="token punctuation">[</span>source2 <span class="token operator">...</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
 引入一个名字为<code>&lt;name&gt;</code>的可执行目标，这个可执行目标会由调用该命令时在源文件列表中指定的源文件来构建，比如<code>main.c</code>就是一个源码文件。<code>&lt;name&gt;</code>在工程范围内必须是全局唯一的，它实际上就是make编译后生成的可执行文件。</li>
@@ -1372,7 +1372,7 @@ project <span class="token punctuation">(</span>section1<span class="token punct
 
             
                 &nbsp;<i class="fa fa-area-chart"></i>&nbsp;站点总字数:&nbsp;
-                <span class="white-color">138.3k </span>
+                <span class="white-color">141.2k </span>
 
             
 
