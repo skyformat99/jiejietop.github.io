@@ -689,11 +689,11 @@ duration duration_msg<span aria-hidden="true" class="line-numbers-rows"><span></
 </li>
 </ul>
 <h1 id="添加源码文件"><a href="#添加源码文件" class="headerlink" title="添加源码文件"></a>添加源码文件</h1><p>在功能包的src文件夹下随便建立两个文件，主要是为了能编译通过，名字分别为<code>publisher_topic002.cpp</code>、<code>subscriber_topic002.cpp</code>，先在里面随便写个main函数就行了。</p>
-<pre class="line-numbers language-c"><code class="language-c"><span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">&lt;cstdlib&gt;</span></span>
+<pre class="line-numbers language-c"><code class="language-c"><span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">&lt;cstdlib></span></span>
 <span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">"ros/ros.h"</span></span>
-<span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">&lt;iostream&gt;</span></span>
-<span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">&lt;string&gt;</span></span>
-<span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">&lt;cstring&gt;</span></span>
+<span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">&lt;iostream></span></span>
+<span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">&lt;string></span></span>
+<span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">&lt;cstring></span></span>
 
 <span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token keyword">void</span><span class="token punctuation">)</span>
 <span class="token punctuation">{</span>
@@ -705,8 +705,8 @@ duration duration_msg<span aria-hidden="true" class="line-numbers-rows"><span></
 <p>如果你是新建的功能包，最好通过<code>catkin_create_pkg</code>命令依赖<code>message_generation</code>、<code>message_runtime</code>这两个功能包，具体命令如下：</p>
 <pre class="line-numbers language-bash"><code class="language-bash">catkin_create_pkg my_topic002 roscpp rospy std_msgs message_generation message_runtime<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <p>如果你是在已有的功能包中想要自定义消息，则在<code>package.xml</code>文件中添加功能包依赖：</p>
-<pre class="line-numbers language-bash"><code class="language-bash"><span class="token operator">&lt;</span>build_depend<span class="token operator">&gt;</span>message_generation<span class="token operator">&lt;</span>/build_depend<span class="token operator">&gt;</span>
-<span class="token operator">&lt;</span>run_depend<span class="token operator">&gt;</span>message_runtime<span class="token operator">&lt;</span>/run_depend<span class="token operator">&gt;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-bash"><code class="language-bash"><span class="token operator">&lt;</span>build_depend<span class="token operator">></span>message_generation<span class="token operator">&lt;</span>/build_depend<span class="token operator">></span>
+<span class="token operator">&lt;</span>run_depend<span class="token operator">></span>message_runtime<span class="token operator">&lt;</span>/run_depend<span class="token operator">></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
 <h1 id="修改编译规则"><a href="#修改编译规则" class="headerlink" title="修改编译规则"></a>修改编译规则</h1><p>CMakeLists.txt是配置编译规则的文件，具体的CMake语法参考我以前的博客文章。</p>
 <p><code>CMakeLists.txt</code>要修改4-5个地方，根据实际场景修改即可：</p>
 <ol>
@@ -765,10 +765,10 @@ add_dependencies<span class="token punctuation">(</span>subscriber_topic002 <spa
 <p>它里面有一大串消息的类型，都是我们自定义的，我随意列举一下：</p>
 <pre class="line-numbers language-c"><code class="language-c">namespace my_topic002
 <span class="token punctuation">{</span>
-template <span class="token operator">&lt;</span>class ContainerAllocator<span class="token operator">&gt;</span>
+template <span class="token operator">&lt;</span>class ContainerAllocator<span class="token operator">></span>
 <span class="token keyword">struct</span> topic_msg_
 <span class="token punctuation">{</span>
-  <span class="token keyword">typedef</span> topic_msg_<span class="token operator">&lt;</span>ContainerAllocator<span class="token operator">&gt;</span> Type<span class="token punctuation">;</span>
+  <span class="token keyword">typedef</span> topic_msg_<span class="token operator">&lt;</span>ContainerAllocator<span class="token operator">></span> Type<span class="token punctuation">;</span>
 
   <span class="token function">topic_msg_</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
     <span class="token punctuation">:</span> <span class="token function">bool_msg</span><span class="token punctuation">(</span>false<span class="token punctuation">)</span>
@@ -812,7 +812,7 @@ template <span class="token operator">&lt;</span>class ContainerAllocator<span c
 <ul>
 <li>创建一个Publisher，发布名为my_topic_msg，消息类型为my_topic002::topic_msg，队列长度100：</li>
 </ul>
-<pre class="line-numbers language-c"><code class="language-c">ros<span class="token punctuation">:</span><span class="token punctuation">:</span>Publisher pub_topic <span class="token operator">=</span> n<span class="token punctuation">.</span>advertise<span class="token operator">&lt;</span>my_topic002<span class="token punctuation">:</span><span class="token punctuation">:</span>topic_msg<span class="token operator">&gt;</span><span class="token punctuation">(</span><span class="token string">"my_topic_msg"</span><span class="token punctuation">,</span><span class="token number">100</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<pre class="line-numbers language-c"><code class="language-c">ros<span class="token punctuation">:</span><span class="token punctuation">:</span>Publisher pub_topic <span class="token operator">=</span> n<span class="token punctuation">.</span>advertise<span class="token operator">&lt;</span>my_topic002<span class="token punctuation">:</span><span class="token punctuation">:</span>topic_msg<span class="token operator">></span><span class="token punctuation">(</span><span class="token string">"my_topic_msg"</span><span class="token punctuation">,</span><span class="token number">100</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <ul>
 <li>初始化std_msgs::String类型的消息</li>
 </ul>
@@ -846,7 +846,7 @@ int32 nsec<span aria-hidden="true" class="line-numbers-rows"><span></span><span>
  * @LastEditTime: 2020-04-12 12:17:00
  * @Description: the code belongs to jiejie, please keep the author information and source code according to the license.
  */</span>
-<span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">&lt;ros/ros.h&gt;</span></span>
+<span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">&lt;ros/ros.h></span></span>
 <span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">"my_topic002/topic_msg.h"</span></span>
 <span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">"std_msgs/String.h"</span></span>
 
@@ -859,7 +859,7 @@ int32 nsec<span aria-hidden="true" class="line-numbers-rows"><span></span><span>
     ros<span class="token punctuation">:</span><span class="token punctuation">:</span>NodeHandle n<span class="token punctuation">;</span>
 
     <span class="token comment" spellcheck="true">// 创建一个Publisher，发布名为my_topic_msg，消息类型为my_topic002::topic_msg，队列长度100</span>
-    ros<span class="token punctuation">:</span><span class="token punctuation">:</span>Publisher pub_topic <span class="token operator">=</span> n<span class="token punctuation">.</span>advertise<span class="token operator">&lt;</span>my_topic002<span class="token punctuation">:</span><span class="token punctuation">:</span>topic_msg<span class="token operator">&gt;</span><span class="token punctuation">(</span><span class="token string">"my_topic_msg"</span><span class="token punctuation">,</span><span class="token number">100</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    ros<span class="token punctuation">:</span><span class="token punctuation">:</span>Publisher pub_topic <span class="token operator">=</span> n<span class="token punctuation">.</span>advertise<span class="token operator">&lt;</span>my_topic002<span class="token punctuation">:</span><span class="token punctuation">:</span>topic_msg<span class="token operator">></span><span class="token punctuation">(</span><span class="token string">"my_topic_msg"</span><span class="token punctuation">,</span><span class="token number">100</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
     <span class="token comment" spellcheck="true">// 设置循环的频率</span>
     ros<span class="token punctuation">:</span><span class="token punctuation">:</span>Rate <span class="token function">loop_rate</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -894,28 +894,28 @@ int32 nsec<span aria-hidden="true" class="line-numbers-rows"><span></span><span>
 <ul>
 <li>subscriber_topic002.cpp：</li>
 </ul>
-<pre class="line-numbers language-c"><code class="language-c"><span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">&lt;ros/ros.h&gt;</span></span>
+<pre class="line-numbers language-c"><code class="language-c"><span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">&lt;ros/ros.h></span></span>
 <span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">"my_topic002/topic_msg.h"</span></span>
-<span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">&lt;std_msgs/String.h&gt;</span></span>
+<span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">&lt;std_msgs/String.h></span></span>
 
 <span class="token comment" spellcheck="true">// 接收到订阅的消息后，会进入消息回调函数</span>
 <span class="token keyword">void</span> <span class="token function">test_topic_cb</span><span class="token punctuation">(</span><span class="token keyword">const</span> my_topic002<span class="token punctuation">:</span><span class="token punctuation">:</span>topic_msg<span class="token punctuation">:</span><span class="token punctuation">:</span>ConstPtr <span class="token operator">&amp;</span> msg<span class="token punctuation">)</span>
 <span class="token punctuation">{</span>
     <span class="token comment" spellcheck="true">// 将接收到的消息打印出来</span>
     <span class="token function">ROS_INFO</span><span class="token punctuation">(</span><span class="token string">"------------------ msg ---------------------"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token function">ROS_INFO</span><span class="token punctuation">(</span><span class="token string">"bool_msg:    [%d]"</span><span class="token punctuation">,</span> msg<span class="token operator">-&gt;</span>bool_msg<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token function">ROS_INFO</span><span class="token punctuation">(</span><span class="token string">"string_msg:  [%s]"</span><span class="token punctuation">,</span> msg<span class="token operator">-&gt;</span>string_msg<span class="token punctuation">.</span><span class="token function">c_str</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token function">ROS_INFO</span><span class="token punctuation">(</span><span class="token string">"float32_msg: [%f]"</span><span class="token punctuation">,</span> msg<span class="token operator">-&gt;</span>float32_msg<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token function">ROS_INFO</span><span class="token punctuation">(</span><span class="token string">"float64_msg: [%f]"</span><span class="token punctuation">,</span> msg<span class="token operator">-&gt;</span>float64_msg<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token function">ROS_INFO</span><span class="token punctuation">(</span><span class="token string">"int8_msg:    [%d]"</span><span class="token punctuation">,</span> msg<span class="token operator">-&gt;</span>int8_msg<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token function">ROS_INFO</span><span class="token punctuation">(</span><span class="token string">"int16_msg:   [%d]"</span><span class="token punctuation">,</span> msg<span class="token operator">-&gt;</span>int16_msg<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token function">ROS_INFO</span><span class="token punctuation">(</span><span class="token string">"int32_msg:   [%d]"</span><span class="token punctuation">,</span> msg<span class="token operator">-&gt;</span>int32_msg<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token function">ROS_INFO</span><span class="token punctuation">(</span><span class="token string">"int64_msg:   [%ld]"</span><span class="token punctuation">,</span> msg<span class="token operator">-&gt;</span>int64_msg<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token function">ROS_INFO</span><span class="token punctuation">(</span><span class="token string">"uint8_msg:   [%d]"</span><span class="token punctuation">,</span> msg<span class="token operator">-&gt;</span>uint8_msg<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token function">ROS_INFO</span><span class="token punctuation">(</span><span class="token string">"uint16_msg:  [%d]"</span><span class="token punctuation">,</span> msg<span class="token operator">-&gt;</span>uint16_msg<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token function">ROS_INFO</span><span class="token punctuation">(</span><span class="token string">"uint32_msg:  [%d]"</span><span class="token punctuation">,</span> msg<span class="token operator">-&gt;</span>uint32_msg<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token function">ROS_INFO</span><span class="token punctuation">(</span><span class="token string">"uint64_msg:  [%ld]"</span><span class="token punctuation">,</span> msg<span class="token operator">-&gt;</span>uint64_msg<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token function">ROS_INFO</span><span class="token punctuation">(</span><span class="token string">"time_msg:    [%d.%d]"</span><span class="token punctuation">,</span> msg<span class="token operator">-&gt;</span>time_msg<span class="token punctuation">.</span>sec<span class="token punctuation">,</span> msg<span class="token operator">-&gt;</span>time_msg<span class="token punctuation">.</span>nsec<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">ROS_INFO</span><span class="token punctuation">(</span><span class="token string">"bool_msg:    [%d]"</span><span class="token punctuation">,</span> msg<span class="token operator">-></span>bool_msg<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">ROS_INFO</span><span class="token punctuation">(</span><span class="token string">"string_msg:  [%s]"</span><span class="token punctuation">,</span> msg<span class="token operator">-></span>string_msg<span class="token punctuation">.</span><span class="token function">c_str</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">ROS_INFO</span><span class="token punctuation">(</span><span class="token string">"float32_msg: [%f]"</span><span class="token punctuation">,</span> msg<span class="token operator">-></span>float32_msg<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">ROS_INFO</span><span class="token punctuation">(</span><span class="token string">"float64_msg: [%f]"</span><span class="token punctuation">,</span> msg<span class="token operator">-></span>float64_msg<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">ROS_INFO</span><span class="token punctuation">(</span><span class="token string">"int8_msg:    [%d]"</span><span class="token punctuation">,</span> msg<span class="token operator">-></span>int8_msg<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">ROS_INFO</span><span class="token punctuation">(</span><span class="token string">"int16_msg:   [%d]"</span><span class="token punctuation">,</span> msg<span class="token operator">-></span>int16_msg<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">ROS_INFO</span><span class="token punctuation">(</span><span class="token string">"int32_msg:   [%d]"</span><span class="token punctuation">,</span> msg<span class="token operator">-></span>int32_msg<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">ROS_INFO</span><span class="token punctuation">(</span><span class="token string">"int64_msg:   [%ld]"</span><span class="token punctuation">,</span> msg<span class="token operator">-></span>int64_msg<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">ROS_INFO</span><span class="token punctuation">(</span><span class="token string">"uint8_msg:   [%d]"</span><span class="token punctuation">,</span> msg<span class="token operator">-></span>uint8_msg<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">ROS_INFO</span><span class="token punctuation">(</span><span class="token string">"uint16_msg:  [%d]"</span><span class="token punctuation">,</span> msg<span class="token operator">-></span>uint16_msg<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">ROS_INFO</span><span class="token punctuation">(</span><span class="token string">"uint32_msg:  [%d]"</span><span class="token punctuation">,</span> msg<span class="token operator">-></span>uint32_msg<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">ROS_INFO</span><span class="token punctuation">(</span><span class="token string">"uint64_msg:  [%ld]"</span><span class="token punctuation">,</span> msg<span class="token operator">-></span>uint64_msg<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">ROS_INFO</span><span class="token punctuation">(</span><span class="token string">"time_msg:    [%d.%d]"</span><span class="token punctuation">,</span> msg<span class="token operator">-></span>time_msg<span class="token punctuation">.</span>sec<span class="token punctuation">,</span> msg<span class="token operator">-></span>time_msg<span class="token punctuation">.</span>nsec<span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span>
 
 <span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token keyword">int</span> argc<span class="token punctuation">,</span> <span class="token keyword">char</span> <span class="token operator">*</span><span class="token operator">*</span>argv<span class="token punctuation">)</span>
@@ -927,7 +927,7 @@ int32 nsec<span aria-hidden="true" class="line-numbers-rows"><span></span><span>
     ros<span class="token punctuation">:</span><span class="token punctuation">:</span>NodeHandle n<span class="token punctuation">;</span>
 
     <span class="token comment" spellcheck="true">// 创建一个Subscriber，订阅名为my_topic_msg的消息，注册回调函数test_topic_cb</span>
-    ros<span class="token punctuation">:</span><span class="token punctuation">:</span>Subscriber sub_topic <span class="token operator">=</span> n<span class="token punctuation">.</span>subscribe<span class="token operator">&lt;</span>my_topic002<span class="token punctuation">:</span><span class="token punctuation">:</span>topic_msg<span class="token operator">&gt;</span><span class="token punctuation">(</span><span class="token string">"my_topic_msg"</span><span class="token punctuation">,</span> <span class="token number">100</span><span class="token punctuation">,</span> test_topic_cb<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    ros<span class="token punctuation">:</span><span class="token punctuation">:</span>Subscriber sub_topic <span class="token operator">=</span> n<span class="token punctuation">.</span>subscribe<span class="token operator">&lt;</span>my_topic002<span class="token punctuation">:</span><span class="token punctuation">:</span>topic_msg<span class="token operator">></span><span class="token punctuation">(</span><span class="token string">"my_topic_msg"</span><span class="token punctuation">,</span> <span class="token number">100</span><span class="token punctuation">,</span> test_topic_cb<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
     <span class="token comment" spellcheck="true">// 循环等待回调函数</span>
     ros<span class="token punctuation">:</span><span class="token punctuation">:</span><span class="token function">spin</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -1654,7 +1654,7 @@ int32 nsec<span aria-hidden="true" class="line-numbers-rows"><span></span><span>
 
             
                 &nbsp;<i class="fa fa-area-chart"></i>&nbsp;站点总字数:&nbsp;
-                <span class="white-color">141.2k </span>
+                <span class="white-color">142.3k </span>
 
             
 
@@ -1806,6 +1806,6 @@ $(function () {
         <script async src="/libs/others/busuanzi.pure.mini.js"></script>
     
     
-<script>!function(e){var r=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function t(){for(var c=0;c<r.length;c++)t=r[c],void 0,0<=(n=t.getBoundingClientRect()).top&&0<=n.left&&n.top<=(e.innerHeight||document.documentElement.clientHeight)&&function(){var t,n,e,i,o=r[c];t=o,n=function(){r=r.filter(function(t){return o!==t})},e=new Image,i=t.getAttribute("data-original"),e.onload=function(){t.src=i,n&&n()},e.src=i}();var t,n}t(),e.addEventListener("scroll",function(){!function(t,n){clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(n)},500)}(t,e)})}(this);</script><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"log":false,"model":{"jsonPath":"/live2dw/assets/wanko.model.json"},"display":{"position":"left","width":150,"height":200},"mobile":{"show":false},"react":{"opacity":0.7}});</script></body>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"log":false,"model":{"jsonPath":"/live2dw/assets/wanko.model.json"},"display":{"position":"left","width":150,"height":200},"mobile":{"show":false},"react":{"opacity":0.7}});</script><script>!function(e){var r=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function t(){for(var c=0;c<r.length;c++)t=r[c],void 0,0<=(n=t.getBoundingClientRect()).top&&0<=n.left&&n.top<=(e.innerHeight||document.documentElement.clientHeight)&&function(){var t,n,e,i,o=r[c];t=o,n=function(){r=r.filter(function(t){return o!==t})},e=new Image,i=t.getAttribute("data-original"),e.onload=function(){t.src=i,n&&n()},e.src=i}();var t,n}t(),e.addEventListener("scroll",function(){!function(t,n){clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(n)},500)}(t,e)})}(this);</script></body>
 
 </html>

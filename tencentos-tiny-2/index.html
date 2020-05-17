@@ -730,7 +730,7 @@
 ..\..\TencentOS\TOS-CONFIG</code></pre><p>同时还要在配置中勾选支持<code>C99</code>模式：<br><img src="./images/loading.png" data-original="https://img-blog.csdnimg.cn/20190919213556464.png?" alt=""></p>
 <h1 id="尝试编译"><a href="#尝试编译" class="headerlink" title="尝试编译"></a>尝试编译</h1><p>如果你走到这一步，那么可以尝试编译一下，不过我测试时编译是没通过的，原因是缺少了部分头文件：<br><img src="./images/loading.png" data-original="https://img-blog.csdnimg.cn/20190919213852458.png?" alt=""><br>不过这不影响，我们在配置文件<code>tos_config.h</code>中修改一下就好，添加两句话</p>
 <pre class="line-numbers language-c"><code class="language-c"><span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">"stm32f10x.h"</span></span>
-<span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">&lt;stdio.h&gt;</span> </span><span class="token comment" spellcheck="true">// 或者 #include &lt;stddef.h&gt;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">&lt;stdio.h></span> </span><span class="token comment" spellcheck="true">// 或者 #include &lt;stddef.h></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
 <p>如下图：<br><img src="./images/loading.png" data-original="https://img-blog.csdnimg.cn/20190919214203165.png?" alt=""></p>
 <h1 id="修改中断函数"><a href="#修改中断函数" class="headerlink" title="修改中断函数"></a>修改中断函数</h1><h2 id="注释PendSV-Handler-函数"><a href="#注释PendSV-Handler-函数" class="headerlink" title="注释PendSV_Handler()函数"></a>注释PendSV_Handler()函数</h2><p>鉴于<code>TencentOS tiny</code>已经处理好<code>PendSV与SysTick</code>中断了，就不需要用户自己去处理，所以要在中断相关的源文件（<code>stm32f10x_it.c文件</code>）中<strong>注释</strong>（或者<strong>删除</strong>）<code>PendSV_Handler()</code>函数。<br><img src="./images/loading.png" data-original="https://img-blog.csdnimg.cn/20190919214321770.png?" alt=""></p>
 <h2 id="编写SysTick-Handler-函数"><a href="#编写SysTick-Handler-函数" class="headerlink" title="编写SysTick_Handler()函数"></a>编写SysTick_Handler()函数</h2><p><code>SysTick</code>中断服务函数是一个非常重要的函数，<code>TencentOS tiny</code>所有跟时间相关的事情都在里面处理，<code>SysTick</code>就是<code>TencentOS tiny</code>的一个心跳时钟，驱动着<code>TencentOS tiny</code>的运行，就像人的心跳一样，假如没有心跳，我们就相当于<code>“挂掉”</code>，同样的，<code>TencentOS tiny</code>没有了心跳，那么它就会卡死在某个地方，不能进行任务调度，不能运行任何的东西，因此我们需要实现一个<code>TencentOS tiny</code>的心跳时钟。代码如下：</p>
@@ -1529,7 +1529,7 @@ int <span class="token function">main</span><span class="token punctuation">(</s
 
             
                 &nbsp;<i class="fa fa-area-chart"></i>&nbsp;站点总字数:&nbsp;
-                <span class="white-color">141.2k </span>
+                <span class="white-color">142.3k </span>
 
             
 
@@ -1681,6 +1681,6 @@ $(function () {
         <script async src="/libs/others/busuanzi.pure.mini.js"></script>
     
     
-<script>!function(e){var r=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function t(){for(var c=0;c<r.length;c++)t=r[c],void 0,0<=(n=t.getBoundingClientRect()).top&&0<=n.left&&n.top<=(e.innerHeight||document.documentElement.clientHeight)&&function(){var t,n,e,i,o=r[c];t=o,n=function(){r=r.filter(function(t){return o!==t})},e=new Image,i=t.getAttribute("data-original"),e.onload=function(){t.src=i,n&&n()},e.src=i}();var t,n}t(),e.addEventListener("scroll",function(){!function(t,n){clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(n)},500)}(t,e)})}(this);</script><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"log":false,"model":{"jsonPath":"/live2dw/assets/wanko.model.json"},"display":{"position":"left","width":150,"height":200},"mobile":{"show":false},"react":{"opacity":0.7}});</script></body>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"log":false,"model":{"jsonPath":"/live2dw/assets/wanko.model.json"},"display":{"position":"left","width":150,"height":200},"mobile":{"show":false},"react":{"opacity":0.7}});</script><script>!function(e){var r=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function t(){for(var c=0;c<r.length;c++)t=r[c],void 0,0<=(n=t.getBoundingClientRect()).top&&0<=n.left&&n.top<=(e.innerHeight||document.documentElement.clientHeight)&&function(){var t,n,e,i,o=r[c];t=o,n=function(){r=r.filter(function(t){return o!==t})},e=new Image,i=t.getAttribute("data-original"),e.onload=function(){t.src=i,n&&n()},e.src=i}();var t,n}t(),e.addEventListener("scroll",function(){!function(t,n){clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(n)},500)}(t,e)})}(this);</script></body>
 
 </html>

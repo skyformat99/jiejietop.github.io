@@ -533,7 +533,7 @@
                     
                     <div class="info-break-policy">
                         <i class="fa fa-file-word-o fa-fw"></i>文章字数:&nbsp;&nbsp;
-                        1.9k
+                        1.8k
                     </div>
                     
 
@@ -593,30 +593,30 @@
 <pre class="line-numbers language-c"><code class="language-c"><span class="token keyword">int</span> <span class="token function">uv_shutdown</span><span class="token punctuation">(</span>uv_shutdown_t<span class="token operator">*</span> req<span class="token punctuation">,</span> uv_stream_t<span class="token operator">*</span> stream<span class="token punctuation">,</span> uv_shutdown_cb cb<span class="token punctuation">)</span> <span class="token punctuation">{</span>
 
   <span class="token comment" spellcheck="true">/* 校验相关信息，只有 UV_TCP UV_TTY UV_NAMED_PIPE 类型的stream handle 才可以用*/</span>
-  <span class="token function">assert</span><span class="token punctuation">(</span>stream<span class="token operator">-&gt;</span>type <span class="token operator">==</span> UV_TCP <span class="token operator">||</span>
-         stream<span class="token operator">-&gt;</span>type <span class="token operator">==</span> UV_TTY <span class="token operator">||</span>
-         stream<span class="token operator">-&gt;</span>type <span class="token operator">==</span> UV_NAMED_PIPE<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token function">assert</span><span class="token punctuation">(</span>stream<span class="token operator">-></span>type <span class="token operator">==</span> UV_TCP <span class="token operator">||</span>
+         stream<span class="token operator">-></span>type <span class="token operator">==</span> UV_TTY <span class="token operator">||</span>
+         stream<span class="token operator">-></span>type <span class="token operator">==</span> UV_NAMED_PIPE<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token punctuation">(</span>stream<span class="token operator">-&gt;</span>flags <span class="token operator">&amp;</span> UV_HANDLE_WRITABLE<span class="token punctuation">)</span> <span class="token operator">||</span>
-      stream<span class="token operator">-&gt;</span>flags <span class="token operator">&amp;</span> UV_HANDLE_SHUT <span class="token operator">||</span>
-      stream<span class="token operator">-&gt;</span>flags <span class="token operator">&amp;</span> UV_HANDLE_SHUTTING <span class="token operator">||</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token punctuation">(</span>stream<span class="token operator">-></span>flags <span class="token operator">&amp;</span> UV_HANDLE_WRITABLE<span class="token punctuation">)</span> <span class="token operator">||</span>
+      stream<span class="token operator">-></span>flags <span class="token operator">&amp;</span> UV_HANDLE_SHUT <span class="token operator">||</span>
+      stream<span class="token operator">-></span>flags <span class="token operator">&amp;</span> UV_HANDLE_SHUTTING <span class="token operator">||</span>
       <span class="token function">uv__is_closing</span><span class="token punctuation">(</span>stream<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
     <span class="token keyword">return</span> UV_ENOTCONN<span class="token punctuation">;</span>
   <span class="token punctuation">}</span>
 
-  <span class="token function">assert</span><span class="token punctuation">(</span><span class="token function">uv__stream_fd</span><span class="token punctuation">(</span>stream<span class="token punctuation">)</span> <span class="token operator">&gt;=</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token function">assert</span><span class="token punctuation">(</span><span class="token function">uv__stream_fd</span><span class="token punctuation">(</span>stream<span class="token punctuation">)</span> <span class="token operator">>=</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
   <span class="token comment" spellcheck="true">/* 初始化请求 */</span>
-  <span class="token function">uv__req_init</span><span class="token punctuation">(</span>stream<span class="token operator">-&gt;</span>loop<span class="token punctuation">,</span> req<span class="token punctuation">,</span> UV_SHUTDOWN<span class="token punctuation">)</span><span class="token punctuation">;</span>
-  req<span class="token operator">-&gt;</span>handle <span class="token operator">=</span> stream<span class="token punctuation">;</span>
-  req<span class="token operator">-&gt;</span>cb <span class="token operator">=</span> cb<span class="token punctuation">;</span>
-  stream<span class="token operator">-&gt;</span>shutdown_req <span class="token operator">=</span> req<span class="token punctuation">;</span>
+  <span class="token function">uv__req_init</span><span class="token punctuation">(</span>stream<span class="token operator">-></span>loop<span class="token punctuation">,</span> req<span class="token punctuation">,</span> UV_SHUTDOWN<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  req<span class="token operator">-></span>handle <span class="token operator">=</span> stream<span class="token punctuation">;</span>
+  req<span class="token operator">-></span>cb <span class="token operator">=</span> cb<span class="token punctuation">;</span>
+  stream<span class="token operator">-></span>shutdown_req <span class="token operator">=</span> req<span class="token punctuation">;</span>
 
   <span class="token comment" spellcheck="true">/* 设置关闭标志位 */</span>
-  stream<span class="token operator">-&gt;</span>flags <span class="token operator">|</span><span class="token operator">=</span> UV_HANDLE_SHUTTING<span class="token punctuation">;</span>
+  stream<span class="token operator">-></span>flags <span class="token operator">|</span><span class="token operator">=</span> UV_HANDLE_SHUTTING<span class="token punctuation">;</span>
 
   <span class="token comment" spellcheck="true">/* 初始化io观察者，将 io 观察者加入到队列中后，以便在事件循环的特定阶段进行处理 */</span>
-  <span class="token function">uv__io_start</span><span class="token punctuation">(</span>stream<span class="token operator">-&gt;</span>loop<span class="token punctuation">,</span> <span class="token operator">&amp;</span>stream<span class="token operator">-&gt;</span>io_watcher<span class="token punctuation">,</span> POLLOUT<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token function">uv__io_start</span><span class="token punctuation">(</span>stream<span class="token operator">-></span>loop<span class="token punctuation">,</span> <span class="token operator">&amp;</span>stream<span class="token operator">-></span>io_watcher<span class="token punctuation">,</span> POLLOUT<span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token function">uv__stream_osx_interrupt_select</span><span class="token punctuation">(</span>stream<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
   <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
@@ -627,7 +627,7 @@
   <span class="token keyword">int</span> err<span class="token punctuation">;</span>
 
   <span class="token comment" spellcheck="true">/* 根据类型处理，只有UV_TCP  UV_NAMED_PIPE 才可以 */</span>
-  <span class="token keyword">switch</span> <span class="token punctuation">(</span>stream<span class="token operator">-&gt;</span>type<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">switch</span> <span class="token punctuation">(</span>stream<span class="token operator">-></span>type<span class="token punctuation">)</span> <span class="token punctuation">{</span>
   <span class="token keyword">case</span> UV_TCP<span class="token punctuation">:</span>
 
     <span class="token comment" spellcheck="true">/* tcp连接，调用tcp的listen去处理 */</span>
@@ -664,31 +664,31 @@
 <pre class="line-numbers language-c"><code class="language-c"><span class="token keyword">int</span> <span class="token function">uv_accept</span><span class="token punctuation">(</span>uv_stream_t<span class="token operator">*</span> server<span class="token punctuation">,</span> uv_stream_t<span class="token operator">*</span> client<span class="token punctuation">)</span> <span class="token punctuation">{</span>
   <span class="token keyword">int</span> err<span class="token punctuation">;</span>
 
-  <span class="token function">assert</span><span class="token punctuation">(</span>server<span class="token operator">-&gt;</span>loop <span class="token operator">==</span> client<span class="token operator">-&gt;</span>loop<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token function">assert</span><span class="token punctuation">(</span>server<span class="token operator">-></span>loop <span class="token operator">==</span> client<span class="token operator">-></span>loop<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-  <span class="token keyword">if</span> <span class="token punctuation">(</span>server<span class="token operator">-&gt;</span>accepted_fd <span class="token operator">==</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>server<span class="token operator">-></span>accepted_fd <span class="token operator">==</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span>
     <span class="token keyword">return</span> UV_EAGAIN<span class="token punctuation">;</span>
 
-  <span class="token keyword">switch</span> <span class="token punctuation">(</span>client<span class="token operator">-&gt;</span>type<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">switch</span> <span class="token punctuation">(</span>client<span class="token operator">-></span>type<span class="token punctuation">)</span> <span class="token punctuation">{</span>
     <span class="token keyword">case</span> UV_NAMED_PIPE<span class="token punctuation">:</span>
     <span class="token keyword">case</span> UV_TCP<span class="token punctuation">:</span>
 
-      <span class="token comment" spellcheck="true">/* 获取文件描述符，并赋值给 client-&gt;io_watcher.fd */</span>
+      <span class="token comment" spellcheck="true">/* 获取文件描述符，并赋值给 client->io_watcher.fd */</span>
       err <span class="token operator">=</span> <span class="token function">uv__stream_open</span><span class="token punctuation">(</span>client<span class="token punctuation">,</span>
-                            server<span class="token operator">-&gt;</span>accepted_fd<span class="token punctuation">,</span>
+                            server<span class="token operator">-></span>accepted_fd<span class="token punctuation">,</span>
                             UV_HANDLE_READABLE <span class="token operator">|</span> UV_HANDLE_WRITABLE<span class="token punctuation">)</span><span class="token punctuation">;</span>
       <span class="token keyword">if</span> <span class="token punctuation">(</span>err<span class="token punctuation">)</span> <span class="token punctuation">{</span>
         <span class="token comment" spellcheck="true">/* 出现错误就关闭 */</span>
-        <span class="token function">uv__close</span><span class="token punctuation">(</span>server<span class="token operator">-&gt;</span>accepted_fd<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token function">uv__close</span><span class="token punctuation">(</span>server<span class="token operator">-></span>accepted_fd<span class="token punctuation">)</span><span class="token punctuation">;</span>
         <span class="token keyword">goto</span> done<span class="token punctuation">;</span>
       <span class="token punctuation">}</span>
       <span class="token keyword">break</span><span class="token punctuation">;</span>
 
     <span class="token keyword">case</span> UV_UDP<span class="token punctuation">:</span>
           <span class="token comment" spellcheck="true">/* 对于udp协议，通过uv_udp_open去获取文件描述符 */</span>
-      err <span class="token operator">=</span> <span class="token function">uv_udp_open</span><span class="token punctuation">(</span><span class="token punctuation">(</span>uv_udp_t<span class="token operator">*</span><span class="token punctuation">)</span> client<span class="token punctuation">,</span> server<span class="token operator">-&gt;</span>accepted_fd<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      err <span class="token operator">=</span> <span class="token function">uv_udp_open</span><span class="token punctuation">(</span><span class="token punctuation">(</span>uv_udp_t<span class="token operator">*</span><span class="token punctuation">)</span> client<span class="token punctuation">,</span> server<span class="token operator">-></span>accepted_fd<span class="token punctuation">)</span><span class="token punctuation">;</span>
       <span class="token keyword">if</span> <span class="token punctuation">(</span>err<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        <span class="token function">uv__close</span><span class="token punctuation">(</span>server<span class="token operator">-&gt;</span>accepted_fd<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token function">uv__close</span><span class="token punctuation">(</span>server<span class="token operator">-></span>accepted_fd<span class="token punctuation">)</span><span class="token punctuation">;</span>
         <span class="token keyword">goto</span> done<span class="token punctuation">;</span>
       <span class="token punctuation">}</span>
       <span class="token keyword">break</span><span class="token punctuation">;</span>
@@ -697,33 +697,33 @@
       <span class="token keyword">return</span> UV_EINVAL<span class="token punctuation">;</span>
   <span class="token punctuation">}</span>
 
-  client<span class="token operator">-&gt;</span>flags <span class="token operator">|</span><span class="token operator">=</span> UV_HANDLE_BOUND<span class="token punctuation">;</span>
+  client<span class="token operator">-></span>flags <span class="token operator">|</span><span class="token operator">=</span> UV_HANDLE_BOUND<span class="token punctuation">;</span>
 
 done<span class="token punctuation">:</span>
   <span class="token comment" spellcheck="true">/* 处理在排队的连接请求 */</span>
-  <span class="token keyword">if</span> <span class="token punctuation">(</span>server<span class="token operator">-&gt;</span>queued_fds <span class="token operator">!=</span> <span class="token constant">NULL</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>server<span class="token operator">-></span>queued_fds <span class="token operator">!=</span> <span class="token constant">NULL</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
     uv__stream_queued_fds_t<span class="token operator">*</span> queued_fds<span class="token punctuation">;</span>
 
-    queued_fds <span class="token operator">=</span> server<span class="token operator">-&gt;</span>queued_fds<span class="token punctuation">;</span>
+    queued_fds <span class="token operator">=</span> server<span class="token operator">-></span>queued_fds<span class="token punctuation">;</span>
 
     <span class="token comment" spellcheck="true">/* 处理第一个排队的 */</span>
-    server<span class="token operator">-&gt;</span>accepted_fd <span class="token operator">=</span> queued_fds<span class="token operator">-&gt;</span>fds<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+    server<span class="token operator">-></span>accepted_fd <span class="token operator">=</span> queued_fds<span class="token operator">-></span>fds<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
 
     <span class="token comment" spellcheck="true">/* All read, free */</span>
-    <span class="token function">assert</span><span class="token punctuation">(</span>queued_fds<span class="token operator">-&gt;</span>offset <span class="token operator">&gt;</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">--</span>queued_fds<span class="token operator">-&gt;</span>offset <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token function">assert</span><span class="token punctuation">(</span>queued_fds<span class="token operator">-></span>offset <span class="token operator">></span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">--</span>queued_fds<span class="token operator">-></span>offset <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
       <span class="token function">uv__free</span><span class="token punctuation">(</span>queued_fds<span class="token punctuation">)</span><span class="token punctuation">;</span>
-      server<span class="token operator">-&gt;</span>queued_fds <span class="token operator">=</span> <span class="token constant">NULL</span><span class="token punctuation">;</span>
+      server<span class="token operator">-></span>queued_fds <span class="token operator">=</span> <span class="token constant">NULL</span><span class="token punctuation">;</span>
     <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
       <span class="token comment" spellcheck="true">/* Shift rest */</span>
-      <span class="token function">memmove</span><span class="token punctuation">(</span>queued_fds<span class="token operator">-&gt;</span>fds<span class="token punctuation">,</span>
-              queued_fds<span class="token operator">-&gt;</span>fds <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">,</span>
-              queued_fds<span class="token operator">-&gt;</span>offset <span class="token operator">*</span> <span class="token keyword">sizeof</span><span class="token punctuation">(</span><span class="token operator">*</span>queued_fds<span class="token operator">-&gt;</span>fds<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token function">memmove</span><span class="token punctuation">(</span>queued_fds<span class="token operator">-></span>fds<span class="token punctuation">,</span>
+              queued_fds<span class="token operator">-></span>fds <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">,</span>
+              queued_fds<span class="token operator">-></span>offset <span class="token operator">*</span> <span class="token keyword">sizeof</span><span class="token punctuation">(</span><span class="token operator">*</span>queued_fds<span class="token operator">-></span>fds<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
   <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
-    server<span class="token operator">-&gt;</span>accepted_fd <span class="token operator">=</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">;</span>
+    server<span class="token operator">-></span>accepted_fd <span class="token operator">=</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">;</span>
     <span class="token keyword">if</span> <span class="token punctuation">(</span>err <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">)</span>
-      <span class="token function">uv__io_start</span><span class="token punctuation">(</span>server<span class="token operator">-&gt;</span>loop<span class="token punctuation">,</span> <span class="token operator">&amp;</span>server<span class="token operator">-&gt;</span>io_watcher<span class="token punctuation">,</span> POLLIN<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token function">uv__io_start</span><span class="token punctuation">(</span>server<span class="token operator">-></span>loop<span class="token punctuation">,</span> <span class="token operator">&amp;</span>server<span class="token operator">-></span>io_watcher<span class="token punctuation">,</span> POLLIN<span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token punctuation">}</span>
   <span class="token keyword">return</span> err<span class="token punctuation">;</span>
 <span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
@@ -747,27 +747,27 @@ done<span class="token punctuation">:</span>
 <pre class="line-numbers language-c"><code class="language-c"><span class="token keyword">int</span> <span class="token function">uv_read_start</span><span class="token punctuation">(</span>uv_stream_t<span class="token operator">*</span> stream<span class="token punctuation">,</span>
                   uv_alloc_cb alloc_cb<span class="token punctuation">,</span>
                   uv_read_cb read_cb<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-  <span class="token function">assert</span><span class="token punctuation">(</span>stream<span class="token operator">-&gt;</span>type <span class="token operator">==</span> UV_TCP <span class="token operator">||</span> stream<span class="token operator">-&gt;</span>type <span class="token operator">==</span> UV_NAMED_PIPE <span class="token operator">||</span>
-      stream<span class="token operator">-&gt;</span>type <span class="token operator">==</span> UV_TTY<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token function">assert</span><span class="token punctuation">(</span>stream<span class="token operator">-></span>type <span class="token operator">==</span> UV_TCP <span class="token operator">||</span> stream<span class="token operator">-></span>type <span class="token operator">==</span> UV_NAMED_PIPE <span class="token operator">||</span>
+      stream<span class="token operator">-></span>type <span class="token operator">==</span> UV_TTY<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-  <span class="token keyword">if</span> <span class="token punctuation">(</span>stream<span class="token operator">-&gt;</span>flags <span class="token operator">&amp;</span> UV_HANDLE_CLOSING<span class="token punctuation">)</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>stream<span class="token operator">-></span>flags <span class="token operator">&amp;</span> UV_HANDLE_CLOSING<span class="token punctuation">)</span>
     <span class="token keyword">return</span> UV_EINVAL<span class="token punctuation">;</span>
 
-  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token punctuation">(</span>stream<span class="token operator">-&gt;</span>flags <span class="token operator">&amp;</span> UV_HANDLE_READABLE<span class="token punctuation">)</span><span class="token punctuation">)</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token punctuation">(</span>stream<span class="token operator">-></span>flags <span class="token operator">&amp;</span> UV_HANDLE_READABLE<span class="token punctuation">)</span><span class="token punctuation">)</span>
     <span class="token keyword">return</span> UV_ENOTCONN<span class="token punctuation">;</span>
 
   <span class="token comment" spellcheck="true">/* 设置标志位，表示此时流正在被使用读取 */</span>
-  stream<span class="token operator">-&gt;</span>flags <span class="token operator">|</span><span class="token operator">=</span> UV_HANDLE_READING<span class="token punctuation">;</span>
+  stream<span class="token operator">-></span>flags <span class="token operator">|</span><span class="token operator">=</span> UV_HANDLE_READING<span class="token punctuation">;</span>
 
-  <span class="token function">assert</span><span class="token punctuation">(</span><span class="token function">uv__stream_fd</span><span class="token punctuation">(</span>stream<span class="token punctuation">)</span> <span class="token operator">&gt;=</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token function">assert</span><span class="token punctuation">(</span><span class="token function">uv__stream_fd</span><span class="token punctuation">(</span>stream<span class="token punctuation">)</span> <span class="token operator">>=</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token function">assert</span><span class="token punctuation">(</span>alloc_cb<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
   <span class="token comment" spellcheck="true">/* 注册回调函数 */</span>
-  stream<span class="token operator">-&gt;</span>read_cb <span class="token operator">=</span> read_cb<span class="token punctuation">;</span>
-  stream<span class="token operator">-&gt;</span>alloc_cb <span class="token operator">=</span> alloc_cb<span class="token punctuation">;</span>
+  stream<span class="token operator">-></span>read_cb <span class="token operator">=</span> read_cb<span class="token punctuation">;</span>
+  stream<span class="token operator">-></span>alloc_cb <span class="token operator">=</span> alloc_cb<span class="token punctuation">;</span>
 
   <span class="token comment" spellcheck="true">/* 启动io观察者 */</span>
-  <span class="token function">uv__io_start</span><span class="token punctuation">(</span>stream<span class="token operator">-&gt;</span>loop<span class="token punctuation">,</span> <span class="token operator">&amp;</span>stream<span class="token operator">-&gt;</span>io_watcher<span class="token punctuation">,</span> POLLIN<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token function">uv__io_start</span><span class="token punctuation">(</span>stream<span class="token operator">-></span>loop<span class="token punctuation">,</span> <span class="token operator">&amp;</span>stream<span class="token operator">-></span>io_watcher<span class="token punctuation">,</span> POLLIN<span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token function">uv__handle_start</span><span class="token punctuation">(</span>stream<span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token function">uv__stream_osx_interrupt_select</span><span class="token punctuation">(</span>stream<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
@@ -781,24 +781,24 @@ done<span class="token punctuation">:</span>
 <pre class="line-numbers language-c"><code class="language-c"><span class="token keyword">int</span> <span class="token function">uv_read_stop</span><span class="token punctuation">(</span>uv_stream_t<span class="token operator">*</span> stream<span class="token punctuation">)</span> <span class="token punctuation">{</span>
 
   <span class="token comment" spellcheck="true">/* 如果它未被设置为 UV_HANDLE_READING 读取占用标志位，则不需要停止 */</span>
-  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token punctuation">(</span>stream<span class="token operator">-&gt;</span>flags <span class="token operator">&amp;</span> UV_HANDLE_READING<span class="token punctuation">)</span><span class="token punctuation">)</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token punctuation">(</span>stream<span class="token operator">-></span>flags <span class="token operator">&amp;</span> UV_HANDLE_READING<span class="token punctuation">)</span><span class="token punctuation">)</span>
     <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
 
   <span class="token comment" spellcheck="true">/* 取消设置 UV_HANDLE_READING 标志位 */</span>
-  stream<span class="token operator">-&gt;</span>flags <span class="token operator">&amp;</span><span class="token operator">=</span> <span class="token operator">~</span>UV_HANDLE_READING<span class="token punctuation">;</span>
+  stream<span class="token operator">-></span>flags <span class="token operator">&amp;</span><span class="token operator">=</span> <span class="token operator">~</span>UV_HANDLE_READING<span class="token punctuation">;</span>
 
   <span class="token comment" spellcheck="true">/* 停止流读取，关闭流io观察者 */</span>
-  <span class="token function">uv__io_stop</span><span class="token punctuation">(</span>stream<span class="token operator">-&gt;</span>loop<span class="token punctuation">,</span> <span class="token operator">&amp;</span>stream<span class="token operator">-&gt;</span>io_watcher<span class="token punctuation">,</span> POLLIN<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token function">uv__io_stop</span><span class="token punctuation">(</span>stream<span class="token operator">-></span>loop<span class="token punctuation">,</span> <span class="token operator">&amp;</span>stream<span class="token operator">-></span>io_watcher<span class="token punctuation">,</span> POLLIN<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
   <span class="token comment" spellcheck="true">/* 当且仅当io观察者不处于活跃时才关闭这个 stream handle */</span>
-  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token function">uv__io_active</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>stream<span class="token operator">-&gt;</span>io_watcher<span class="token punctuation">,</span> POLLOUT<span class="token punctuation">)</span><span class="token punctuation">)</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token function">uv__io_active</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>stream<span class="token operator">-></span>io_watcher<span class="token punctuation">,</span> POLLOUT<span class="token punctuation">)</span><span class="token punctuation">)</span>
     <span class="token function">uv__handle_stop</span><span class="token punctuation">(</span>stream<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
   <span class="token function">uv__stream_osx_interrupt_select</span><span class="token punctuation">(</span>stream<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
   <span class="token comment" spellcheck="true">/* 取消注册回调函数 */</span>
-  stream<span class="token operator">-&gt;</span>read_cb <span class="token operator">=</span> <span class="token constant">NULL</span><span class="token punctuation">;</span>
-  stream<span class="token operator">-&gt;</span>alloc_cb <span class="token operator">=</span> <span class="token constant">NULL</span><span class="token punctuation">;</span>
+  stream<span class="token operator">-></span>read_cb <span class="token operator">=</span> <span class="token constant">NULL</span><span class="token punctuation">;</span>
+  stream<span class="token operator">-></span>alloc_cb <span class="token operator">=</span> <span class="token constant">NULL</span><span class="token punctuation">;</span>
   <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <h2 id="uv-write"><a href="#uv-write" class="headerlink" title="uv_write()"></a>uv_write()</h2><p>向stream handle 写入数据，实际上是调用<code>uv_write2()</code>这个函数。</p>
@@ -832,20 +832,20 @@ done<span class="token punctuation">:</span>
   <span class="token keyword">int</span> empty_queue<span class="token punctuation">;</span>
 
   <span class="token comment" spellcheck="true">/* 健壮性的判断，只有tcp pipe tty类型的handle才可用改函数 */</span>
-  <span class="token function">assert</span><span class="token punctuation">(</span>nbufs <span class="token operator">&gt;</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token function">assert</span><span class="token punctuation">(</span><span class="token punctuation">(</span>stream<span class="token operator">-&gt;</span>type <span class="token operator">==</span> UV_TCP <span class="token operator">||</span>
-          stream<span class="token operator">-&gt;</span>type <span class="token operator">==</span> UV_NAMED_PIPE <span class="token operator">||</span>
-          stream<span class="token operator">-&gt;</span>type <span class="token operator">==</span> UV_TTY<span class="token punctuation">)</span> <span class="token operator">&amp;&amp;</span>
+  <span class="token function">assert</span><span class="token punctuation">(</span>nbufs <span class="token operator">></span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token function">assert</span><span class="token punctuation">(</span><span class="token punctuation">(</span>stream<span class="token operator">-></span>type <span class="token operator">==</span> UV_TCP <span class="token operator">||</span>
+          stream<span class="token operator">-></span>type <span class="token operator">==</span> UV_NAMED_PIPE <span class="token operator">||</span>
+          stream<span class="token operator">-></span>type <span class="token operator">==</span> UV_TTY<span class="token punctuation">)</span> <span class="token operator">&amp;&amp;</span>
          <span class="token string">"uv_write (unix) does not yet support other types of streams"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
   <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token function">uv__stream_fd</span><span class="token punctuation">(</span>stream<span class="token punctuation">)</span> <span class="token operator">&lt;</span> <span class="token number">0</span><span class="token punctuation">)</span>
     <span class="token keyword">return</span> UV_EBADF<span class="token punctuation">;</span>
 
-  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token punctuation">(</span>stream<span class="token operator">-&gt;</span>flags <span class="token operator">&amp;</span> UV_HANDLE_WRITABLE<span class="token punctuation">)</span><span class="token punctuation">)</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token punctuation">(</span>stream<span class="token operator">-></span>flags <span class="token operator">&amp;</span> UV_HANDLE_WRITABLE<span class="token punctuation">)</span><span class="token punctuation">)</span>
     <span class="token keyword">return</span> UV_EPIPE<span class="token punctuation">;</span>
 
   <span class="token keyword">if</span> <span class="token punctuation">(</span>send_handle<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token keyword">if</span> <span class="token punctuation">(</span>stream<span class="token operator">-&gt;</span>type <span class="token operator">!=</span> UV_NAMED_PIPE <span class="token operator">||</span> <span class="token operator">!</span><span class="token punctuation">(</span><span class="token punctuation">(</span>uv_pipe_t<span class="token operator">*</span><span class="token punctuation">)</span>stream<span class="token punctuation">)</span><span class="token operator">-&gt;</span>ipc<span class="token punctuation">)</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>stream<span class="token operator">-></span>type <span class="token operator">!=</span> UV_NAMED_PIPE <span class="token operator">||</span> <span class="token operator">!</span><span class="token punctuation">(</span><span class="token punctuation">(</span>uv_pipe_t<span class="token operator">*</span><span class="token punctuation">)</span>stream<span class="token punctuation">)</span><span class="token operator">-></span>ipc<span class="token punctuation">)</span>
       <span class="token keyword">return</span> UV_EINVAL<span class="token punctuation">;</span>
 
     <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token function">uv__handle_fd</span><span class="token punctuation">(</span><span class="token punctuation">(</span>uv_handle_t<span class="token operator">*</span><span class="token punctuation">)</span> send_handle<span class="token punctuation">)</span> <span class="token operator">&lt;</span> <span class="token number">0</span><span class="token punctuation">)</span>
@@ -858,36 +858,36 @@ done<span class="token punctuation">:</span>
 <span class="token macro property">#<span class="token directive keyword">endif</span></span>
   <span class="token punctuation">}</span>
 
-  <span class="token comment" spellcheck="true">/* 即使write_queue为空，write_queue_size&gt; 0也合法；这意味着write_completed_queue中存在错误状态请求，这些错误状态请求将在以后修改write_queue_size */</span>
-  empty_queue <span class="token operator">=</span> <span class="token punctuation">(</span>stream<span class="token operator">-&gt;</span>write_queue_size <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment" spellcheck="true">/* 即使write_queue为空，write_queue_size> 0也合法；这意味着write_completed_queue中存在错误状态请求，这些错误状态请求将在以后修改write_queue_size */</span>
+  empty_queue <span class="token operator">=</span> <span class="token punctuation">(</span>stream<span class="token operator">-></span>write_queue_size <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
   <span class="token comment" spellcheck="true">/* 初始化请求 */</span>
-  <span class="token function">uv__req_init</span><span class="token punctuation">(</span>stream<span class="token operator">-&gt;</span>loop<span class="token punctuation">,</span> req<span class="token punctuation">,</span> UV_WRITE<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token function">uv__req_init</span><span class="token punctuation">(</span>stream<span class="token operator">-></span>loop<span class="token punctuation">,</span> req<span class="token punctuation">,</span> UV_WRITE<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
   <span class="token comment" spellcheck="true">/* 注册回调函数，注册请求的stream handle */</span>
-  req<span class="token operator">-&gt;</span>cb <span class="token operator">=</span> cb<span class="token punctuation">;</span>
-  req<span class="token operator">-&gt;</span>handle <span class="token operator">=</span> stream<span class="token punctuation">;</span>
-  req<span class="token operator">-&gt;</span>error <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
-  req<span class="token operator">-&gt;</span>send_handle <span class="token operator">=</span> send_handle<span class="token punctuation">;</span>
-  <span class="token function">QUEUE_INIT</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>req<span class="token operator">-&gt;</span>queue<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  req<span class="token operator">-></span>cb <span class="token operator">=</span> cb<span class="token punctuation">;</span>
+  req<span class="token operator">-></span>handle <span class="token operator">=</span> stream<span class="token punctuation">;</span>
+  req<span class="token operator">-></span>error <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+  req<span class="token operator">-></span>send_handle <span class="token operator">=</span> send_handle<span class="token punctuation">;</span>
+  <span class="token function">QUEUE_INIT</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>req<span class="token operator">-></span>queue<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-  req<span class="token operator">-&gt;</span>bufs <span class="token operator">=</span> req<span class="token operator">-&gt;</span>bufsml<span class="token punctuation">;</span>
-  <span class="token keyword">if</span> <span class="token punctuation">(</span>nbufs <span class="token operator">&gt;</span> <span class="token function">ARRAY_SIZE</span><span class="token punctuation">(</span>req<span class="token operator">-&gt;</span>bufsml<span class="token punctuation">)</span><span class="token punctuation">)</span>
-    req<span class="token operator">-&gt;</span>bufs <span class="token operator">=</span> <span class="token function">uv__malloc</span><span class="token punctuation">(</span>nbufs <span class="token operator">*</span> <span class="token keyword">sizeof</span><span class="token punctuation">(</span>bufs<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  req<span class="token operator">-></span>bufs <span class="token operator">=</span> req<span class="token operator">-></span>bufsml<span class="token punctuation">;</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>nbufs <span class="token operator">></span> <span class="token function">ARRAY_SIZE</span><span class="token punctuation">(</span>req<span class="token operator">-></span>bufsml<span class="token punctuation">)</span><span class="token punctuation">)</span>
+    req<span class="token operator">-></span>bufs <span class="token operator">=</span> <span class="token function">uv__malloc</span><span class="token punctuation">(</span>nbufs <span class="token operator">*</span> <span class="token keyword">sizeof</span><span class="token punctuation">(</span>bufs<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-  <span class="token keyword">if</span> <span class="token punctuation">(</span>req<span class="token operator">-&gt;</span>bufs <span class="token operator">==</span> <span class="token constant">NULL</span><span class="token punctuation">)</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>req<span class="token operator">-></span>bufs <span class="token operator">==</span> <span class="token constant">NULL</span><span class="token punctuation">)</span>
     <span class="token keyword">return</span> UV_ENOMEM<span class="token punctuation">;</span>
 
-  <span class="token function">memcpy</span><span class="token punctuation">(</span>req<span class="token operator">-&gt;</span>bufs<span class="token punctuation">,</span> bufs<span class="token punctuation">,</span> nbufs <span class="token operator">*</span> <span class="token keyword">sizeof</span><span class="token punctuation">(</span>bufs<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  req<span class="token operator">-&gt;</span>nbufs <span class="token operator">=</span> nbufs<span class="token punctuation">;</span>
-  req<span class="token operator">-&gt;</span>write_index <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
-  stream<span class="token operator">-&gt;</span>write_queue_size <span class="token operator">+</span><span class="token operator">=</span> <span class="token function">uv__count_bufs</span><span class="token punctuation">(</span>bufs<span class="token punctuation">,</span> nbufs<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token function">memcpy</span><span class="token punctuation">(</span>req<span class="token operator">-></span>bufs<span class="token punctuation">,</span> bufs<span class="token punctuation">,</span> nbufs <span class="token operator">*</span> <span class="token keyword">sizeof</span><span class="token punctuation">(</span>bufs<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  req<span class="token operator">-></span>nbufs <span class="token operator">=</span> nbufs<span class="token punctuation">;</span>
+  req<span class="token operator">-></span>write_index <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+  stream<span class="token operator">-></span>write_queue_size <span class="token operator">+</span><span class="token operator">=</span> <span class="token function">uv__count_bufs</span><span class="token punctuation">(</span>bufs<span class="token punctuation">,</span> nbufs<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
   <span class="token comment" spellcheck="true">/* 将请求追加到write_queue。 */</span>
-  <span class="token function">QUEUE_INSERT_TAIL</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>stream<span class="token operator">-&gt;</span>write_queue<span class="token punctuation">,</span> <span class="token operator">&amp;</span>req<span class="token operator">-&gt;</span>queue<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token function">QUEUE_INSERT_TAIL</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>stream<span class="token operator">-></span>write_queue<span class="token punctuation">,</span> <span class="token operator">&amp;</span>req<span class="token operator">-></span>queue<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
   <span class="token comment" spellcheck="true">/* 如果此函数开始时队列为空，则应尝试立即进行写操作。否则，启动write_watcher并等待fd变为可写状态。 */</span>
-  <span class="token keyword">if</span> <span class="token punctuation">(</span>stream<span class="token operator">-&gt;</span>connect_req<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>stream<span class="token operator">-></span>connect_req<span class="token punctuation">)</span> <span class="token punctuation">{</span>
     <span class="token comment" spellcheck="true">/* 仍在连接，什么也不做. */</span>
   <span class="token punctuation">}</span>
   <span class="token keyword">else</span> <span class="token keyword">if</span> <span class="token punctuation">(</span>empty_queue<span class="token punctuation">)</span> <span class="token punctuation">{</span>
@@ -895,8 +895,8 @@ done<span class="token punctuation">:</span>
   <span class="token punctuation">}</span>
   <span class="token keyword">else</span> <span class="token punctuation">{</span>
     <span class="token comment" spellcheck="true">/* 阻塞流永远不会在队列中有任何东西。 */</span>
-    <span class="token function">assert</span><span class="token punctuation">(</span><span class="token operator">!</span><span class="token punctuation">(</span>stream<span class="token operator">-&gt;</span>flags <span class="token operator">&amp;</span> UV_HANDLE_BLOCKING_WRITES<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token function">uv__io_start</span><span class="token punctuation">(</span>stream<span class="token operator">-&gt;</span>loop<span class="token punctuation">,</span> <span class="token operator">&amp;</span>stream<span class="token operator">-&gt;</span>io_watcher<span class="token punctuation">,</span> POLLOUT<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">assert</span><span class="token punctuation">(</span><span class="token operator">!</span><span class="token punctuation">(</span>stream<span class="token operator">-></span>flags <span class="token operator">&amp;</span> UV_HANDLE_BLOCKING_WRITES<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">uv__io_start</span><span class="token punctuation">(</span>stream<span class="token operator">-></span>loop<span class="token punctuation">,</span> <span class="token operator">&amp;</span>stream<span class="token operator">-></span>io_watcher<span class="token punctuation">,</span> POLLOUT<span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token function">uv__stream_osx_interrupt_select</span><span class="token punctuation">(</span>stream<span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token punctuation">}</span>
 
@@ -1353,61 +1353,55 @@ done<span class="token punctuation">:</span>
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fa fa-dot-circle-o"></i>&nbsp;本篇
-            </div>
+                <i class="fa fa-chevron-left"></i>&nbsp;上一篇</div>
             <div class="card">
-                <a href="/libuv-11/">
+                <a href="/open-source/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/1.jpg" class="responsive-img" alt="【libuv高效编程】libuv学习超详细教程11 —— libuv stream 流句柄解读">
+                        <img src="/medias/featureimages/14.jpg" class="responsive-img" alt="我为什么热啊开源">
                         
-                        <span class="card-title">【libuv高效编程】libuv学习超详细教程11 —— libuv stream 流句柄解读</span>
+                        <span class="card-title">我为什么热啊开源</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            libuv系列文章
-【libuv高效编程】libuv学习超详细教程1——libuv的编译与安装
-
-【libuv高效编程】libuv学习超详细教程2——libuv框架初窥
-
-【libuv高效编程】libuv学习超详细教程3——libuv事件循
+                            hello！公众号的兄弟姐妹们大家好，我们今天来聊一聊我热爱的事情——开源。
+回想几年前，我刚学C语言的时候，觉得这东西很好玩，也很有兴趣，居然能让我操控电脑，虽然能做的东西不对，也就打印点字符在屏幕上，但这确实却让我喜欢上了它，也许以前没
                         
                     </div>
                     <div class="publish-info">
-                            <span class="publish-date">
-                                <i class="fa fa-clock-o fa-fw icon-date"></i>2020-04-24
-                            </span>
+                        <span class="publish-date">
+                            <i class="fa fa-clock-o fa-fw icon-date"></i>2020-05-17
+                        </span>
                         <span class="publish-author">
                             
                             <i class="fa fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/网络/" class="post-category" target="_blank">
-                                    网络
+                            <a href="/categories/闲谈开源/" class="post-category" target="_blank">
+                                    闲谈开源
                                 </a>
                             
                             
                         </span>
                     </div>
                 </div>
-
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/libuv/" target="_blank">
-                        <span class="chip bg-color">libuv</span>
+                    <a href="/tags/闲谈/" target="_blank">
+                        <span class="chip bg-color">闲谈</span>
                     </a>
                     
-                    <a href="/tags/网络/" target="_blank">
-                        <span class="chip bg-color">网络</span>
+                    <a href="/tags/开源/" target="_blank">
+                        <span class="chip bg-color">开源</span>
                     </a>
                     
-                    <a href="/tags/Linux/" target="_blank">
-                        <span class="chip bg-color">Linux</span>
+                    <a href="/tags/GitHub/" target="_blank">
+                        <span class="chip bg-color">GitHub</span>
                     </a>
                     
                 </div>
@@ -1636,7 +1630,7 @@ done<span class="token punctuation">:</span>
 
             
                 &nbsp;<i class="fa fa-area-chart"></i>&nbsp;站点总字数:&nbsp;
-                <span class="white-color">141.2k </span>
+                <span class="white-color">142.3k </span>
 
             
 
@@ -1788,6 +1782,6 @@ $(function () {
         <script async src="/libs/others/busuanzi.pure.mini.js"></script>
     
     
-<script>!function(e){var r=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function t(){for(var c=0;c<r.length;c++)t=r[c],void 0,0<=(n=t.getBoundingClientRect()).top&&0<=n.left&&n.top<=(e.innerHeight||document.documentElement.clientHeight)&&function(){var t,n,e,i,o=r[c];t=o,n=function(){r=r.filter(function(t){return o!==t})},e=new Image,i=t.getAttribute("data-original"),e.onload=function(){t.src=i,n&&n()},e.src=i}();var t,n}t(),e.addEventListener("scroll",function(){!function(t,n){clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(n)},500)}(t,e)})}(this);</script><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"log":false,"model":{"jsonPath":"/live2dw/assets/wanko.model.json"},"display":{"position":"left","width":150,"height":200},"mobile":{"show":false},"react":{"opacity":0.7}});</script></body>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"log":false,"model":{"jsonPath":"/live2dw/assets/wanko.model.json"},"display":{"position":"left","width":150,"height":200},"mobile":{"show":false},"react":{"opacity":0.7}});</script><script>!function(e){var r=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function t(){for(var c=0;c<r.length;c++)t=r[c],void 0,0<=(n=t.getBoundingClientRect()).top&&0<=n.left&&n.top<=(e.innerHeight||document.documentElement.clientHeight)&&function(){var t,n,e,i,o=r[c];t=o,n=function(){r=r.filter(function(t){return o!==t})},e=new Image,i=t.getAttribute("data-original"),e.onload=function(){t.src=i,n&&n()},e.src=i}();var t,n}t(),e.addEventListener("scroll",function(){!function(t,n){clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(n)},500)}(t,e)})}(this);</script></body>
 
 </html>

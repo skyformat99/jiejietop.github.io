@@ -596,7 +596,7 @@
 <p>当然，我在这提到遍历并不是因为必须要使用这个命令，而是为后续的文章做铺垫。</p>
 <h2 id="构建库"><a href="#构建库" class="headerlink" title="构建库"></a>构建库</h2><p>如果一个工程中有非常多的源码，那么总不能将所有的源码都使用<code>add_executable</code>命令去生成可执行文件是不是，我们可以让这个可执行文件去依赖库，静态库，动态库都可以，那么在这里就简单说说<code>add_executable</code>命令依赖静态库生成可执行文件，那么问题来了，静态库从哪来？</p>
 <p>很显然，静态库是我们的一些源码文件生成的，在生成静态库后，再通过静态库去构建可执行文件，那么就用到了CMake中的<code>add_library</code>命令：</p>
-<pre class="line-numbers language-js"><code class="language-js"><span class="token function">add_library</span><span class="token punctuation">(</span><span class="token operator">&lt;</span>name<span class="token operator">&gt;</span> <span class="token punctuation">[</span>STATIC <span class="token operator">|</span> SHARED <span class="token operator">|</span> MODULE<span class="token punctuation">]</span>
+<pre class="line-numbers language-js"><code class="language-js"><span class="token function">add_library</span><span class="token punctuation">(</span><span class="token operator">&lt;</span>name<span class="token operator">></span> <span class="token punctuation">[</span>STATIC <span class="token operator">|</span> SHARED <span class="token operator">|</span> MODULE<span class="token punctuation">]</span>
             <span class="token punctuation">[</span>EXCLUDE_FROM_ALL<span class="token punctuation">]</span>
             source1 source2 <span class="token operator">...</span> sourceN<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
 <p>它的作用就是使用指定的源文件向工程中添加一个库。添加一个名为<code>&lt;name&gt;</code>的库文件，<code>&lt;name&gt;</code>在一个工程的全局域内必须是唯一的，这个库文件将会根据命令里列出的源文件（<code>source1 source2 ... sourceN</code>）来创建。待构建的库文件的实际文件名根据对应平台的命名约定来构造（比如 可以是<code>lib&lt;name&gt;.a</code> 或者<code>&lt;name&gt;.lib</code>）。通过指定<code>STATIC</code>，<code>SHARED</code>，或者 <code>MODULE</code> 参数用来指定要创建的库的类型。</p>
@@ -1386,7 +1386,7 @@
 
             
                 &nbsp;<i class="fa fa-area-chart"></i>&nbsp;站点总字数:&nbsp;
-                <span class="white-color">141.2k </span>
+                <span class="white-color">142.3k </span>
 
             
 
@@ -1538,6 +1538,6 @@ $(function () {
         <script async src="/libs/others/busuanzi.pure.mini.js"></script>
     
     
-<script>!function(e){var r=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function t(){for(var c=0;c<r.length;c++)t=r[c],void 0,0<=(n=t.getBoundingClientRect()).top&&0<=n.left&&n.top<=(e.innerHeight||document.documentElement.clientHeight)&&function(){var t,n,e,i,o=r[c];t=o,n=function(){r=r.filter(function(t){return o!==t})},e=new Image,i=t.getAttribute("data-original"),e.onload=function(){t.src=i,n&&n()},e.src=i}();var t,n}t(),e.addEventListener("scroll",function(){!function(t,n){clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(n)},500)}(t,e)})}(this);</script><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"log":false,"model":{"jsonPath":"/live2dw/assets/wanko.model.json"},"display":{"position":"left","width":150,"height":200},"mobile":{"show":false},"react":{"opacity":0.7}});</script></body>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"log":false,"model":{"jsonPath":"/live2dw/assets/wanko.model.json"},"display":{"position":"left","width":150,"height":200},"mobile":{"show":false},"react":{"opacity":0.7}});</script><script>!function(e){var r=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function t(){for(var c=0;c<r.length;c++)t=r[c],void 0,0<=(n=t.getBoundingClientRect()).top&&0<=n.left&&n.top<=(e.innerHeight||document.documentElement.clientHeight)&&function(){var t,n,e,i,o=r[c];t=o,n=function(){r=r.filter(function(t){return o!==t})},e=new Image,i=t.getAttribute("data-original"),e.onload=function(){t.src=i,n&&n()},e.src=i}();var t,n}t(),e.addEventListener("scroll",function(){!function(t,n){clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(n)},500)}(t,e)})}(this);</script></body>
 
 </html>

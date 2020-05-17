@@ -649,9 +649,9 @@ struct uv_loop_s <span class="token punctuation">{</span>
 <li><code>timer_heap</code> 是 <code>timer</code> 的二叉堆，它还使用了二叉树来提高遍历的效率。</li>
 </ul>
 <h1 id="demo"><a href="#demo" class="headerlink" title="demo"></a>demo</h1><p>写个demo来讲解整个循环事件的过程吧:</p>
-<pre class="line-numbers language-js"><code class="language-js">#include <span class="token operator">&lt;</span>stdio<span class="token punctuation">.</span>h<span class="token operator">&gt;</span>
-#include <span class="token operator">&lt;</span>stdlib<span class="token punctuation">.</span>h<span class="token operator">&gt;</span>
-#include <span class="token operator">&lt;</span>uv<span class="token punctuation">.</span>h<span class="token operator">&gt;</span>
+<pre class="line-numbers language-js"><code class="language-js">#include <span class="token operator">&lt;</span>stdio<span class="token punctuation">.</span>h<span class="token operator">></span>
+#include <span class="token operator">&lt;</span>stdlib<span class="token punctuation">.</span>h<span class="token operator">></span>
+#include <span class="token operator">&lt;</span>uv<span class="token punctuation">.</span>h<span class="token operator">></span>
 
 int <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span> 
 <span class="token punctuation">{</span>
@@ -673,44 +673,44 @@ int <span class="token function">main</span><span class="token punctuation">(</s
   int err<span class="token punctuation">;</span>
 
   <span class="token comment" spellcheck="true">/* 清空数据 */</span>
-  saved_data <span class="token operator">=</span> loop<span class="token operator">-</span><span class="token operator">&gt;</span>data<span class="token punctuation">;</span>
+  saved_data <span class="token operator">=</span> loop<span class="token operator">-</span><span class="token operator">></span>data<span class="token punctuation">;</span>
   <span class="token function">memset</span><span class="token punctuation">(</span>loop<span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token function">sizeof</span><span class="token punctuation">(</span><span class="token operator">*</span>loop<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  loop<span class="token operator">-</span><span class="token operator">&gt;</span>data <span class="token operator">=</span> saved_data<span class="token punctuation">;</span>
+  loop<span class="token operator">-</span><span class="token operator">></span>data <span class="token operator">=</span> saved_data<span class="token punctuation">;</span>
 
   <span class="token comment" spellcheck="true">/* 初始化定时器堆，初始化工作队列、空闲队列、各种队列 */</span>
-  <span class="token function">heap_init</span><span class="token punctuation">(</span><span class="token punctuation">(</span>struct heap<span class="token operator">*</span><span class="token punctuation">)</span> <span class="token operator">&amp;</span>loop<span class="token operator">-</span><span class="token operator">&gt;</span>timer_heap<span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token function">QUEUE_INIT</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>loop<span class="token operator">-</span><span class="token operator">&gt;</span>wq<span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token function">QUEUE_INIT</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>loop<span class="token operator">-</span><span class="token operator">&gt;</span>idle_handles<span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token function">QUEUE_INIT</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>loop<span class="token operator">-</span><span class="token operator">&gt;</span>async_handles<span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token function">QUEUE_INIT</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>loop<span class="token operator">-</span><span class="token operator">&gt;</span>check_handles<span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token function">QUEUE_INIT</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>loop<span class="token operator">-</span><span class="token operator">&gt;</span>prepare_handles<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token function">heap_init</span><span class="token punctuation">(</span><span class="token punctuation">(</span>struct heap<span class="token operator">*</span><span class="token punctuation">)</span> <span class="token operator">&amp;</span>loop<span class="token operator">-</span><span class="token operator">></span>timer_heap<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token function">QUEUE_INIT</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>loop<span class="token operator">-</span><span class="token operator">></span>wq<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token function">QUEUE_INIT</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>loop<span class="token operator">-</span><span class="token operator">></span>idle_handles<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token function">QUEUE_INIT</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>loop<span class="token operator">-</span><span class="token operator">></span>async_handles<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token function">QUEUE_INIT</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>loop<span class="token operator">-</span><span class="token operator">></span>check_handles<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token function">QUEUE_INIT</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>loop<span class="token operator">-</span><span class="token operator">></span>prepare_handles<span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token comment" spellcheck="true">/* 这个队列很重要，对于libuv中其他的 handle 在初始化后都会被放到此队列中 */</span>
-  <span class="token function">QUEUE_INIT</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>loop<span class="token operator">-</span><span class="token operator">&gt;</span>handle_queue<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token function">QUEUE_INIT</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>loop<span class="token operator">-</span><span class="token operator">></span>handle_queue<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
   <span class="token comment" spellcheck="true">/* 初始化I/O观察者相关的内容，初始化处于活跃状态的观察者句柄计数、请求计数、文件描述符等为0 */</span>
-  loop<span class="token operator">-</span><span class="token operator">&gt;</span>active_handles <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
-  loop<span class="token operator">-</span><span class="token operator">&gt;</span>active_reqs<span class="token punctuation">.</span>count <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
-  loop<span class="token operator">-</span><span class="token operator">&gt;</span>nfds <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
-  loop<span class="token operator">-</span><span class="token operator">&gt;</span>watchers <span class="token operator">=</span> NULL<span class="token punctuation">;</span>
-  loop<span class="token operator">-</span><span class="token operator">&gt;</span>nwatchers <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+  loop<span class="token operator">-</span><span class="token operator">></span>active_handles <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+  loop<span class="token operator">-</span><span class="token operator">></span>active_reqs<span class="token punctuation">.</span>count <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+  loop<span class="token operator">-</span><span class="token operator">></span>nfds <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+  loop<span class="token operator">-</span><span class="token operator">></span>watchers <span class="token operator">=</span> NULL<span class="token punctuation">;</span>
+  loop<span class="token operator">-</span><span class="token operator">></span>nwatchers <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
   <span class="token comment" spellcheck="true">/* 初始化挂起的I/O观察者队列，挂起的I/O观察者会被插入此队列延迟处理 */</span>
-  <span class="token function">QUEUE_INIT</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>loop<span class="token operator">-</span><span class="token operator">&gt;</span>pending_queue<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token function">QUEUE_INIT</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>loop<span class="token operator">-</span><span class="token operator">></span>pending_queue<span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token comment" spellcheck="true">/* 初始化 I/O观察者队列，所有初始化后的I/O观察者都会被插入此队列 */</span>
-  <span class="token function">QUEUE_INIT</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>loop<span class="token operator">-</span><span class="token operator">&gt;</span>watcher_queue<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token function">QUEUE_INIT</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>loop<span class="token operator">-</span><span class="token operator">></span>watcher_queue<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-  loop<span class="token operator">-</span><span class="token operator">&gt;</span>closing_handles <span class="token operator">=</span> NULL<span class="token punctuation">;</span>
+  loop<span class="token operator">-</span><span class="token operator">></span>closing_handles <span class="token operator">=</span> NULL<span class="token punctuation">;</span>
 
   <span class="token comment" spellcheck="true">/* 初始化时间，获取系统当前的时间 */</span>
   <span class="token function">uv__update_time</span><span class="token punctuation">(</span>loop<span class="token punctuation">)</span><span class="token punctuation">;</span>
-  loop<span class="token operator">-</span><span class="token operator">&gt;</span>async_io_watcher<span class="token punctuation">.</span>fd <span class="token operator">=</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">;</span>
-  loop<span class="token operator">-</span><span class="token operator">&gt;</span>async_wfd <span class="token operator">=</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">;</span>
-  loop<span class="token operator">-</span><span class="token operator">&gt;</span>signal_pipefd<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">;</span>
-  loop<span class="token operator">-</span><span class="token operator">&gt;</span>signal_pipefd<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">;</span>
-  loop<span class="token operator">-</span><span class="token operator">&gt;</span>backend_fd <span class="token operator">=</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">;</span>
-  loop<span class="token operator">-</span><span class="token operator">&gt;</span>emfile_fd <span class="token operator">=</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">;</span>
+  loop<span class="token operator">-</span><span class="token operator">></span>async_io_watcher<span class="token punctuation">.</span>fd <span class="token operator">=</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">;</span>
+  loop<span class="token operator">-</span><span class="token operator">></span>async_wfd <span class="token operator">=</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">;</span>
+  loop<span class="token operator">-</span><span class="token operator">></span>signal_pipefd<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">;</span>
+  loop<span class="token operator">-</span><span class="token operator">></span>signal_pipefd<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">;</span>
+  loop<span class="token operator">-</span><span class="token operator">></span>backend_fd <span class="token operator">=</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">;</span>
+  loop<span class="token operator">-</span><span class="token operator">></span>emfile_fd <span class="token operator">=</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">;</span>
 
-  loop<span class="token operator">-</span><span class="token operator">&gt;</span>timer_counter <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
-  loop<span class="token operator">-</span><span class="token operator">&gt;</span>stop_flag <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+  loop<span class="token operator">-</span><span class="token operator">></span>timer_counter <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+  loop<span class="token operator">-</span><span class="token operator">></span>stop_flag <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
 
   <span class="token comment" spellcheck="true">/* 初始化平台、linux Windows等 */</span>
   err <span class="token operator">=</span> <span class="token function">uv__platform_loop_init</span><span class="token punctuation">(</span>loop<span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -719,39 +719,39 @@ int <span class="token function">main</span><span class="token punctuation">(</s
 
   <span class="token comment" spellcheck="true">/* 初始化信号 */</span>
   <span class="token function">uv__signal_global_once_init</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  err <span class="token operator">=</span> <span class="token function">uv_signal_init</span><span class="token punctuation">(</span>loop<span class="token punctuation">,</span> <span class="token operator">&amp;</span>loop<span class="token operator">-</span><span class="token operator">&gt;</span>child_watcher<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  err <span class="token operator">=</span> <span class="token function">uv_signal_init</span><span class="token punctuation">(</span>loop<span class="token punctuation">,</span> <span class="token operator">&amp;</span>loop<span class="token operator">-</span><span class="token operator">></span>child_watcher<span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token keyword">if</span> <span class="token punctuation">(</span>err<span class="token punctuation">)</span>
     goto fail_signal_init<span class="token punctuation">;</span>
 
-  <span class="token function">uv__handle_unref</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>loop<span class="token operator">-</span><span class="token operator">&gt;</span>child_watcher<span class="token punctuation">)</span><span class="token punctuation">;</span>
-  loop<span class="token operator">-</span><span class="token operator">&gt;</span>child_watcher<span class="token punctuation">.</span>flags <span class="token operator">|</span><span class="token operator">=</span> UV_HANDLE_INTERNAL<span class="token punctuation">;</span>
-  <span class="token function">QUEUE_INIT</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>loop<span class="token operator">-</span><span class="token operator">&gt;</span>process_handles<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token function">uv__handle_unref</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>loop<span class="token operator">-</span><span class="token operator">></span>child_watcher<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  loop<span class="token operator">-</span><span class="token operator">></span>child_watcher<span class="token punctuation">.</span>flags <span class="token operator">|</span><span class="token operator">=</span> UV_HANDLE_INTERNAL<span class="token punctuation">;</span>
+  <span class="token function">QUEUE_INIT</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>loop<span class="token operator">-</span><span class="token operator">></span>process_handles<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
   <span class="token comment" spellcheck="true">/* 初始化线程读写锁 */</span>
-  err <span class="token operator">=</span> <span class="token function">uv_rwlock_init</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>loop<span class="token operator">-</span><span class="token operator">&gt;</span>cloexec_lock<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  err <span class="token operator">=</span> <span class="token function">uv_rwlock_init</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>loop<span class="token operator">-</span><span class="token operator">></span>cloexec_lock<span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token keyword">if</span> <span class="token punctuation">(</span>err<span class="token punctuation">)</span>
     goto fail_rwlock_init<span class="token punctuation">;</span>
 
   <span class="token comment" spellcheck="true">/* 初始化线程互斥锁 */</span>
-  err <span class="token operator">=</span> <span class="token function">uv_mutex_init</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>loop<span class="token operator">-</span><span class="token operator">&gt;</span>wq_mutex<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  err <span class="token operator">=</span> <span class="token function">uv_mutex_init</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>loop<span class="token operator">-</span><span class="token operator">></span>wq_mutex<span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token keyword">if</span> <span class="token punctuation">(</span>err<span class="token punctuation">)</span>
     goto fail_mutex_init<span class="token punctuation">;</span>
 
-  err <span class="token operator">=</span> <span class="token function">uv_async_init</span><span class="token punctuation">(</span>loop<span class="token punctuation">,</span> <span class="token operator">&amp;</span>loop<span class="token operator">-</span><span class="token operator">&gt;</span>wq_async<span class="token punctuation">,</span> uv__work_done<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  err <span class="token operator">=</span> <span class="token function">uv_async_init</span><span class="token punctuation">(</span>loop<span class="token punctuation">,</span> <span class="token operator">&amp;</span>loop<span class="token operator">-</span><span class="token operator">></span>wq_async<span class="token punctuation">,</span> uv__work_done<span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token keyword">if</span> <span class="token punctuation">(</span>err<span class="token punctuation">)</span>
     goto fail_async_init<span class="token punctuation">;</span>
 
-  <span class="token function">uv__handle_unref</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>loop<span class="token operator">-</span><span class="token operator">&gt;</span>wq_async<span class="token punctuation">)</span><span class="token punctuation">;</span>
-  loop<span class="token operator">-</span><span class="token operator">&gt;</span>wq_async<span class="token punctuation">.</span>flags <span class="token operator">|</span><span class="token operator">=</span> UV_HANDLE_INTERNAL<span class="token punctuation">;</span>
+  <span class="token function">uv__handle_unref</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>loop<span class="token operator">-</span><span class="token operator">></span>wq_async<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  loop<span class="token operator">-</span><span class="token operator">></span>wq_async<span class="token punctuation">.</span>flags <span class="token operator">|</span><span class="token operator">=</span> UV_HANDLE_INTERNAL<span class="token punctuation">;</span>
 
   <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
 
 <span class="token comment" spellcheck="true">/* 各种出错的处理 */</span>
 fail_async_init<span class="token punctuation">:</span>
-  <span class="token function">uv_mutex_destroy</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>loop<span class="token operator">-</span><span class="token operator">&gt;</span>wq_mutex<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token function">uv_mutex_destroy</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>loop<span class="token operator">-</span><span class="token operator">></span>wq_mutex<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
 fail_mutex_init<span class="token punctuation">:</span>
-  <span class="token function">uv_rwlock_destroy</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>loop<span class="token operator">-</span><span class="token operator">&gt;</span>cloexec_lock<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token function">uv_rwlock_destroy</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>loop<span class="token operator">-</span><span class="token operator">></span>cloexec_lock<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
 fail_rwlock_init<span class="token punctuation">:</span>
   <span class="token function">uv__signal_loop_cleanup</span><span class="token punctuation">(</span>loop<span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -804,7 +804,7 @@ uv_loop_t<span class="token operator">*</span> <span class="token function">uv_d
     <span class="token function">uv__update_time</span><span class="token punctuation">(</span>loop<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
   <span class="token comment" spellcheck="true">/* 这是一个while循环 */</span>
-  <span class="token keyword">while</span> <span class="token punctuation">(</span>r <span class="token operator">!=</span> <span class="token number">0</span> <span class="token operator">&amp;&amp;</span> loop<span class="token operator">-</span><span class="token operator">&gt;</span>stop_flag <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">while</span> <span class="token punctuation">(</span>r <span class="token operator">!=</span> <span class="token number">0</span> <span class="token operator">&amp;&amp;</span> loop<span class="token operator">-</span><span class="token operator">></span>stop_flag <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
 
     <span class="token comment" spellcheck="true">/* 更新时间并开始倒计时 */</span>
     <span class="token function">uv__update_time</span><span class="token punctuation">(</span>loop<span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -851,8 +851,8 @@ uv_loop_t<span class="token operator">*</span> <span class="token function">uv_d
   <span class="token comment" spellcheck="true">/* The if statement lets gcc compile it to a conditional store. Avoids
    * dirtying a cache line.
    */</span>
-  <span class="token keyword">if</span> <span class="token punctuation">(</span>loop<span class="token operator">-</span><span class="token operator">&gt;</span>stop_flag <span class="token operator">!=</span> <span class="token number">0</span><span class="token punctuation">)</span>
-    loop<span class="token operator">-</span><span class="token operator">&gt;</span>stop_flag <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>loop<span class="token operator">-</span><span class="token operator">></span>stop_flag <span class="token operator">!=</span> <span class="token number">0</span><span class="token punctuation">)</span>
+    loop<span class="token operator">-</span><span class="token operator">></span>stop_flag <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
 
   <span class="token keyword">return</span> r<span class="token punctuation">;</span>
 <span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
@@ -872,9 +872,9 @@ uv_loop_t<span class="token operator">*</span> <span class="token function">uv_d
     <span class="token keyword">return</span> UV_EBUSY<span class="token punctuation">;</span>
 
   <span class="token comment" spellcheck="true">/* 如果存在处于活跃状态的handle，则返回UV_EBUSY */</span>
-  <span class="token function">QUEUE_FOREACH</span><span class="token punctuation">(</span>q<span class="token punctuation">,</span> <span class="token operator">&amp;</span>loop<span class="token operator">-</span><span class="token operator">&gt;</span>handle_queue<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token function">QUEUE_FOREACH</span><span class="token punctuation">(</span>q<span class="token punctuation">,</span> <span class="token operator">&amp;</span>loop<span class="token operator">-</span><span class="token operator">></span>handle_queue<span class="token punctuation">)</span> <span class="token punctuation">{</span>
     h <span class="token operator">=</span> <span class="token function">QUEUE_DATA</span><span class="token punctuation">(</span>q<span class="token punctuation">,</span> uv_handle_t<span class="token punctuation">,</span> handle_queue<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token punctuation">(</span>h<span class="token operator">-</span><span class="token operator">&gt;</span>flags <span class="token operator">&amp;</span> UV_HANDLE_INTERNAL<span class="token punctuation">)</span><span class="token punctuation">)</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token punctuation">(</span>h<span class="token operator">-</span><span class="token operator">></span>flags <span class="token operator">&amp;</span> UV_HANDLE_INTERNAL<span class="token punctuation">)</span><span class="token punctuation">)</span>
       <span class="token keyword">return</span> UV_EBUSY<span class="token punctuation">;</span>
   <span class="token punctuation">}</span>
 
@@ -882,9 +882,9 @@ uv_loop_t<span class="token operator">*</span> <span class="token function">uv_d
   <span class="token function">uv__loop_close</span><span class="token punctuation">(</span>loop<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
 #ifndef NDEBUG
-  saved_data <span class="token operator">=</span> loop<span class="token operator">-</span><span class="token operator">&gt;</span>data<span class="token punctuation">;</span>
+  saved_data <span class="token operator">=</span> loop<span class="token operator">-</span><span class="token operator">></span>data<span class="token punctuation">;</span>
   <span class="token function">memset</span><span class="token punctuation">(</span>loop<span class="token punctuation">,</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token function">sizeof</span><span class="token punctuation">(</span><span class="token operator">*</span>loop<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  loop<span class="token operator">-</span><span class="token operator">&gt;</span>data <span class="token operator">=</span> saved_data<span class="token punctuation">;</span>
+  loop<span class="token operator">-</span><span class="token operator">></span>data <span class="token operator">=</span> saved_data<span class="token punctuation">;</span>
 #endif
   <span class="token keyword">if</span> <span class="token punctuation">(</span>loop <span class="token operator">==</span> default_loop_ptr<span class="token punctuation">)</span>
     default_loop_ptr <span class="token operator">=</span> NULL<span class="token punctuation">;</span>
@@ -1623,7 +1623,7 @@ uv_loop_t<span class="token operator">*</span> <span class="token function">uv_d
 
             
                 &nbsp;<i class="fa fa-area-chart"></i>&nbsp;站点总字数:&nbsp;
-                <span class="white-color">141.2k </span>
+                <span class="white-color">142.3k </span>
 
             
 
@@ -1775,6 +1775,6 @@ $(function () {
         <script async src="/libs/others/busuanzi.pure.mini.js"></script>
     
     
-<script>!function(e){var r=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function t(){for(var c=0;c<r.length;c++)t=r[c],void 0,0<=(n=t.getBoundingClientRect()).top&&0<=n.left&&n.top<=(e.innerHeight||document.documentElement.clientHeight)&&function(){var t,n,e,i,o=r[c];t=o,n=function(){r=r.filter(function(t){return o!==t})},e=new Image,i=t.getAttribute("data-original"),e.onload=function(){t.src=i,n&&n()},e.src=i}();var t,n}t(),e.addEventListener("scroll",function(){!function(t,n){clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(n)},500)}(t,e)})}(this);</script><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"log":false,"model":{"jsonPath":"/live2dw/assets/wanko.model.json"},"display":{"position":"left","width":150,"height":200},"mobile":{"show":false},"react":{"opacity":0.7}});</script></body>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"log":false,"model":{"jsonPath":"/live2dw/assets/wanko.model.json"},"display":{"position":"left","width":150,"height":200},"mobile":{"show":false},"react":{"opacity":0.7}});</script><script>!function(e){var r=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function t(){for(var c=0;c<r.length;c++)t=r[c],void 0,0<=(n=t.getBoundingClientRect()).top&&0<=n.left&&n.top<=(e.innerHeight||document.documentElement.clientHeight)&&function(){var t,n,e,i,o=r[c];t=o,n=function(){r=r.filter(function(t){return o!==t})},e=new Image,i=t.getAttribute("data-original"),e.onload=function(){t.src=i,n&&n()},e.src=i}();var t,n}t(),e.addEventListener("scroll",function(){!function(t,n){clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(n)},500)}(t,e)})}(this);</script></body>
 
 </html>

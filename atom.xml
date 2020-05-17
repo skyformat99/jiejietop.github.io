@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://jiedev.com/"/>
-  <updated>2020-05-06T17:30:02.697Z</updated>
+  <updated>2020-05-17T17:33:33.877Z</updated>
   <id>https://jiedev.com/</id>
   
   <author>
@@ -15,6 +15,37 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>我为什么热啊开源</title>
+    <link href="https://jiedev.com/open-source/"/>
+    <id>https://jiedev.com/open-source/</id>
+    <published>2020-05-17T15:54:23.000Z</published>
+    <updated>2020-05-17T17:33:33.877Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;p&gt;hello！公众号的兄弟姐妹们大家好，我们今天来聊一聊我热爱的事情——开源。&lt;/p&gt;
+&lt;p&gt;回想几年前，我刚学C语言的时候，觉得这东西很好玩，也很有兴趣，居然能让我操控电脑，虽然能做的东西不对，也就打印点字符在屏幕上，但这确实却让我喜欢上了它，也许以前没有接触过这些高大上的
+        
+      
+    
+    </summary>
+    
+      <category term="闲谈开源" scheme="https://jiedev.com/categories/%E9%97%B2%E8%B0%88%E5%BC%80%E6%BA%90/"/>
+    
+    
+      <category term="闲谈" scheme="https://jiedev.com/tags/%E9%97%B2%E8%B0%88/"/>
+    
+      <category term="开源" scheme="https://jiedev.com/tags/%E5%BC%80%E6%BA%90/"/>
+    
+      <category term="GitHub" scheme="https://jiedev.com/tags/GitHub/"/>
+    
+  </entry>
   
   <entry>
     <title>【libuv高效编程】libuv学习超详细教程11 —— libuv stream 流句柄解读</title>
@@ -585,32 +616,6 @@
       <category term="mqtt" scheme="https://jiedev.com/tags/mqtt/"/>
     
       <category term="mqttclient" scheme="https://jiedev.com/tags/mqttclient/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>CMake实战教程（三）</title>
-    <link href="https://jiedev.com/cmake-3/"/>
-    <id>https://jiedev.com/cmake-3/</id>
-    <published>2020-02-11T17:22:09.000Z</published>
-    <updated>2020-02-11T17:24:07.208Z</updated>
-    
-    <summary type="html">
-    
-      
-      
-        
-        
-          &lt;h1 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h1&gt;&lt;p&gt;从本小节开始，后面所有的构建我们都将采用 &lt;code&gt;out-of-source build&lt;/code&gt;
-        
-      
-    
-    </summary>
-    
-      <category term="cmake" scheme="https://jiedev.com/categories/cmake/"/>
-    
-    
-      <category term="cmake" scheme="https://jiedev.com/tags/cmake/"/>
     
   </entry>
   

@@ -602,16 +602,16 @@
 说了那么多，首先方个idle handle的例子吧，通过例子去讲解idle handle相关的知识。
 
 ```c
-<span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">&lt;stdio.h&gt;</span></span>
-<span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">&lt;stdlib.h&gt;</span></span>
-<span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">&lt;uv.h&gt;</span></span>
+<span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">&lt;stdio.h></span></span>
+<span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">&lt;stdlib.h></span></span>
+<span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">&lt;uv.h></span></span>
 
 int64_t num <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
 
 <span class="token keyword">void</span> <span class="token function">my_idle_cb</span><span class="token punctuation">(</span>uv_idle_t<span class="token operator">*</span> handle<span class="token punctuation">)</span>
 <span class="token punctuation">{</span>
     num<span class="token operator">++</span><span class="token punctuation">;</span>
-    <span class="token keyword">if</span> <span class="token punctuation">(</span>num <span class="token operator">&gt;=</span> <span class="token number">10e6</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>num <span class="token operator">>=</span> <span class="token number">10e6</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
         <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"idle stop, num = %ld\n"</span><span class="token punctuation">,</span> num<span class="token punctuation">)</span><span class="token punctuation">;</span>
         <span class="token function">uv_idle_stop</span><span class="token punctuation">(</span>handle<span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
@@ -651,22 +651,22 @@ int64_t num <span class="token operator">=</span> <span class="token number">0</
 <span class="token macro property">#<span class="token directive keyword">define</span> UV_LOOP_WATCHER_DEFINE(name, type)                                    \
   int uv_##name##_init(uv_loop_t* loop, uv_##name##_t* handle) {              \
     uv__handle_init(loop, (uv_handle_t*)handle, UV_##type);                   \
-    handle-&gt;name##_cb = NULL;                                                 \
+    handle->name##_cb = NULL;                                                 \
     return 0;                                                                 \
   }                                                                           \
                                                                               \
   int uv_##name##_start(uv_##name##_t* handle, uv_##name##_cb cb) {           \
     if (uv__is_active(handle)) return 0;                                      \
     if (cb == NULL) return UV_EINVAL;                                         \
-    QUEUE_INSERT_HEAD(&amp;handle-&gt;loop-&gt;name##_handles, &amp;handle-&gt;queue);         \
-    handle-&gt;name##_cb = cb;                                                   \
+    QUEUE_INSERT_HEAD(&amp;handle->loop->name##_handles, &amp;handle->queue);         \
+    handle->name##_cb = cb;                                                   \
     uv__handle_start(handle);                                                 \
     return 0;                                                                 \
   }                                                                           \
                                                                               \
   int uv_##name##_stop(uv_##name##_t* handle) {                               \
     if (!uv__is_active(handle)) return 0;                                     \
-    QUEUE_REMOVE(&amp;handle-&gt;queue);                                             \
+    QUEUE_REMOVE(&amp;handle->queue);                                             \
     uv__handle_stop(handle);                                                  \
     return 0;                                                                 \
   }                                                                           \
@@ -675,13 +675,13 @@ int64_t num <span class="token operator">=</span> <span class="token number">0</
     uv_##name##_t* h;                                                         \
     QUEUE queue;                                                              \
     QUEUE* q;                                                                 \
-    QUEUE_MOVE(&amp;loop-&gt;name##_handles, &amp;queue);                                \
+    QUEUE_MOVE(&amp;loop->name##_handles, &amp;queue);                                \
     while (!QUEUE_EMPTY(&amp;queue)) {                                            \
       q = QUEUE_HEAD(&amp;queue);                                                 \
       h = QUEUE_DATA(q, uv_##name##_t, queue);                                \
       QUEUE_REMOVE(q);                                                        \
-      QUEUE_INSERT_TAIL(&amp;loop-&gt;name##_handles, q);                            \
-      h-&gt;name##_cb(h);                                                        \
+      QUEUE_INSERT_TAIL(&amp;loop->name##_handles, q);                            \
+      h->name##_cb(h);                                                        \
     }                                                                         \
   }                                                                           \
                                                                               \
@@ -698,10 +698,10 @@ int64_t num <span class="token operator">=</span> <span class="token number">0</
 <li>这就是编译器预处理生成的idle handle相关的代码：</li>
 </ul>
 <pre class="line-numbers language-c"><code class="language-c"><span class="token keyword">int</span> <span class="token function">uv_idle_init</span><span class="token punctuation">(</span>uv_loop_t<span class="token operator">*</span> loop<span class="token punctuation">,</span> uv_idle_t<span class="token operator">*</span> handle<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token comment" spellcheck="true">/* 初始化handle的类型，所属loop，设置UV_HANDLE_REF标志，并且把handle插入loop-&gt;handle_queue队列的队尾 */</span>
+    <span class="token comment" spellcheck="true">/* 初始化handle的类型，所属loop，设置UV_HANDLE_REF标志，并且把handle插入loop->handle_queue队列的队尾 */</span>
     <span class="token function">uv__handle_init</span><span class="token punctuation">(</span>loop<span class="token punctuation">,</span> <span class="token punctuation">(</span>uv_handle_t<span class="token operator">*</span><span class="token punctuation">)</span>handle<span class="token punctuation">,</span> UV_IDLE<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-    handle<span class="token operator">-&gt;</span>idle_cb <span class="token operator">=</span> <span class="token constant">NULL</span><span class="token punctuation">;</span>
+    handle<span class="token operator">-></span>idle_cb <span class="token operator">=</span> <span class="token constant">NULL</span><span class="token punctuation">;</span>
     <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span>
 
@@ -713,10 +713,10 @@ int64_t num <span class="token operator">=</span> <span class="token number">0</
     <span class="token keyword">if</span> <span class="token punctuation">(</span>cb <span class="token operator">==</span> <span class="token constant">NULL</span><span class="token punctuation">)</span> <span class="token keyword">return</span> UV_EINVAL<span class="token punctuation">;</span> 
 
     <span class="token comment" spellcheck="true">/* 把handle插入loop中idle_handles队列，loop有prepare，idle和check三个队列 */</span>
-    <span class="token function">QUEUE_INSERT_HEAD</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>handle<span class="token operator">-&gt;</span>loop<span class="token operator">-&gt;</span>idle_handles<span class="token punctuation">,</span> <span class="token operator">&amp;</span>handle<span class="token operator">-&gt;</span>queue<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">QUEUE_INSERT_HEAD</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>handle<span class="token operator">-></span>loop<span class="token operator">-></span>idle_handles<span class="token punctuation">,</span> <span class="token operator">&amp;</span>handle<span class="token operator">-></span>queue<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
     <span class="token comment" spellcheck="true">/* 指定回调函数，在事件循环迭代的时候被执行 */</span>
-    handle<span class="token operator">-&gt;</span>idle_cb <span class="token operator">=</span> cb<span class="token punctuation">;</span> 
+    handle<span class="token operator">-></span>idle_cb <span class="token operator">=</span> cb<span class="token punctuation">;</span> 
 
     <span class="token comment" spellcheck="true">/* 启动idle handle，设置UV_HANDLE_ACTIVE标记并且将loop中的handle的active计数加一，
        init的时候只是把handle挂载到loop，start的时候handle才处于激活态 */</span>
@@ -729,7 +729,7 @@ int64_t num <span class="token operator">=</span> <span class="token number">0</
     <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token function">uv__is_active</span><span class="token punctuation">(</span>handle<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
 
     <span class="token comment" spellcheck="true">/* 把handle从loop中相应的队列移除，但是还挂载到handle_queue中 */</span>
-    <span class="token function">QUEUE_REMOVE</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>handle<span class="token operator">-&gt;</span>queue<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">QUEUE_REMOVE</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>handle<span class="token operator">-></span>queue<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
     <span class="token comment" spellcheck="true">/* 清除UV_HANDLE_ACTIVE标记并且减去loop中handle的active计数 */</span>
     <span class="token function">uv__handle_stop</span><span class="token punctuation">(</span>handle<span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -743,7 +743,7 @@ int64_t num <span class="token operator">=</span> <span class="token number">0</
     QUEUE<span class="token operator">*</span> q<span class="token punctuation">;</span>
 
     <span class="token comment" spellcheck="true">/* 把loop的idle_handles队列中所有节点摘下来挂载到queue变量 */</span>
-    <span class="token function">QUEUE_MOVE</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>loop<span class="token operator">-&gt;</span>idle_handles<span class="token punctuation">,</span> <span class="token operator">&amp;</span>queue<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">QUEUE_MOVE</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>loop<span class="token operator">-></span>idle_handles<span class="token punctuation">,</span> <span class="token operator">&amp;</span>queue<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
     <span class="token comment" spellcheck="true">/* while循环遍历队列，执行每个节点里面的函数 */</span>
     <span class="token keyword">while</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token function">QUEUE_EMPTY</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>queue<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
@@ -757,11 +757,11 @@ int64_t num <span class="token operator">=</span> <span class="token number">0</
         <span class="token comment" spellcheck="true">/* 把该节点移出当前队列 */</span>
         <span class="token function">QUEUE_REMOVE</span><span class="token punctuation">(</span>q<span class="token punctuation">)</span><span class="token punctuation">;</span> 
 
-        <span class="token comment" spellcheck="true">/* 重新插入loop-&gt;idle_handles队列 */</span>
-        <span class="token function">QUEUE_INSERT_TAIL</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>loop<span class="token operator">-&gt;</span>idle_handles<span class="token punctuation">,</span> q<span class="token punctuation">)</span><span class="token punctuation">;</span> 
+        <span class="token comment" spellcheck="true">/* 重新插入loop->idle_handles队列 */</span>
+        <span class="token function">QUEUE_INSERT_TAIL</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>loop<span class="token operator">-></span>idle_handles<span class="token punctuation">,</span> q<span class="token punctuation">)</span><span class="token punctuation">;</span> 
 
         <span class="token comment" spellcheck="true">/* 执行对应的回调函数 */</span>
-        h<span class="token operator">-&gt;</span><span class="token function">idle_cb</span><span class="token punctuation">(</span>h<span class="token punctuation">)</span><span class="token punctuation">;</span> 
+        h<span class="token operator">-></span><span class="token function">idle_cb</span><span class="token punctuation">(</span>h<span class="token punctuation">)</span><span class="token punctuation">;</span> 
     <span class="token punctuation">}</span> 
 <span class="token punctuation">}</span>
 
@@ -1501,7 +1501,7 @@ int64_t num <span class="token operator">=</span> <span class="token number">0</
 
             
                 &nbsp;<i class="fa fa-area-chart"></i>&nbsp;站点总字数:&nbsp;
-                <span class="white-color">141.2k </span>
+                <span class="white-color">142.3k </span>
 
             
 
@@ -1653,6 +1653,6 @@ $(function () {
         <script async src="/libs/others/busuanzi.pure.mini.js"></script>
     
     
-<script>!function(e){var r=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function t(){for(var c=0;c<r.length;c++)t=r[c],void 0,0<=(n=t.getBoundingClientRect()).top&&0<=n.left&&n.top<=(e.innerHeight||document.documentElement.clientHeight)&&function(){var t,n,e,i,o=r[c];t=o,n=function(){r=r.filter(function(t){return o!==t})},e=new Image,i=t.getAttribute("data-original"),e.onload=function(){t.src=i,n&&n()},e.src=i}();var t,n}t(),e.addEventListener("scroll",function(){!function(t,n){clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(n)},500)}(t,e)})}(this);</script><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"log":false,"model":{"jsonPath":"/live2dw/assets/wanko.model.json"},"display":{"position":"left","width":150,"height":200},"mobile":{"show":false},"react":{"opacity":0.7}});</script></body>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"log":false,"model":{"jsonPath":"/live2dw/assets/wanko.model.json"},"display":{"position":"left","width":150,"height":200},"mobile":{"show":false},"react":{"opacity":0.7}});</script><script>!function(e){var r=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function t(){for(var c=0;c<r.length;c++)t=r[c],void 0,0<=(n=t.getBoundingClientRect()).top&&0<=n.left&&n.top<=(e.innerHeight||document.documentElement.clientHeight)&&function(){var t,n,e,i,o=r[c];t=o,n=function(){r=r.filter(function(t){return o!==t})},e=new Image,i=t.getAttribute("data-original"),e.onload=function(){t.src=i,n&&n()},e.src=i}();var t,n}t(),e.addEventListener("scroll",function(){!function(t,n){clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(n)},500)}(t,e)})}(this);</script></body>
 
 </html>

@@ -606,7 +606,7 @@
     LDR     R2<span class="token punctuation">,</span> <span class="token punctuation">[</span>R1<span class="token punctuation">]</span>
     STR     R2<span class="token punctuation">,</span> <span class="token punctuation">[</span>R0<span class="token punctuation">]</span>
 
-    <span class="token punctuation">;</span> sp <span class="token operator">=</span> k_next_task<span class="token operator">-</span><span class="token operator">&gt;</span>sp
+    <span class="token punctuation">;</span> sp <span class="token operator">=</span> k_next_task<span class="token operator">-</span><span class="token operator">></span>sp
     LDR     R0<span class="token punctuation">,</span> <span class="token punctuation">[</span>R2<span class="token punctuation">]</span>
     <span class="token punctuation">;</span> PSP <span class="token operator">=</span> sp
     MSR     PSP<span class="token punctuation">,</span> R0
@@ -817,7 +817,7 @@ _context_save
     <span class="token punctuation">;</span> save remaining regs r4<span class="token number">-11</span> on process stack
     STMFD   R0<span class="token operator">!</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>R4 <span class="token operator">-</span> R11<span class="token punctuation">}</span>
 
-    <span class="token punctuation">;</span> k_curr_task<span class="token operator">-</span><span class="token operator">&gt;</span>sp <span class="token operator">=</span> PSP
+    <span class="token punctuation">;</span> k_curr_task<span class="token operator">-</span><span class="token operator">></span>sp <span class="token operator">=</span> PSP
     MOV32   R5<span class="token punctuation">,</span> k_curr_task
     LDR     R6<span class="token punctuation">,</span> <span class="token punctuation">[</span>R5<span class="token punctuation">]</span>
     <span class="token punctuation">;</span> R0 is SP <span class="token keyword">of</span> process being switched out
@@ -829,7 +829,7 @@ _context_restore
     LDR     R2<span class="token punctuation">,</span> <span class="token punctuation">[</span>R1<span class="token punctuation">]</span>
     STR     R2<span class="token punctuation">,</span> <span class="token punctuation">[</span>R5<span class="token punctuation">]</span>
 
-    <span class="token punctuation">;</span> R0 <span class="token operator">=</span> k_next_task<span class="token operator">-</span><span class="token operator">&gt;</span>sp
+    <span class="token punctuation">;</span> R0 <span class="token operator">=</span> k_next_task<span class="token operator">-</span><span class="token operator">></span>sp
     LDR     R0<span class="token punctuation">,</span> <span class="token punctuation">[</span>R2<span class="token punctuation">]</span>
 
     <span class="token punctuation">;</span> restore R4 <span class="token operator">-</span> R11
@@ -862,7 +862,7 @@ _context_restore
     k_cpu_cycle_per_tick <span class="token operator">=</span> TOS_CFG_CPU_CLOCK <span class="token operator">/</span> k_cpu_tick_per_second<span class="token punctuation">;</span>
     <span class="token function">cpu_systick_init</span><span class="token punctuation">(</span>k_cpu_cycle_per_tick<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-#<span class="token keyword">if</span> <span class="token punctuation">(</span>TOS_CFG_CPU_HRTIMER_EN <span class="token operator">&gt;</span> <span class="token number">0</span><span class="token punctuation">)</span>
+#<span class="token keyword">if</span> <span class="token punctuation">(</span>TOS_CFG_CPU_HRTIMER_EN <span class="token operator">></span> <span class="token number">0</span><span class="token punctuation">)</span>
     <span class="token function">tos_cpu_hrtimer_init</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 #endif
 <span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
@@ -893,12 +893,12 @@ _context_restore
 
     <span class="token function">tick_update</span><span class="token punctuation">(</span><span class="token punctuation">(</span>k_tick_t<span class="token punctuation">)</span>1u<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-#<span class="token keyword">if</span> TOS_CFG_TIMER_EN <span class="token operator">&gt;</span> 0u <span class="token operator">&amp;&amp;</span> TOS_CFG_TIMER_AS_PROC <span class="token operator">&gt;</span> 0u
+#<span class="token keyword">if</span> TOS_CFG_TIMER_EN <span class="token operator">></span> 0u <span class="token operator">&amp;&amp;</span> TOS_CFG_TIMER_AS_PROC <span class="token operator">></span> 0u
     <span class="token function">timer_update</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 #endif
 
-#<span class="token keyword">if</span> TOS_CFG_ROUND_ROBIN_EN <span class="token operator">&gt;</span> 0u
-    <span class="token function">robin_sched</span><span class="token punctuation">(</span>k_curr_task<span class="token operator">-</span><span class="token operator">&gt;</span>prio<span class="token punctuation">)</span><span class="token punctuation">;</span>
+#<span class="token keyword">if</span> TOS_CFG_ROUND_ROBIN_EN <span class="token operator">></span> 0u
+    <span class="token function">robin_sched</span><span class="token punctuation">(</span>k_curr_task<span class="token operator">-</span><span class="token operator">></span>prio<span class="token punctuation">)</span><span class="token punctuation">;</span>
 #endif
 <span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>不得不说<code>TencentOS tiny</code>源码的实现非常简单，<code>我非常喜欢</code>，在<code>tos_tick_handler</code>中，首先判断一下系统是否已经开始运行，如果没有运行将直接返回，如果已经运行了，那就调用<code>tick_update</code>函数更新系统时基，如果使能了<code>TOS_CFG_TIMER_EN</code> 宏定义表示使用软件定时器，则需要更新相应的处理，此处暂且不提及。如果使能了<code>TOS_CFG_ROUND_ROBIN_EN</code>宏定义，还需要更新时间片相关变量，稍后讲解。</p>
@@ -917,17 +917,17 @@ _context_restore
     <span class="token punctuation">}</span>
 
     first <span class="token operator">=</span> <span class="token function">TOS_LIST_FIRST_ENTRY</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>k_tick_list<span class="token punctuation">,</span> k_task_t<span class="token punctuation">,</span> tick_list<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token keyword">if</span> <span class="token punctuation">(</span>first<span class="token operator">-</span><span class="token operator">&gt;</span>tick_expires <span class="token operator">&lt;=</span> tick<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        first<span class="token operator">-</span><span class="token operator">&gt;</span>tick_expires <span class="token operator">=</span> <span class="token punctuation">(</span>k_tick_t<span class="token punctuation">)</span>0u<span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>first<span class="token operator">-</span><span class="token operator">></span>tick_expires <span class="token operator">&lt;=</span> tick<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        first<span class="token operator">-</span><span class="token operator">></span>tick_expires <span class="token operator">=</span> <span class="token punctuation">(</span>k_tick_t<span class="token punctuation">)</span>0u<span class="token punctuation">;</span>
     <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
-        first<span class="token operator">-</span><span class="token operator">&gt;</span>tick_expires <span class="token operator">-</span><span class="token operator">=</span> tick<span class="token punctuation">;</span>
+        first<span class="token operator">-</span><span class="token operator">></span>tick_expires <span class="token operator">-</span><span class="token operator">=</span> tick<span class="token punctuation">;</span>
         <span class="token function">TOS_CPU_INT_ENABLE</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
         <span class="token keyword">return</span><span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
 
     <span class="token function">TOS_LIST_FOR_EACH_SAFE</span><span class="token punctuation">(</span>curr<span class="token punctuation">,</span> next<span class="token punctuation">,</span> <span class="token operator">&amp;</span>k_tick_list<span class="token punctuation">)</span> <span class="token punctuation">{</span>
         task <span class="token operator">=</span> <span class="token function">TOS_LIST_ENTRY</span><span class="token punctuation">(</span>curr<span class="token punctuation">,</span> k_task_t<span class="token punctuation">,</span> tick_list<span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token keyword">if</span> <span class="token punctuation">(</span>task<span class="token operator">-</span><span class="token operator">&gt;</span>tick_expires <span class="token operator">&gt;</span> <span class="token punctuation">(</span>k_tick_t<span class="token punctuation">)</span>0u<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>task<span class="token operator">-</span><span class="token operator">></span>tick_expires <span class="token operator">></span> <span class="token punctuation">(</span>k_tick_t<span class="token punctuation">)</span>0u<span class="token punctuation">)</span> <span class="token punctuation">{</span>
             <span class="token keyword">break</span><span class="token punctuation">;</span>
         <span class="token punctuation">}</span>
 
@@ -965,22 +965,22 @@ _context_restore
         <span class="token keyword">return</span><span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
 
-    <span class="token keyword">if</span> <span class="token punctuation">(</span>task<span class="token operator">-</span><span class="token operator">&gt;</span>timeslice <span class="token operator">&gt;</span> <span class="token punctuation">(</span>k_timeslice_t<span class="token punctuation">)</span>0u<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        <span class="token operator">--</span>task<span class="token operator">-</span><span class="token operator">&gt;</span>timeslice<span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>task<span class="token operator">-</span><span class="token operator">></span>timeslice <span class="token operator">></span> <span class="token punctuation">(</span>k_timeslice_t<span class="token punctuation">)</span>0u<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token operator">--</span>task<span class="token operator">-</span><span class="token operator">></span>timeslice<span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
 
-    <span class="token keyword">if</span> <span class="token punctuation">(</span>task<span class="token operator">-</span><span class="token operator">&gt;</span>timeslice <span class="token operator">&gt;</span> <span class="token punctuation">(</span>k_timeslice_t<span class="token punctuation">)</span>0u<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>task<span class="token operator">-</span><span class="token operator">></span>timeslice <span class="token operator">></span> <span class="token punctuation">(</span>k_timeslice_t<span class="token punctuation">)</span>0u<span class="token punctuation">)</span> <span class="token punctuation">{</span>
         <span class="token function">TOS_CPU_INT_ENABLE</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
         <span class="token keyword">return</span><span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
 
-    <span class="token function">readyqueue_move_head_to_tail</span><span class="token punctuation">(</span>k_curr_task<span class="token operator">-</span><span class="token operator">&gt;</span>prio<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">readyqueue_move_head_to_tail</span><span class="token punctuation">(</span>k_curr_task<span class="token operator">-</span><span class="token operator">></span>prio<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
     task <span class="token operator">=</span> <span class="token function">readyqueue_first_task_get</span><span class="token punctuation">(</span>prio<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token keyword">if</span> <span class="token punctuation">(</span>task<span class="token operator">-</span><span class="token operator">&gt;</span>timeslice_reload <span class="token operator">==</span> <span class="token punctuation">(</span>k_timeslice_t<span class="token punctuation">)</span>0u<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        task<span class="token operator">-</span><span class="token operator">&gt;</span>timeslice <span class="token operator">=</span> k_robin_default_timeslice<span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>task<span class="token operator">-</span><span class="token operator">></span>timeslice_reload <span class="token operator">==</span> <span class="token punctuation">(</span>k_timeslice_t<span class="token punctuation">)</span>0u<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        task<span class="token operator">-</span><span class="token operator">></span>timeslice <span class="token operator">=</span> k_robin_default_timeslice<span class="token punctuation">;</span>
     <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
-        task<span class="token operator">-</span><span class="token operator">&gt;</span>timeslice <span class="token operator">=</span> task<span class="token operator">-</span><span class="token operator">&gt;</span>timeslice_reload<span class="token punctuation">;</span>
+        task<span class="token operator">-</span><span class="token operator">></span>timeslice <span class="token operator">=</span> task<span class="token operator">-</span><span class="token operator">></span>timeslice_reload<span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
 
     <span class="token function">TOS_CPU_INT_ENABLE</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -1717,7 +1717,7 @@ _context_restore
 
             
                 &nbsp;<i class="fa fa-area-chart"></i>&nbsp;站点总字数:&nbsp;
-                <span class="white-color">141.2k </span>
+                <span class="white-color">142.3k </span>
 
             
 
@@ -1869,6 +1869,6 @@ $(function () {
         <script async src="/libs/others/busuanzi.pure.mini.js"></script>
     
     
-<script>!function(e){var r=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function t(){for(var c=0;c<r.length;c++)t=r[c],void 0,0<=(n=t.getBoundingClientRect()).top&&0<=n.left&&n.top<=(e.innerHeight||document.documentElement.clientHeight)&&function(){var t,n,e,i,o=r[c];t=o,n=function(){r=r.filter(function(t){return o!==t})},e=new Image,i=t.getAttribute("data-original"),e.onload=function(){t.src=i,n&&n()},e.src=i}();var t,n}t(),e.addEventListener("scroll",function(){!function(t,n){clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(n)},500)}(t,e)})}(this);</script><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"log":false,"model":{"jsonPath":"/live2dw/assets/wanko.model.json"},"display":{"position":"left","width":150,"height":200},"mobile":{"show":false},"react":{"opacity":0.7}});</script></body>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"log":false,"model":{"jsonPath":"/live2dw/assets/wanko.model.json"},"display":{"position":"left","width":150,"height":200},"mobile":{"show":false},"react":{"opacity":0.7}});</script><script>!function(e){var r=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function t(){for(var c=0;c<r.length;c++)t=r[c],void 0,0<=(n=t.getBoundingClientRect()).top&&0<=n.left&&n.top<=(e.innerHeight||document.documentElement.clientHeight)&&function(){var t,n,e,i,o=r[c];t=o,n=function(){r=r.filter(function(t){return o!==t})},e=new Image,i=t.getAttribute("data-original"),e.onload=function(){t.src=i,n&&n()},e.src=i}();var t,n}t(),e.addEventListener("scroll",function(){!function(t,n){clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(n)},500)}(t,e)})}(this);</script></body>
 
 </html>

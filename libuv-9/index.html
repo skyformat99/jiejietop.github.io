@@ -611,20 +611,20 @@
 <pre class="line-numbers language-c"><code class="language-c"><span class="token keyword">int</span> <span class="token function">uv_async_init</span><span class="token punctuation">(</span>uv_loop_t<span class="token operator">*</span> loop<span class="token punctuation">,</span> uv_async_t<span class="token operator">*</span> handle<span class="token punctuation">,</span> uv_async_cb async_cb<span class="token punctuation">)</span> <span class="token punctuation">{</span>
   <span class="token keyword">int</span> err<span class="token punctuation">;</span>
 
-  <span class="token comment" spellcheck="true">/* 其实这个函数的内部主要做了以下操作：创建一个管道，并且将管道注册到loop-&gt;async_io_watcher，并且start */</span>
+  <span class="token comment" spellcheck="true">/* 其实这个函数的内部主要做了以下操作：创建一个管道，并且将管道注册到loop->async_io_watcher，并且start */</span>
   err <span class="token operator">=</span> <span class="token function">uv__async_start</span><span class="token punctuation">(</span>loop<span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token keyword">if</span> <span class="token punctuation">(</span>err<span class="token punctuation">)</span>
     <span class="token keyword">return</span> err<span class="token punctuation">;</span>
 
-  <span class="token comment" spellcheck="true">/* 设置UV_HANDLE_REF标记，并且将async handle 插入loop-&gt;handle_queue */</span>
+  <span class="token comment" spellcheck="true">/* 设置UV_HANDLE_REF标记，并且将async handle 插入loop->handle_queue */</span>
   <span class="token function">uv__handle_init</span><span class="token punctuation">(</span>loop<span class="token punctuation">,</span> <span class="token punctuation">(</span>uv_handle_t<span class="token operator">*</span><span class="token punctuation">)</span>handle<span class="token punctuation">,</span> UV_ASYNC<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
   <span class="token comment" spellcheck="true">/* 注册回调函数、将 pending 字段初始化为0 */</span>
-  handle<span class="token operator">-&gt;</span>async_cb <span class="token operator">=</span> async_cb<span class="token punctuation">;</span>
-  handle<span class="token operator">-&gt;</span>pending <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+  handle<span class="token operator">-></span>async_cb <span class="token operator">=</span> async_cb<span class="token punctuation">;</span>
+  handle<span class="token operator">-></span>pending <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
 
-  <span class="token comment" spellcheck="true">/* queue 作为队列节点插入 loop-&gt;async_handles */</span>
-  <span class="token function">QUEUE_INSERT_TAIL</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>loop<span class="token operator">-&gt;</span>async_handles<span class="token punctuation">,</span> <span class="token operator">&amp;</span>handle<span class="token operator">-&gt;</span>queue<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment" spellcheck="true">/* queue 作为队列节点插入 loop->async_handles */</span>
+  <span class="token function">QUEUE_INSERT_TAIL</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>loop<span class="token operator">-></span>async_handles<span class="token punctuation">,</span> <span class="token operator">&amp;</span>handle<span class="token operator">-></span>queue<span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token function">uv__handle_start</span><span class="token punctuation">(</span>handle<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
   <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
@@ -634,7 +634,7 @@
   <span class="token keyword">int</span> pipefd<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
   <span class="token keyword">int</span> err<span class="token punctuation">;</span>
 
-  <span class="token keyword">if</span> <span class="token punctuation">(</span>loop<span class="token operator">-&gt;</span>async_io_watcher<span class="token punctuation">.</span>fd <span class="token operator">!=</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>loop<span class="token operator">-></span>async_io_watcher<span class="token punctuation">.</span>fd <span class="token operator">!=</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span>
     <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
 
 <span class="token comment" spellcheck="true">/* 创建管道 */</span>
@@ -651,10 +651,10 @@
     <span class="token keyword">return</span> err<span class="token punctuation">;</span>
 <span class="token macro property">#<span class="token directive keyword">endif</span></span>
 
-  <span class="token comment" spellcheck="true">/* 初始化并启动了 loop-&gt;async_io_watcher */</span>
-  <span class="token function">uv__io_init</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>loop<span class="token operator">-&gt;</span>async_io_watcher<span class="token punctuation">,</span> uv__async_io<span class="token punctuation">,</span> pipefd<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token function">uv__io_start</span><span class="token punctuation">(</span>loop<span class="token punctuation">,</span> <span class="token operator">&amp;</span>loop<span class="token operator">-&gt;</span>async_io_watcher<span class="token punctuation">,</span> POLLIN<span class="token punctuation">)</span><span class="token punctuation">;</span>
-  loop<span class="token operator">-&gt;</span>async_wfd <span class="token operator">=</span> pipefd<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+  <span class="token comment" spellcheck="true">/* 初始化并启动了 loop->async_io_watcher */</span>
+  <span class="token function">uv__io_init</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>loop<span class="token operator">-></span>async_io_watcher<span class="token punctuation">,</span> uv__async_io<span class="token punctuation">,</span> pipefd<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token function">uv__io_start</span><span class="token punctuation">(</span>loop<span class="token punctuation">,</span> <span class="token operator">&amp;</span>loop<span class="token operator">-></span>async_io_watcher<span class="token punctuation">,</span> POLLIN<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  loop<span class="token operator">-></span>async_wfd <span class="token operator">=</span> pipefd<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
 
   <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
@@ -668,18 +668,18 @@
 <p>其实真正的唤醒操作是uv__async_send()函数，它往管道中写入消息就行了。</p>
 <pre class="line-numbers language-c"><code class="language-c"><span class="token keyword">int</span> <span class="token function">uv_async_send</span><span class="token punctuation">(</span>uv_async_t<span class="token operator">*</span> handle<span class="token punctuation">)</span> <span class="token punctuation">{</span>
 
-  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token function">ACCESS_ONCE</span><span class="token punctuation">(</span><span class="token keyword">int</span><span class="token punctuation">,</span> handle<span class="token operator">-&gt;</span>pending<span class="token punctuation">)</span> <span class="token operator">!=</span> <span class="token number">0</span><span class="token punctuation">)</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token function">ACCESS_ONCE</span><span class="token punctuation">(</span><span class="token keyword">int</span><span class="token punctuation">,</span> handle<span class="token operator">-></span>pending<span class="token punctuation">)</span> <span class="token operator">!=</span> <span class="token number">0</span><span class="token punctuation">)</span>
     <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
 
-  <span class="token comment" spellcheck="true">/* 将handle-&gt;pending设置为1，表示此时有线程在操作这个async handle */</span>
-  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token function">cmpxchgi</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>handle<span class="token operator">-&gt;</span>pending<span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token operator">!=</span> <span class="token number">0</span><span class="token punctuation">)</span>
+  <span class="token comment" spellcheck="true">/* 将handle->pending设置为1，表示此时有线程在操作这个async handle */</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token function">cmpxchgi</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>handle<span class="token operator">-></span>pending<span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token operator">!=</span> <span class="token number">0</span><span class="token punctuation">)</span>
     <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
 
   <span class="token comment" spellcheck="true">/* 唤醒事件循环线程 */</span>
-  <span class="token function">uv__async_send</span><span class="token punctuation">(</span>handle<span class="token operator">-&gt;</span>loop<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token function">uv__async_send</span><span class="token punctuation">(</span>handle<span class="token operator">-></span>loop<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
   <span class="token comment" spellcheck="true">/* 操作完成 */</span>
-  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token function">cmpxchgi</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>handle<span class="token operator">-&gt;</span>pending<span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span> <span class="token operator">!=</span> <span class="token number">1</span><span class="token punctuation">)</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token function">cmpxchgi</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>handle<span class="token operator">-></span>pending<span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span> <span class="token operator">!=</span> <span class="token number">1</span><span class="token punctuation">)</span>
     <span class="token function">abort</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
   <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
@@ -693,14 +693,14 @@
 
   buf <span class="token operator">=</span> <span class="token string">""</span><span class="token punctuation">;</span>
   len <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span>
-  fd <span class="token operator">=</span> loop<span class="token operator">-&gt;</span>async_wfd<span class="token punctuation">;</span>
+  fd <span class="token operator">=</span> loop<span class="token operator">-></span>async_wfd<span class="token punctuation">;</span>
 
 <span class="token macro property">#<span class="token directive keyword">if</span> defined(__linux__)</span>
   <span class="token keyword">if</span> <span class="token punctuation">(</span>fd <span class="token operator">==</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
     <span class="token keyword">static</span> <span class="token keyword">const</span> uint64_t val <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span>
     buf <span class="token operator">=</span> <span class="token operator">&amp;</span>val<span class="token punctuation">;</span>
     len <span class="token operator">=</span> <span class="token keyword">sizeof</span><span class="token punctuation">(</span>val<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    fd <span class="token operator">=</span> loop<span class="token operator">-&gt;</span>async_io_watcher<span class="token punctuation">.</span>fd<span class="token punctuation">;</span>  <span class="token comment" spellcheck="true">/* eventfd */</span>
+    fd <span class="token operator">=</span> loop<span class="token operator">-></span>async_io_watcher<span class="token punctuation">.</span>fd<span class="token punctuation">;</span>  <span class="token comment" spellcheck="true">/* eventfd */</span>
   <span class="token punctuation">}</span>
 <span class="token macro property">#<span class="token directive keyword">endif</span></span>
 
@@ -727,12 +727,12 @@
   QUEUE<span class="token operator">*</span> q<span class="token punctuation">;</span>
   uv_async_t<span class="token operator">*</span> h<span class="token punctuation">;</span>
 
-  <span class="token function">assert</span><span class="token punctuation">(</span>w <span class="token operator">==</span> <span class="token operator">&amp;</span>loop<span class="token operator">-</span><span class="token operator">&gt;</span>async_io_watcher<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token function">assert</span><span class="token punctuation">(</span>w <span class="token operator">==</span> <span class="token operator">&amp;</span>loop<span class="token operator">-</span><span class="token operator">></span>async_io_watcher<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
   <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token punctuation">;</span><span class="token punctuation">;</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
 
-    <span class="token comment" spellcheck="true">/* 不断的读取 w-&gt;fd 上的数据到 buf 中直到为空，buf 中的数据无实际用途 */</span>
-    r <span class="token operator">=</span> <span class="token function">read</span><span class="token punctuation">(</span>w<span class="token operator">-</span><span class="token operator">&gt;</span>fd<span class="token punctuation">,</span> buf<span class="token punctuation">,</span> <span class="token function">sizeof</span><span class="token punctuation">(</span>buf<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment" spellcheck="true">/* 不断的读取 w->fd 上的数据到 buf 中直到为空，buf 中的数据无实际用途 */</span>
+    r <span class="token operator">=</span> <span class="token function">read</span><span class="token punctuation">(</span>w<span class="token operator">-</span><span class="token operator">></span>fd<span class="token punctuation">,</span> buf<span class="token punctuation">,</span> <span class="token function">sizeof</span><span class="token punctuation">(</span>buf<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
     <span class="token keyword">if</span> <span class="token punctuation">(</span>r <span class="token operator">==</span> <span class="token function">sizeof</span><span class="token punctuation">(</span>buf<span class="token punctuation">)</span><span class="token punctuation">)</span>
       <span class="token keyword">continue</span><span class="token punctuation">;</span>
@@ -750,7 +750,7 @@
     <span class="token function">abort</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token punctuation">}</span>
 
-  <span class="token function">QUEUE_MOVE</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>loop<span class="token operator">-</span><span class="token operator">&gt;</span>async_handles<span class="token punctuation">,</span> <span class="token operator">&amp;</span>queue<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token function">QUEUE_MOVE</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>loop<span class="token operator">-</span><span class="token operator">></span>async_handles<span class="token punctuation">,</span> <span class="token operator">&amp;</span>queue<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
   <span class="token comment" spellcheck="true">/* 遍历队列 */</span>
   <span class="token keyword">while</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token function">QUEUE_EMPTY</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>queue<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
@@ -762,23 +762,23 @@
     <span class="token function">QUEUE_REMOVE</span><span class="token punctuation">(</span>q<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
     <span class="token comment" spellcheck="true">/* 重新插入队列 */</span>
-    <span class="token function">QUEUE_INSERT_TAIL</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>loop<span class="token operator">-</span><span class="token operator">&gt;</span>async_handles<span class="token punctuation">,</span> q<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">QUEUE_INSERT_TAIL</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>loop<span class="token operator">-</span><span class="token operator">></span>async_handles<span class="token punctuation">,</span> q<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
     <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token number">0</span> <span class="token operator">==</span> <span class="token function">uv__async_spin</span><span class="token punctuation">(</span>h<span class="token punctuation">)</span><span class="token punctuation">)</span>
       <span class="token keyword">continue</span><span class="token punctuation">;</span>  <span class="token comment" spellcheck="true">/* Not pending. */</span>
 
-    <span class="token keyword">if</span> <span class="token punctuation">(</span>h<span class="token operator">-</span><span class="token operator">&gt;</span>async_cb <span class="token operator">==</span> NULL<span class="token punctuation">)</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>h<span class="token operator">-</span><span class="token operator">></span>async_cb <span class="token operator">==</span> NULL<span class="token punctuation">)</span>
       <span class="token keyword">continue</span><span class="token punctuation">;</span>
 
     <span class="token comment" spellcheck="true">/* 调用async 的回调函数 */</span>
-    h<span class="token operator">-</span><span class="token operator">&gt;</span><span class="token function">async_cb</span><span class="token punctuation">(</span>h<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    h<span class="token operator">-</span><span class="token operator">></span><span class="token function">async_cb</span><span class="token punctuation">(</span>h<span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token punctuation">}</span>
 <span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <h1 id="example"><a href="#example" class="headerlink" title="example"></a>example</h1><p>接着来一个例子吧，都是非常简单的，创建1个线程，在事件循环中等待async handle。</p>
-<pre class="line-numbers language-c"><code class="language-c"><span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">&lt;stdio.h&gt;</span></span>
-<span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">&lt;unistd.h&gt;</span></span>
+<pre class="line-numbers language-c"><code class="language-c"><span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">&lt;stdio.h></span></span>
+<span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">&lt;unistd.h></span></span>
 
-<span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">&lt;uv.h&gt;</span></span>
+<span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">&lt;uv.h></span></span>
 
 <span class="token keyword">void</span> <span class="token function">wake_entry</span><span class="token punctuation">(</span><span class="token keyword">void</span> <span class="token operator">*</span>arg<span class="token punctuation">)</span> 
 <span class="token punctuation">{</span>
@@ -1543,7 +1543,7 @@
 
             
                 &nbsp;<i class="fa fa-area-chart"></i>&nbsp;站点总字数:&nbsp;
-                <span class="white-color">141.2k </span>
+                <span class="white-color">142.3k </span>
 
             
 
@@ -1695,6 +1695,6 @@ $(function () {
         <script async src="/libs/others/busuanzi.pure.mini.js"></script>
     
     
-<script>!function(e){var r=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function t(){for(var c=0;c<r.length;c++)t=r[c],void 0,0<=(n=t.getBoundingClientRect()).top&&0<=n.left&&n.top<=(e.innerHeight||document.documentElement.clientHeight)&&function(){var t,n,e,i,o=r[c];t=o,n=function(){r=r.filter(function(t){return o!==t})},e=new Image,i=t.getAttribute("data-original"),e.onload=function(){t.src=i,n&&n()},e.src=i}();var t,n}t(),e.addEventListener("scroll",function(){!function(t,n){clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(n)},500)}(t,e)})}(this);</script><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"log":false,"model":{"jsonPath":"/live2dw/assets/wanko.model.json"},"display":{"position":"left","width":150,"height":200},"mobile":{"show":false},"react":{"opacity":0.7}});</script></body>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"log":false,"model":{"jsonPath":"/live2dw/assets/wanko.model.json"},"display":{"position":"left","width":150,"height":200},"mobile":{"show":false},"react":{"opacity":0.7}});</script><script>!function(e){var r=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function t(){for(var c=0;c<r.length;c++)t=r[c],void 0,0<=(n=t.getBoundingClientRect()).top&&0<=n.left&&n.top<=(e.innerHeight||document.documentElement.clientHeight)&&function(){var t,n,e,i,o=r[c];t=o,n=function(){r=r.filter(function(t){return o!==t})},e=new Image,i=t.getAttribute("data-original"),e.onload=function(){t.src=i,n&&n()},e.src=i}();var t,n}t(),e.addEventListener("scroll",function(){!function(t,n){clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(n)},500)}(t,e)})}(this);</script></body>
 
 </html>

@@ -533,14 +533,14 @@
                     
                     <div class="info-break-policy">
                         <i class="fa fa-file-word-o fa-fw"></i>文章字数:&nbsp;&nbsp;
-                        5.7k
+                        5.6k
                     </div>
                     
 
                     
                     <div class="info-break-policy">
                         <i class="fa fa-clock-o fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                        22 分
+                        21 分
                     </div>
                     
                 
@@ -853,9 +853,9 @@
 
   <span class="token comment" spellcheck="true">/* 初始化handle的类型，并且插入loop的handle队列，因为所有的handle都会被放到该队列管理 */</span>
   <span class="token function">uv__handle_init</span><span class="token punctuation">(</span>loop<span class="token punctuation">,</span> <span class="token punctuation">(</span>uv_handle_t<span class="token operator">*</span><span class="token punctuation">)</span> handle<span class="token punctuation">,</span> UV_SIGNAL<span class="token punctuation">)</span><span class="token punctuation">;</span>
-  handle<span class="token operator">-&gt;</span>signum <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
-  handle<span class="token operator">-&gt;</span>caught_signals <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
-  handle<span class="token operator">-&gt;</span>dispatched_signals <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+  handle<span class="token operator">-></span>signum <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+  handle<span class="token operator">-></span>caught_signals <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+  handle<span class="token operator">-></span>dispatched_signals <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
 
   <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span>
@@ -865,22 +865,22 @@
   <span class="token keyword">int</span> err<span class="token punctuation">;</span>
 
   <span class="token comment" spellcheck="true">/* 如果已经初始化则返回 */</span>
-  <span class="token keyword">if</span> <span class="token punctuation">(</span>loop<span class="token operator">-&gt;</span>signal_pipefd<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">!=</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>loop<span class="token operator">-></span>signal_pipefd<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">!=</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span>
     <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
 
   <span class="token comment" spellcheck="true">/* 申请两个管道，用于其他进程和libuv主进程通信，并设置非阻塞标记 */</span>
-  err <span class="token operator">=</span> <span class="token function">uv__make_pipe</span><span class="token punctuation">(</span>loop<span class="token operator">-&gt;</span>signal_pipefd<span class="token punctuation">,</span> UV__F_NONBLOCK<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  err <span class="token operator">=</span> <span class="token function">uv__make_pipe</span><span class="token punctuation">(</span>loop<span class="token operator">-></span>signal_pipefd<span class="token punctuation">,</span> UV__F_NONBLOCK<span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token keyword">if</span> <span class="token punctuation">(</span>err<span class="token punctuation">)</span>
     <span class="token keyword">return</span> err<span class="token punctuation">;</span>
 
   <span class="token comment" spellcheck="true">/* 置信号io观察者的处理函数和文件描述符，libuv在循环I/O的时候，
-     如果发现管道读端loop-&gt;signal_pipefd[0]可读，则执行对应的回调函数uv__signal_event */</span>
-  <span class="token function">uv__io_init</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>loop<span class="token operator">-&gt;</span>signal_io_watcher<span class="token punctuation">,</span>
+     如果发现管道读端loop->signal_pipefd[0]可读，则执行对应的回调函数uv__signal_event */</span>
+  <span class="token function">uv__io_init</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>loop<span class="token operator">-></span>signal_io_watcher<span class="token punctuation">,</span>
               uv__signal_event<span class="token punctuation">,</span>
-              loop<span class="token operator">-&gt;</span>signal_pipefd<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+              loop<span class="token operator">-></span>signal_pipefd<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
   <span class="token comment" spellcheck="true">/* 插入libuv的signal io观察者队列，当管道可读的时候，执行uv__signal_event */</span>
-  <span class="token function">uv__io_start</span><span class="token punctuation">(</span>loop<span class="token punctuation">,</span> <span class="token operator">&amp;</span>loop<span class="token operator">-&gt;</span>signal_io_watcher<span class="token punctuation">,</span> POLLIN<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token function">uv__io_start</span><span class="token punctuation">(</span>loop<span class="token punctuation">,</span> <span class="token operator">&amp;</span>loop<span class="token operator">-></span>signal_io_watcher<span class="token punctuation">,</span> POLLIN<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
   <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
@@ -912,13 +912,13 @@
     <span class="token keyword">return</span> UV_EINVAL<span class="token punctuation">;</span>
 
   <span class="token comment" spellcheck="true">/* 这个信号已经注册过了，重新设置回调处理函数就行。 */</span>
-  <span class="token keyword">if</span> <span class="token punctuation">(</span>signum <span class="token operator">==</span> handle<span class="token operator">-&gt;</span>signum<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    handle<span class="token operator">-&gt;</span>signal_cb <span class="token operator">=</span> signal_cb<span class="token punctuation">;</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>signum <span class="token operator">==</span> handle<span class="token operator">-></span>signum<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    handle<span class="token operator">-></span>signal_cb <span class="token operator">=</span> signal_cb<span class="token punctuation">;</span>
     <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
   <span class="token punctuation">}</span>
 
   <span class="token comment" spellcheck="true">/* 如果信号处理程序已经处于活动状态，请先停止它。 */</span>
-  <span class="token keyword">if</span> <span class="token punctuation">(</span>handle<span class="token operator">-&gt;</span>signum <span class="token operator">!=</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>handle<span class="token operator">-></span>signum <span class="token operator">!=</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
     <span class="token function">uv__signal_stop</span><span class="token punctuation">(</span>handle<span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token punctuation">}</span>
 
@@ -928,7 +928,7 @@
   <span class="token comment" spellcheck="true">/* 如果此时没有用于该信号的活动信号监视程序（在任何循环中），则给进程注册一个信号和信号处理函数。主要是调用操作系统的sigaction()函数来处理的。 */</span>
   first_handle <span class="token operator">=</span> <span class="token function">uv__signal_first_handle</span><span class="token punctuation">(</span>signum<span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token keyword">if</span> <span class="token punctuation">(</span>first_handle <span class="token operator">==</span> <span class="token constant">NULL</span> <span class="token operator">||</span>
-      <span class="token punctuation">(</span><span class="token operator">!</span>oneshot <span class="token operator">&amp;&amp;</span> <span class="token punctuation">(</span>first_handle<span class="token operator">-&gt;</span>flags <span class="token operator">&amp;</span> UV_SIGNAL_ONE_SHOT<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token punctuation">(</span><span class="token operator">!</span>oneshot <span class="token operator">&amp;&amp;</span> <span class="token punctuation">(</span>first_handle<span class="token operator">-></span>flags <span class="token operator">&amp;</span> UV_SIGNAL_ONE_SHOT<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
     err <span class="token operator">=</span> <span class="token function">uv__signal_register_handler</span><span class="token punctuation">(</span>signum<span class="token punctuation">,</span> oneshot<span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token keyword">if</span> <span class="token punctuation">(</span>err<span class="token punctuation">)</span> <span class="token punctuation">{</span>
       <span class="token comment" spellcheck="true">/* 注册信号失败 */</span>
@@ -937,11 +937,11 @@
     <span class="token punctuation">}</span>
   <span class="token punctuation">}</span>
 
-  handle<span class="token operator">-&gt;</span>signum <span class="token operator">=</span> signum<span class="token punctuation">;</span>
+  handle<span class="token operator">-></span>signum <span class="token operator">=</span> signum<span class="token punctuation">;</span>
 
   <span class="token comment" spellcheck="true">/* 设置UV_SIGNAL_ONE_SHOT标记，表示libuv只响应一次信号 */</span>
   <span class="token keyword">if</span> <span class="token punctuation">(</span>oneshot<span class="token punctuation">)</span>
-    handle<span class="token operator">-&gt;</span>flags <span class="token operator">|</span><span class="token operator">=</span> UV_SIGNAL_ONE_SHOT<span class="token punctuation">;</span>
+    handle<span class="token operator">-></span>flags <span class="token operator">|</span><span class="token operator">=</span> UV_SIGNAL_ONE_SHOT<span class="token punctuation">;</span>
 
   <span class="token comment" spellcheck="true">/* 插入红黑树 */</span>
   <span class="token function">RB_INSERT</span><span class="token punctuation">(</span>uv__signal_tree_s<span class="token punctuation">,</span> <span class="token operator">&amp;</span>uv__signal_tree<span class="token punctuation">,</span> handle<span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -949,7 +949,7 @@
   <span class="token comment" spellcheck="true">/* 接触屏蔽信号 */</span>
   <span class="token function">uv__signal_unlock_and_unblock</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>saved_sigmask<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-  handle<span class="token operator">-&gt;</span>signal_cb <span class="token operator">=</span> signal_cb<span class="token punctuation">;</span>
+  handle<span class="token operator">-></span>signal_cb <span class="token operator">=</span> signal_cb<span class="token punctuation">;</span>
 
   <span class="token comment" spellcheck="true">/* 设置handle的标志UV_HANDLE_ACTIVE，表示处于活跃状态 */</span>
   <span class="token function">uv__handle_start</span><span class="token punctuation">(</span>handle<span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -980,7 +980,7 @@
   <span class="token keyword">int</span> ret<span class="token punctuation">;</span>
 
   <span class="token comment" spellcheck="true">/* 如果没有启动观察程序，则该操作无效。 */</span>
-  <span class="token keyword">if</span> <span class="token punctuation">(</span>handle<span class="token operator">-&gt;</span>signum <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">)</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>handle<span class="token operator">-></span>signum <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">)</span>
     <span class="token keyword">return</span><span class="token punctuation">;</span>
 
   <span class="token comment" spellcheck="true">/* 暂时屏蔽所有信号 */</span>
@@ -992,16 +992,16 @@
   <span class="token punctuation">(</span><span class="token keyword">void</span><span class="token punctuation">)</span> removed_handle<span class="token punctuation">;</span>
 
   <span class="token comment" spellcheck="true">/* 检查是否还有其他活动的信号监视程序正在观察此信号。如果没有了则注销信号处理程序。*/</span>
-  first_handle <span class="token operator">=</span> <span class="token function">uv__signal_first_handle</span><span class="token punctuation">(</span>handle<span class="token operator">-&gt;</span>signum<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  first_handle <span class="token operator">=</span> <span class="token function">uv__signal_first_handle</span><span class="token punctuation">(</span>handle<span class="token operator">-></span>signum<span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token keyword">if</span> <span class="token punctuation">(</span>first_handle <span class="token operator">==</span> <span class="token constant">NULL</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
 
     <span class="token comment" spellcheck="true">/* 注销信号，还是依赖系统的函数sigaction() */</span>
-    <span class="token function">uv__signal_unregister_handler</span><span class="token punctuation">(</span>handle<span class="token operator">-&gt;</span>signum<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">uv__signal_unregister_handler</span><span class="token punctuation">(</span>handle<span class="token operator">-></span>signum<span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
-    rem_oneshot <span class="token operator">=</span> handle<span class="token operator">-&gt;</span>flags <span class="token operator">&amp;</span> UV_SIGNAL_ONE_SHOT<span class="token punctuation">;</span>
-    first_oneshot <span class="token operator">=</span> first_handle<span class="token operator">-&gt;</span>flags <span class="token operator">&amp;</span> UV_SIGNAL_ONE_SHOT<span class="token punctuation">;</span>
+    rem_oneshot <span class="token operator">=</span> handle<span class="token operator">-></span>flags <span class="token operator">&amp;</span> UV_SIGNAL_ONE_SHOT<span class="token punctuation">;</span>
+    first_oneshot <span class="token operator">=</span> first_handle<span class="token operator">-></span>flags <span class="token operator">&amp;</span> UV_SIGNAL_ONE_SHOT<span class="token punctuation">;</span>
     <span class="token keyword">if</span> <span class="token punctuation">(</span>first_oneshot <span class="token operator">&amp;&amp;</span> <span class="token operator">!</span>rem_oneshot<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-      ret <span class="token operator">=</span> <span class="token function">uv__signal_register_handler</span><span class="token punctuation">(</span>handle<span class="token operator">-&gt;</span>signum<span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      ret <span class="token operator">=</span> <span class="token function">uv__signal_register_handler</span><span class="token punctuation">(</span>handle<span class="token operator">-></span>signum<span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
       <span class="token function">assert</span><span class="token punctuation">(</span>ret <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
       <span class="token punctuation">(</span><span class="token keyword">void</span><span class="token punctuation">)</span>ret<span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
@@ -1010,7 +1010,7 @@
   <span class="token comment" spellcheck="true">/* 解除屏蔽所有信号 */</span>
   <span class="token function">uv__signal_unlock_and_unblock</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>saved_sigmask<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-  handle<span class="token operator">-&gt;</span>signum <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+  handle<span class="token operator">-></span>signum <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
   <span class="token function">uv__handle_stop</span><span class="token punctuation">(</span>handle<span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <h1 id="信号的处理过程"><a href="#信号的处理过程" class="headerlink" title="信号的处理过程"></a>信号的处理过程</h1><p>libuv的信号分为两个部分，一个部分是用于通知，另一部分才是真正的处理，当系统有信号到达后，libuv会通过管道通知到libuv的事件循环中，然后在事件循环中处理信号，这里的事件循环其实是一个笼统的概念，具体的处理是在poll io阶段，即I/O轮询阶段，因为在等待信号的过程中，它可能会进入阻塞状态。</p>
@@ -1053,7 +1053,7 @@
 
   <span class="token comment" spellcheck="true">/* 获取signal handle */</span>
   <span class="token keyword">for</span> <span class="token punctuation">(</span>handle <span class="token operator">=</span> <span class="token function">uv__signal_first_handle</span><span class="token punctuation">(</span>signum<span class="token punctuation">)</span><span class="token punctuation">;</span>
-       handle <span class="token operator">!=</span> <span class="token constant">NULL</span> <span class="token operator">&amp;&amp;</span> handle<span class="token operator">-&gt;</span>signum <span class="token operator">==</span> signum<span class="token punctuation">;</span>
+       handle <span class="token operator">!=</span> <span class="token constant">NULL</span> <span class="token operator">&amp;&amp;</span> handle<span class="token operator">-></span>signum <span class="token operator">==</span> signum<span class="token punctuation">;</span>
        handle <span class="token operator">=</span> <span class="token function">RB_NEXT</span><span class="token punctuation">(</span>uv__signal_tree_s<span class="token punctuation">,</span> <span class="token operator">&amp;</span>uv__signal_tree<span class="token punctuation">,</span> handle<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
     <span class="token keyword">int</span> r<span class="token punctuation">;</span>
 
@@ -1062,7 +1062,7 @@
 
     <span class="token comment" spellcheck="true">/* 往signal_pipefd管道写入数据，就是通知libuv，拿些signal handle需要处理信号，这是在事件循环中处理的 */</span>
     <span class="token keyword">do</span> <span class="token punctuation">{</span>
-      r <span class="token operator">=</span> <span class="token function">write</span><span class="token punctuation">(</span>handle<span class="token operator">-&gt;</span>loop<span class="token operator">-&gt;</span>signal_pipefd<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token operator">&amp;</span>msg<span class="token punctuation">,</span> <span class="token keyword">sizeof</span> msg<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      r <span class="token operator">=</span> <span class="token function">write</span><span class="token punctuation">(</span>handle<span class="token operator">-></span>loop<span class="token operator">-></span>signal_pipefd<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token operator">&amp;</span>msg<span class="token punctuation">,</span> <span class="token keyword">sizeof</span> msg<span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token punctuation">}</span> <span class="token keyword">while</span> <span class="token punctuation">(</span>r <span class="token operator">==</span> <span class="token operator">-</span><span class="token number">1</span> <span class="token operator">&amp;&amp;</span> errno <span class="token operator">==</span> EINTR<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
     <span class="token function">assert</span><span class="token punctuation">(</span>r <span class="token operator">==</span> <span class="token keyword">sizeof</span> msg <span class="token operator">||</span>
@@ -1070,7 +1070,7 @@
 
     <span class="token comment" spellcheck="true">/* 记录该signal handle收到信号的次数 */</span>
     <span class="token keyword">if</span> <span class="token punctuation">(</span>r <span class="token operator">!=</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span>
-      handle<span class="token operator">-&gt;</span>caught_signals<span class="token operator">++</span><span class="token punctuation">;</span>
+      handle<span class="token operator">-></span>caught_signals<span class="token operator">++</span><span class="token punctuation">;</span>
   <span class="token punctuation">}</span>
 
   <span class="token function">uv__signal_unlock</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -1091,14 +1091,14 @@
 
   <span class="token comment" spellcheck="true">/* 读取管道里的消息，处理所有的信号消息 */</span>
   <span class="token keyword">do</span> <span class="token punctuation">{</span>
-    r <span class="token operator">=</span> <span class="token function">read</span><span class="token punctuation">(</span>loop<span class="token operator">-&gt;</span>signal_pipefd<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">,</span> buf <span class="token operator">+</span> bytes<span class="token punctuation">,</span> <span class="token keyword">sizeof</span><span class="token punctuation">(</span>buf<span class="token punctuation">)</span> <span class="token operator">-</span> bytes<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    r <span class="token operator">=</span> <span class="token function">read</span><span class="token punctuation">(</span>loop<span class="token operator">-></span>signal_pipefd<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">,</span> buf <span class="token operator">+</span> bytes<span class="token punctuation">,</span> <span class="token keyword">sizeof</span><span class="token punctuation">(</span>buf<span class="token punctuation">)</span> <span class="token operator">-</span> bytes<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
     <span class="token keyword">if</span> <span class="token punctuation">(</span>r <span class="token operator">==</span> <span class="token operator">-</span><span class="token number">1</span> <span class="token operator">&amp;&amp;</span> errno <span class="token operator">==</span> EINTR<span class="token punctuation">)</span>
       <span class="token keyword">continue</span><span class="token punctuation">;</span>
 
     <span class="token keyword">if</span> <span class="token punctuation">(</span>r <span class="token operator">==</span> <span class="token operator">-</span><span class="token number">1</span> <span class="token operator">&amp;&amp;</span> <span class="token punctuation">(</span>errno <span class="token operator">==</span> EAGAIN <span class="token operator">||</span> errno <span class="token operator">==</span> EWOULDBLOCK<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
 
-      <span class="token keyword">if</span> <span class="token punctuation">(</span>bytes <span class="token operator">&gt;</span> <span class="token number">0</span><span class="token punctuation">)</span>
+      <span class="token keyword">if</span> <span class="token punctuation">(</span>bytes <span class="token operator">></span> <span class="token number">0</span><span class="token punctuation">)</span>
         <span class="token keyword">continue</span><span class="token punctuation">;</span>
 
       <span class="token keyword">return</span><span class="token punctuation">;</span>
@@ -1114,21 +1114,21 @@
 
     <span class="token keyword">for</span> <span class="token punctuation">(</span>i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> end<span class="token punctuation">;</span> i <span class="token operator">+</span><span class="token operator">=</span> <span class="token keyword">sizeof</span><span class="token punctuation">(</span>uv__signal_msg_t<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
       msg <span class="token operator">=</span> <span class="token punctuation">(</span>uv__signal_msg_t<span class="token operator">*</span><span class="token punctuation">)</span> <span class="token punctuation">(</span>buf <span class="token operator">+</span> i<span class="token punctuation">)</span><span class="token punctuation">;</span>
-      handle <span class="token operator">=</span> msg<span class="token operator">-&gt;</span>handle<span class="token punctuation">;</span>
+      handle <span class="token operator">=</span> msg<span class="token operator">-></span>handle<span class="token punctuation">;</span>
 
       <span class="token comment" spellcheck="true">/* 如果收到的信号与预期的信号是一致的，则执行回调函数 */</span>
-      <span class="token keyword">if</span> <span class="token punctuation">(</span>msg<span class="token operator">-&gt;</span>signum <span class="token operator">==</span> handle<span class="token operator">-&gt;</span>signum<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        <span class="token function">assert</span><span class="token punctuation">(</span><span class="token operator">!</span><span class="token punctuation">(</span>handle<span class="token operator">-&gt;</span>flags <span class="token operator">&amp;</span> UV_HANDLE_CLOSING<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token keyword">if</span> <span class="token punctuation">(</span>msg<span class="token operator">-></span>signum <span class="token operator">==</span> handle<span class="token operator">-></span>signum<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token function">assert</span><span class="token punctuation">(</span><span class="token operator">!</span><span class="token punctuation">(</span>handle<span class="token operator">-></span>flags <span class="token operator">&amp;</span> UV_HANDLE_CLOSING<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
         <span class="token comment" spellcheck="true">/* signal 回调函数 */</span>
-        handle<span class="token operator">-&gt;</span><span class="token function">signal_cb</span><span class="token punctuation">(</span>handle<span class="token punctuation">,</span> handle<span class="token operator">-&gt;</span>signum<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        handle<span class="token operator">-></span><span class="token function">signal_cb</span><span class="token punctuation">(</span>handle<span class="token punctuation">,</span> handle<span class="token operator">-></span>signum<span class="token punctuation">)</span><span class="token punctuation">;</span>
       <span class="token punctuation">}</span>
 
       <span class="token comment" spellcheck="true">/* 记录处理的信号个数 */</span>
-      handle<span class="token operator">-&gt;</span>dispatched_signals<span class="token operator">++</span><span class="token punctuation">;</span>
+      handle<span class="token operator">-></span>dispatched_signals<span class="token operator">++</span><span class="token punctuation">;</span>
 
       <span class="token comment" spellcheck="true">/* 只响应一次，需要回复系统默认的处理函数 */</span>
-      <span class="token keyword">if</span> <span class="token punctuation">(</span>handle<span class="token operator">-&gt;</span>flags <span class="token operator">&amp;</span> UV_SIGNAL_ONE_SHOT<span class="token punctuation">)</span>
+      <span class="token keyword">if</span> <span class="token punctuation">(</span>handle<span class="token operator">-></span>flags <span class="token operator">&amp;</span> UV_SIGNAL_ONE_SHOT<span class="token punctuation">)</span>
         <span class="token function">uv__signal_stop</span><span class="token punctuation">(</span>handle<span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
 
@@ -1141,10 +1141,10 @@
   <span class="token punctuation">}</span> <span class="token keyword">while</span> <span class="token punctuation">(</span>end <span class="token operator">==</span> <span class="token keyword">sizeof</span> buf<span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <h1 id="example"><a href="#example" class="headerlink" title="example"></a>example</h1><p>我们从example来讲解相关的函数使用吧，本次实验主要是是创建两个线程，其中一个线程等待SIGUSR1信号，另一个线程发送SIGUSR1信号，在处理完信号后退出。</p>
-<pre class="line-numbers language-c"><code class="language-c"><span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">&lt;stdio.h&gt;</span></span>
-<span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">&lt;stdlib.h&gt;</span></span>
-<span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">&lt;unistd.h&gt;</span></span>
-<span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">&lt;uv.h&gt;</span></span>
+<pre class="line-numbers language-c"><code class="language-c"><span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">&lt;stdio.h></span></span>
+<span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">&lt;stdlib.h></span></span>
+<span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">&lt;unistd.h></span></span>
+<span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">&lt;uv.h></span></span>
 
 <span class="token keyword">void</span> <span class="token function">signal_handler</span><span class="token punctuation">(</span>uv_signal_t <span class="token operator">*</span>handle<span class="token punctuation">,</span> <span class="token keyword">int</span> signum<span class="token punctuation">)</span>
 <span class="token punctuation">{</span>
@@ -1913,7 +1913,7 @@
 
             
                 &nbsp;<i class="fa fa-area-chart"></i>&nbsp;站点总字数:&nbsp;
-                <span class="white-color">141.2k </span>
+                <span class="white-color">142.3k </span>
 
             
 
@@ -2065,6 +2065,6 @@ $(function () {
         <script async src="/libs/others/busuanzi.pure.mini.js"></script>
     
     
-<script>!function(e){var r=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function t(){for(var c=0;c<r.length;c++)t=r[c],void 0,0<=(n=t.getBoundingClientRect()).top&&0<=n.left&&n.top<=(e.innerHeight||document.documentElement.clientHeight)&&function(){var t,n,e,i,o=r[c];t=o,n=function(){r=r.filter(function(t){return o!==t})},e=new Image,i=t.getAttribute("data-original"),e.onload=function(){t.src=i,n&&n()},e.src=i}();var t,n}t(),e.addEventListener("scroll",function(){!function(t,n){clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(n)},500)}(t,e)})}(this);</script><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"log":false,"model":{"jsonPath":"/live2dw/assets/wanko.model.json"},"display":{"position":"left","width":150,"height":200},"mobile":{"show":false},"react":{"opacity":0.7}});</script></body>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"log":false,"model":{"jsonPath":"/live2dw/assets/wanko.model.json"},"display":{"position":"left","width":150,"height":200},"mobile":{"show":false},"react":{"opacity":0.7}});</script><script>!function(e){var r=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function t(){for(var c=0;c<r.length;c++)t=r[c],void 0,0<=(n=t.getBoundingClientRect()).top&&0<=n.left&&n.top<=(e.innerHeight||document.documentElement.clientHeight)&&function(){var t,n,e,i,o=r[c];t=o,n=function(){r=r.filter(function(t){return o!==t})},e=new Image,i=t.getAttribute("data-original"),e.onload=function(){t.src=i,n&&n()},e.src=i}();var t,n}t(),e.addEventListener("scroll",function(){!function(t,n){clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(n)},500)}(t,e)})}(this);</script></body>
 
 </html>
