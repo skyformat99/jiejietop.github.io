@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://jiedev.com/"/>
-  <updated>2020-05-17T17:53:46.193Z</updated>
+  <updated>2020-06-04T15:43:19.020Z</updated>
   <id>https://jiedev.com/</id>
   
   <author>
@@ -15,6 +15,34 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>关于Linux进程你所需要知道的一切都在这里！！</title>
+    <link href="https://jiedev.com/linux-proces/"/>
+    <id>https://jiedev.com/linux-proces/</id>
+    <published>2020-06-04T15:35:29.000Z</published>
+    <updated>2020-06-04T15:43:19.020Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h1 id=&quot;进程&quot;&gt;&lt;a href=&quot;#进程&quot; class=&quot;headerlink&quot; title=&quot;进程&quot;&gt;&lt;/a&gt;进程&lt;/h1&gt;&lt;h2 id=&quot;简单了解进程&quot;&gt;&lt;a href=&quot;#简单了解进程&quot; class=&quot;headerlink&quot;
+        
+      
+    
+    </summary>
+    
+      <category term="linux" scheme="https://jiedev.com/categories/linux/"/>
+    
+    
+      <category term="linux" scheme="https://jiedev.com/tags/linux/"/>
+    
+      <category term="进程" scheme="https://jiedev.com/tags/%E8%BF%9B%E7%A8%8B/"/>
+    
+  </entry>
   
   <entry>
     <title>闲谈：我为什么热爱开源。</title>
@@ -48,11 +76,11 @@
   </entry>
   
   <entry>
-    <title>【libuv高效编程】libuv学习超详细教程11 —— libuv stream 流句柄解读</title>
-    <link href="https://jiedev.com/libuv-11/"/>
-    <id>https://jiedev.com/libuv-11/</id>
+    <title>【libuv高效编程】libuv学习超详细教程10 —— libuv stream 流句柄解读</title>
+    <link href="https://jiedev.com/libuv-10/"/>
+    <id>https://jiedev.com/libuv-10/</id>
     <published>2020-04-24T11:16:05.000Z</published>
-    <updated>2020-05-06T17:30:02.697Z</updated>
+    <updated>2020-04-28T15:02:08.542Z</updated>
     
     <summary type="html">
     
@@ -79,11 +107,11 @@
   </entry>
   
   <entry>
-    <title>【libuv高效编程】libuv学习超详细教程10 —— libuv stream 流句柄解读</title>
-    <link href="https://jiedev.com/libuv-10/"/>
-    <id>https://jiedev.com/libuv-10/</id>
+    <title>【libuv高效编程】libuv学习超详细教程11 —— libuv stream 流句柄解读</title>
+    <link href="https://jiedev.com/libuv-11/"/>
+    <id>https://jiedev.com/libuv-11/</id>
     <published>2020-04-24T11:16:05.000Z</published>
-    <updated>2020-04-28T15:02:08.542Z</updated>
+    <updated>2020-05-06T17:30:02.697Z</updated>
     
     <summary type="html">
     
@@ -586,36 +614,6 @@
       <category term="ROS" scheme="https://jiedev.com/tags/ROS/"/>
     
       <category term="机器人操作系统" scheme="https://jiedev.com/tags/%E6%9C%BA%E5%99%A8%E4%BA%BA%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>一个基于socket API之上的跨平台MQTT客户端，支持qos2</title>
-    <link href="https://jiedev.com/mqttclient/"/>
-    <id>https://jiedev.com/mqttclient/</id>
-    <published>2020-02-11T17:24:55.000Z</published>
-    <updated>2020-03-15T11:51:15.853Z</updated>
-    
-    <summary type="html">
-    
-      
-      
-        
-        
-          &lt;h1 id=&quot;mqttclient&quot;&gt;&lt;a href=&quot;#mqttclient&quot; class=&quot;headerlink&quot; title=&quot;mqttclient&quot;&gt;&lt;/a&gt;mqttclient&lt;/h1&gt;&lt;p&gt;&lt;strong&gt;一个基于socket
-        
-      
-    
-    </summary>
-    
-      <category term="网络" scheme="https://jiedev.com/categories/%E7%BD%91%E7%BB%9C/"/>
-    
-    
-      <category term="网络" scheme="https://jiedev.com/tags/%E7%BD%91%E7%BB%9C/"/>
-    
-      <category term="mqtt" scheme="https://jiedev.com/tags/mqtt/"/>
-    
-      <category term="mqttclient" scheme="https://jiedev.com/tags/mqttclient/"/>
     
   </entry>
   
